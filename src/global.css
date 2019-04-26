@@ -1,0 +1,153 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  --font-size: 14px;
+  --font-size-h4: 16px;
+  --font-size-h3: 20px;
+  --font-size-h2: 24px;
+  --font-size-h1: 28px;
+  --font-size-heading: 20px;
+  --font-size-subheading: 12px;
+  --font-family: 'halyard-display', sans-serif;
+  --font-family-subheading: 'Work Sans', sans-serif;
+  --color-black-1: #10171E;
+  --color-black-2: #15202B;
+  --color-black-3: #1C2938;
+  --color-black-4: #38444D;
+  --color-black-5: #8899A6;
+  --color-primary: #E8368F;
+  --color-secondary: #F7C948;
+  --color-white: #fff;
+  --border-radius: 4px;
+
+  color: var(--color-white);
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  background: var(--color-black-1);
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+}
+
+h3 {
+  font-size: var(--font-size-h3);
+}
+
+h4 {
+  font-size: var(--font-size-h4);
+}
+
+h5 {
+  font-size: var(--font-size);
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+.main-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  padding-right: 16px;
+  height: 50px;
+  background: var(--color-black-2);
+  margin-bottom: 16px;
+}
+
+.main-heading > .action {
+  width: 25%;
+  color: var(--color-black-4);
+}
+
+.main-heading > .logo {
+  text-align: center;
+  width: 50%;
+  font-family: var(--font-family-subheading);
+  font-size: var(--font-size-h4);
+  color: var(--color-primary);
+}
+
+.main-heading > .action:last-child {
+  text-align: right;
+}
+
+.ui-avatar {
+  height: 36px;
+  width: 36px;
+  border-radius: var(--border-radius);
+}
+
+.ui-subheading {
+  letter-spacing: 1px;
+  font-family: var(--font-family-subheading);
+  font-size: var(--font-size-subheading);
+  text-transform: uppercase;
+}
+
+.show-list {
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-bottom: 32px;
+}
+
+.show-carousel {
+  overflow-x: scroll;
+}
+
+.show-carousel > .inner {
+  display: flex;
+}
+
+.show-carousel > .inner > .card {
+  flex-shrink: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.show-carousel-card {
+  position: relative;
+  width: 218px;
+  height: 146px;
+  border-radius: var(--border-radius);
+  background-color: #ddd;
+}
+
+.show-carousel-card > .overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+.show-carousel-card > .details {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 0;
+}
+
+.show-carousel-card > .details > .tags {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.show-carousel-card > .details > .tag > .tag {
+  margin-right: 8px;
+  text-shadow: 0 1px 1px var(--color-black-1);
+}
+
+.show-carousel-card > .details > .title {
+  text-shadow: 0 1px 1px var(--color-black-1);
+}

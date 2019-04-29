@@ -1,5 +1,7 @@
-import * as React from "react";
 import "./style";
+
+import * as React from "react";
+import UiAvatar from '~/components/UiAvatar'
 
 /**
  * Use this to create a route instead of typing everything down
@@ -18,11 +20,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
         <div className="watch-screen-chat">
           <div className="watch-screen-chat-group is-self">
             <div className="avatar">
-              <img
-                src={require("~/assets/dummy-avatar.png")}
-                alt="Avatar"
-                className="ui-avatar"
-              />
+              <UiAvatar img={require("~/assets/dummy-avatar.png")} />
             </div>
 
             <div className="messages">
@@ -40,11 +38,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
           <div className="watch-screen-chat-group">
             <div className="avatar">
-              <img
-                src={require("~/assets/dummy-avatar.png")}
-                alt="Avatar"
-                className="ui-avatar"
-              />
+              <UiAvatar img={require("~/assets/dummy-avatar.png")} />
             </div>
 
             <div className="messages">
@@ -64,11 +58,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
           <div className="watch-screen-chat-group is-self">
             <div className="avatar">
-              <img
-                src={require("~/assets/dummy-avatar.png")}
-                alt="Avatar"
-                className="ui-avatar"
-              />
+              <UiAvatar img={require("~/assets/dummy-avatar.png")} />
             </div>
 
             <div className="messages">

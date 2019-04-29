@@ -1,8 +1,9 @@
-import * as React from 'react'
 import './style'
 
+import * as React from 'react'
+import UiAvatar from '~/components/UiAvatar'
+
 function App(props: ReactComponentWrapper) {
-  console.log('tite', props)
   return (
     <React.Fragment>
       <div className="main-heading">
@@ -13,7 +14,7 @@ function App(props: ReactComponentWrapper) {
         <div className="logo">Care.tv</div>
 
         <div className="action">
-          <img className="ui-avatar" src="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" alt="Avatar" />
+          <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
         </div>
       </div>
 

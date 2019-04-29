@@ -60,12 +60,6 @@ p, h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
-.ui-avatar {
-  height: 36px;
-  width: 36px;
-  border-radius: var(--border-radius);
-}
-
 .ui-subheading {
   letter-spacing: 1px;
   font-family: var(--font-family-subheading);

@@ -1,0 +1,10 @@
+.ui-avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: var(--border-radius);
+}
+
+.ui-avatar.is-m {
+  height: 48px;
+  width: 48px;
+}

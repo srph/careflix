@@ -9,6 +9,8 @@ import history from '~/lib/history'
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
 import AppWatch from '~/screens/app.watch'
+import AppWatchHome from '~/screens/app.watch.home'
+import AppWatchInvite from '~/screens/app.watch.invite'
 
 function Mount() {
   return (
@@ -19,7 +21,12 @@ function Mount() {
             <App>
               <Switch>
                 <Route path="/" exact component={AppHome} />
-                <Route path="/watch/:id" exact component={AppWatch} />
+                <Route path="/watch/:id" render={(matchProps) => (
+                  <AppWatch {...matchProps}>
+                    <Route path="/watch/:id" exact component={AppWatchHome} />
+                    <Route path="/watch/:id/invite" exact component={AppWatchInvite} />
+                  </AppWatch>
+                )} />
               </Switch>
             </App>
           )} />

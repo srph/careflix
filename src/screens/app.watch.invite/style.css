@@ -1,0 +1,57 @@
+.invite-searchbar {
+  flex-shrink: 0;
+  padding: 16px;
+  background: var(--color-black-2);
+  border-top: 1px solid var(--color-black-1);
+}
+
+.user-item {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.user-item > .avatar {
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.user-item > .details {
+  width: 100%;
+}
+
+.user-item > .details > .name {
+  font-weight: 500;
+}
+
+.user-item > .details > .meta {
+  color: var(--color-black-5);
+  text-transform: uppercase;
+}
+
+.user-item > .action {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 16px;
+}
+
+.user-item:not(:last-child) {
+  border-bottom: 1px solid var(--color-black);
+}
+
+.user-item.is-invited {
+  opacity: 0.5;
+  transition: 200ms all ease;
+}
+
+.ui-input {
+  display: block;
+  padding: 0 16px;
+  height: 50px;
+  width: 100%;
+  color: var(--color-black-5);
+  background: var(--color-black-1);
+  border: 0;
+  outline: 0;
+  border-radius: 25px;
+}

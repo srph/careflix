@@ -1,0 +1,133 @@
+.nav-tabs {
+  margin-top: -16px;
+  display: flex;
+  border-top: 1px solid var(--color-black-1);
+  border-bottom: 1px solid var(--color-black-1);
+}
+
+.nav-tabs > .link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  padding-left: 16px;
+  padding-right: 16px;
+  color: var(--color-black-5);
+  font-size: var(--font-size-subheading);
+  font-family: var(--font-family-subheading);
+  background: var(--color-black-2);
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  font-weight: bold;
+  letter-spacing: var(--letter-spacing-subheading);
+}
+
+.nav-tabs > .link.is-active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.watch-screen {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 84px);
+}
+
+.watch-screen-video {
+  flex-shrink: 0;
+  padding-bottom: 56.25%;
+  background-size: cover;
+}
+
+.watch-screen-chat {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.watch-screen-chatbar {
+  flex-shrink: 0;
+  padding: 16px;
+  background: var(--color-black-2);
+  border-top: 1px solid var(--color-black-1);
+}
+
+.ui-input {
+  display: block;
+  padding: 0 16px;
+  height: 50px;
+  width: 100%;
+  color: var(--color-black-5);
+  background: var(--color-black-1);
+  border: 0;
+  outline: 0;
+  border-radius: 25px;
+}
+
+.watch-screen-chat-group {
+  padding: 16px;
+  display: flex;
+}
+
+.watch-screen-chat-group > .avatar {
+  align-self: flex-end;
+  margin-right: 16px;
+}
+
+.watch-screen-chat-group > .messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.watch-screen-chat-group > .messages > .message {
+  display: flex;
+}
+
+.watch-screen-chat-group > .messages > .message > .inner {
+  flex-grow: 0;
+  display: inline-block;
+  padding: 16px;
+  background: var(--color-black-4);
+  border-radius: 24px;
+}
+
+.watch-screen-chat-group > .messages > .message:not(:last-child) > .inner {
+  margin-bottom: 4px;
+}
+
+.watch-screen-chat-group > .messages > .message:not(:first-child) > .inner {
+  border-top-left-radius: 0;
+}
+
+.watch-screen-chat-group > .messages > .message:not(:last-child) > .inner {
+  border-bottom-left-radius: 0;
+}
+
+.watch-screen-chat-group.is-self {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
+
+.watch-screen-chat-group.is-self > .avatar {
+  margin-right: 0;
+  margin-left: 16px;
+}
+
+.watch-screen-chat-group.is-self > .messages > .message {
+  margin-left: auto;
+}
+
+.watch-screen-chat-group.is-self > .messages > .message > .inner {
+  background: var(--color-primary);
+}
+
+.watch-screen-chat-group.is-self > .messages > .message:not(:first-child) > .inner {
+  border-top-left-radius: 24px;
+  border-top-right-radius: 0px;
+}
+
+.watch-screen-chat-group.is-self > .messages > .message:not(:last-child) > .inner {
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 0;
+}

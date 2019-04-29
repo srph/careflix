@@ -1,0 +1,75 @@
+.show-list {
+  margin-bottom: 32px;
+}
+
+.show-list > .ui-subheading {
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-bottom: 8px;
+}
+
+.show-carousel {
+  overflow-x: scroll;
+}
+
+.show-carousel > .inner {
+  display: flex;
+}
+
+.show-carousel > .inner > .card {
+  flex-shrink: 0;
+  padding-right: 16px;
+}
+
+.show-carousel > .inner > .card:first-child {
+  padding-left: 16px;
+}
+
+.show-carousel > .inner > .card:last-child {
+  padding-left: 16px;
+}
+
+.show-carousel-card {
+  position: relative;
+  width: 218px;
+  height: 146px;
+  border-radius: var(--border-radius);
+  background-color: #ddd;
+  background-size: cover;
+}
+
+.show-carousel-card > .overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  border-radius: var(--border-radius);
+}
+
+.show-carousel-card > .details {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+}
+
+.show-carousel-card > .details > .tags {
+  display: flex;
+  align-items: center;
+  opacity: 0.75;
+}
+
+.show-carousel-card > .details > .tags > .tag {
+  margin-right: 8px;
+  text-shadow: var(--text-shadow-default);
+  font-family: var(--font-family-subheading);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.show-carousel-card > .details > .title {
+  text-shadow: var(--text-shadow-default);
+  font-weight: 600;
+}

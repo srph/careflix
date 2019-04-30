@@ -7,7 +7,7 @@ interface Props {
 
 function UiContainer(props: Props) {
   return (
-    <div className="ui-spacer">
+    <div className="ui-container">
       {props.children}
     </div>
   )

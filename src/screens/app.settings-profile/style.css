@@ -1,0 +1,24 @@
+.settings-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.settings-profile-avatar > .avatar {
+  position: relative;
+}
+
+.settings-profile-avatar > .avatar > .action {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  background: var(--color-black-5);
+  border: 2px solid var(--color-black-2);
+  border-radius: 50%;
+}

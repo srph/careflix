@@ -1,0 +1,11 @@
+.ui-form-group {
+
+}
+
+.ui-form-group > .label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--color-black-5);
+  line-height: 1;
+}

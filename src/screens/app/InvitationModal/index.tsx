@@ -6,7 +6,7 @@ import UiAvatar from '~/components/UiAvatar'
 import useCountdownTimer from '~/components/CountdownTimer'
 
 function InvitationModal() {
-  const [isOpen, setIsOpen] = React.useState<boolean>(false)
+  const [isOpen, setIsOpen] = React.useState<boolean>(true)
 
   const countdown: number = useCountdownTimer({
     duration: 5,

@@ -10,12 +10,12 @@ interface OwnProps {
 
 type Props = OwnProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>
 
-function UiButton(props: Props) {
+function UiButton({ variant, size, block, ...props }: Props) {
   return (
     <button {...props} className={cx("ui-button", {
-      'is-primary': props.variant === 'primary',
-      'is-block': props.block,
-      'is-l': props.size === 'l',
+      'is-primary': variant === 'primary',
+      'is-block': block,
+      'is-l': size === 'l',
     })}>
       {props.children}
     </button>

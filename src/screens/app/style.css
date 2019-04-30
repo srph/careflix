@@ -17,11 +17,17 @@
 .main-heading > .logo {
   text-align: center;
   width: 50%;
-  font-family: var(--font-family-subheading);
-  font-size: var(--font-size-h4);
-  color: var(--color-primary);
+
 }
 
 .main-heading > .action:last-child {
   text-align: right;
+}
+
+.main-heading > .logo > a {
+  text-decoration: none;
+  font-family: var(--font-family-subheading);
+  font-size: var(--font-size-h4);
+  color: var(--color-primary);
+  text-decoration: none;
 }

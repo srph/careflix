@@ -3,6 +3,7 @@ import './style'
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import InvitationModal from './InvitationModal'
+import { Link } from 'react-router-dom'
 
 function App(props: ReactComponentWrapper) {
   return (
@@ -12,10 +13,14 @@ function App(props: ReactComponentWrapper) {
           &nbsp;
         </div>
 
-        <div className="logo">Care.tv</div>
+        <div className="logo">
+          <Link to="/">Care.tv</Link>
+        </div>
 
         <div className="action">
-          <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
+          <Link to="/settings">
+            <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
+          </Link>
         </div>
       </div>
 

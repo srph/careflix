@@ -1,0 +1,37 @@
+.watch-player-modal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.watch-player-modal-card {
+  padding: 16px;
+  padding-bottom: 48px;
+  background: var(--color-white);
+}
+
+.watch-player-modal-card > .meta {
+  color: var(--color-black-5);
+}
+
+.watch-player-modal-card > .title {
+  color: var(--color-black-2);
+  margin-bottom: 8px;
+}
+
+.watch-player-modal-card > .summary {
+  color: var(--color-black-1);
+  font-size: var(--font-size-h4);
+  line-height: 1.25;
+}
+
+.watch-player-controls {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.watch-player-controls > .control {
+  margin-right: 16px;
+}

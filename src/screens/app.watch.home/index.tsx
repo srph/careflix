@@ -2,6 +2,7 @@ import "./style";
 
 import * as React from "react";
 import UiAvatar from '~/components/UiAvatar'
+import PlayerModal from './PlayerModal'
 
 /**
  * Use this to create a route instead of typing everything down
@@ -9,6 +10,8 @@ import UiAvatar from '~/components/UiAvatar'
 function AppWatchHome(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
+      <PlayerModal />
+      
       <div className="watch-screen">
         <div
           className="watch-screen-video"

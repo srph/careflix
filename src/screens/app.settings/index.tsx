@@ -2,6 +2,7 @@ import './style'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
+import { Link } from 'react-router-dom'
 
 /**
  * Use this to create a route instead of typing everything down
@@ -29,21 +30,21 @@ function AppSettings(props: ReactComponentWrapper) {
       </div>
 
       <div className="settings-menu-list">
-        <a href="#" className="item">
+        <Link to="/settings/profile" className="item">
           <div className="icon">
             <i className="fa fa-cog"></i>
           </div>
 
           <div className="text">
-            Account Settings
+            Account settings
           </div>
 
           <div className="caret">
             <i className="fa fa-angle-right"></i>
           </div>
-        </a>
+        </Link>
 
-        <a href="#" className="item">
+        <Link to="/settings/password" className="item">
           <div className="icon">
             <i className="fa fa-lock"></i>
           </div>
@@ -55,9 +56,9 @@ function AppSettings(props: ReactComponentWrapper) {
           <div className="caret">
             <i className="fa fa-angle-right"></i>
           </div>
-        </a>
+        </Link>
 
-        <a href="#" className="item">
+        <Link to="/" className="item">
           <div className="icon">
             <i className="fa fa-long-arrow-left"></i>
           </div>
@@ -69,7 +70,7 @@ function AppSettings(props: ReactComponentWrapper) {
           <div className="caret">
             <i className="fa fa-angle-right"></i>
           </div>
-        </a>
+        </Link>
       </div>
 
       <div className="settings-credits">

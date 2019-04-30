@@ -14,6 +14,7 @@ import AppWatchHome from '~/screens/app.watch.home'
 import AppWatchInvite from '~/screens/app.watch.invite'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
+import AppSettingsPassword from '~/screens/app.settings-password'
 
 function Mount() {
   return (
@@ -26,6 +27,7 @@ function Mount() {
                 <Route path="/" exact component={AppHome} />
                 <Route path="/settings" exact component={AppSettings} />
                 <Route path="/settings/profile" exact component={AppSettingsProfile} />
+                <Route path="/settings/password" exact component={AppSettingsPassword} />
                 <Route path="/watch/:id" render={(matchProps) => (
                   <AppWatch {...matchProps}>
                     <Route path="/watch/:id" exact component={AppWatchHome} />

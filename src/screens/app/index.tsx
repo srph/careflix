@@ -2,6 +2,7 @@ import './style'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
+import InvitationModal from './InvitationModal'
 
 function App(props: ReactComponentWrapper) {
   return (
@@ -17,6 +18,8 @@ function App(props: ReactComponentWrapper) {
           <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
         </div>
       </div>
+
+      <InvitationModal />
 
       {props.children}
     </React.Fragment>

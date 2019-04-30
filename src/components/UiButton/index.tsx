@@ -6,13 +6,15 @@ interface OwnProps {
   variant?: 'default' | 'primary'
 }
 
-type Props = OwnProps & React.ButtonHTMLAttributes<HTMLButtonElement> 
+type Props = OwnProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>
 
 function UiButton(props: Props) {
   return (
-    <div className="ui-button">
+    <button {...props} className={cx("ui-button", {
+      'is-primary': props.variant === 'primary'
+    })}>
       {props.children}
-    </div>
+    </button>
   )
 }
 

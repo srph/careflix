@@ -1,0 +1,81 @@
+/* .invitation-modal {
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+} */
+
+.invitation-modal {
+  padding-top: 64px;
+}
+
+.invitation-modal > .actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.invitation-modal-card {
+  background: var(--color-white);
+  border-radius: var(--border-radius);
+  margin-bottom: 16px;
+}
+
+.invitation-modal-card > .user {
+  padding: 24px;
+  color: var(--color-black-1);
+  text-align: center;
+}
+
+.invitation-modal-card > .user > .avatar {
+  margin-bottom: 16px;
+}
+
+.invitation-modal-card > .user > .details > .name {
+  margin-bottom: 4px;
+}
+
+.invitation-modal-card > .user > .details > .subheading {
+  color: var(--color-black-5);
+}
+
+.invitation-modal-card > .thumbnail {
+  position: relative;
+  padding-bottom: 56.25%;
+  background-color: var(--color-dark-5);
+  background-size: cover;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
+.invitation-modal-card > .thumbnail > .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--overlay-fade);
+  border-radius: var(--border-radius);
+}
+
+.invitation-modal-card > .thumbnail > .details {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  text-shadow: var(--text-shadow-default);
+}
+
+.invitation-modal-card > .thumbnail > .details > .tag {
+  opacity: 0.75
+}
+
+.invitation-modal-card > .thumbnail > .details > .title {
+  font-weight: 600;
+}
+
+.invitation-modal-expiration {
+  text-align: center;
+}
+
+.invitation-modal-expiration-lowercaps {
+  text-transform: lowercase;
+}

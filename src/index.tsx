@@ -1,5 +1,5 @@
-import './global.css'
 import 'sanitize.css'
+import './global.css'
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'

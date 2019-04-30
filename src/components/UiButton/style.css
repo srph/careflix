@@ -14,3 +14,7 @@
   outline: 0;
   cursor: pointer;
 }
+
+.ui-button.is-primary {
+  background: var(--color-primary);
+}

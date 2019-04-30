@@ -58,7 +58,7 @@ function AppSettings(props: ReactComponentWrapper) {
           </div>
         </Link>
 
-        <Link to="/" className="item">
+        <Link to="/logout" className="item">
           <div className="icon">
             <i className="fa fa-long-arrow-left"></i>
           </div>

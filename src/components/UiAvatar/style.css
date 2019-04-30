@@ -8,3 +8,8 @@
   height: 48px;
   width: 48px;
 }
+
+.ui-avatar.is-l {
+  height: 80px;
+  width: 80px;
+}

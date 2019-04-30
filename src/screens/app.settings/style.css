@@ -1,0 +1,61 @@
+.settings-page {
+  position: relative;
+  height: calc(100% - 50px);
+}
+
+.settings-user-info {
+  margin-top: -16px;
+  padding: 32px 16px;
+  display: flex;
+  align-items: center;
+}
+
+.settings-user-info > .avatar {
+  margin-right: 16px;
+}
+
+.settings-user-info > .info > .description {
+  color: var(--color-black-5);
+}
+
+.settings-user-info > .caret {
+  margin-left: auto;
+}
+
+.settings-menu-list > .item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 16px;
+  color: var(--color-white);
+  border-bottom: 1px solid var(--color-black-2);
+}
+
+.settings-menu-list > .item:first-child {
+  border-top: 1px solid var(--color-black-2);
+}
+
+.settings-menu-list > .item > .icon {
+  width: 24px;
+  color: var(--color-black-5);
+}
+
+.settings-menu-list > .item > .caret {
+  margin-left: auto;
+}
+
+.settings-credits {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  text-align: center;
+}
+
+.settings-credits > .avatar {
+  margin-bottom: 16px;
+}
+
+.settings-credits > .ui-subheading {
+  color: var(--color-black-5);
+}

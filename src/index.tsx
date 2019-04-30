@@ -1,4 +1,5 @@
 import 'sanitize.css'
+import 'font-awesome/css/font-awesome.css'
 import './global.css'
 
 import * as React from 'react'
@@ -11,6 +12,7 @@ import AppHome from '~/screens/app.home'
 import AppWatch from '~/screens/app.watch'
 import AppWatchHome from '~/screens/app.watch.home'
 import AppWatchInvite from '~/screens/app.watch.invite'
+import AppSettings from '~/screens/app.settings'
 
 function Mount() {
   return (
@@ -21,6 +23,7 @@ function Mount() {
             <App>
               <Switch>
                 <Route path="/" exact component={AppHome} />
+                <Route path="/settings" exact component={AppSettings} />
                 <Route path="/watch/:id" render={(matchProps) => (
                   <AppWatch {...matchProps}>
                     <Route path="/watch/:id" exact component={AppWatchHome} />

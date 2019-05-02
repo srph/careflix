@@ -1,5 +1,13 @@
 .watch-player-modal {
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.watch-player-contents {
+  position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
@@ -34,4 +42,23 @@
 
 .watch-player-controls > .control {
   margin-right: 16px;
+}
+
+.watch-player-actions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.watch-player-actions > .section {
+  display: flex;
+  align-items: center;
+}
+.watch-player-actions > .section > .action:not(:last-child) {
+  margin-right: 24px;
 }

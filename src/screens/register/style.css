@@ -1,0 +1,26 @@
+.registration-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.registration-image {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.registration-image > img {
+  max-width: 162px;
+}
+
+.registration-action {
+  margin-bottom: 16px;
+}
+
+.registration-byline {
+  text-align: center;
+}
+
+.registration-byline a {
+  color: var(--color-primary);
+  text-decoration:  none;
+}

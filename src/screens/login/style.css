@@ -1,0 +1,26 @@
+.login-title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-image {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.login-image > img {
+  max-width: 162px;
+}
+
+.login-action {
+  margin-bottom: 16px;
+}
+
+.login-byline {
+  text-align: center;
+}
+
+.login-byline a {
+  color: var(--color-primary);
+  text-decoration:  none;
+}

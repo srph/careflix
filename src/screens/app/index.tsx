@@ -2,27 +2,24 @@ import './style'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
+import UiNavigation from '~/components/UiNavigation'
 import InvitationModal from './InvitationModal'
 import { Link } from 'react-router-dom'
 
 function App(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
-      <div className="main-heading">
-        <div className="action">
-          &nbsp;
-        </div>
+      <UiNavigation>
+        <UiNavigation.Action />
 
-        <div className="logo">
-          <Link to="/">Care.tv</Link>
-        </div>
+        <UiNavigation.Logo />
 
-        <div className="action">
+        <UiNavigation.Action>
           <Link to="/settings">
             <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
           </Link>
-        </div>
-      </div>
+        </UiNavigation.Action>
+      </UiNavigation>
 
       <InvitationModal />
 

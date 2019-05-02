@@ -1,0 +1,32 @@
+.ui-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 16px;
+  padding-right: 16px;
+  height: 50px;
+  background: var(--color-black-2);
+  margin-bottom: 16px;
+}
+
+.ui-navigation > .action {
+  width: 25%;
+  color: var(--color-black-5);
+}
+
+.ui-navigation > .logo {
+  text-align: center;
+  width: 50%;
+
+}
+.ui-navigation > .action:last-child {
+  text-align: right;
+}
+
+.ui-navigation > .logo > a {
+  text-decoration: none;
+  font-family: var(--font-family-subheading);
+  font-size: var(--font-size-h4);
+  color: var(--color-primary);
+  text-decoration: none;
+}

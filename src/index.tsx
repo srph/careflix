@@ -15,12 +15,17 @@ import AppWatchInvite from '~/screens/app.watch.invite'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsPassword from '~/screens/app.settings-password'
+import Login from '~/screens/login'
+import Register from '~/screens/register'
 
 function Mount() {
   return (
     <React.Fragment>
       <Router history={history}>
         <Switch>
+          <Route path="/login" exact component={Login} />
+          <Route path="/register" exact component={Register} />
+          
           <Route path="/" render={() => (
             <App>
               <Switch>

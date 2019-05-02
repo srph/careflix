@@ -49,7 +49,7 @@ function Login(props: ReactComponentWrapper) {
           </UiButton>
         </div>
 
-        <div className="registration-byline">
+        <div className="login-byline">
           <h5 className="ui-subheading">
             New here? <Link to="/register">Sign up</Link>
           </h5>

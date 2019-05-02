@@ -17,16 +17,12 @@
 .ui-navigation > .logo {
   text-align: center;
   width: 50%;
-
 }
+
 .ui-navigation > .action:last-child {
   text-align: right;
 }
 
 .ui-navigation > .logo > a {
-  text-decoration: none;
-  font-family: var(--font-family-subheading);
-  font-size: var(--font-size-h4);
-  color: var(--color-primary);
   text-decoration: none;
 }

@@ -1,5 +1,6 @@
 import './style.css'
 import * as React from 'react'
+import UiLogo from '~/components/UiLogo'
 import { Link } from 'react-router-dom'
 
 interface Props {
@@ -29,7 +30,9 @@ UiNavigation.Title = function(props: Props) {
 UiNavigation.Logo = function() {
   return (
     <div className="logo">
-      <Link to="/">Care.tv</Link>
+      <Link to="/">
+        <UiLogo />
+      </Link>
     </div>
   )
 }

@@ -1,8 +1,11 @@
-import * as React from 'react'
 import './style'
 
+import * as React from 'react'
+import GuestHome from './GuestHome'
+
 function AppHome() {
-  console.log('home')
+  return <GuestHome />
+  
   return (
     <React.Fragment>
       {Array(10).fill(0).map((category, i) =>

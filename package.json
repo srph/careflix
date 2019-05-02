@@ -21,6 +21,8 @@
   "devDependencies": {
     "@types/node": "^11.13.7",
     "@types/react": "^16.8.14",
+    "@types/react-router": "^4.4.5",
+    "@types/react-router-dom": "^4.3.2",
     "parcel-bundler": "^1.12.3",
     "typescript": "^3.4.5"
   }

@@ -27,3 +27,8 @@
   height: 50px;
   line-height: 49px;
 }
+
+a.ui-button {
+  text-decoration: none;
+  text-align: center;
+}

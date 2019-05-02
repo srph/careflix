@@ -2,6 +2,7 @@
   padding-top: 16px;
   margin-bottom: 32px;
   text-align: center;
+  color: var(--color-primary);
 }
 
 .guest-home-title {

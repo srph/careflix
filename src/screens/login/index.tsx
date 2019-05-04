@@ -8,10 +8,13 @@ import UiFormSpacer from '~/components/UiFormSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButton from '~/components/UiButton'
 import { Link } from 'react-router-dom'
+import Helmet from 'react-helmet'
 
 function Login(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
+      <Helmet title="Welcome back" />
+      
       <UiNavigation>
         <UiNavigation.Action to="/">
           <i className='fa fa-angle-left' />

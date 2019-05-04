@@ -8,6 +8,7 @@ import UiFormSpacer from '~/components/UiFormSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButton from '~/components/UiButton'
 import { Link } from 'react-router-dom'
+import Helmet from 'react-helmet'
 
 /**
  * Use this to create a route instead of typing everything down
@@ -15,6 +16,8 @@ import { Link } from 'react-router-dom'
 function Login(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
+      <Helmet title="Create a new account" />
+
       <UiNavigation>
         <UiNavigation.Action to="/">
           <i className='fa fa-angle-left' />

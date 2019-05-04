@@ -14,7 +14,7 @@ function PlayerModal() {
         <div className="watch-player-actions">
           <div className="section">
             <div className="action">
-              <UiPlainButton>
+              <UiPlainButton onClick={() => setIsOpen(false)}>
                 <i className="fa fa-close" />
               </UiPlainButton>
             </div>

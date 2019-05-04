@@ -6,6 +6,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Router, Route, Switch } from 'react-router-dom'
 import history from '~/lib/history'
+import { GatewayProvider } from 'react-gateway'
 
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
@@ -21,29 +22,31 @@ import Register from '~/screens/register'
 function Mount() {
   return (
     <React.Fragment>
-      <Router history={history}>
-        <Switch>
-          <Route path="/login" exact component={Login} />
-          <Route path="/register" exact component={Register} />
-          
-          <Route path="/" render={() => (
-            <App>
-              <Switch>
-                <Route path="/" exact component={AppHome} />
-                <Route path="/settings" exact component={AppSettings} />
-                <Route path="/settings/profile" exact component={AppSettingsProfile} />
-                <Route path="/settings/password" exact component={AppSettingsPassword} />
-                <Route path="/watch/:id" render={(matchProps) => (
-                  <AppWatch {...matchProps}>
-                    <Route path="/watch/:id" exact component={AppWatchHome} />
-                    <Route path="/watch/:id/invite" exact component={AppWatchInvite} />
-                  </AppWatch>
-                )} />
-              </Switch>
-            </App>
-          )} />
-        </Switch>
-      </Router>
+      <GatewayProvider>
+        <Router history={history}>
+          <Switch>
+            <Route path="/login" exact component={Login} />
+            <Route path="/register" exact component={Register} />
+            
+            <Route path="/" render={() => (
+              <App>
+                <Switch>
+                  <Route path="/" exact component={AppHome} />
+                  <Route path="/settings" exact component={AppSettings} />
+                  <Route path="/settings/profile" exact component={AppSettingsProfile} />
+                  <Route path="/settings/password" exact component={AppSettingsPassword} />
+                  <Route path="/watch/:id" render={(matchProps) => (
+                    <AppWatch {...matchProps}>
+                      <Route path="/watch/:id" exact component={AppWatchHome} />
+                      <Route path="/watch/:id/invite" exact component={AppWatchInvite} />
+                    </AppWatch>
+                  )} />
+                </Switch>
+              </App>
+            )} />
+          </Switch>
+        </Router>
+      </GatewayProvider>
     </React.Fragment>
   )
 }

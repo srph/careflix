@@ -1,7 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import UiLogo from '~/components/UiLogo'
-import { Link } from 'react-router-dom'
+import { Link, LinkProps } from 'react-router-dom'
 
 interface Props {
   children?: React.ReactNode
@@ -15,9 +15,17 @@ function UiNavigation(props: Props) {
   )
 }
 
-UiNavigation.Action = function(props: Props) {
+type ActionProps = {
+  children?: React.ReactNode
+} | LinkProps;
+
+UiNavigation.Action = function(props: ActionProps) {
   return (
-    <div className="action">{props.children}</div>
+    <div className="action">
+      {props.children && (
+        <Link {...(props as LinkProps)} />
+      )}
+    </div>
   )
 }
 

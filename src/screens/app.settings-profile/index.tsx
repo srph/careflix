@@ -7,10 +7,13 @@ import UiFormGroup from '~/components/UiFormGroup'
 import UiInput from '~/components/UiInput'
 import UiButton from '~/components/UiButton'
 import UiFormSpacer from '~/components/UiFormSpacer'
+import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 function AppSettingsProfile(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
+      <AppHeadingSettings title="Account Settings" backUrl="/settings" />
+
       <div className="settings-profile-avatar">
         <div className="avatar">
           <UiAvatar size="l" img={require('~/assets/dummy-avatar.png')} />

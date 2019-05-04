@@ -13,7 +13,7 @@ function Login(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
       <UiNavigation>
-        <UiNavigation.Action>
+        <UiNavigation.Action to="/">
           <i className='fa fa-angle-left' />
         </UiNavigation.Action>
 

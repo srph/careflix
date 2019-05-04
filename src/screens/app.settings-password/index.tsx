@@ -7,10 +7,12 @@ import UiFormGroup from '~/components/UiFormGroup'
 import UiInput from '~/components/UiInput'
 import UiButton from '~/components/UiButton'
 import UiFormSpacer from '~/components/UiFormSpacer'
+import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 function AppSettingsProfile(props: ReactComponentWrapper) {
   return (
-    <React.Fragment>      
+    <React.Fragment>
+      <AppHeadingSettings title="Change Password" backUrl="/settings" />
       <UiContainer>
         <UiFormGroup label="Current Password">
           <UiInput type="password" placeholder="*********" />

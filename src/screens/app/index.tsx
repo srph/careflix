@@ -6,20 +6,20 @@ import UiNavigation from '~/components/UiNavigation'
 import InvitationModal from './InvitationModal'
 import { Link, Route, RouteComponentProps } from 'react-router-dom'
 
+import GatewayDestWithFallback from '~/components/GatewayDestWithFallback'
+import constants from './constants'
 
 function App(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
       <Route render={(routeProps: RouteComponentProps) => (
-        routeProps.match.path !=='/' && <UiNavigation>
-          <UiNavigation.Action />
+        routeProps.location.pathname !=='/' && <UiNavigation>
+          <GatewayDestWithFallback name={constants.gateway.backUrl} fallback={<UiNavigation.Action />} />
 
-          <UiNavigation.Logo />
+          <GatewayDestWithFallback name={constants.gateway.title} fallback={<UiNavigation.Logo />} />
 
-          <UiNavigation.Action>
-            <Link to="/settings">
-              <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
-            </Link>
+          <UiNavigation.Action to="settings">
+            <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
           </UiNavigation.Action>
         </UiNavigation>
       )} />

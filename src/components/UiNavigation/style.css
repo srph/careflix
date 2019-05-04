@@ -14,6 +14,10 @@
   color: var(--color-black-5);
 }
 
+.ui-navigation > .action > a {
+  color: var(--color-black-5);
+}
+
 .ui-navigation > .logo {
   text-align: center;
   width: 50%;

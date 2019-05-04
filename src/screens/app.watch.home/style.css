@@ -13,6 +13,7 @@
 .watch-screen-chat {
   height: 100%;
   overflow-y: scroll;
+  background: var(--color-black-2);
 }
 
 .watch-screen-chatbar {
@@ -99,4 +100,30 @@
 .watch-screen-chat-group.is-self > .messages > .message:not(:last-child) > .inner {
   border-bottom-left-radius: 24px;
   border-bottom-right-radius: 0;
+}
+
+.watch-screen-activity-group {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.watch-screen-activity-group > .activity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding-left: 8px;
+  padding-right: 8px;
+  background: var(--color-black-1);
+  border-radius: var(--border-radius);
+}
+
+.watch-screen-activity-group > .activity:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+.watch-screen-activity-group > .activity > .avatar {
+  margin-right: 8px;
 }

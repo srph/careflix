@@ -76,6 +76,24 @@ function AppWatchHome(props: ReactComponentWrapper) {
               </div>
             </div>
           </div>
+
+          <div className="watch-screen-activity-group">
+            <div className="activity">
+              <div className="avatar">
+                <UiAvatar img={require("~/assets/dummy-avatar.png")} size="sm" />
+              </div>
+
+              <h6 className="ui-subheading">Kier left the room.</h6>
+            </div>
+
+            <div className="activity">
+              <div className="avatar">
+                <UiAvatar img={require("~/assets/dummy-avatar.png")} size="sm" />
+              </div>
+
+              <h6 className="ui-subheading">Kier joined the room.</h6>
+            </div>
+          </div>
         </div>
 
         <div className="watch-screen-chatbar">

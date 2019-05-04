@@ -18,10 +18,13 @@ import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsPassword from '~/screens/app.settings-password'
 import Login from '~/screens/login'
 import Register from '~/screens/register'
+import Helmet from 'react-helmet'
 
 function Mount() {
   return (
     <React.Fragment>
+      <Helmet titleTemplate="%s - Care.tv" />
+
       <GatewayProvider>
         <Router history={history}>
           <Switch>

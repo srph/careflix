@@ -31,6 +31,15 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true
         ]);
 
+        $user = App\User::create([
+            'name' => $faker->name,
+            'email' => 'user@user.com',
+            'email_verified_at' => now(),
+            'password' => 'password',
+            'remember_token' => Str::random(10),
+            'is_admin' => false
+        ]);
+
         foreach(range(0, 10) as $i) {
             $is_movie = $i < 5;
 

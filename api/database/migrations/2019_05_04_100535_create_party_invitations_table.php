@@ -17,9 +17,9 @@ class CreatePartyInvitationsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('party_id');
             $table->integer('sender_id');
-            $table->integer('recepient_id');
+            $table->integer('recipient_id');
             $table->string('invitation_code');
-            $table->boolean('is_accepted');
+            $table->string('action')->nullable();
             $table->boolean('is_expired');
             $table->integer('duration');
             $table->timestamp('expires_at');

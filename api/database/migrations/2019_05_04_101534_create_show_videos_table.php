@@ -15,11 +15,13 @@ class CreateShowVideosTable extends Migration
     {
         Schema::create('show_videos', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('show_group_id');
-            $table->string('title');
-            $table->string('url');
+            $table->integer('show_id');
+            $table->integer('show_group_id')->nullable();
+            $table->string('preview_image')->nullable();
+            $table->string('video_url');
+            $table->string('title')->nullable();
             $table->integer('duration');
-            $table->string('synposis')->nullable();
+            $table->string('synopsis')->nullable();
             $table->timestamps();
         });
     }

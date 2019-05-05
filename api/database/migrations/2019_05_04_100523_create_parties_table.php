@@ -19,7 +19,7 @@ class CreatePartiesTable extends Migration
             $table->boolean('is_playing');
             $table->boolean('is_expired');
             $table->integer('current_time');
-            $table->boolean('last_activity_at');
+            $table->timestamp('last_activity_at');
             $table->timestamps();
         });
     }

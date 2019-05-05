@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function() {
+    Route::get('shows', 'ShowsController@index');
+    Route::get('parties/{party_id}', 'PartiesController@show');
+    Route::post('parties', 'PartiesController@store');
+    Route::get('/me', 'MeController@data');
 });

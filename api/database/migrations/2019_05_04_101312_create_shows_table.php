@@ -17,12 +17,12 @@ class CreateShowsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('title_type');
+            $table->string('preview_image')->nullable();
             $table->string('synposis')->nullable();
-            $table->string('storyline')->nullable();
             $table->string('language')->nullable();
-            $table->datetime('start_year')->nullable();
-            $table->datetime('end_year')->nullable();
-            $table->string('age_rating');
+            $table->datetime('air_start')->nullable();
+            $table->datetime('air_end')->nullable();
+            $table->string('age_rating')->nullable();
             $table->timestamps();
         });
     }

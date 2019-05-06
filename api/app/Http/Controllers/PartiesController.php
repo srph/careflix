@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Party;
+use App\Events\PartyState;
 
 class PartiesController extends Controller
 {
@@ -52,8 +53,32 @@ class PartiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function state(Party $party, )
+    public function state(\App\Http\Requests\UpdatePartyState $request, Party $party)
     {
-        //
+        $party->fill([
+            'current_time' => (int) $request->get('current_time'),
+            'is_playing' => (boolean) $request->get('is_playing')
+        ])->save();
+
+        broadcast(new PartyState($party));
+
+        return $party;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @todo Permission for non-party users
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function time(\App\Http\Requests\UpdatePartyState $request, Party $party)
+    {
+        $party->fill([
+            'current_time' => (int) $request->get('current_time')
+        ])->save();
+
+        return $party;
     }
 }

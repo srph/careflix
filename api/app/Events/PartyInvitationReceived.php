@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\User;
 use App\Party;
 use App\PartyInvitation;
 use Illuminate\Broadcasting\Channel;
@@ -17,9 +16,9 @@ class PartyInvitationReceived implements ShouldBroadcast
     use SerializesModels;
 
     /**
-     * @var User
+     * @var number
      */
-    public $user;
+    public $recepient_id;
 
     /**
      * @var Party
@@ -36,9 +35,9 @@ class PartyInvitationReceived implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(User $user, Party $party, PartyInvitation $invitation)
+    public function __construct($recepient_id, Party $party, PartyInvitation $invitation)
     {
-        $this->user = $user;
+        $this->recepient_id = $recepient_id;
         $this->party = $party;
         $this->invitation = $invitation;
     }
@@ -50,7 +49,7 @@ class PartyInvitationReceived implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.invitation.'.$this->user->id);
+        return new PrivateChannel('user.invitation.'.$this->recepient_id);
     }
 
     /**
@@ -61,5 +60,17 @@ class PartyInvitationReceived implements ShouldBroadcast
     public function broadcastAs()
     {
         return 'receive';
+    }
+
+    /**
+     * The event's serialized data
+     *
+     * @return array
+     */
+    public function broadcastWith() {
+        return [
+            'user' => $this->party,
+            'invitation' => $this->invitation
+        ];
     }
 }

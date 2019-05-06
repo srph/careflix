@@ -46,7 +46,7 @@ class PartyInvitationsController extends Controller
 
         broadcast(new PartyInvitationSent($party, $invitation));
 
-        broadcast(new PartyInvitationReceived($request->user(), $party, $invitation));
+        broadcast(new PartyInvitationReceived($request->get('recipient_id'), $party, $invitation));
 
         return $invitation;
     }

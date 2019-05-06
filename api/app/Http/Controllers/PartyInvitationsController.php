@@ -5,8 +5,14 @@ namespace App\Http\Controllers;
 use App\Party;
 use App\PartyInvitation;
 use App\Support\Helper;
+
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+
+use App\Events\PartyInvitationSent;
+use App\Events\PartyInvitationReceived;
+use App\Events\PartyInvitationAccepted;
+use App\Events\PartyInvitationDeclined;
+use App\Events\PartyInvitationCancelled;
 
 class PartyInvitationsController extends Controller
 {
@@ -38,9 +44,9 @@ class PartyInvitationsController extends Controller
             'expires_at' => Carbon::now()->addSeconds($duration)
         ]);
 
-        // .......................
-        // ... Broadcast
-        // .......................
+        broadcast(new PartyInvitationSent($party, $invitation));
+
+        broadcast(new PartyInvitationReceived($request->user(), $party, $invitation));
 
         return $invitation;
     }
@@ -58,9 +64,7 @@ class PartyInvitationsController extends Controller
             'is_active' => false
         ]);
         
-        // .......................
-        // ... Broadcast
-        // .......................
+        broadcast(new PartyInvitationAccepted($invitation->party, $invitation));
 
         return $invitation->party;
     }
@@ -75,9 +79,7 @@ class PartyInvitationsController extends Controller
         $invitation->action = 'declined';
         $invitation->save();
         
-        // .......................
-        // ... Broadcast
-        // .......................
+        broadcast(new PartyInvitationDeclined($invitation->party, $invitation));
 
         return $invitation;
     }
@@ -92,9 +94,7 @@ class PartyInvitationsController extends Controller
         $invitation->action = 'cancelled';
         $invitation->save();
         
-        // .......................
-        // ... Broadcast
-        // .......................
+        broadcast(new PartyInvitationCancelled($invitation->party, $invitation));
 
         return $invitation;
     }

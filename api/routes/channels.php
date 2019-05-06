@@ -11,6 +11,10 @@
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('user.invitation.{user}', function ($user, User $receiver) {
+    return $user->id === $receiver->id;
+});
+
+Broadcast::channel('party.{party}', function ($user, Party $party) {
+    return $user->isMemberOfParty($party);
 });

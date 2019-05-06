@@ -5,7 +5,7 @@ Pulse is an annual bullet journal to help you track your progress. Inspired by [
 You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/).
 
 - Move to the `api` folder.
-```
+```bash
 cd api
 ```
 - Install the dependencies
@@ -42,12 +42,12 @@ php artisan serve
 You will need npm `>=5` and Node.js `>=10`.
 
 - Move to the `ui` folder
-```
+```bash
 cd ui
 ```
 
 - Install the dependencies
-```
+```bash
 npm i
 ```
 
@@ -75,7 +75,7 @@ php artisan passport:client --password
 
 ### Front-end
 The web interface is hosted on Netlify for free. Set the root folder to `ui`; the public folder to `dist`. For the build command:
-```
+```bash
 npm run build
 ```
 

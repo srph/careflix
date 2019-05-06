@@ -13,7 +13,7 @@ class SendPartyMessage extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->isMemberOfParty($this->route('party'));
+        return true;
     }
 
     /**

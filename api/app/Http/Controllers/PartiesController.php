@@ -47,11 +47,12 @@ class PartiesController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @todo Permission for non-party users
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function state(Party $party, )
     {
         //
     }

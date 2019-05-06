@@ -12,10 +12,11 @@ class Party extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'show_video_id',
         'is_playing',
-        'current_time',
         'is_expired',
+        'current_time',
         'last_activity_at'
     ];
 
@@ -43,5 +44,9 @@ class Party extends Model
 
     public function invitations() {
         return $this->hasMany(PartyInvitation::class)->where('expires_at', '>=', now());
+    }
+
+    public function activities() {
+        return $this->hasManyThrough(PartyActivity::class, PartyLog::class);
     }
 }

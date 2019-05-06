@@ -55,14 +55,14 @@ class PartyInvitationsController extends Controller
         $invitation->action = 'accepted';
         $invitation->save();
         $invitation->party->users()->attach($request->user()->id, [
-            'is_active' => true
+            'is_active' => false
         ]);
         
         // .......................
         // ... Broadcast
         // .......................
 
-        return $invitation;
+        return $invitation->party;
     }
 
     /**

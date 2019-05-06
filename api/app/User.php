@@ -56,4 +56,15 @@ class User extends Authenticatable
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }
+
+    public function parties() {
+        return $this->belongsToMany(Party::class);
+    }
+
+    /**
+     * $user->isMemberOfParty($party);
+     */
+    public function isMemberOfParty(Party $party) {
+        return $party->users()->where('user_id', $this->id)->exists();
+    }
 }

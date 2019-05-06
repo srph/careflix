@@ -15,8 +15,9 @@ class CreatePartyLogsTable extends Migration
     {
         Schema::create('party_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('party_id');
             $table->integer('loggable_id');
-            $table->integer('loggable_type');
+            $table->string('loggable_type');
             $table->timestamps();
         }); 
     }

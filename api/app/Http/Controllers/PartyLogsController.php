@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Party;
+use App\PartyMessage;
+use App\PartyActivity;
 use Illuminate\Http\Request;
 
 class PartyLogsController extends Controller
@@ -11,9 +14,9 @@ class PartyLogsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Party $party)
     {
-        //
+        return $party->logs;
     }
 
     /**
@@ -21,64 +24,44 @@ class PartyLogsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function activity(Request $request, Party $party)
     {
-        //
+        // @TODO Check if both syntax have the same effect.
+        $activity = PartyActivity::create([
+            'user_id' => $request->user()->id,
+            'party_id' => $party->id,
+            'text' => 'accepted the invitation'
+        ]);
+
+        $log = $party->logs()->create([
+            'loggable_type' => PartyActivity::class,
+            'loggable_id' => $activity->id
+        ]);
+
+        // This seems a safer bet than `$log->load('loggable')`.
+        return $log->fresh();
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new resource.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function message(\App\Http\Requests\SendPartyMessage $request, Party $party)
     {
-        //
-    }
+        // @TODO Check if both syntax have the same effect.
+        $activity = PartyMessage::create([
+            'user_id' => $request->user()->id,
+            'party_id' => $party->id,
+            'text' => $request->get('message')
+        ]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        $log = $party->logs()->create([
+            'loggable_type' => PartyMessage::class,
+            'loggable_id' => $activity->id
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        // This seems a safer bet than `$log->load('loggable')`.
+        return $log->fresh();
     }
 }

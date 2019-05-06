@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SendInvitation extends FormRequest
+class GetPartyLogs extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class SendInvitation extends FormRequest
     public function rules()
     {
         return [
-            'recipient_id' => 'required|exists:users,id'
+            'offset' => 'numeric'
         ];
     }
 }

@@ -14,9 +14,14 @@ class PartyLogsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Party $party)
+    public function index(\App\Http\Requests\GetPartyLogs $request, Party $party)
     {
-        return $party->logs;
+        return $party->logs()->orderBy('created_at', 'desc')
+            ->limit(30)
+            ->when($request->has('offset'), function($query) use ($request) {
+                $query->where('id', '<', $request->get('offset'));
+            })
+            ->get();
     }
 
     /**

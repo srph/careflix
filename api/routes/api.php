@@ -15,18 +15,21 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->group(function() {
     Route::get('shows', 'ShowsController@index');
-    Route::get('parties/{party}', 'PartiesController@show');
     Route::post('parties', 'PartiesController@store');
 
-    Route::get('parties/{party}/invitations', 'PartyInvitationsController@index');
-    Route::post('parties/{party}/invitations/send', 'PartyInvitationsController@send');
-    Route::post('invitations/{invitation}/accept', 'PartyInvitationsController@accept');
-    Route::post('invitations/{invitation}/decline', 'PartyInvitationsController@decline');
-    Route::post('invitations/{invitation}/cancel', 'PartyInvitationsController@cancel');
+    Route::group(['middleware' => 'party.member'], function() {
+        Route::get('parties/{party}', 'PartiesController@show');
+        Route::get('parties/{party}/invitations', 'PartyInvitationsController@index');
 
-    Route::get('parties/{party}/logs', 'PartyLogsController@index');
-    Route::post('parties/{party}/logs/activity', 'PartyLogsController@activity');
-    Route::post('parties/{party}/logs/message', 'PartyLogsController@message');
-    
+        Route::post('parties/{party}/invitations/send', 'PartyInvitationsController@send');
+        Route::post('invitations/{invitation}/accept', 'PartyInvitationsController@accept');
+        Route::post('invitations/{invitation}/decline', 'PartyInvitationsController@decline');
+        Route::post('invitations/{invitation}/cancel', 'PartyInvitationsController@cancel');
+
+        Route::get('parties/{party}/logs', 'PartyLogsController@index');
+        Route::post('parties/{party}/logs/activity', 'PartyLogsController@activity');
+        Route::post('parties/{party}/logs/message', 'PartyLogsController@message');
+    });
+        
     Route::get('me', 'MeController@data');
 });

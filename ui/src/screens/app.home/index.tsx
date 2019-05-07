@@ -3,11 +3,13 @@ import './style'
 import * as React from 'react'
 import GuestHome from './GuestHome'
 
-import { AuthStore } from '~/stores'
-import { observer } from 'mobx-react-lite'
+import { useUnstated } from '@gitbook/unstated'
+import { AuthContainer } from '~/containers'
 
 function AppHome() {
-  if (AuthStore.isGuest) {
+  const auth = useUnstated(AuthContainer)
+
+  if (auth.isGuest()) {
     return <GuestHome />
   }
   
@@ -56,4 +58,4 @@ function AppHome() {
   )
 }
 
-export default observer(AppHome)
+export default AppHome

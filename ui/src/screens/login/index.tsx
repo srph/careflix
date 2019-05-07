@@ -12,7 +12,8 @@ import Helmet from 'react-helmet'
 
 import axios from '~/lib/axios'
 import history from '~/lib/history'
-import { AuthStore } from '~/stores';
+import { useUnstated } from '@gitbook/unstated'
+import { AuthContainer } from '~/containers'
 import useFormState from '~/hooks/useFormState';
 
 const reducer = (state, action) => {
@@ -45,6 +46,8 @@ const reducer = (state, action) => {
 }
 
 function Login(props: ReactComponentWrapper) {
+  const auth = useUnstated(AuthContainer)
+
   const [state, dispatch] = React.useReducer(reducer, {
     isLoading: false,
     isError: false
@@ -64,7 +67,7 @@ function Login(props: ReactComponentWrapper) {
 
     dispatch({ type: 'request' })
 
-    const [err] = await AuthStore.login({
+    const [err] = await auth.login({
       username: form.username,
       password: form.password
     })

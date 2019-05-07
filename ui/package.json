@@ -2,7 +2,7 @@
   "name": "care.tv",
   "main": "src/index.ts",
   "scripts": {
-    "start": "parcel src/index.html",
+    "start": "parcel src/index.html --no-cache",
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && parcel build src/index.html && cp netlify/_redirects dist"
   },

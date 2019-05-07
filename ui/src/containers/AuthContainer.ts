@@ -34,11 +34,17 @@ class AuthContainer extends Container<State> {
       client_secret: config.api.clientSecret,
       grant_type: 'password'
     })
+    if (err) {
+      return [err]
+    }
     const token = tokenResponse.data.access_token
     cookie.set('app_token', token, {
       path: '/'
     })
     const [err2, dataResponse] = await axios.get('/api/me')
+    if (err2) {
+      return [err2]
+    }
     const data = dataResponse.data
     this.setState({ data, token })
     return []
@@ -62,10 +68,16 @@ class AuthContainer extends Container<State> {
 
     const [err, res] = await axios.get('/api/me')
 
+    if (err) {
+      return [err]
+    }
+
     this.setState({
       token,
       data: res.data
     })
+
+    return []
   }
 
   updateUserData = (payload: Partial<AppUser>) => {

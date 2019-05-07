@@ -22,7 +22,7 @@ import Register from '~/screens/register'
 import Helmet from 'react-helmet'
 
 import { useAsyncEffect } from 'use-async-effect'
-import { Provider as UnstatedProvider, useUnstated } from '@gitbook/unstated'
+import { Provider as UnstatedProvider, useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 
 function Root(props: { children: React.ReactNode }) {

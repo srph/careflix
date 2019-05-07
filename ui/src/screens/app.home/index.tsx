@@ -3,7 +3,7 @@ import './style'
 import * as React from 'react'
 import GuestHome from './GuestHome'
 
-import { useUnstated } from '@gitbook/unstated'
+import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 
 function AppHome() {

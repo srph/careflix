@@ -22,7 +22,6 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "sanitize.css": "^8.0.0",
-    "unstated": "git+https://github.com/vanthiyathevan/unstated.git",
     "use-async-effect": "^2.0.1"
   },
   "devDependencies": {

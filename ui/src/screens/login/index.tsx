@@ -10,7 +10,74 @@ import UiButton from '~/components/UiButton'
 import { Link } from 'react-router-dom'
 import Helmet from 'react-helmet'
 
+import axios from '~/lib/axios'
+import history from '~/lib/history'
+import { AuthStore } from '~/stores';
+import useFormState from '~/hooks/useFormState';
+
+const reducer = (state, action) => {
+  switch(action.type) {
+    case 'request': {
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      }
+    }
+
+    case 'success': {
+      return {
+        ...state,
+        isLoading: false
+      }
+    }
+
+    case 'error': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true
+      }
+    }
+  }
+
+  return state
+}
+
 function Login(props: ReactComponentWrapper) {
+  const [state, dispatch] = React.useReducer(reducer, {
+    isLoading: false,
+    isError: false
+  })
+
+  const form = useFormState({
+    username: '',
+    password: ''
+  })
+
+  async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault()
+
+    if (state.isLoading) {
+      return
+    }
+
+    dispatch({ type: 'request' })
+
+    const [err] = await AuthStore.login({
+      username: form.username,
+      password: form.password
+    })
+
+    if (err) {
+      return dispatch({ type: 'error' })
+    }
+    
+    dispatch({ type: 'success' })
+
+    history.push('/')
+  }
+
   return (
     <React.Fragment>
       <Helmet title="Welcome back" />
@@ -34,29 +101,31 @@ function Login(props: ReactComponentWrapper) {
 
         <h1 className="login-title">Watch. Together.</h1>
 
-        <UiFormGroup label="Email">
-          <UiInput type="email" placeholder="johndoe" name="email" />
-        </UiFormGroup>
+        <form onSubmit={handleSubmit}>
+          <UiFormGroup label="Email">
+            <UiInput value={form.username} onChange={form.setUsername} type="email" placeholder="johndoe" name="email" />
+          </UiFormGroup>
 
-        <UiFormSpacer />
+          <UiFormSpacer />
 
-        <UiFormGroup label="Password">
-          <UiInput type="password" placeholder="********" name="password" />
-        </UiFormGroup>
+          <UiFormGroup label="Password">
+            <UiInput value={form.password} onChange={form.setPassword} type="password" placeholder="********" name="password" />
+          </UiFormGroup>
 
-        <UiFormSpacer />
+          <UiFormSpacer />
 
-        <div className="login-action">
-          <UiButton variant="primary" block size="l">
-            Login
-          </UiButton>
-        </div>
+          <div className="login-action">
+            <UiButton variant="primary" block size="l">
+              Login
+            </UiButton>
+          </div>
 
-        <div className="login-byline">
-          <h5 className="ui-subheading">
-            New here? <Link to="/register">Sign up</Link>
-          </h5>
-        </div>
+          <div className="login-byline">
+            <h5 className="ui-subheading">
+              New here? <Link to="/register">Sign up</Link>
+            </h5>
+          </div>
+        </form>
       </UiContainer>
     </React.Fragment>
   )

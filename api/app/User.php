@@ -65,6 +65,6 @@ class User extends Authenticatable
      * $user->isMemberOfParty($party);
      */
     public function isMemberOfParty(Party $party) {
-        return $party->users()->where('user_id', $this->id)->exists();
+        return $party->members()->where('user_id', $this->id)->exists();
     }
 }

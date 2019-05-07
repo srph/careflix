@@ -25,7 +25,7 @@ class PartiesController extends Controller
             'last_activity_at' => now()
         ]);
 
-        $party->users()->attach($request->user()->id, [
+        $party->members()->attach($request->user()->id, [
             'is_active' => false
         ]);
 
@@ -40,7 +40,7 @@ class PartiesController extends Controller
      */
     public function show($id)
     {
-        $party = Party::with('video', 'video.show', 'users')->find($id);
+        $party = Party::with('video', 'video.show', 'members')->find($id);
 
         return $party;
     }

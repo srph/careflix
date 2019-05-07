@@ -60,7 +60,7 @@ class PartyInvitationsController extends Controller
     {
         $invitation->action = 'accepted';
         $invitation->save();
-        $invitation->party->users()->attach($request->user()->id, [
+        $invitation->party->members()->attach($request->user()->id, [
             'is_active' => false
         ]);
         

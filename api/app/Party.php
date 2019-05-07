@@ -38,8 +38,8 @@ class Party extends Model
         return $this->belongsTo(ShowVideo::class, 'show_video_id');
     }
 
-    public function users() {
-        return $this->belongsToMany(User::class);
+    public function members() {
+        return $this->belongsToMany(User::class)->withPivot('is_active');
     }
 
     public function invitations() {

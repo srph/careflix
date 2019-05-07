@@ -3,8 +3,13 @@ import './style'
 import * as React from 'react'
 import GuestHome from './GuestHome'
 
+import { AuthStore } from '~/stores'
+import { observer } from 'mobx-react-lite'
+
 function AppHome() {
-  return <GuestHome />
+  if (AuthStore.isGuest) {
+    return <GuestHome />
+  }
   
   return (
     <React.Fragment>
@@ -51,4 +56,4 @@ function AppHome() {
   )
 }
 
-export default AppHome
+export default observer(AppHome)

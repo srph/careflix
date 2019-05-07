@@ -5,6 +5,7 @@ import './global.css'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Router, Route, Switch } from 'react-router-dom'
+import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import history from '~/lib/history'
 import { GatewayProvider } from 'react-gateway'
 
@@ -20,35 +21,61 @@ import Login from '~/screens/login'
 import Register from '~/screens/register'
 import Helmet from 'react-helmet'
 
+import { useAsyncEffect } from 'use-async-effect'
+import { Provider as UnstatedProvider, useUnstated } from '@gitbook/unstated'
+import { AuthContainer } from '~/containers'
+
+function Root(props: { children: React.ReactNode }) {
+  const [isLoading, setIsLoading] = React.useState<boolean>(true)
+
+  const auth: typeof AuthContainer = useUnstated(AuthContainer)
+
+  useAsyncEffect(async () => {
+    const [err] = await auth.getUserData()
+    
+    if (err) {
+      throw err
+    }
+
+    setIsLoading(false)
+  }, null, [])
+
+  return isLoading ? <div /> : props.children
+}
+
 function Mount() {
   return (
     <React.Fragment>
       <Helmet titleTemplate="%s - Care.tv" />
 
       <GatewayProvider>
-        <Router history={history}>
-          <Switch>
-            <Route path="/login" exact component={Login} />
-            <Route path="/register" exact component={Register} />
-            
-            <Route path="/" render={() => (
-              <App>
-                <Switch>
-                  <Route path="/" exact component={AppHome} />
-                  <Route path="/settings" exact component={AppSettings} />
-                  <Route path="/settings/profile" exact component={AppSettingsProfile} />
-                  <Route path="/settings/password" exact component={AppSettingsPassword} />
-                  <Route path="/watch/:id" render={(matchProps) => (
-                    <AppWatch {...matchProps}>
-                      <Route path="/watch/:id" exact component={AppWatchHome} />
-                      <Route path="/watch/:id/invite" exact component={AppWatchInvite} />
-                    </AppWatch>
-                  )} />
-                </Switch>
-              </App>
-            )} />
-          </Switch>
-        </Router>
+        <UnstatedProvider>
+          <Root>
+            <Router history={history}>
+              <Switch>
+                <Route path="/login" exact component={Login} />
+                <Route path="/register" exact component={Register} />
+                
+                <Route path="/" render={() => (
+                  <App>
+                    <Switch>
+                      <Route path="/" exact component={AppHome} />
+                      <PrivateRoute path="/settings" exact component={AppSettings} />
+                      <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
+                      <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
+                      <PrivateRoute path="/watch/:id" render={(matchProps) => (
+                        <AppWatch {...matchProps}>
+                          <Route path="/watch/:id" exact component={AppWatchHome} />
+                          <Route path="/watch/:id/invite" exact component={AppWatchInvite} />
+                        </AppWatch>
+                      )} />
+                    </Switch>
+                  </App>
+                )} />
+              </Switch>
+            </Router>
+          </Root>
+        </UnstatedProvider>
       </GatewayProvider>
     </React.Fragment>
   )

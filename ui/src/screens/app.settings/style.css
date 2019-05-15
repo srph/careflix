@@ -12,14 +12,29 @@
 
 .settings-user-info > .avatar {
   margin-right: 16px;
+  flex-shrink: 0;
+}
+
+.settings-user-info > .info {
+  /* This allows us to set dynamic width for a text ellipsis feature */
+  min-width: 0;
+  width: 100%;
+}
+
+.settings-user-info > .info > .name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .settings-user-info > .info > .description {
   color: var(--color-black-5);
+  flex-shrink: 0;
 }
 
 .settings-user-info > .caret {
   margin-left: auto;
+  padding-left: 16px;
 }
 
 .settings-menu-list > .item {

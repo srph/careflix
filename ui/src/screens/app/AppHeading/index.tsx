@@ -20,7 +20,7 @@ function AppHeading() {
       <GatewayDestWithFallback name={constants.gateway.title} fallback={<UiNavigation.Logo />} />
 
       <UiNavigation.Action to="settings">
-        <UiAvatar img="https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/qHp1NtCQ2YbbD1tL.jpg" />
+        <UiAvatar img={auth.state.data.avatar} />
       </UiNavigation.Action>
     </UiNavigation>
   )} />

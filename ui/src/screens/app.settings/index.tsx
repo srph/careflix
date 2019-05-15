@@ -6,10 +6,15 @@ import { Link } from 'react-router-dom'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
+import { useUnstated } from '~/lib/unstated'
+import { AuthContainer } from '~/containers'
+
 /**
  * Use this to create a route instead of typing everything down
  */
 function AppSettings(props: ReactComponentWrapper) {
+  const auth = useUnstated(AuthContainer)
+
   return (
     <React.Fragment>
       <AppHeadingSettings title="Settings" backUrl="/" />
@@ -17,11 +22,11 @@ function AppSettings(props: ReactComponentWrapper) {
       <div className="settings-page">
         <div className="settings-user-info">
           <div className="avatar">
-            <UiAvatar img={require('~/assets/dummy-avatar.png')} size="l" />
+            <UiAvatar img={auth.state.data.avatar} size="l" />
           </div>
 
           <div className="info">
-            <h2>Kier Borromeo</h2>
+            <h2 className="name">{auth.state.data.name}</h2>
             <div className="description">
               <h6 className="ui-subheading">
                 View Your Profile

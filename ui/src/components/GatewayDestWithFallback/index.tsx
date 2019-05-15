@@ -24,12 +24,14 @@ function GatewayDestWithFallback(props: Props) {
 }
 
 interface InnerProps {
-  children?: React.ReactNode
+  // It appears that children coming from GatewayDest
+  // are transformed into normal JS arrays.
+  children?: React.ReactElement[]
   fallback?: React.ReactNode
 }
 
 function Inner(props: InnerProps) {
-  return props.children || props.fallback || <div />
+  return (props.children && props.children.length ? props.children : props.fallback || <div />)
 }
 
 export default GatewayDestWithFallback

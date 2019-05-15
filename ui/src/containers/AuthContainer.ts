@@ -63,7 +63,7 @@ class AuthContainer extends Container<State> {
     const token: string = cookie.get('app_token') || ''
 
     if (!token.length) {
-      return
+      return []
     }
 
     const [err, res] = await axios.get('/api/me')

@@ -53,8 +53,8 @@ function Mount() {
           <Root>
             <Router history={history}>
               <Switch>
-                <Route path="/login" exact component={Login} />
-                <Route path="/register" exact component={Register} />
+                <GuestRoute path="/login" exact component={Login} />
+                <GuestRoute path="/register" exact component={Register} />
                 
                 <Route path="/" render={() => (
                   <App>

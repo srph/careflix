@@ -5,7 +5,7 @@ import { Route, Redirect } from 'react-router-dom'
 import { RouteProps } from 'react-router'
 
 function GuestRoute({ component, render, ...rest }: RouteProps) {
-  const Component = this.props.component
+  const Component = component
   const auth = useUnstated(AuthContainer)
 
   return (

@@ -31,11 +31,17 @@
 
 .show-carousel-card {
   position: relative;
+  display: block;
   width: 218px;
   height: 146px;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  color: var(--color-white);
   border-radius: var(--border-radius);
   background-color: #ddd;
   background-size: cover;
+  outline: 0;
 }
 
 .show-carousel-card > .overlay {

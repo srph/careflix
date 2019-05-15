@@ -49,6 +49,18 @@ interface AppPartyLog {
   updated_at: string
 }
 
+interface AppShowVideo {
+  id: number
+  show_id: number
+  show_group_id: number
+  synopsis: string
+  title: string
+  preview_image: string
+  video_url: string
+  created_at: string
+  updated_at: string
+}
+
 interface AppShow {
   id: number
   title: string
@@ -60,7 +72,8 @@ interface AppShow {
   air_end: string
   age_rating: string
   created_at: string
-  updateD_at: string
+  updated_at: string
+  movie: AppShowVideo | null
 }
 
 type AppPartyMember = AppUser & {

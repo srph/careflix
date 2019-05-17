@@ -78,11 +78,11 @@ function AppWatch(props: ReactComponentWrapper) {
       <AppHeadingSettings title="Watch" backUrl="/" />
 
       <div className="nav-tabs">
-        <NavLink to="/watch/1" className="link" exact activeClassName="is-active">
+        <NavLink to={`/watch/${state.party.id}`} className="link" exact activeClassName="is-active">
           Watch
         </NavLink>
 
-        <NavLink to="/watch/1/invite" className="link" activeClassName="is-active">
+        <NavLink to={`/watch/${state.party.id}/invite`} className="link" activeClassName="is-active">
           Invite Friends
         </NavLink>
       </div>

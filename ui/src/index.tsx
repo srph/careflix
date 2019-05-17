@@ -63,10 +63,10 @@ function Mount() {
                       <PrivateRoute path="/settings" exact component={AppSettings} />
                       <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
                       <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
-                      <PrivateRoute path="/watch/:id" render={(matchProps) => (
+                      <PrivateRoute path="/watch/:partyId" render={(matchProps) => (
                         <AppWatch {...matchProps}>
-                          <Route path="/watch/:id" exact component={AppWatchHome} />
-                          <Route path="/watch/:id/invite" exact component={AppWatchInvite} />
+                          <Route path="/watch/:partyId" exact component={AppWatchHome} />
+                          <Route path="/watch/:partyId/invite" exact component={AppWatchInvite} />
                         </AppWatch>
                       )} />
                     </Switch>

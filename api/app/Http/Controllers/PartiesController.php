@@ -38,10 +38,8 @@ class PartiesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Party $party)
     {
-        $party = Party::with('video', 'video.show', 'members')->find($id);
-
         return $party;
     }
 

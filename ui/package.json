@@ -23,7 +23,8 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "sanitize.css": "^8.0.0",
-    "use-async-effect": "^2.0.1"
+    "use-async-effect": "^2.0.1",
+    "use-react-router": "^1.0.6"
   },
   "devDependencies": {
     "@types/node": "^11.13.7",

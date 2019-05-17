@@ -20,6 +20,17 @@ class Party extends Model
         'last_activity_at'
     ];
 
+    /**
+     * The relationships that will always be eager-loaded
+     *
+     * @var array
+     */
+    protected $with = [
+        'video',
+        'video.show',
+        'members'
+    ];
+
     public $table = 'parties';
 
     public function genre() {

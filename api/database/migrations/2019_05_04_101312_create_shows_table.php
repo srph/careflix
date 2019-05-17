@@ -18,7 +18,7 @@ class CreateShowsTable extends Migration
             $table->string('title');
             $table->string('title_type');
             $table->string('preview_image')->nullable();
-            $table->string('synposis')->nullable();
+            $table->string('synopsis')->nullable();
             $table->string('language')->nullable();
             $table->datetime('air_start')->nullable();
             $table->datetime('air_end')->nullable();

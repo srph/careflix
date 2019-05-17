@@ -1,11 +1,13 @@
 import './style.css'
 import * as React from 'react'
 import UiModal from '~/components/UiModal'
-import UiButton from '~/components/UiButton'
 import UiPlainButton from '~/components/UiPlainButton'
-import useCountdownTimer from '~/components/CountdownTimer'
 
-function PlayerModal() {
+interface Props {
+  party: AppParty
+}
+
+function PlayerModal({ party, ...props }: Props) {
   const [isOpen, setIsOpen] = React.useState<boolean>(true)
   
   return (
@@ -68,8 +70,8 @@ function PlayerModal() {
               </h6>
             </div>
 
-            <h2 className="title">Boku no Hero Academia</h2>
-            <p className="summary">Detective Jake Peralta, a talented and carefree cop with the best arrest record, has never had to follow the rules too closely or work very hard.</p>
+            <h2 className="title">{party.video.show.title}</h2>
+            <p className="summary">{party.video.show.synopsis}</p>
           </div>
         </div>
       </div>

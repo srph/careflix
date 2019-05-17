@@ -13,9 +13,9 @@ type AppValidationBag = {
   [key: string]: string[]
 }
 
-interface ReducerAction<T> {
-  type: string
-  payload: T
+interface ReducerAction<T, P = {}> {
+  type: T
+  payload?: P
 }
 
 interface AppUser {
@@ -57,6 +57,7 @@ interface AppShowVideo {
   title: string
   preview_image: string
   video_url: string
+  show?: AppShow
   created_at: string
   updated_at: string
 }
@@ -87,7 +88,7 @@ interface AppParty {
   show_video_id: number
   is_playing: boolean
   current_time: number
-  show: AppShow
+  video?: AppShowVideo
   members: AppPartyMember[]
   last_activity_at: string
   created_at: string

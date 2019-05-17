@@ -4,13 +4,17 @@ import * as React from "react";
 import UiAvatar from '~/components/UiAvatar'
 import PlayerModal from './PlayerModal'
 
+import { usePartyContext } from '~/screens/app.watch/Context'
+
 /**
  * Use this to create a route instead of typing everything down
  */
 function AppWatchHome(props: ReactComponentWrapper) {
+  const state = usePartyContext()
+
   return (
     <React.Fragment>
-      <PlayerModal />
+      <PlayerModal party={state.party} />
       
       <div className="watch-screen">
         <div

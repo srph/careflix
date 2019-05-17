@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
             $show = App\Show::create([
                 'title' => $is_movie ? 'Avengers: Endgame' : 'Brooklyn Nine-Nine',
                 'title_type' => $title_type,
-                'synposis' => $faker->text,
+                'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2000 + $i, 0, 0),
                 'air_end' => $is_movie ? null : Carbon::create(2000 + $i + 1, 0, 0),

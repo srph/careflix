@@ -1,6 +1,6 @@
-import "./style";
+import './style'
 
-import * as React from "react";
+import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import PlayerModal from './PlayerModal'
 
@@ -9,19 +9,22 @@ import { usePartyContext } from '~/screens/app.watch/Context'
 
 interface State {
   time: number
+  isComplete: boolean
   isPlaying: boolean
   isOpen: boolean
 }
 
-type Action = ReducerAction<'controls:open'>
+type Action =
+  | ReducerAction<'controls:open'>
   | ReducerAction<'controls:close'>
   | ReducerAction<'controls:seek', { time: number }>
   | ReducerAction<'time-update', { time: number }>
   | ReducerAction<'controls:play'>
   | ReducerAction<'controls:pause'>
+  | ReducerAction<'video-complete'>
 
-const reducer = (state: State, action: Action) => {
-  switch(action.type) {
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
     case 'controls:open': {
       return {
         ...state,
@@ -35,7 +38,7 @@ const reducer = (state: State, action: Action) => {
         isOpen: false
       }
     }
-    
+
     case 'controls:seek': {
       return {
         ...state,
@@ -56,6 +59,14 @@ const reducer = (state: State, action: Action) => {
         time: action.payload.time
       }
     }
+
+    case 'video-complete': {
+      return {
+        ...state,
+        isPlaying: false,
+        isComplete: false
+      }
+    }
   }
 
   return state
@@ -69,6 +80,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
   const [state, dispatch] = useReducer(reducer, {
     time: context.party.current_time,
+    isComplete: false,
     isPlaying: false,
     isOpen: false
   })
@@ -78,6 +90,15 @@ function AppWatchHome(props: ReactComponentWrapper) {
   useEffect(() => {
     if (state.isPlaying) {
       $video.current.play()
+
+      if (state.isComplete) {
+        dispatch({
+          type: 'time-update',
+          payload: { time: 0 }
+        })
+
+        $video.current.currentTime = 0
+      }
     } else {
       $video.current.pause()
     }
@@ -113,36 +134,42 @@ function AppWatchHome(props: ReactComponentWrapper) {
   function handleTimeUpdate() {
     dispatch({
       type: 'time-update',
-      payload : { time: $video.current.currentTime }
+      payload: { time: $video.current.currentTime }
+    })
+  }
+
+  function handleVideoEnded() {
+    dispatch({
+      type: 'video-complete'
     })
   }
 
   return (
     <React.Fragment>
-      <PlayerModal party={context.party}
+      <PlayerModal
+        party={context.party}
         time={state.time}
         isOpen={state.isOpen}
         isPlaying={state.isPlaying}
         onClose={handleClose}
         onPlay={handlePlay}
-        onSeek={handleSeek} />
-      
+        onSeek={handleSeek}
+      />
+
       <div className="watch-screen">
         <div
           className="watch-screen-video"
           style={{
-            backgroundImage: `url(${require("~/assets/show-thumbnail-218x146.jpg")})`
+            backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})`
           }}
-          onClick={handleOpen}
-        >
-          <video src={context.party.video.video_url} ref={$video}
-          onTimeUpdate={handleTimeUpdate}></video>
+          onClick={handleOpen}>
+          <video src={context.party.video.video_url} ref={$video} onTimeUpdate={handleTimeUpdate} onEnded={handleVideoEnded} />
         </div>
 
         <div className="watch-screen-chat">
           <div className="watch-screen-chat-group is-self">
             <div className="avatar">
-              <UiAvatar img={require("~/assets/dummy-avatar.png")} />
+              <UiAvatar img={require('~/assets/dummy-avatar.png')} />
             </div>
 
             <div className="messages">
@@ -151,16 +178,14 @@ function AppWatchHome(props: ReactComponentWrapper) {
               </div>
 
               <div className="message">
-                <div className="inner">
-                  it wasn't that bad if you ask me. it was just weird.
-                </div>
+                <div className="inner">it wasn't that bad if you ask me. it was just weird.</div>
               </div>
             </div>
           </div>
 
           <div className="watch-screen-chat-group">
             <div className="avatar">
-              <UiAvatar img={require("~/assets/dummy-avatar.png")} />
+              <UiAvatar img={require('~/assets/dummy-avatar.png')} />
             </div>
 
             <div className="messages">
@@ -180,7 +205,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
           <div className="watch-screen-chat-group is-self">
             <div className="avatar">
-              <UiAvatar img={require("~/assets/dummy-avatar.png")} />
+              <UiAvatar img={require('~/assets/dummy-avatar.png')} />
             </div>
 
             <div className="messages">
@@ -189,9 +214,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
               </div>
 
               <div className="message">
-                <div className="inner">
-                  it wasn't that bad if you ask me. it was just weird.
-                </div>
+                <div className="inner">it wasn't that bad if you ask me. it was just weird.</div>
               </div>
             </div>
           </div>
@@ -199,7 +222,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           <div className="watch-screen-activity-group">
             <div className="activity">
               <div className="avatar">
-                <UiAvatar img={require("~/assets/dummy-avatar.png")} size="sm" />
+                <UiAvatar img={require('~/assets/dummy-avatar.png')} size="sm" />
               </div>
 
               <h6 className="ui-subheading">Kier left the room.</h6>
@@ -207,7 +230,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
             <div className="activity">
               <div className="avatar">
-                <UiAvatar img={require("~/assets/dummy-avatar.png")} size="sm" />
+                <UiAvatar img={require('~/assets/dummy-avatar.png')} size="sm" />
               </div>
 
               <h6 className="ui-subheading">Kier joined the room.</h6>
@@ -216,16 +239,12 @@ function AppWatchHome(props: ReactComponentWrapper) {
         </div>
 
         <div className="watch-screen-chatbar">
-          <input
-            type="text"
-            className="ui-input"
-            placeholder="Write something..."
-          />
+          <input type="text" className="ui-input" placeholder="Write something..." />
         </div>
       </div>
       {props.children}
     </React.Fragment>
-  );
+  )
 }
 
-export default AppWatchHome;
+export default AppWatchHome

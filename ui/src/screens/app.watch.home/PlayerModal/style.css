@@ -41,6 +41,21 @@
 }
 
 .watch-player-controls > .control {
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.watch-player-controls > .slider {
+  margin-right: 16px;
+  width: 100%;
+}
+
+.watch-player-controls > .time {
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.watch-player-controls > .time:not(:last-child) {
   margin-right: 16px;
 }
 

@@ -4,6 +4,9 @@ import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import Slider, { SliderValue } from 'react-input-slider'
 
+import toReadableTime from '~/utils/toReadableTime'
+import getAirDetails from '~/utils/shows/getAirDetails';
+
 interface Props {
   party: AppParty
   time: number
@@ -20,17 +23,12 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   function handleForward() {
-    props.onSeek(
-      Math.min(props.time + 10, party.video.duration)
-    )
+    props.onSeek(Math.min(props.time + 10, party.video.duration))
   }
 
   function handleBackward() {
-    props.onSeek(
-      Math.max(props.time - 10, 0)
-    )
+    props.onSeek(Math.max(props.time - 10, 0))
   }
-
 
   return (
     <UiModal isOpen={props.isOpen} shouldCloseOnOverlayClick={false}>
@@ -84,15 +82,23 @@ function PlayerModal({ party, ...props }: Props) {
               </UiPlainButton>
             </div>
 
+            <div className="time">
+              {toReadableTime(props.time, {
+                max: party.video.duration > 3600 ? 'hh' : 'mm'
+              })}
+            </div>
+
             <div className="slider">
               <Slider axis="x" x={props.time} xmin={0} xmax={party.video.duration} onChange={handleSeek} />
             </div>
+
+            <div className="time">{toReadableTime(party.video.duration)}</div>
           </div>
 
           <div className="watch-player-modal-card">
             <div className="meta">
               <h6 className="ui-subheading">
-                Season 6: Episode 9
+                {getAirDetails(party.video)}
               </h6>
             </div>
 

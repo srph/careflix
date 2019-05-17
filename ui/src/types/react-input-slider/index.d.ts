@@ -14,7 +14,7 @@ declare module 'react-input-slider' {
     ymax?: number
     xstep?: number
     ystep?: number
-    onChang?: (SliderValue) => void
+    onChange?: (SliderValue) => void
     onDragEnd?: () => void
   }
 

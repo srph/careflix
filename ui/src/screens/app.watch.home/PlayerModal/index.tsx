@@ -2,21 +2,43 @@ import './style.css'
 import * as React from 'react'
 import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
+import Slider, { SliderValue } from 'react-input-slider'
 
 interface Props {
   party: AppParty
+  time: number
+  isOpen: boolean
+  isPlaying: boolean
+  onClose: () => void
+  onPlay: () => void
+  onSeek: (time: number) => void
 }
 
 function PlayerModal({ party, ...props }: Props) {
-  const [isOpen, setIsOpen] = React.useState<boolean>(true)
-  
+  function handleSeek({ x }: SliderValue) {
+    props.onSeek(x)
+  }
+
+  function handleForward() {
+    props.onSeek(
+      Math.min(props.time + 10, party.video.duration)
+    )
+  }
+
+  function handleBackward() {
+    props.onSeek(
+      Math.max(props.time - 10, 0)
+    )
+  }
+
+
   return (
-    <UiModal isOpen={isOpen} shouldCloseOnOverlayClick={false}>
+    <UiModal isOpen={props.isOpen} shouldCloseOnOverlayClick={false}>
       <div className="watch-player-modal">
         <div className="watch-player-actions">
           <div className="section">
             <div className="action">
-              <UiPlainButton onClick={() => setIsOpen(false)}>
+              <UiPlainButton onClick={props.onClose}>
                 <i className="fa fa-close" />
               </UiPlainButton>
             </div>
@@ -45,21 +67,25 @@ function PlayerModal({ party, ...props }: Props) {
         <div className="watch-player-contents">
           <div className="watch-player-controls">
             <div className="control">
-              <UiPlainButton>
-                <i className="fa fa-play" />
+              <UiPlainButton onClick={props.onPlay}>
+                {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
               </UiPlainButton>
             </div>
 
             <div className="control">
-              <UiPlainButton>
+              <UiPlainButton onClick={handleBackward}>
                 <i className="fa fa-fast-backward" />
               </UiPlainButton>
             </div>
 
             <div className="control">
-              <UiPlainButton>
+              <UiPlainButton onClick={handleForward}>
                 <i className="fa fa-fast-forward" />
               </UiPlainButton>
+            </div>
+
+            <div className="slider">
+              <Slider axis="x" x={props.time} xmin={0} xmax={party.video.duration} onChange={handleSeek} />
             </div>
           </div>
 

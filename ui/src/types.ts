@@ -58,6 +58,7 @@ interface AppShowVideo {
   preview_image: string
   video_url: string
   show?: AppShow
+  duration: number
   created_at: string
   updated_at: string
 }

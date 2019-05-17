@@ -6,8 +6,19 @@
 
 .watch-screen-video {
   flex-shrink: 0;
+  position: relative;
   padding-bottom: 56.25%;
   background-size: cover;
+}
+
+.watch-screen-video > video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
 }
 
 .watch-screen-chat {

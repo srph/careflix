@@ -19,6 +19,7 @@
     "react-dom": "^16.8.6",
     "react-gateway": "^3.0.0",
     "react-helmet": "^5.2.1",
+    "react-input-slider": "^5.0.14",
     "react-modal": "^3.8.1",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",

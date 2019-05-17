@@ -4,17 +4,128 @@ import * as React from "react";
 import UiAvatar from '~/components/UiAvatar'
 import PlayerModal from './PlayerModal'
 
+import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
+
+interface State {
+  time: number
+  isPlaying: boolean
+  isOpen: boolean
+}
+
+type Action = ReducerAction<'controls:open'>
+  | ReducerAction<'controls:close'>
+  | ReducerAction<'controls:seek', { time: number }>
+  | ReducerAction<'time-update', { time: number }>
+  | ReducerAction<'controls:play'>
+  | ReducerAction<'controls:pause'>
+
+const reducer = (state: State, action: Action) => {
+  switch(action.type) {
+    case 'controls:open': {
+      return {
+        ...state,
+        isOpen: true
+      }
+    }
+
+    case 'controls:close': {
+      return {
+        ...state,
+        isOpen: false
+      }
+    }
+    
+    case 'controls:seek': {
+      return {
+        ...state,
+        time: action.payload.time
+      }
+    }
+
+    case 'controls:play': {
+      return {
+        ...state,
+        isPlaying: !state.isPlaying
+      }
+    }
+
+    case 'time-update': {
+      return {
+        ...state,
+        time: action.payload.time
+      }
+    }
+  }
+
+  return state
+}
 
 /**
  * Use this to create a route instead of typing everything down
  */
 function AppWatchHome(props: ReactComponentWrapper) {
-  const state = usePartyContext()
+  const context = usePartyContext()
+
+  const [state, dispatch] = useReducer(reducer, {
+    time: context.party.current_time,
+    isPlaying: false,
+    isOpen: false
+  })
+
+  const $video = useRef<HTMLVideoElement>()
+
+  useEffect(() => {
+    if (state.isPlaying) {
+      $video.current.play()
+    } else {
+      $video.current.pause()
+    }
+  }, [state.isPlaying])
+
+  function handleOpen() {
+    dispatch({
+      type: 'controls:open'
+    })
+  }
+
+  function handleClose() {
+    dispatch({
+      type: 'controls:close'
+    })
+  }
+
+  function handleSeek(time: number) {
+    dispatch({
+      type: 'controls:seek',
+      payload: { time }
+    })
+
+    $video.current.currentTime = time
+  }
+
+  function handlePlay() {
+    dispatch({
+      type: 'controls:play'
+    })
+  }
+
+  function handleTimeUpdate() {
+    dispatch({
+      type: 'time-update',
+      payload : { time: $video.current.currentTime }
+    })
+  }
 
   return (
     <React.Fragment>
-      <PlayerModal party={state.party} />
+      <PlayerModal party={context.party}
+        time={state.time}
+        isOpen={state.isOpen}
+        isPlaying={state.isPlaying}
+        onClose={handleClose}
+        onPlay={handlePlay}
+        onSeek={handleSeek} />
       
       <div className="watch-screen">
         <div
@@ -22,7 +133,11 @@ function AppWatchHome(props: ReactComponentWrapper) {
           style={{
             backgroundImage: `url(${require("~/assets/show-thumbnail-218x146.jpg")})`
           }}
-        />
+          onClick={handleOpen}
+        >
+          <video src={context.party.video.video_url} ref={$video}
+          onTimeUpdate={handleTimeUpdate}></video>
+        </div>
 
         <div className="watch-screen-chat">
           <div className="watch-screen-chat-group is-self">

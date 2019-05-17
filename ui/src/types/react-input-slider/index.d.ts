@@ -1,0 +1,24 @@
+declare module 'react-input-slider' {
+  export interface SliderValue {
+    x: number
+    y: number
+  }
+
+  export interface SliderProps {
+    axis?: 'x' | 'y' | 'xy'
+    x?: number
+    y?: number
+    xmin?: number
+    xmax?: number
+    ymin?: number
+    ymax?: number
+    xstep?: number
+    ystep?: number
+    onChang?: (SliderValue) => void
+    onDragEnd?: () => void
+  }
+
+  declare class Slider extends React.Component<SliderProps, any> {}
+
+  export default Slider
+}

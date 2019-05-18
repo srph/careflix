@@ -82,12 +82,17 @@ function AppWatch(props: ReactComponentWrapper) {
     []
   )
 
-  usePusher(state.party ? `private-party.${state.party.id}` : '', 'state', function(event: { party: AppParty }) {
-    dispatch({
-      type: 'data:update',
-      payload: { party: event.party }
-    })
-  }, state.party == null)
+  usePusher(
+    state.party ? `private-party.${state.party.id}` : '',
+    'state',
+    function(event: { party: AppParty }) {
+      dispatch({
+        type: 'data:update',
+        payload: { party: event.party }
+      })
+    },
+    state.party == null
+  )
 
   if (state.isLoading) {
     return null

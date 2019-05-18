@@ -8,7 +8,7 @@ import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import useMount from 'react-use/lib/useMount'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
-import axios from '~lib/axios';
+import axios from '~lib/axios'
 
 interface State {
   time: number
@@ -25,7 +25,7 @@ type Action =
   | ReducerAction<'controls:play'>
   | ReducerAction<'controls:pause'>
   | ReducerAction<'video-complete'>
-  | ReducerAction<'sync', { time: number, isPlaying: boolean }>
+  | ReducerAction<'sync', { time: number; isPlaying: boolean }>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -194,7 +194,12 @@ function AppWatchHome(props: ReactComponentWrapper) {
             backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})`
           }}
           onClick={handleOpen}>
-          <video src={context.party.video.video_url} ref={$video} onTimeUpdate={handleTimeUpdate} onEnded={handleVideoEnded} />
+          <video
+            src={context.party.video.video_url}
+            ref={$video}
+            onTimeUpdate={handleTimeUpdate}
+            onEnded={handleVideoEnded}
+          />
         </div>
 
         <div className="watch-screen-chat">

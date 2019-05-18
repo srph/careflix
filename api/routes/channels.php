@@ -1,5 +1,8 @@
 <?php
 
+use App\User;
+use App\Party;
+
 /*
 |--------------------------------------------------------------------------
 | Broadcast Channels
@@ -11,10 +14,10 @@
 |
 */
 
-Broadcast::channel('user.invitation.{user}', function ($user, User $receiver) {
+Broadcast::channel('user.invitation.{user}', function (User $user, User $receiver) {
     return $user->id === $receiver->id;
 });
 
-Broadcast::channel('party.{party}', function ($user, Party $party) {
+Broadcast::channel('party.{party}', function (User $user, Party $party) {
     return $user->isMemberOfParty($party);
 });

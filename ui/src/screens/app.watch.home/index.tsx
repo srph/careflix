@@ -4,8 +4,11 @@ import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import PlayerModal from './PlayerModal'
 
+import useUpdateEffect from 'react-use/lib/useUpdateEffect'
+import useMount from 'react-use/lib/useMount'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
+import axios from '~lib/axios';
 
 interface State {
   time: number
@@ -22,6 +25,7 @@ type Action =
   | ReducerAction<'controls:play'>
   | ReducerAction<'controls:pause'>
   | ReducerAction<'video-complete'>
+  | ReducerAction<'sync', { time: number, isPlaying: boolean }>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -53,9 +57,10 @@ const reducer = (state: State, action: Action): State => {
       }
     }
 
-    case 'time-update': {
+    case 'sync': {
       return {
         ...state,
+        isPlaying: action.payload.isPlaying,
         time: action.payload.time
       }
     }
@@ -88,9 +93,23 @@ function AppWatchHome(props: ReactComponentWrapper) {
   const $video = useRef<HTMLVideoElement>()
 
   useEffect(() => {
-    if (state.isPlaying) {
-      $video.current.play()
+    $video.current.currentTime = state.time
+  }, [])
 
+  useUpdateEffect(() => {
+    dispatch({
+      type: 'sync',
+      payload: {
+        time: context.party.current_time,
+        isPlaying: context.party.is_playing
+      }
+    })
+
+    $video.current.currentTime = context.party.current_time
+  }, [context.party])
+
+  useUpdateEffect(() => {
+    if (state.isPlaying) {
       if (state.isComplete) {
         dispatch({
           type: 'time-update',
@@ -99,6 +118,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
         $video.current.currentTime = 0
       }
+
+      $video.current.play()
     } else {
       $video.current.pause()
     }
@@ -123,11 +144,21 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
 
     $video.current.currentTime = time
+
+    axios.put(`/api/parties/${context.party.id}/state`, {
+      is_playing: state.isPlaying,
+      current_time: time
+    })
   }
 
   function handlePlay() {
     dispatch({
       type: 'controls:play'
+    })
+
+    axios.put(`/api/parties/${context.party.id}/state`, {
+      is_playing: !state.isPlaying,
+      current_time: state.time
     })
   }
 

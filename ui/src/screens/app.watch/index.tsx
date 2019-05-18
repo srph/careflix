@@ -1,9 +1,11 @@
-import "./style";
-import * as React from "react";
-import { NavLink } from "react-router-dom";
+import './style'
+import * as React from 'react'
+import { NavLink } from 'react-router-dom'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
+import { useInterval } from '@use-it/interval'
 import { useReducer } from 'react'
+import { usePusher } from '~/hooks/usePusher'
 import { useAsyncEffect } from 'use-async-effect'
 import useReactRouter from 'use-react-router'
 import axios from '~/lib/axios'
@@ -34,6 +36,13 @@ const reducer = (state: State, action: Action): State => {
         isLoading: false
       }
     }
+
+    case 'data:update': {
+      return {
+        ...state,
+        party: action.payload.party
+      }
+    }
   }
 
   return state
@@ -50,24 +59,35 @@ function AppWatch(props: ReactComponentWrapper) {
     isLoading: true
   })
 
-  useAsyncEffect(async () => {
-    dispatch({
-      type: 'data:init'
-    })
-
-    const [err, res] = await axios.get(`/api/parties/${match.params.partyId}`)
-
-    if (err) {
-      return dispatch({
-        type: 'data:error'
+  useAsyncEffect(
+    async () => {
+      dispatch({
+        type: 'data:init'
       })
-    }
 
+      const [err, res] = await axios.get(`/api/parties/${match.params.partyId}`)
+
+      if (err) {
+        return dispatch({
+          type: 'data:error'
+        })
+      }
+
+      dispatch({
+        type: 'data:success',
+        payload: { party: res.data }
+      })
+    },
+    null,
+    []
+  )
+
+  usePusher(state.party ? `private-party.${state.party.id}` : '', 'state', function(event: { party: AppParty }) {
     dispatch({
-      type: 'data:success',
-      payload: { party: res.data }
+      type: 'data:update',
+      payload: { party: event.party }
     })
-  }, null, [])
+  }, state.party == null)
 
   if (state.isLoading) {
     return null
@@ -87,11 +107,9 @@ function AppWatch(props: ReactComponentWrapper) {
         </NavLink>
       </div>
 
-      <Context.Provider value={state}>
-        {props.children}
-      </Context.Provider>
+      <Context.Provider value={state}>{props.children}</Context.Provider>
     </React.Fragment>
-  );
+  )
 }
 
-export default AppWatch;
+export default AppWatch

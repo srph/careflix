@@ -4,6 +4,7 @@ import './interceptor-oauth'
 import './interceptor-expired-tokens'
 // import './interceptor-toast-errors'
 // import './interceptor-error-handler'
+import './interceptor-pusher'
 
 export default {
   get(url, query?) {

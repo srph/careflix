@@ -66,16 +66,15 @@ class AuthContainer extends Container<State> {
       return []
     }
 
+    await this.setState({ token })
+
     const [err, res] = await axios.get('/api/me')
 
     if (err) {
       return [err]
     }
 
-    this.setState({
-      token,
-      data: res.data
-    })
+    await this.setState({ data: res.data })
 
     return []
   }

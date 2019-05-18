@@ -6,3 +6,4 @@ export interface State {
 export type Action = ReducerAction<'data:init'>
  | ReducerAction<'data:success', { party: AppParty }>
  | ReducerAction<'data:error'>
+ | ReducerAction<'data:update', { party: AppParty }>

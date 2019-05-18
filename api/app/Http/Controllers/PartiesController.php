@@ -58,7 +58,7 @@ class PartiesController extends Controller
             'is_playing' => (boolean) $request->get('is_playing')
         ])->save();
 
-        broadcast(new PartyState($party));
+        broadcast(new PartyState($party))->toOthers();
 
         return $party;
     }

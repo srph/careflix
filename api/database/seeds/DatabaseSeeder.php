@@ -54,7 +54,8 @@ class DatabaseSeeder extends Seeder
                 'language' => 'English',
                 'air_start' => Carbon::create(2000 + $i, 0, 0),
                 'air_end' => $is_movie ? null : Carbon::create(2000 + $i + 1, 0, 0),
-                'age_rating' => '13+'
+                'age_rating' => '13+',
+                'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
             ]);
 
             if ($is_movie) {
@@ -62,7 +63,7 @@ class DatabaseSeeder extends Seeder
                     'show_id' => $show->id,
                     'video_url' => 'https://tite.com',
                     'duration' => 7200,
-                    'synopsis' => $faker->text
+                    'synopsis' => $faker->text,
                 ]);
             } else {
                 foreach (range(0, 2) as $j) {
@@ -76,9 +77,10 @@ class DatabaseSeeder extends Seeder
                             'show_id' => $show->id,
                             'show_group_id' => $group->id,
                             'title' => sprintf("Episode %s", $k),
-                            'video_url' => 'https://tite.com',
+                            'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.avi',
                             'duration' => 1200,
-                            'synopsis' => $faker->text
+                            'synopsis' => $faker->text,
+                            'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
                         ]);
                     }
                 }

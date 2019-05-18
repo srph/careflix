@@ -31,7 +31,7 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   return (
-    <UiModal isOpen={props.isOpen} shouldCloseOnOverlayClick={false}>
+    <UiModal isOpen={props.isOpen} shouldCloseOnOverlayClick={true} onClose={props.onClose}>
       <div className="watch-player-modal">
         <div className="watch-player-actions">
           <div className="section">

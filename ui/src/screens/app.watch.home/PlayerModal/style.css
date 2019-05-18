@@ -4,6 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: none;
 }
 
 .watch-player-contents {
@@ -11,6 +12,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: initial;
 }
 
 .watch-player-modal-card {
@@ -68,6 +70,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
+  pointer-events: initial;
 }
 
 .watch-player-actions > .section {

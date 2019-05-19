@@ -38,6 +38,9 @@ class AuthContainer extends Container<State> {
       return [err]
     }
     const token = tokenResponse.data.access_token
+    await this.setState({
+      token
+    })
     cookie.set('app_token', token, {
       path: '/'
     })

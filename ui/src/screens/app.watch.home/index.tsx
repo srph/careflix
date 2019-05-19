@@ -71,6 +71,13 @@ const reducer = (state: State, action: Action): State => {
         isComplete: false
       }
     }
+
+    case 'time-update': {
+      return {
+        ...state,
+        time: action.payload.time
+      }
+    }
   }
 
   return state
@@ -162,6 +169,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }
 
   function handleTimeUpdate() {
+    console.log($video.current.currentTime)
+
     dispatch({
       type: 'time-update',
       payload: { time: $video.current.currentTime }

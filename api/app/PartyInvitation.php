@@ -42,4 +42,8 @@ class PartyInvitation extends Model
     public function party() {
         return $this->belongsTo(Party::class);
     }
+
+    public function getActionAttribute($value) {
+        return $this->action ?? 'pending';
+    }
 }

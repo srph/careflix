@@ -40,7 +40,7 @@ class PartiesController extends Controller
      */
     public function show(Party $party)
     {
-        return $party;
+        return $party->load('invitations');
     }
 
     /**

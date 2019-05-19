@@ -22,16 +22,21 @@ Route::middleware('auth:api')->group(function() {
         Route::put('parties/{party}/state', 'PartiesController@state');
         Route::put('parties/{party}/time', 'PartiesController@time');
         Route::get('parties/{party}/invitations', 'PartyInvitationsController@index');
+        Route::get('parties/{party}/invitations/search', 'PartyInvitationsController@search');
 
         Route::post('parties/{party}/invitations/send', 'PartyInvitationsController@send');
-        Route::post('invitations/{invitation}/accept', 'PartyInvitationsController@accept');
-        Route::post('invitations/{invitation}/decline', 'PartyInvitationsController@decline');
-        Route::post('invitations/{invitation}/cancel', 'PartyInvitationsController@cancel');
 
         Route::get('parties/{party}/logs', 'PartyLogsController@index');
         Route::post('parties/{party}/logs/activity', 'PartyLogsController@activity');
         Route::post('parties/{party}/logs/message', 'PartyLogsController@message');
     });
+
+    Route::group(['middleware' => 'party.invitation.recipient'], function() {
+        Route::post('invitations/{invitation}/accept', 'PartyInvitationsController@accept');
+        Route::post('invitations/{invitation}/decline', 'PartyInvitationsController@decline');
+    });
+
+    Route::post('invitations/{invitation}/cancel', 'PartyInvitationsController@cancel');
         
     Route::get('me', 'MeController@data');
 });

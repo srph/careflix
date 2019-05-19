@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { State } from '../types'
+import { ContextType } from '../types'
 
-export default React.createContext<State>({
+export default React.createContext<ContextType>({
   party: null,
-  isLoading: false
+  isLoading: false,
+  onCancel: () => {},
+  onInvite: () => {}
 })

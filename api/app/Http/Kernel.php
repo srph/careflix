@@ -62,7 +62,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        'party.member' => \App\Http\Middleware\MemberOfParty::class
+        'party.member' => \App\Http\Middleware\MemberOfParty::class,
+        'party.invitation.recipient' => \App\Http\Middleware\RecipientOfInvitation::class
     ];
 
     /**

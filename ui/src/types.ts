@@ -31,6 +31,8 @@ interface AppPartyInvitation {
   id: number
   party_id: number
   invitation_code: string
+  sender: AppUser
+  recipient: AppUser
 }
 
 interface AppPartyLog {
@@ -90,6 +92,7 @@ interface AppParty {
   is_playing: boolean
   current_time: number
   video?: AppShowVideo
+  invitations?: AppPartyInvitation[]
   members: AppPartyMember[]
   last_activity_at: string
   created_at: string

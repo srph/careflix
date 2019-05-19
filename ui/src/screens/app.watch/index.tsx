@@ -4,14 +4,15 @@ import { NavLink } from 'react-router-dom'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useInterval } from '@use-it/interval'
-import { useReducer } from 'react'
+import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
 import { useAsyncEffect } from 'use-async-effect'
 import useReactRouter from 'use-react-router'
 import axios from '~/lib/axios'
+import immer from 'immer'
 
-import { Context } from './Context'
-import { State, Action } from './types'
+import { Context, usePartyContext } from './Context'
+import { State, ContextType, Action } from './types'
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -41,6 +42,24 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         party: action.payload.party
+      }
+    }
+
+    case 'invitation.send': {
+      return {
+        ...state,
+        party: immer(state.party, (draft) => {
+          draft.invitations.push(action.payload.invitation)
+        })
+      }
+    }
+
+    case 'invitation.cancel': {
+      return {
+        ...state,
+        party: immer(state.party, (draft) => {
+          draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+        })
       }
     }
   }
@@ -94,6 +113,28 @@ function AppWatch(props: ReactComponentWrapper) {
     state.party == null
   )
 
+  function handleInvite(invitation: AppPartyInvitation) {
+    dispatch({
+      type: 'invitation.send',
+      payload: { invitation }
+    })
+  }
+
+  function handleCancel(invitation: AppPartyInvitation) {
+    dispatch({
+      type: 'invitation.cancel',
+      payload: { invitation }
+    })
+  }
+
+  const context = useMemo<ContextType>(() => {
+    return {
+      ...state,
+      onCancel: handleCancel,
+      onInvite: handleInvite
+    }
+  }, [state])
+
   if (state.isLoading) {
     return null
   }
@@ -112,7 +153,7 @@ function AppWatch(props: ReactComponentWrapper) {
         </NavLink>
       </div>
 
-      <Context.Provider value={state}>{props.children}</Context.Provider>
+      <Context.Provider value={context}>{props.children}</Context.Provider>
     </React.Fragment>
   )
 }

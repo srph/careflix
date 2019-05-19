@@ -7,16 +7,16 @@ import './interceptor-expired-tokens'
 import './interceptor-pusher'
 
 export default {
-  get(url, query?) {
-    return goify(instance.get(url, query))
+  get(url: string, config?) {
+    return goify(instance.get(url, config))
   },
-  post(url, payload?) {
+  post(url: string, payload?) {
     return goify(instance.post(url, payload))
   },
-  put(url, payload?) {
+  put(url: string, payload?) {
     return goify(instance.put(url, payload))
   },
-  delete(url, config?) {
+  delete(url: string, config?) {
     return goify(instance.delete(url, config))
   }
 }

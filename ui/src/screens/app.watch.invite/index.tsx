@@ -7,6 +7,7 @@ import UiAvatar from '~/components/UiAvatar'
 import immer from 'immer'
 import { useReducer, useMemo } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
+import { usePusher } from '~/hooks/usePusher'
 import useDebounce from 'react-use/lib/useDebounce'
 import axios from '~/lib/axios'
 import toSearchObject from '~/utils/toSearchObject'
@@ -139,6 +140,14 @@ function AppWatchInvite(props: ReactComponentWrapper) {
     isSendingInvitation: {},
     isCancellingInvitation: {},
     input: ''
+  })
+
+  usePusher(`private-party.${context.party.id}`, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
+    context.onInvite(event.invitation)
+  })
+
+  usePusher(`private-party.${context.party.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
+    context.onCancel(event.invitation)
   })
 
   useDebounce(

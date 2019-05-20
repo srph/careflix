@@ -18,6 +18,7 @@ import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsPassword from '~/screens/app.settings-password'
 import Login from '~/screens/login'
+import Logout from '~/screens/logout'
 import Register from '~/screens/register'
 import Helmet from 'react-helmet'
 
@@ -55,6 +56,7 @@ function Mount() {
               <Switch>
                 <GuestRoute path="/login" exact component={Login} />
                 <GuestRoute path="/register" exact component={Register} />
+                <Route path="/logout" exact component={Logout} />
                 
                 <Route path="/" render={() => (
                   <App>

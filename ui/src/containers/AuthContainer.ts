@@ -3,6 +3,7 @@ import axios from '~/lib/axios'
 import * as cookie from 'cookie-machine'
 import history from '~/lib/history'
 import config from '~/config';
+import immer from 'immer';
 
 interface State {
   data: AppUser | null,
@@ -88,6 +89,40 @@ class AuthContainer extends Container<State> {
         ...this.state.data,
         ...payload
       }
+    })
+  }
+
+  /**
+   * Remove the first invitation (called after accepted / declined / expired)
+   */
+  shiftInvitations = () => {
+    this.setState({
+      data: immer(this.state.data, draft => {
+        draft.invitations.shift()
+      })
+    })
+  }
+
+  /**
+   * Push the received invitation
+   */
+  receiveInvitation = (invitation: AppPartyInvitation) => {
+    this.setState({
+      data: immer(this.state.data, draft => {
+        draft.invitations.push(invitation)
+      })
+    })
+  }
+
+  /**
+   * Push the received invitation
+   */
+  cancelInvitation = (particular: AppPartyInvitation) => {
+    this.setState({
+      data: immer(this.state.data, draft => {
+        const invitation = draft.invitations.find(invitation => invitation.id === particular.id)
+        invitation.action = 'cancelled'
+      })
     })
   }
 }

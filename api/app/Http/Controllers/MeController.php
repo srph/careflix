@@ -13,6 +13,6 @@ class MeController extends Controller
      */
     public function data(Request $request)
     {
-        return $request->user();
+        return $request->user()->load('invitations');
     }
 }

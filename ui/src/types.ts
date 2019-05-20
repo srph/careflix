@@ -23,6 +23,7 @@ interface AppUser {
   email: string
   name: string
   avatar: string
+  invitations?: AppPartyInvitation[]
   created_at: string
   updated_at: string
 }

@@ -15,7 +15,7 @@ class DoInvitation extends FormRequest
     {
         $invitation = $this->route('invitation');
         // Really not sure with the expirations for now.
-        return $invitation->action == 'pending';
+        return $invitation->action == 'pending' || $invitation->action == null;
 
         // @TODO Check if user is recipient/sender
         // @TODO Make sure accept/decline is not done by sender?

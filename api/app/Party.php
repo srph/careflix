@@ -54,9 +54,7 @@ class Party extends Model
     }
 
     public function invitations() {
-        return $this->hasMany(PartyInvitation::class)
-            ->where('expires_at', '<=', now())
-            ->where('action', '=', 'pending');
+        return $this->hasMany(PartyInvitation::class)->pending();
     }
 
     public function activities() {

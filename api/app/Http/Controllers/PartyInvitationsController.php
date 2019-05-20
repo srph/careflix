@@ -11,7 +11,8 @@ use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use App\Events\PartyInvitationSent;
-use App\Events\PartyInvitationReceived;
+use App\Events\UserInvitationReceived;
+use App\Events\UserInvitationCancelled;
 use App\Events\PartyInvitationAccepted;
 use App\Events\PartyInvitationDeclined;
 use App\Events\PartyInvitationCancelled;
@@ -37,10 +38,8 @@ class PartyInvitationsController extends Controller
     {
         $search = $request->get('search');
         
-        return User::where('name', 'like', "%{$search}%")
-            ->orWhere('email', 'like', "%{$search}%")
+        return User::search($search)
             ->where('id', '!=', $request->user()->id)
-            ->limit(10)
             ->get();
     }
 
@@ -63,9 +62,11 @@ class PartyInvitationsController extends Controller
             'expires_at' => Carbon::now()->addSeconds($duration)
         ])->fresh();
 
-        broadcast(new PartyInvitationSent($party, $invitation));
+        $invitation->load('party');
 
-        broadcast(new PartyInvitationReceived($request->get('recipient_id'), $party, $invitation));
+        broadcast(new PartyInvitationSent($invitation->party, $invitation))->toOthers();
+
+        broadcast(new UserInvitationReceived($request->get('recipient_id'), $party, $invitation));
 
         return $invitation;
     }
@@ -83,7 +84,7 @@ class PartyInvitationsController extends Controller
             'is_active' => false
         ]);
 
-        broadcast(new PartyInvitationAccepted($invitation->party, $invitation));
+        broadcast(new PartyInvitationAccepted($invitation->party, $invitation))->toOthers();
 
         return $invitation->party;
     }
@@ -97,8 +98,9 @@ class PartyInvitationsController extends Controller
     {
         $invitation->action = 'declined';
         $invitation->save();
+        $invitation->load('party');
 
-        broadcast(new PartyInvitationDeclined($invitation->party, $invitation));
+        broadcast(new PartyInvitationDeclined($invitation->party, $invitation))->toOthers();
 
         return $invitation;
     }
@@ -112,8 +114,11 @@ class PartyInvitationsController extends Controller
     {
         $invitation->action = 'cancelled';
         $invitation->save();
+        $invitation->load('party');
 
-        broadcast(new PartyInvitationCancelled($invitation->party, $invitation));
+        broadcast(new PartyInvitationCancelled($invitation->party, $invitation))->toOthers();
+
+        broadcast(new UserInvitationCancelled($invitation->party, $invitation))->toOthers();
 
         return $invitation;
     }

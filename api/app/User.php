@@ -61,6 +61,34 @@ class User extends Authenticatable
         return $this->belongsToMany(Party::class);
     }
 
+    public function invitations() {
+        return  $this->hasMany(PartyInvitation::class, 'recipient_id')
+            ->pending()
+            ->with('party')
+            ->orderBy('created_at');
+    }
+
+    /**
+     * Search for a user by name or email
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  string $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch(\Illuminate\Database\Eloquent\Builder $query, $search) {
+        return $query->where(function($query) use ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })->limit(10);
+    }
+
+    /**
+     * Check user is the recipient of an invitation
+     */
+    public function isRecipientOf(PartyInvitation $invitation) {
+        return $this->id === $invitation->recipient_id;
+    }
+
     /**
      * $user->isMemberOfParty($party);
      */

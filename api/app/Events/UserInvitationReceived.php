@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 // use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class PartyInvitationReceived implements ShouldBroadcast
+class UserInvitationReceived implements ShouldBroadcast
 {
     use SerializesModels;
 
@@ -49,7 +49,7 @@ class PartyInvitationReceived implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('user.invitation.'.$this->recepient_id);
+        return new PrivateChannel('user.'.$this->recepient_id);
     }
 
     /**
@@ -59,18 +59,6 @@ class PartyInvitationReceived implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return 'receive';
-    }
-
-    /**
-     * The event's serialized data
-     *
-     * @return array
-     */
-    public function broadcastWith() {
-        return [
-            'user' => $this->party,
-            'invitation' => $this->invitation
-        ];
+        return 'invitation.received';
     }
 }

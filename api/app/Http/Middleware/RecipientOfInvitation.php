@@ -15,9 +15,9 @@ class RecipientOfInvitation
      */
     public function handle($request, Closure $next)
     {
-        $party = $request->route('invitation')->party;
+        $invitation = $request->route('invitation');
 
-        if (!$request->user()->isMemberOfParty($party)) {
+        if (!$request->user()->isRecipientOf($invitation)) {
             return response()->json([
                 'error' => true,
                 'status' => 403,

@@ -43,7 +43,28 @@ class PartyInvitation extends Model
         return $this->belongsTo(Party::class);
     }
 
+    /**
+     * Provide a fallback to the action attribute
+     * 
+     * @param  string
+     * @return string
+     */
     public function getActionAttribute($value) {
         return $this->action ?? 'pending';
+    }
+
+    /**
+     * Get non-expired pending invitations
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePending($query) {
+        return $query->where('expires_at', '<=', now())
+            // ->where('action', '=', 'pending')
+            ->where(function($query) {
+                $query->where('action', 'pending')
+                    ->orWhereNull('action');
+            });
     }
 }

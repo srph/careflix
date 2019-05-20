@@ -72,10 +72,19 @@
   font-weight: 600;
 }
 
+.invitation-modal.is-cancelled .invitation-modal-card > .thumbnail {
+  filter: grayscale(100%);
+}
+
 .invitation-modal-expiration {
   text-align: center;
 }
 
 .invitation-modal-expiration-lowercaps {
   text-transform: lowercase;
+}
+
+.invitation-modal-expiration-warning-icon {
+  margin-right: 6px;
+  color: var(--color-secondary);
 }

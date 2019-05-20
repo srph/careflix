@@ -12,6 +12,7 @@
   border-radius: var(--border-radius);
   border: 0;
   outline: 0;
+  transition: 200ms all ease;
   cursor: pointer;
 }
 
@@ -31,4 +32,8 @@
 a.ui-button {
   text-decoration: none;
   text-align: center;
+}
+
+.ui-button:disabled {
+  opacity: 0.6;
 }

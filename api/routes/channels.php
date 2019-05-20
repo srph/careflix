@@ -14,7 +14,7 @@ use App\Party;
 |
 */
 
-Broadcast::channel('user.invitation.{user}', function (User $user, User $receiver) {
+Broadcast::channel('user.{user}', function (User $user, User $receiver) {
     return $user->id === $receiver->id;
 });
 

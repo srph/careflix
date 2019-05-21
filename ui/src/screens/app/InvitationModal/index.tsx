@@ -158,10 +158,7 @@ function InvitationModal() {
     return invitation && parse(invitation.expires_at)
   }, [invitation && invitation.id])
 
-
-  const isInvalid = useMemo(() => {
-    return invitation && (invitation.action === 'cancelled' || isAfter(now, expiration))
-  }, [invitation && invitation.id])
+  const isInvalid = invitation && (invitation.action === 'cancelled' || isAfter(now, expiration))
 
   return (
     <UiModal isOpen={invitation != null} shouldCloseOnOverlayClick={false}>

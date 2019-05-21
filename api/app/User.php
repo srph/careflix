@@ -77,8 +77,11 @@ class User extends Authenticatable
      */
     public function scopeSearch(\Illuminate\Database\Eloquent\Builder $query, $search) {
         return $query->where(function($query) use ($search) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+            $parameter = "%{$search}%";
+            
+            // https://stackoverflow.com/a/21216559/2698227
+            $query->whereRaw('lower(name) like (?)', $parameter)
+                ->orWhereRaw('lower(email) like (?)', $parameter);
         })->limit(10);
     }
 

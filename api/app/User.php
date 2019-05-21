@@ -62,7 +62,7 @@ class User extends Authenticatable
     }
 
     public function invitations() {
-        return  $this->hasMany(PartyInvitation::class, 'recipient_id')
+        return $this->hasMany(PartyInvitation::class, 'recipient_id')
             ->pending()
             ->with('party')
             ->orderBy('created_at');

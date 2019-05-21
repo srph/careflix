@@ -14,7 +14,7 @@ function AppHeading() {
   const auth = useUnstated(AuthContainer)
 
   return <Route render={() => (
-    auth.isAuthenticated() && <UiNavigation>
+    <UiNavigation>
       <GatewayDestWithFallback name={constants.gateway.backUrl} fallback={<UiNavigation.Action />} />
 
       <GatewayDestWithFallback name={constants.gateway.title} fallback={<UiNavigation.Logo />} />

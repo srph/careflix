@@ -4,7 +4,7 @@ import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import Slider, { SliderValue } from 'react-input-slider'
 
-import toReadableTime from '~/utils/toReadableTime'
+import toReadableTime from '~/utils/date/toReadableTime'
 import getAirDetails from '~/utils/shows/getAirDetails';
 
 interface Props {

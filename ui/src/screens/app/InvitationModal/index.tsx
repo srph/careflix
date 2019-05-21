@@ -10,9 +10,15 @@ import axios from '~/lib/axios'
 import history from '~/lib/history'
 import { usePusher } from '~/hooks/usePusher'
 import { useReducer, useMemo } from 'react'
+import { useCountdownTimer } from '~/hooks/useCountdownTimer'
+import { useInterval } from '~/hooks/useInterval'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 import getAirDetails from '~/utils/shows/getAirDetails'
+
+import { useNow } from '~/hooks/useNow';
+import { parse, isAfter, differenceInSeconds } from 'date-fns'
+import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
 
 interface State {
   isAccepting: boolean
@@ -72,13 +78,21 @@ function InvitationModal() {
 
   const [state, dispatch] = useReducer(reducer, init())
 
-  usePusher(`private-user.${auth.state.data.id}`, 'invitation.received', (event: { invitation: AppPartyInvitation }) => {
-    auth.receiveInvitation(event.invitation)
-  })
+  usePusher(
+    `private-user.${auth.state.data.id}`,
+    'invitation.received',
+    (event: { invitation: AppPartyInvitation }) => {
+      auth.receiveInvitation(event.invitation)
+    }
+  )
 
-  usePusher(`private-user.${auth.state.data.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
-    auth.cancelInvitation(event.invitation)
-  })
+  usePusher(
+    `private-user.${auth.state.data.id}`,
+    'invitation.cancelled',
+    (event: { invitation: AppPartyInvitation }) => {
+      auth.cancelInvitation(event.invitation)
+    }
+  )
 
   async function handleAccept() {
     dispatch({
@@ -132,72 +146,93 @@ function InvitationModal() {
     auth.shiftInvitations()
   }
 
-  const isLoading = state.isDeclining || state.isAccepting
+  const isLoading = (
+    state.isDeclining || state.isAccepting
+  )
 
-  const isCancelled = invitation && invitation.action === 'cancelled'
+  const now = useNow({
+    interval: 1000
+  })
+
+  const expiration = useMemo(() => {
+    return invitation && parse(invitation.expires_at)
+  }, [invitation && invitation.id])
+
+
+  const isInvalid = useMemo(() => {
+    return invitation && (invitation.action === 'cancelled' || isAfter(now, expiration))
+  }, [invitation && invitation.id])
 
   return (
     <UiModal isOpen={invitation != null} shouldCloseOnOverlayClick={false}>
-      {invitation != null && <div className={cx('invitation-modal', { 'is-cancelled': isCancelled })}>
-        <div className="actions">
-          {isCancelled && <UiButton onClick={handleCloseCancelled} disabled={isLoading}>
-            Close
-          </UiButton>}
-
-          {!isCancelled && (
-            <React.Fragment>
-              <UiButton onClick={handleDecline} disabled={isLoading}>
-                {state.isDeclining ? 'Declining...' : 'Decline'}
+      {invitation != null && (
+        <div className={cx('invitation-modal', { 'is-cancelled': isInvalid })}>
+          <div className="actions">
+            {isInvalid && (
+              <UiButton onClick={handleCloseCancelled} disabled={isLoading}>
+                Close
               </UiButton>
+            )}
 
-              <UiButton onClick={handleAccept} disabled={isLoading} variant="primary">
-                {state.isAccepting ? 'Accepting' : 'Accept'}
-              </UiButton>
-            </React.Fragment>
-          )}
-        </div>
+            {!isInvalid && (
+              <React.Fragment>
+                <UiButton onClick={handleDecline} disabled={isLoading}>
+                  {state.isDeclining ? 'Declining...' : 'Decline'}
+                </UiButton>
 
-        <div className="invitation-modal-card">
-          <div className="user">
-            <div className="avatar">
-              <UiAvatar size="m" img={invitation.sender.avatar} />
+                <UiButton onClick={handleAccept} disabled={isLoading} variant="primary">
+                  {state.isAccepting ? 'Accepting' : 'Accept'}
+                </UiButton>
+              </React.Fragment>
+            )}
+          </div>
+
+          <div className="invitation-modal-card">
+            <div className="user">
+              <div className="avatar">
+                <UiAvatar size="m" img={invitation.sender.avatar} />
+              </div>
+
+              <div className="details">
+                <h2>{invitation.sender.name}</h2>
+                <div className="subheading">
+                  <h6 className="ui-subheading">Invited you to watch</h6>
+                </div>
+              </div>
             </div>
 
-            <div className="details">
-              <h2>{invitation.sender.name}</h2>
-              <div className="subheading">
-                <h6 className="ui-subheading">Invited you to watch</h6>
+            <div className="thumbnail" style={{ backgroundImage: `url(${invitation.party.video.show.preview_image})` }}>
+              <div className="overlay" />
+              <div className="details">
+                <div className="tag">
+                  <h6 className="ui-subheading">{getAirDetails(invitation.party.video)}</h6>
+                </div>
+                <h3 className="title">{invitation.party.video.show.title}</h3>
               </div>
             </div>
           </div>
 
-          <div
-            className="thumbnail"
-            style={{ backgroundImage: `url(${invitation.party.video.show.preview_image})` }}>
-            <div className="overlay" />
-            <div className="details">
-              <div className="tag">
-                <h6 className="ui-subheading">{getAirDetails(invitation.party.video)}</h6>
-              </div>
-              <h3 className="title">{invitation.party.video.show.title}</h3>
-            </div>
+          <div className="invitation-modal-expiration">
+            {!isInvalid && (
+              <h6 className="ui-subheading">
+                Expires in
+                <span className="invitation-modal-expiration-lowercaps">
+                  &nbsp;{getFormattedRemainingTime(expiration, now)}
+                </span>
+              </h6>
+            )}
+
+            {isInvalid && (
+              <h6 className="ui-subheading">
+                <span className="invitation-modal-expiration-warning-icon">
+                  <i className="fa fa-exclamation-circle" />
+                </span>
+                Invitation no longer exists
+              </h6>
+            )}
           </div>
         </div>
-
-        <div className="invitation-modal-expiration">
-          {/*<h6 className="ui-subheading">
-            Expires in 10
-            <span className="invitation-modal-expiration-lowercaps">s</span>
-          </h6>*/}
-
-          {isCancelled && <h6 className="ui-subheading">
-            <span className='invitation-modal-expiration-warning-icon'>
-              <i className='fa fa-exclamation-circle' />
-            </span>
-            Invitation no longer exists
-          </h6>}
-        </div>
-      </div>}
+      )}
     </UiModal>
   )
 }

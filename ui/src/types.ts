@@ -34,6 +34,9 @@ interface AppPartyInvitation {
   invitation_code: string
   sender: AppUser
   recipient: AppUser
+  expires_at: string
+  created_at: string
+  updated_at: string
 }
 
 interface AppPartyLog {

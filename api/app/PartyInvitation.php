@@ -60,8 +60,9 @@ class PartyInvitation extends Model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopePending($query) {
-        return $query->where('expires_at', '<=', now())
-            // ->where('action', '=', 'pending')
+        \Log::info([date('Y-m-d H:i:s')]);
+
+        return $query->where('expires_at', '>', date('Y-m-d H:i:s'))
             ->where(function($query) {
                 $query->where('action', 'pending')
                     ->orWhereNull('action');

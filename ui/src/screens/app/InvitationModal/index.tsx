@@ -17,7 +17,7 @@ import { AuthContainer } from '~/containers'
 import getAirDetails from '~/utils/shows/getAirDetails'
 
 import { useNow } from '~/hooks/useNow';
-import { parse, isAfter, differenceInSeconds } from 'date-fns'
+import { parse, isBefore, differenceInSeconds } from 'date-fns'
 import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
 
 interface State {
@@ -158,7 +158,9 @@ function InvitationModal() {
     return invitation && parse(invitation.expires_at)
   }, [invitation && invitation.id])
 
-  const isInvalid = invitation && (invitation.action === 'cancelled' || isAfter(now, expiration))
+  const isInvalid = useMemo(() => {
+    invitation && (invitation.action === 'cancelled' || isBefore(expiration, now))
+  }, [now])
 
   return (
     <UiModal isOpen={invitation != null} shouldCloseOnOverlayClick={false}>

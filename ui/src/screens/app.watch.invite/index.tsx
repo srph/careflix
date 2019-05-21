@@ -5,13 +5,18 @@ import UiButton from '~/components/UiButton'
 import UiAvatar from '~/components/UiAvatar'
 
 import immer from 'immer'
-import { useReducer, useMemo } from 'react'
+import { useReducer, useMemo, useEffect } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { usePusher } from '~/hooks/usePusher'
 import useDebounce from 'react-use/lib/useDebounce'
 import axios from '~/lib/axios'
 import toSearchObject from '~/utils/toSearchObject'
 import toSearchIndexObject from '~/utils/toSearchIndexObject'
+
+import { useNow } from '~/hooks/useNow'
+import { isBefore, parse } from 'date-fns'
+import getRemainingTime from '~/utils/date/getRemainingTime'
+import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime';
 
 interface State {
   data: any[]
@@ -253,6 +258,10 @@ function AppWatchInvite(props: ReactComponentWrapper) {
     context.onCancel(invitation)
   }
 
+  function handleExpire(invitation: AppPartyInvitation) {
+    context.onCancel(invitation)
+  }
+
   return (
     <React.Fragment>
       <div className="invite-searchbar">
@@ -277,6 +286,7 @@ function AppWatchInvite(props: ReactComponentWrapper) {
             isCancellingInvitation={state.isCancellingInvitation[invitation.recipient.id]}
             onInvite={handleInvite}
             onCancel={handleCancel}
+            onExpire={handleExpire}
           />
         ))}
 
@@ -291,6 +301,7 @@ function AppWatchInvite(props: ReactComponentWrapper) {
             isSendingInvitation={state.isSendingInvitation[user.id]}
             onInvite={handleInvite}
             onCancel={handleCancel}
+            onExpire={handleExpire}
           />
         ))}
     </React.Fragment>
@@ -304,6 +315,7 @@ interface UserItemProps {
   isCancellingInvitation: boolean
   isSendingInvitation?: boolean
   onInvite: (id: number) => void
+  onExpire: (invitation: id) => void
   onCancel: (invitation: AppPartyInvitation) => void
 }
 
@@ -316,6 +328,24 @@ function UserItem(props: UserItemProps) {
     props.onCancel(props.invitation)
   }
 
+  const now = useNow({
+    interval: 1000
+  })
+
+  const expiration = useMemo(() => {
+    return props.invitation && parse(props.invitation.expires_at)
+  }, [props.invitation && props.invitation.id])
+  
+  const isExpired = useMemo(() => {
+    props.invitation && isBefore(expiration, now)
+  }, [now])
+
+  useEffect(() => {
+    if (isExpired) {
+      props.onExpire(props.invitation)
+    }
+  }, [isExpired])
+
   return (
     <div className="user-item">
       <div className="avatar">
@@ -325,7 +355,7 @@ function UserItem(props: UserItemProps) {
       <div className="details">
         <h4 className="name">{props.user.name}</h4>
         <h6 className="meta">{props.isMember && 'Already a member'}</h6>
-        {/* <h6 className="meta">Expires in 10s</h6> */}
+        <h6 className="meta">{isExpired ? 'Invitation expired' : `Expires in ${getFormattedRemainingTime(expiration, now)}`}</h6>
       </div>
 
       <div className="action">

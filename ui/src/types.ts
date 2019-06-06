@@ -46,10 +46,12 @@ interface AppPartyLog {
   activity?: {
     id: string
     text: string
+    user: AppUser
   }
   message?: {
     id: string
     text: string
+    user: AppUser
   }
   created_at: string
   updated_at: string

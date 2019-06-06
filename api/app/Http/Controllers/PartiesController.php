@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Party;
 use App\Events\PartyState;
+use App\Events\PartyActivity;
 
 class PartiesController extends Controller
 {
@@ -27,6 +28,17 @@ class PartiesController extends Controller
 
         $party->members()->attach($request->user()->id, [
             'is_active' => false
+        ]);
+
+        $activity = \App\PartyActivity::create([
+            'user_id' => $request->user()->id,
+            'party_id' => $party->id,
+            'text' => 'created the room'
+        ]);
+
+        $party->logs()->create([
+            'loggable_type' => \App\PartyActivity::class,
+            'loggable_id' => $activity->id
         ]);
 
         return $party;

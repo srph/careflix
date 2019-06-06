@@ -32,12 +32,7 @@ function Root(props: { children: React.ReactNode }) {
   const auth: typeof AuthContainer = useUnstated(AuthContainer)
 
   useAsyncEffect(async () => {
-    const [err] = await auth.getUserData()
-    
-    if (err) {
-      throw err
-    }
-
+    await auth.getUserData()
     setIsLoading(false)
   }, null, [])
 

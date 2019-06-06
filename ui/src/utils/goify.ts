@@ -7,6 +7,9 @@ export default async function(promise: Promise<any>): Promise<AsyncGoReturn> {
   try {
     data = await promise
   } catch(e) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(e)
+    }
     return [e]
   }
   return data instanceof Error ? [data] : [null, data]

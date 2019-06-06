@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Party;
 use App\PartyInvitation;
+use App\PartyActivity;
 use App\Support\Helper;
 
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ use App\Events\UserInvitationCancelled;
 use App\Events\PartyInvitationAccepted;
 use App\Events\PartyInvitationDeclined;
 use App\Events\PartyInvitationCancelled;
+use App\Events\PartyActivity as PartyActivityEvent;
 
 class PartyInvitationsController extends Controller
 {
@@ -78,13 +80,28 @@ class PartyInvitationsController extends Controller
      */
     public function accept(\App\Http\Requests\DoInvitation $request, PartyInvitation $invitation)
     {
-        $invitation->action = 'accepted';
-        $invitation->save();
+        $invitation->fill([
+            'action' => 'accepted'
+        ])->save();
+
         $invitation->party->members()->attach($request->user()->id, [
             'is_active' => false
         ]);
 
+        $activity = \App\PartyActivity::create([
+            'user_id' => $request->user()->id,
+            'party_id' => $invitation->party->id,
+            'text' => 'joined the room'
+        ]);
+
+        $log = $invitation->party->logs()->create([
+            'loggable_type' => \App\PartyActivity::class,
+            'loggable_id' => $activity->id
+        ]);
+
         broadcast(new PartyInvitationAccepted($invitation->party, $invitation))->toOthers();
+
+        broadcast(new PartyActivityEvent($invitation->party, $log));
 
         return $invitation->party;
     }

@@ -16,7 +16,7 @@ class PartyLogsController extends Controller
      */
     public function index(\App\Http\Requests\GetPartyLogs $request, Party $party)
     {
-        return $party->logs()->orderBy('created_at', 'desc')
+        return $party->logs()->orderBy('created_at', 'asc')
             ->limit(30)
             ->when($request->has('offset'), function($query) use ($request) {
                 $query->where('id', '<', $request->get('offset'));

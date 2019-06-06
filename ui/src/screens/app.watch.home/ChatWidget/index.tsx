@@ -11,6 +11,7 @@ import axios from '~/lib/axios'
 import last from '~/utils/last'
 import { useReducer, useEffect, useMemo, useRef } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
+import { usePusher } from '~/hooks/usePusher'
 
 interface State {
   logs: AppPartyLog[]
@@ -21,6 +22,7 @@ type Action =
   | ReducerAction<'request:init'>
   | ReducerAction<'request:error'>
   | ReducerAction<'request:success', { logs: AppPartyLog[] }>
+  | ReducerAction<'logs:push', { log: AppPartyLog }>
 
 interface Props {
   party: AppParty
@@ -53,6 +55,13 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         isLoading: false
+      }
+    }
+
+    case 'logs:push': {
+      return {
+        ...state,
+        logs: [...state.logs, action.payload.log]
       }
     }
   }
@@ -98,6 +107,13 @@ function ChatWidget(props: Props) {
   const grouped = useMemo(() => {
     return groupPartyLogs(state.logs)
   }, [state.logs])
+
+  usePusher(`private-party.${props.party.id}`, 'activity', (event: { log: AppPartyLog }) => {
+    dispatch({
+      type: 'logs:push',
+      payload: { log: event.log }
+    })
+  })
 
   return (
     <React.Fragment>

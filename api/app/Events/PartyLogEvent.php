@@ -11,7 +11,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 // use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class PartyActivity implements ShouldBroadcast
+class PartyLogEvent implements ShouldBroadcast
 {
     use SerializesModels;
 
@@ -53,6 +53,6 @@ class PartyActivity implements ShouldBroadcast
      */
     public function broadcastAs()
     {
-        return 'activity';
+        return 'log';
     }
 }

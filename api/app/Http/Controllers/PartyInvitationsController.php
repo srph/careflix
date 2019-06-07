@@ -17,7 +17,7 @@ use App\Events\UserInvitationCancelled;
 use App\Events\PartyInvitationAccepted;
 use App\Events\PartyInvitationDeclined;
 use App\Events\PartyInvitationCancelled;
-use App\Events\PartyActivity as PartyActivityEvent;
+use App\Events\PartyLogEvent;
 
 class PartyInvitationsController extends Controller
 {
@@ -101,7 +101,7 @@ class PartyInvitationsController extends Controller
 
         broadcast(new PartyInvitationAccepted($invitation->party, $invitation))->toOthers();
 
-        broadcast(new PartyActivityEvent($invitation->party, $log));
+        broadcast(new PartyLogEvent($invitation->party, $log));
 
         return $invitation->party;
     }

@@ -18,8 +18,10 @@ interface ReducerAction<T, P = {}> {
   payload?: P
 }
 
+type AppId = string | number
+
 interface AppUser {
-  id: number
+  id: AppId
   email: string
   name: string
   avatar: string
@@ -29,8 +31,8 @@ interface AppUser {
 }
 
 interface AppPartyInvitation {
-  id: number
-  party_id: number
+  id: AppId
+  party_id: AppId
   invitation_code: string
   sender: AppUser
   recipient: AppUser
@@ -40,27 +42,31 @@ interface AppPartyInvitation {
 }
 
 interface AppPartyLog {
-  id: number
-  party_id: number
+  id: AppId
+  party_id: AppId
   type: 'activity' | 'message'
   activity?: {
     id: string
     text: string
     user: AppUser
+    created_at: string
+    updated_at: string
   }
   message?: {
     id: string
     text: string
     user: AppUser
+    created_at: string
+    updated_at: string
   }
   created_at: string
   updated_at: string
 }
 
 interface AppShowVideo {
-  id: number
-  show_id: number
-  show_group_id: number
+  id: AppId
+  show_id: AppId
+  show_group_id: AppId
   synopsis: string
   title: string
   preview_image: string
@@ -72,7 +78,7 @@ interface AppShowVideo {
 }
 
 interface AppShow {
-  id: number
+  id: AppId
   title: string
   title_type: 'movie' | 'series'
   preview_image?: string
@@ -93,8 +99,8 @@ type AppPartyMember = AppUser & {
 }
 
 interface AppParty {
-  id: number
-  show_video_id: number
+  id: AppId
+  show_video_id: AppId
   is_playing: boolean
   current_time: number
   video?: AppShowVideo

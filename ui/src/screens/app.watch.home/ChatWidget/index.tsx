@@ -9,12 +9,21 @@ import { AuthContainer } from '~/containers'
 
 import axios from '~/lib/axios'
 import last from '~/utils/last'
+import uuid from '~/lib/uuid'
+import immer from 'immer'
 import { useReducer, useEffect, useMemo, useRef } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePusher } from '~/hooks/usePusher'
+import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateTime'
 
 interface State {
   logs: AppPartyLog[]
+  message: {
+    text: string
+  }
+  isSending: {
+    [key: number]: string
+  }
   isLoading: boolean
 }
 
@@ -23,6 +32,10 @@ type Action =
   | ReducerAction<'request:error'>
   | ReducerAction<'request:success', { logs: AppPartyLog[] }>
   | ReducerAction<'logs:push', { log: AppPartyLog }>
+  | ReducerAction<'chat:input', { input: string }>
+  | ReducerAction<'chat:init', { log: AppPartyLog }>
+  | ReducerAction<'chat:success', { id: AppId; log: AppPartyLog }>
+  | ReducerAction<'chat:error', { id: AppId }>
 
 interface Props {
   party: AppParty
@@ -64,11 +77,40 @@ const reducer = (state: State, action: Action) => {
         logs: [...state.logs, action.payload.log]
       }
     }
+
+    case 'chat:input': {
+      return immer(state, draft => {
+        draft.message.text = action.payload.input
+      })
+    }
+
+    case 'chat:init': {
+      return immer(state, draft => {
+        draft.message.text = ''
+        draft.logs.push(action.payload.log)
+      })
+    }
+
+    case 'chat:error': {
+      // @TODO
+      return {
+        ...state
+      }
+    }
+
+    case 'chat:success': {
+      return immer(state, draft => {
+        const index = draft.logs.findIndex(log => log.id === action.payload.id)
+        draft.logs[index] = action.payload.log
+      })
+    }
   }
 }
 
-const init = {
+const init: State = {
   logs: [],
+  message: { text: '' },
+  isSending: {},
   isLoading: false
 }
 
@@ -104,16 +146,71 @@ function ChatWidget(props: Props) {
     []
   )
 
-  const grouped = useMemo(() => {
-    return groupPartyLogs(state.logs)
-  }, [state.logs])
-
   usePusher(`private-party.${props.party.id}`, 'activity', (event: { log: AppPartyLog }) => {
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
     })
   })
+
+  function handleInput(evt: React.FormEvent<HTMLInputElement>) {
+    dispatch({
+      type: 'chat:input',
+      payload: { input: evt.currentTarget.value }
+    })
+  }
+
+  async function handleMessage(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault()
+
+    const id = uuid()
+
+    const date = getStandardFormattedDateTime()
+
+    const log: AppPartyLog = {
+      id,
+      party_id: props.party.id,
+      type: 'message',
+      message: {
+        id: uuid(),
+        text: state.message.text,
+        user: auth.state.data,
+        created_at: date,
+        updated_at: date
+      },
+      activity: null,
+      created_at: date,
+      updated_at: date
+    }
+
+    dispatch({
+      type: 'chat:init',
+      payload: { log }
+    })
+
+    const [err, res] = await axios.post(`/api/parties/${props.party.id}/logs/message`, {
+      message: state.message.text
+    })
+
+    if (err != null) {
+      return dispatch({
+        type: 'chat:error',
+        payload: { id }
+      })
+    }
+
+    dispatch({
+      type: 'chat:success',
+      payload: {
+        id,
+        log: res.data
+      }
+    })
+  }
+
+  const grouped = useMemo(() => {
+    return groupPartyLogs(state.logs)
+  }, [state.logs])
 
   return (
     <React.Fragment>
@@ -138,9 +235,10 @@ function ChatWidget(props: Props) {
           }
 
           return (
-            <div className={cx('watch-screen-chat-group', {
-              'is-self': group.user.id === auth.state.data.id
-            })}>
+            <div
+              className={cx('watch-screen-chat-group', {
+                'is-self': group.user.id === auth.state.data.id
+              })} key={i}>
               <div className="avatar">
                 <UiAvatar img={group.user.avatar} />
               </div>
@@ -227,7 +325,15 @@ function ChatWidget(props: Props) {
       </div>
 
       <div className="watch-screen-chatbar">
-        <input type="text" className="ui-input" placeholder="Write something..." />
+        <form onSubmit={handleMessage}>
+          <input
+            type="text"
+            className="ui-input"
+            placeholder="Write something..."
+            value={state.message.text}
+            onChange={handleInput}
+          />
+        </form>
       </div>
     </React.Fragment>
   )
@@ -235,7 +341,7 @@ function ChatWidget(props: Props) {
 
 /**
  * This will group chat based on the criteria:
- * 
+ *
  * Suceeding logs
  * Succeeding messages sent by the same user
  */
@@ -246,21 +352,26 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
 
   const first: AppPartyLog = logs[0]
 
-  const groups: GroupedLog[] = [{
-    type: first.type,
-    user: first[first.type].user,
-    logs: [first]
-  }]
+  const groups: GroupedLog[] = [
+    {
+      type: first.type,
+      user: first[first.type].user,
+      logs: [first]
+    }
+  ]
 
   // Since we've initialized the group with the first log, we'll start with the second log.
   logs.slice(1).forEach(log => {
     const recent = last(groups)
 
-    // We'll group it together based on the criteria
-    if (recent.type === 'activity' || recent.user.id === log.message.user.id) {
+    // We'll add it to the last group if it fits the criteria
+    if (
+      (recent.type === 'activity' && recent.type === log.type) ||
+      (recent.type === 'message' && recent.user.id === log.message.user.id)
+    ) {
       recent.logs.push(log)
     } else {
-      // Otherwise, it probably belongs to its own group
+      // Otherwise, we'll create a new group and push it there
       groups.push({
         type: log.type,
         user: log[log.type].user,
@@ -269,6 +380,7 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
     }
   })
 
+  console.log(logs.slice(1), groups)
   return groups
 }
 

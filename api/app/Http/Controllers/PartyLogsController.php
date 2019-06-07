@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Party;
 use App\PartyMessage;
 use App\PartyActivity;
+use App\Events\PartyLogEvent;
 use Illuminate\Http\Request;
 
 class PartyLogsController extends Controller
@@ -64,9 +65,11 @@ class PartyLogsController extends Controller
         $log = $party->logs()->create([
             'loggable_type' => PartyMessage::class,
             'loggable_id' => $activity->id
-        ]);
+        ])->fresh();
+
+        broadcast(new PartyLogEvent($party, $log));
 
         // This seems a safer bet than `$log->load('loggable')`.
-        return $log->fresh();
+        return $log;
     }
 }

@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
             if ($is_movie) {
                 App\ShowVideo::create([
                     'show_id' => $show->id,
-                    'video_url' => 'https://tite.com',
+                    'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.avi',
                     'duration' => 7200,
                     'synopsis' => $faker->text,
                 ]);
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        
+
         // //////////////////////////////////
         // Create random users for search
         // //////////////////////////////////

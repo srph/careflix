@@ -67,7 +67,7 @@ class PartyLogsController extends Controller
             'loggable_id' => $activity->id
         ])->fresh();
 
-        broadcast(new PartyLogEvent($party, $log));
+        broadcast(new PartyLogEvent($party, $log))->toOthers();
 
         // This seems a safer bet than `$log->load('loggable')`.
         return $log;

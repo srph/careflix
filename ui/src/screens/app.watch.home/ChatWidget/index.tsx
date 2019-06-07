@@ -147,6 +147,7 @@ function ChatWidget(props: Props) {
   )
 
   usePusher(`private-party.${props.party.id}`, 'activity', (event: { log: AppPartyLog }) => {
+    console.log('NEW MESSAGE---')
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
@@ -364,10 +365,12 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
   logs.slice(1).forEach(log => {
     const recent = last(groups)
 
+    console.log(recent)
+
     // We'll add it to the last group if it fits the criteria
     if (
-      (recent.type === 'activity' && recent.type === log.type) ||
-      (recent.type === 'message' && recent.user.id === log.message.user.id)
+      (log.type === 'activity' && recent.type === log.type) ||
+      (log.type === 'message' && recent.type === log.type && recent.user.id === log.message.user.id)
     ) {
       recent.logs.push(log)
     } else {
@@ -380,7 +383,6 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
     }
   })
 
-  console.log(logs.slice(1), groups)
   return groups
 }
 

@@ -9,7 +9,6 @@ function usePusher(channelName: string, eventName: string, callback: Pusher.Even
     let channel = null
 
     if (!isDisabled) {
-      // console.log('usePusher', channelName, eventName)
       channel = pusher().subscribe(channelName)
       channel.bind(eventName, callback)
     }

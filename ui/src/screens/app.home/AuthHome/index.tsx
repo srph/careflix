@@ -63,8 +63,6 @@ function AppHome() {
   )
 
   async function handleShowClick(show: AppShow) {
-    console.log(show)
-
     const [err, res] = await axios.post('/api/parties', {
       // @TODO Work on series
       show_video_id: show.movie.id

@@ -355,7 +355,7 @@ function UserItem(props: UserItemProps) {
       <div className="details">
         <h4 className="name">{props.user.name}</h4>
         {props.isMember && <h6 className="meta">Already a member</h6>}
-        {Boolean(props.invitation) && <h6 className="meta">{isExpired ? 'Invitation expired' : `Expires in ${getFormattedRemainingTime(expiration, now)}`)}</h6>}
+        {Boolean(props.invitation) && <h6 className="meta">{isExpired ? 'Invitation expired' : `Expires in ${getFormattedRemainingTime(expiration, now)}`}</h6>}
       </div>
 
       <div className="action">

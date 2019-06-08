@@ -152,7 +152,6 @@ function ChatWidget(props: Props) {
   )
 
   const isWindowVisible = useWindowVisibility()
-  console.log('is it?', isWindowVisible)
 
   usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
     // We'll store the current scrolling position so we can lock it later if needed.

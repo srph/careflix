@@ -337,7 +337,7 @@ function UserItem(props: UserItemProps) {
   }, [props.invitation && props.invitation.id])
   
   const isExpired = useMemo(() => {
-    props.invitation && isBefore(expiration, now)
+    return props.invitation && isBefore(expiration, now)
   }, [now])
 
   useEffect(() => {

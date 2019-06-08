@@ -178,7 +178,7 @@ function ChatWidget(props: Props) {
       chatbarRef.current.scrollTop = scrollTop
     }
 
-    if (!isWindowVisible) {
+    if (!isWindowVisible && event.log.type === 'message') {
       // Let's play a sound if the user receives a message while switched to another tab.
       idleAudioRef.current.play()
     }

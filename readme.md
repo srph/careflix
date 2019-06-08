@@ -81,3 +81,4 @@ npm run build
 
 ## Attribution
 - [DrawKit](https://www.drawkit.io/illustrations/drawing-woman-colour) for the free illustrations pack.
+- [Notification Sounds](https://notificationsounds.com/sound-effects) for the notification audio files.

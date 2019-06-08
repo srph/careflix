@@ -88,3 +88,7 @@
   margin-right: 6px;
   color: var(--color-secondary);
 }
+
+.invitation-notification-audio {
+  display: none;
+}

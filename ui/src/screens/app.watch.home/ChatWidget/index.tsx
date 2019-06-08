@@ -140,17 +140,30 @@ function ChatWidget(props: Props) {
         payload: { logs: res.data }
       })
 
-      chatbarRef.current.scrollTop = chatbarRef.current.scrollHeight
+      scrollToBottom(chatbarRef.current)
     },
     null,
     []
   )
 
-  usePusher(`private-party.${props.party.id}`, 'activity', (event: { log: AppPartyLog }) => {
+  usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
+    // We'll store the current scrolling position so we can lock it later if needed.
+    const scrollTop = chatbarRef.current.scrollTop
+    
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
     })
+
+    if (isScrolledToBottom(chatbarRef.current)) {
+      // If the user was scrolled to the bottom before we pushed another log,
+      // we'll keep the illusion that they still are.
+      scrollToBottom(chatbarRef.current)
+    } else {
+      // However, if the user was somewhere else, we'll lock to the position where
+      // they were before the message was added.
+      chatbarRef.current.scrollTop = scrollTop
+    }
   })
 
   function handleInput(evt: React.FormEvent<HTMLInputElement>) {
@@ -187,6 +200,8 @@ function ChatWidget(props: Props) {
       type: 'chat:init',
       payload: { log }
     })
+
+    scrollToBottom(chatbarRef.current)
 
     const [err, res] = await axios.post(`/api/parties/${props.party.id}/logs/message`, {
       message: state.message.text
@@ -312,6 +327,20 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
   })
 
   return groups
+}
+
+/**
+ * 
+ */
+function scrollToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
+  const treshold = opts.treshold || 0
+  console.log(treshold)
+  el.scrollTop = el.scrollHeight - el.offsetHeight - treshold
+}
+
+function isScrolledToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
+  const treshold = opts.treshold || 0
+  return el.scrollTop >= (el.scrollHeight - el.offsetHeight - treshold)
 }
 
 export default ChatWidget

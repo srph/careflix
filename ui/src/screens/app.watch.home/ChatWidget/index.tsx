@@ -295,7 +295,7 @@ function ChatWidget(props: Props) {
         </form>
       </div>
 
-      <audio style={{ display: 'none' }} ref={notificationRef}>
+      <audio className="chat-notification-audio" ref={notificationRef}>
         <source src={asset_chatInactive} type="audio/ogg" />
       </audio>
     </React.Fragment>

@@ -68,7 +68,7 @@
 .watch-screen-chat-group > .messages > .message > .inner {
   flex-grow: 0;
   display: inline-block;
-  padding: 16px;
+  padding: 6px 8px;
   background: var(--color-black-4);
   border-radius: 24px;
 }

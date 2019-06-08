@@ -14,7 +14,10 @@ import immer from 'immer'
 import { useReducer, useEffect, useMemo, useRef } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePusher } from '~/hooks/usePusher'
+import { useWindowVisibility } from '~/hooks/useWindowVisibility'
 import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateTime'
+
+import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 
 interface State {
   logs: AppPartyLog[]
@@ -120,6 +123,8 @@ function ChatWidget(props: Props) {
   const [state, dispatch] = useReducer(reducer, init)
 
   const chatbarRef = useRef<HTMLDivElement>(null)
+  
+  const notificationRef = useRef<HTMLAudioElement>(null)
 
   useAsyncEffect(
     async () => {
@@ -146,6 +151,9 @@ function ChatWidget(props: Props) {
     []
   )
 
+  const isWindowVisible = useWindowVisibility()
+  console.log('is it?', isWindowVisible)
+
   usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
     // We'll store the current scrolling position so we can lock it later if needed.
     const scrollTop = chatbarRef.current.scrollTop
@@ -163,6 +171,11 @@ function ChatWidget(props: Props) {
       // However, if the user was somewhere else, we'll lock to the position where
       // they were before the message was added.
       chatbarRef.current.scrollTop = scrollTop
+    }
+
+    if (!isWindowVisible) {
+      // Let's play a sound if the user receives a message while switched to another tab.
+      notificationRef.current.play()
     }
   })
 
@@ -281,6 +294,10 @@ function ChatWidget(props: Props) {
           />
         </form>
       </div>
+
+      <audio style={{ display: 'none' }} ref={notificationRef}>
+        <source src={asset_chatInactive} type="audio/ogg" />
+      </audio>
     </React.Fragment>
   )
 }

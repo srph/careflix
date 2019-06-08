@@ -18,6 +18,7 @@ import { useWindowVisibility } from '~/hooks/useWindowVisibility'
 import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateTime'
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
+import asset_chatSend from '~/assets/audio/chat-send.ogg'
 
 interface State {
   logs: AppPartyLog[]
@@ -124,7 +125,9 @@ function ChatWidget(props: Props) {
 
   const chatbarRef = useRef<HTMLDivElement>(null)
   
-  const notificationRef = useRef<HTMLAudioElement>(null)
+  const idleAudioRef = useRef<HTMLAudioElement>(null)
+
+  const sendAudioRef = useRef<HTMLAudioElement>(null)
 
   useAsyncEffect(
     async () => {
@@ -156,13 +159,16 @@ function ChatWidget(props: Props) {
   usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
     // We'll store the current scrolling position so we can lock it later if needed.
     const scrollTop = chatbarRef.current.scrollTop
+
+    // We'll store the current status so we can scroll later if needed.
+    const wasScrolledToBottom = isScrolledToBottom(chatbarRef.current)
     
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
     })
 
-    if (isScrolledToBottom(chatbarRef.current)) {
+    if (wasScrolledToBottom) {
       // If the user was scrolled to the bottom before we pushed another log,
       // we'll keep the illusion that they still are.
       scrollToBottom(chatbarRef.current)
@@ -174,7 +180,7 @@ function ChatWidget(props: Props) {
 
     if (!isWindowVisible) {
       // Let's play a sound if the user receives a message while switched to another tab.
-      notificationRef.current.play()
+      idleAudioRef.current.play()
     }
   })
 
@@ -214,6 +220,8 @@ function ChatWidget(props: Props) {
     })
 
     scrollToBottom(chatbarRef.current)
+
+    sendAudioRef.current.play()
 
     const [err, res] = await axios.post(`/api/parties/${props.party.id}/logs/message`, {
       message: state.message.text
@@ -294,8 +302,12 @@ function ChatWidget(props: Props) {
         </form>
       </div>
 
-      <audio className="chat-notification-audio" ref={notificationRef}>
+      <audio className="chat-notification-audio" ref={idleAudioRef}>
         <source src={asset_chatInactive} type="audio/ogg" />
+      </audio>
+
+      <audio className="chat-notification-audio" ref={sendAudioRef}>
+        <source src={asset_chatSend} type="audio/ogg" />
       </audio>
     </React.Fragment>
   )

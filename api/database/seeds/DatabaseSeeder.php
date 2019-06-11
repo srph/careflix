@@ -62,7 +62,7 @@ class DatabaseSeeder extends Seeder
                 App\ShowVideo::create([
                     'show_id' => $show->id,
                     'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.avi',
-                    'duration' => 7200,
+                    'duration' => 596,
                     'synopsis' => $faker->text,
                 ]);
             } else {
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
                             'show_group_id' => $group->id,
                             'title' => sprintf("Episode %s", $k),
                             'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.avi',
-                            'duration' => 1200,
+                            'duration' => 596,
                             'synopsis' => $faker->text,
                             'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
                         ]);

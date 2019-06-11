@@ -5,7 +5,7 @@ import UiPlainButton from '~/components/UiPlainButton'
 import Slider, { SliderValue } from 'react-input-slider'
 
 import toReadableTime from '~/utils/date/toReadableTime'
-import getAirDetails from '~/utils/shows/getAirDetails';
+import getAirDetails from '~/utils/shows/getAirDetails'
 
 interface Props {
   party: AppParty
@@ -89,7 +89,14 @@ function PlayerModal({ party, ...props }: Props) {
             </div>
 
             <div className="slider">
-              <Slider axis="x" x={props.time} xmin={0} xmax={party.video.duration} onChange={handleSeek} />
+              <Slider
+                axis="x"
+                x={props.time}
+                xmin={0}
+                xmax={party.video.duration}
+                onChange={handleSeek}
+                styles={{ track: { width: '100%' } }}
+              />
             </div>
 
             <div className="time">{toReadableTime(party.video.duration)}</div>
@@ -97,9 +104,7 @@ function PlayerModal({ party, ...props }: Props) {
 
           <div className="watch-player-modal-card">
             <div className="meta">
-              <h6 className="ui-subheading">
-                {getAirDetails(party.video)}
-              </h6>
+              <h6 className="ui-subheading">{getAirDetails(party.video)}</h6>
             </div>
 
             <h2 className="title">{party.video.show.title}</h2>

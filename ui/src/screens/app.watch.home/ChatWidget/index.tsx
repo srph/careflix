@@ -362,7 +362,6 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
  */
 function scrollToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
   const treshold = opts.treshold || 0
-  console.log(treshold)
   el.scrollTop = el.scrollHeight - el.offsetHeight - treshold
 }
 

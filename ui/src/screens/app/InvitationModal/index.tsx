@@ -12,7 +12,7 @@ import { usePusher } from '~/hooks/usePusher'
 import { useRef, useEffect, useReducer, useMemo } from 'react'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
-import getAirDetails from '~/utils/shows/getAirDetails'
+import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 import { useNow } from '~/hooks/useNow';
 import { parse, isBefore } from 'date-fns'
@@ -213,7 +213,7 @@ function InvitationModal() {
                 <div className="overlay" />
                 <div className="details">
                   <div className="tag">
-                    <h6 className="ui-subheading">{getAirDetails(invitation.party.video)}</h6>
+                    <h6 className="ui-subheading">{getVideoDetails(invitation.party.video)}</h6>
                   </div>
                   <h3 className="title">{invitation.party.video.show.title}</h3>
                 </div>

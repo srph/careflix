@@ -9,6 +9,8 @@ import StandardImageAspectRatio from '~/components/StandardImageAspectRatio'
 import getFormattedDurationWithoutSeconds from '~/utils/date/getFormattedDurationWithoutSeconds'
 import axios from '~/lib/axios'
 import history from '~/lib/history'
+import getAirDetails from '~utils/shows/getAirDetails';
+import getVideoDetails from '~utils/shows/getVideoDetails';
 
 interface Props {
   show: AppShow | null
@@ -165,7 +167,13 @@ function ShowModal(props: Props) {
             <div className="show-modal-body">
               <header className="show-modal-heading">
                 <div className="tags">
-                  <h5 className="ui-subheading">8 Seasons</h5>
+                  <h5 className="ui-subheading">
+                    {props.show.title_type === 'series' && (
+                      state.isLoading ? `—` : getAirDetails(props.show)
+                    )}
+
+                    {props.show.title_type === 'movie' && getAirDetails(props.show)}
+                  </h5>
                 </div>
 
                 <h3 className="title">{props.show.title}</h3>

@@ -1,9 +1,10 @@
 import './style.css'
 import * as React from 'react'
+import { useState } from 'react'
 import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import Slider, { SliderValue } from 'react-input-slider'
-
+import SeasonSelectionModal from '../SeasonSelectionModal'
 import toReadableTime from '~/utils/date/toReadableTime'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 
@@ -15,9 +16,16 @@ interface Props {
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
+  onChangeVideo: (party: AppParty) => void
+}
+
+interface State {
+  isSeasonSelectionOpen: boolean
 }
 
 function PlayerModal({ party, ...props }: Props) {
+  const [state, setState] = useState(() => ({ isSeasonSelectionOpen: false }))
+
   function handleSeek({ x }: SliderValue) {
     props.onSeek(x)
   }
@@ -28,6 +36,31 @@ function PlayerModal({ party, ...props }: Props) {
 
   function handleBackward() {
     props.onSeek(Math.max(props.time - 10, 0))
+  }
+
+  function handleSeasonSelectionOpen() {
+    setState({
+      ...state,
+      isSeasonSelectionOpen: true
+    })
+  }
+
+  function handleSeasonSelectionClose() {
+    setState({
+      ...state,
+      isSeasonSelectionOpen: false
+    })
+  }
+
+  function handleChangeVideo(party: AppParty) {
+    setState({
+      ...state,
+      isSeasonSelectionOpen: false
+    })
+
+    props.onClose()
+
+    props.onChangeVideo(party)
   }
 
   return (
@@ -43,15 +76,15 @@ function PlayerModal({ party, ...props }: Props) {
           </div>
 
           <div className="section">
-            <div className="action">
+            {/* <div className="action">
               <UiPlainButton>
                 <i className="fa fa-comments" />
               </UiPlainButton>
-            </div>
+            </div> */}
 
             <div className="action">
-              <UiPlainButton>
-                <i className="fa fa-cc" />
+              <UiPlainButton onClick={handleSeasonSelectionOpen}>
+                <i className="fa fa-list-ol" />
               </UiPlainButton>
             </div>
             <div className="action">
@@ -112,6 +145,8 @@ function PlayerModal({ party, ...props }: Props) {
           </div>
         </div>
       </div>
+
+      <SeasonSelectionModal party={party} show={party.video.show} isOpen={state.isSeasonSelectionOpen} onClose={handleSeasonSelectionClose} onChangeVideo={handleChangeVideo} />
     </UiModal>
   )
 }

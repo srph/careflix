@@ -5,5 +5,6 @@ export default React.createContext<ContextType>({
   party: null,
   isLoading: false,
   onCancel: () => {},
-  onInvite: () => {}
+  onInvite: () => {},
+  onChangeVideo: () => {}
 })

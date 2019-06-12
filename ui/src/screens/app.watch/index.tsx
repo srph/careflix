@@ -127,11 +127,19 @@ function AppWatch(props: ReactComponentWrapper) {
     })
   }
 
+  function handleChangeVideo(party: AppParty) {
+    dispatch({
+      type: 'data:update',
+      payload: { party }
+    })
+  }
+
   const context = useMemo<ContextType>(() => {
     return {
       ...state,
       onCancel: handleCancel,
-      onInvite: handleInvite
+      onInvite: handleInvite,
+      onChangeVideo: handleChangeVideo
     }
   }, [state])
 

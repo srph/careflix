@@ -138,3 +138,47 @@
 .watch-screen-activity-group > .activity > .avatar {
   margin-right: 8px;
 }
+
+@keyframes watch-screen-message-animation {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  85% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.watch-screen-message {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation-name: watch-screen-message-animation;
+  animation-duration: 4s;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+}
+
+.watch-screen-message > .status {
+  opacity: 0.75;
+  margin-bottom: 4px;
+}

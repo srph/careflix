@@ -6,6 +6,7 @@ export interface State {
 export interface Handlers {
   onCancel: (invitation: AppPartyInvitation) => void
   onInvite: (invitation: AppPartyInvitation) => void
+  onChangeVideo: (party: AppParty) => void
 }
 
 export type ContextType = State & Handlers

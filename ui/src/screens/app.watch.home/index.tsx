@@ -7,6 +7,7 @@ import ChatWidget from './ChatWidget'
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
+import { useBufferState } from '~/hooks/useBufferState'
 import axios from '~lib/axios'
 
 interface State {
@@ -131,6 +132,14 @@ function AppWatchHome(props: ReactComponentWrapper) {
     }
   }, [state.isPlaying])
 
+  const [changeEpisodeBuffer, displayChangeEpisodeBuffer] = useBufferState({
+    timeout: 4000
+  })
+
+  useUpdateEffect(() => {
+    displayChangeEpisodeBuffer()
+  }, [context.party.video.id])
+
   function handleOpen() {
     dispatch({
       type: 'controls:open'
@@ -191,13 +200,14 @@ function AppWatchHome(props: ReactComponentWrapper) {
         onClose={handleClose}
         onPlay={handlePlay}
         onSeek={handleSeek}
+        onChangeVideo={context.onChangeVideo}
       />
 
       <div className="watch-screen">
         <div
           className="watch-screen-video"
           style={{
-            backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})`
+            backgroundImage: context.party.video.preview_image
           }}
           onClick={handleOpen}>
           <video
@@ -206,6 +216,18 @@ function AppWatchHome(props: ReactComponentWrapper) {
             onTimeUpdate={handleTimeUpdate}
             onEnded={handleVideoEnded}
           />
+
+          {changeEpisodeBuffer && (
+            <div className="watch-screen-message">
+              <div className="status">
+                <h5 className="ui-subheading">
+                  Now Playing
+                </h5>
+              </div>
+
+              <h4>{context.party.video.group.title}: {context.party.video.title}</h4>
+            </div>
+          )}
         </div>
 
         <ChatWidget party={context.party} />

@@ -21,6 +21,7 @@ Route::middleware('auth:api')->group(function() {
     Route::group(['middleware' => 'party.member'], function() {
         Route::get('parties/{party}', 'PartiesController@show');
         Route::put('parties/{party}/state', 'PartiesController@state');
+        Route::put('parties/{party}/change-video', 'PartiesController@changeVideo');
         Route::put('parties/{party}/time', 'PartiesController@time');
         Route::get('parties/{party}/invitations', 'PartyInvitationsController@index');
         Route::get('parties/{party}/invitations/search', 'PartyInvitationsController@search');

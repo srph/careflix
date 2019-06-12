@@ -1,0 +1,45 @@
+.c-season-selection-select {
+  width: 50%;
+  margin-bottom: 16px;
+}
+
+.c-season-selection-episode {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 16px 0;
+  color: var(--color-white);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.c-season-selection-episode:first-child {
+  border-top: 1px solid var(--color-black-3);
+}
+
+.c-season-selection-episode:not(:last-child) {
+  border-bottom: 1px solid var(--color-black-3);
+}
+
+.c-season-selection-episode > .thumbnail {
+  flex-shrink: 0;
+  width: 120px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.c-season-selection-episode > .info {
+  width: 100%;
+  margin-right: 24px;
+}
+
+.c-season-selection-episode > .info > .meta {
+  color: var(--color-black-5);
+}
+
+.c-season-selection-episode > .play {
+  flex-shrink: 0;
+  color: var(--color-black-5);
+}

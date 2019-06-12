@@ -10,6 +10,8 @@ import { usePartyContext } from '~/screens/app.watch/Context'
 import { useBufferState } from '~/hooks/useBufferState'
 import axios from '~lib/axios'
 
+import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
+
 interface State {
   time: number
   isComplete: boolean
@@ -211,7 +213,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
         <div
           className="watch-screen-video"
           style={{
-            backgroundImage: context.party.video.preview_image
+            backgroundImage: `url(${getVideoPreviewImage(context.party)})`
           }}
           onClick={handleOpen}>
           <video

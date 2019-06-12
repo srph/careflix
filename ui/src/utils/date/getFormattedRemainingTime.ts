@@ -5,6 +5,8 @@ type Payload = Date | string | number
 
 /**
  * Formats the remaining time (5h 4m 3s)
+ * 
+ * @TODO Use `getFormattedDuration` instead of a repeat of what it does.
  */
 export default function getFormattedRemainingTime(future: Payload, present: Payload) {
   const remaining = getRemainingTime(differenceInSeconds(future, present))

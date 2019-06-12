@@ -1,0 +1,97 @@
+.show-modal-overlay {
+  background: var(--color-black-1);
+}
+
+.show-modal {
+  padding: 0;
+}
+
+.show-modal-cover {
+  position: relative;
+  padding-bottom: 56.25%;
+}
+
+.show-modal-cover > .image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.show-modal-cover > .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent 70%, var(--color-black-1) 100%);
+}
+
+.show-modal-body {
+  padding: 16px;
+}
+
+.show-modal-heading {
+  margin-bottom: 24px;
+}
+
+.show-modal-heading > .tags {
+  color: var(--color-black-5);
+}
+
+.show-modal-heading > .title {
+  margin-bottom: 8px;
+}
+
+.show-modal-heading > .synopsis {
+  line-height: 1.5;
+}
+
+.show-modal-select {
+  width: 50%;
+  margin-bottom: 16px;
+}
+
+.show-modal-episode {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 16px 0;
+  color: var(--color-white);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.show-modal-episode:first-child {
+  border-top: 1px solid var(--color-black-3);
+}
+
+.show-modal-episode:not(:last-child) {
+  border-bottom: 1px solid var(--color-black-3);
+}
+
+.show-modal-episode > .thumbnail {
+  flex-shrink: 0;
+  width: 120px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.show-modal-episode > .info {
+  width: 100%;
+  margin-right: 24px;
+}
+
+.show-modal-episode > .info > .meta {
+  color: var(--color-black-5);
+}
+
+.show-modal-episode > .play {
+  flex-shrink: 0;
+  color: var(--color-black-5);
+}

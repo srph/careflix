@@ -3,14 +3,21 @@ import './style'
 import * as React from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import axios from '~/lib/axios'
-import history from '~/lib/history'
+import ShowModal from '../ShowModal'
 
 interface State {
   shows: AppShow[]
   isLoading: boolean
+  selectedShow: AppShow | null
 }
 
-const reducer = (state: State, action) => {
+type Action = ReducerAction<'data:init'>
+  | ReducerAction<'data:success', { shows: AppShow[] }>
+  | ReducerAction<'data:error'>
+  | ReducerAction<'show:select', { show: AppShow }>
+  | ReducerAction<'show:close', { show: AppShow }>
+
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'data:init': {
       return {
@@ -33,6 +40,20 @@ const reducer = (state: State, action) => {
         isLoading: false
       }
     }
+
+    case 'show:select': {
+      return {
+        ...state,
+        selectedShow: action.payload.show
+      }
+    }
+
+    case 'show:close': {
+      return {
+        ...state,
+        selectedShow: null
+      }
+    }
   }
 
   return state
@@ -41,7 +62,8 @@ const reducer = (state: State, action) => {
 function AppHome() {
   const [state, dispatch] = React.useReducer(reducer, {
     shows: [],
-    isLoading: true
+    isLoading: true,
+    selectedShow: null
   })
 
   useAsyncEffect(
@@ -63,16 +85,16 @@ function AppHome() {
   )
 
   async function handleShowClick(show: AppShow) {
-    const [err, res] = await axios.post('/api/parties', {
-      // @TODO Work on series
-      show_video_id: show.movie.id
+    dispatch({
+      type: 'show:select',
+      payload: { show }
     })
+  }
 
-    if (err) {
-      // Launch toast notification
-    }
-
-    history.push(`/watch/${res.data.id}`)
+  function handleShowClose(show: AppShow) {
+    dispatch({
+      type: 'show:close'
+    })
   }
 
   return (
@@ -82,26 +104,28 @@ function AppHome() {
       <div className="show-carousel">
         <div className="inner">
           {state.shows.map((show, j) => (
-              <div className="card" key={j}>
-                <button
-                  type="button"
-                  className="show-carousel-card"
-                  style={{ backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})` }}
-                  onClick={() => handleShowClick(show)}>
-                  <div className="overlay" />
+            <div className="card" key={j}>
+              <button
+                type="button"
+                className="show-carousel-card"
+                style={{ backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})` }}
+                onClick={() => handleShowClick(show)}>
+                <div className="overlay" />
 
-                  <div className="details">
-                    <div className="tags">
-                      <span className="tag">{new Date(show.air_start).getFullYear()}</span>
-                    </div>
-
-                    <h3 className="title">{show.title}</h3>
+                <div className="details">
+                  <div className="tags">
+                    <span className="tag">{new Date(show.air_start).getFullYear()}</span>
                   </div>
-                </button>
-              </div>
-            ))}
+
+                  <h3 className="title">{show.title}</h3>
+                </div>
+              </button>
+            </div>
+          ))}
         </div>
       </div>
+
+      <ShowModal show={state.selectedShow} onClose={handleShowClose} />
     </div>
   )
 

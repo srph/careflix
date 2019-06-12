@@ -8,6 +8,8 @@ interface RemainingTimeValue {
  * Get remaining time from seconds
  * 
  * Used by `toReadableTime` and `distanceInWordsAbbreivated`
+ * 
+ * @TODO Rename to `getDuration`, maybe?
  */
 export default function getRemainingTime(seconds: number): RemainingTimeValue {
   const hh = Math.floor(seconds / 3600)

@@ -12,3 +12,7 @@
   padding: 16px;
   outline: 0;
 }
+
+.ui-modal.has-padding {
+  padding: 0;
+}

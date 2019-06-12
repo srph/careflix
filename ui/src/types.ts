@@ -77,6 +77,16 @@ interface AppShowVideo {
   updated_at: string
 }
 
+interface AppShowGroup {
+  id: AppId
+  show_id: AppId
+  title: string
+  show?: AppShow
+  videos: AppShowVideo[]
+  created_at: string
+  updated_at: string
+}
+
 interface AppShow {
   id: AppId
   title: string

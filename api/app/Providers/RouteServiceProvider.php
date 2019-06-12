@@ -28,6 +28,7 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         Route::model('party', \App\Party::class);
+        Route::model('show', \App\Show::class);
         Route::model('invitation', \App\PartyInvitation::class);
     }
 

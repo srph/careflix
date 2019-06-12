@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->group(function() {
     Route::get('shows', 'ShowsController@index');
+    Route::get('shows/{show}/groups', 'ShowsController@groups');
     Route::post('parties', 'PartiesController@store');
 
     Route::group(['middleware' => 'party.member'], function() {
@@ -37,6 +38,6 @@ Route::middleware('auth:api')->group(function() {
     });
 
     Route::post('invitations/{invitation}/cancel', 'PartyInvitationsController@cancel');
-        
+
     Route::get('me', 'MeController@data');
 });

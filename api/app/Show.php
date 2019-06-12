@@ -22,14 +22,14 @@ class Show extends Model
      */
     protected $appends = [
         'movie'
-    ];    
-    
+    ];
+
     public function genres() {
         return $this->belongsToMany(Genre::class);
     }
-    
+
     public function groups() {
-        return $this->belongsTo(ShowGroup::class);
+        return $this->hasMany(ShowGroup::class);
     }
 
     public function videos() {

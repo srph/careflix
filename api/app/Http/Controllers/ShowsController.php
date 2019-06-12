@@ -16,4 +16,8 @@ class ShowsController extends Controller
     {
         return Show::all();
     }
+
+    public function groups(Show $show) {
+        return $show->groups;
+    }
 }

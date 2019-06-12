@@ -26,6 +26,7 @@ html, body {
   --letter-spacing-subheading: 1px;
   --overlay-fade: linear-gradient(transparent, rgba(0,0,0,0.9));
   --text-shadow-default: 0 1px 1px var(--color-black-1);
+  --form-size: 40px;
 
   color: var(--color-white);
   font-size: var(--font-size);
@@ -66,6 +67,10 @@ p, h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-family-subheading);
   font-size: var(--font-size-subheading);
   text-transform: uppercase;
+}
+
+.ui-subheading.is-compact {
+  letter-spacing: initial;
 }
 
 .u-text-center {

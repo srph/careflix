@@ -24,7 +24,7 @@ class StoreParty extends FormRequest
     public function rules()
     {
         return [
-            'show_video_id' => 'required|exists:shows,id'
+            'show_video_id' => 'required|exists:show_videos,id'
         ];
     }
 }

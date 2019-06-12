@@ -28,6 +28,7 @@ class Party extends Model
     protected $with = [
         'video',
         'video.show',
+        'video.group',
         'members'
     ];
 

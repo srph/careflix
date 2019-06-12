@@ -27,6 +27,9 @@
   left: 0;
   right: 0;
   bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(180deg, transparent 70%, var(--color-black-1) 100%);
 }
 
@@ -45,6 +48,18 @@
   color: var(--color-white);
   background: var(--color-black-5);
   border-radius: 50%;
+}
+
+.show-modal-play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 16px var(--color-primary);
 }
 
 .show-modal-body {

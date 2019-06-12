@@ -142,6 +142,10 @@ function ShowModal(props: Props) {
     history.push(`/watch/${res.data.id}`)
   }
 
+  function handleMoviePlayClick() {
+    handleVideoClick(props.show.movie)
+  }
+
   return (
     <React.Fragment>
       <UiModal
@@ -154,7 +158,17 @@ function ShowModal(props: Props) {
           <React.Fragment>
             <div className="show-modal-cover">
               <img src={props.show.preview_image} alt={props.show.title} className="image" />
-              <div className="overlay" />
+
+              <div className="overlay">
+                {props.show.title_type === 'movie' && (
+                  <UiPlainButton onClick={handleMoviePlayClick}>
+                    <div className="show-modal-play-button">
+                      <i className='fa fa-play' />
+                    </div>
+                  </UiPlainButton>
+                )}
+              </div>
+
               <div className="show-modal-close">
                 <UiPlainButton onClick={handleModalClose}>
                   <div className="show-modal-close-button">

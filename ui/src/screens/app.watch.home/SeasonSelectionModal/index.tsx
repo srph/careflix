@@ -32,6 +32,10 @@ function ShowModal(props: Props) {
     props.onChangeVideo(res.data)
   }
 
+  if (props.party.video.show.title_type !== 'series') {
+    return null
+  }
+
   return (
     <React.Fragment>
       <UiModal
@@ -49,7 +53,7 @@ function ShowModal(props: Props) {
               </UiPlainButton>
             </div>
 
-            <SeasonSelection show={props.show} onEpisodeClick={handleVideoClick} />
+            <SeasonSelection show={props.show} defaultSelectedVideoId={props.party.video.group.id} onEpisodeClick={handleVideoClick} />
           </React.Fragment>
         )}
       </UiModal>

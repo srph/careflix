@@ -82,11 +82,14 @@ function PlayerModal({ party, ...props }: Props) {
               </UiPlainButton>
             </div> */}
 
-            <div className="action">
-              <UiPlainButton onClick={handleSeasonSelectionOpen}>
-                <i className="fa fa-list-ol" />
-              </UiPlainButton>
-            </div>
+            {party.video.show.title_type === 'series' && (
+              <div className="action">
+                <UiPlainButton onClick={handleSeasonSelectionOpen}>
+                  <i className="fa fa-list-ol" />
+                </UiPlainButton>
+              </div>
+            )}
+
             <div className="action">
               <UiPlainButton>
                 <i className="fa fa-cog" />

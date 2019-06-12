@@ -132,11 +132,15 @@ function AppWatchHome(props: ReactComponentWrapper) {
     }
   }, [state.isPlaying])
 
+  // Used to show the change episode notice momentarily
   const [changeEpisodeBuffer, displayChangeEpisodeBuffer] = useBufferState({
     timeout: 4000
   })
 
   useUpdateEffect(() => {
+    // We're not putting any other conditions here (if it's a series, etc.)
+    // because we're in the assumption that only series will have a change
+    // of videos.
     displayChangeEpisodeBuffer()
   }, [context.party.video.id])
 

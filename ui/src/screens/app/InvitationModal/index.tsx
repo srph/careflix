@@ -167,7 +167,7 @@ function InvitationModal() {
   }, [invitation && invitation.id])
 
   const isInvalid = useMemo(() => {
-    invitation && (invitation.action === 'cancelled' || isBefore(expiration, now))
+    return invitation && (invitation.action === 'cancelled' || isBefore(expiration, now))
   }, [now])
 
   return (

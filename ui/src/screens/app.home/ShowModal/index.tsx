@@ -4,6 +4,7 @@ import { useReducer, useMemo } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import UiModal from '~/components/UiModal'
 import UiSelect from '~/components/UiSelect'
+import UiPlainButton from '~/components/UiPlainButton'
 import StandardImageAspectRatio from '~/components/StandardImageAspectRatio'
 import getFormattedDurationWithoutSeconds from '~/utils/date/getFormattedDurationWithoutSeconds'
 import axios from '~/lib/axios'
@@ -152,6 +153,13 @@ function ShowModal(props: Props) {
             <div className="show-modal-cover">
               <img src={props.show.preview_image} alt={props.show.title} className="image" />
               <div className="overlay" />
+              <div className="show-modal-close">
+                <UiPlainButton onClick={handleModalClose}>
+                  <div className="show-modal-close-button">
+                    <i className='fa fa-close' />
+                  </div>
+                </UiPlainButton>
+              </div>
             </div>
 
             <div className="show-modal-body">

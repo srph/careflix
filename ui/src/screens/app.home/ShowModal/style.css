@@ -30,6 +30,23 @@
   background: linear-gradient(180deg, transparent 70%, var(--color-black-1) 100%);
 }
 
+.show-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.show-modal-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  color: var(--color-white);
+  background: var(--color-black-5);
+  border-radius: 50%;
+}
+
 .show-modal-body {
   padding: 16px;
 }

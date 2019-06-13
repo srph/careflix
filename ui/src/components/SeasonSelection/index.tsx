@@ -9,7 +9,7 @@ import axios from '~/lib/axios'
 
 interface Props {
   show: AppShow | null
-  initialSelectedGroupId?: number
+  currentVideo?: AppShowVideo
   onFetch?: (groups: AppShowGroup[]) => void
   onEpisodeClick: (video: AppShowVideo) => void
 }
@@ -83,12 +83,12 @@ function ShowModal(props: Props) {
   const [state, dispatch] = useReducer(reducer, {
     groups: [],
     isLoading: false,
-    selectedGroupId: props.initialSelectedGroupId || -1
+    selectedGroupId: props.currentVideo ? props.currentVideo.show_group_id : -1
   })
 
   const group = useMemo(() => {
     return state.groups.find(group => group.id === state.selectedGroupId)
-  }, [state.selectedGroupId])
+  }, [state.groups, state.selectedGroupId])
 
   useAsyncEffect(
     async () => {
@@ -126,6 +126,16 @@ function ShowModal(props: Props) {
     })
   }
 
+  function handleEpisodeClick(video: AppShowVideo) {
+    if (props.currentVideo && video.id === props.currentVideo.id) {
+      // @TODO Show a toast message, "this is already playing."
+      // @TODO Add API validation.
+      return
+    }
+
+    props.onEpisodeClick(video)
+  }
+
   if (props.show.title_type === 'movie' || state.isLoading || !state.groups.length) {
     return null
   }
@@ -144,7 +154,7 @@ function ShowModal(props: Props) {
 
       <section>
         {group.videos.map(video => (
-          <button type="button" className="c-season-selection-episode" key={video.id} onClick={() => props.onEpisodeClick(video)}>
+          <button type="button" className="c-season-selection-episode" key={video.id} onClick={() => handleEpisodeClick(video)}>
             <div className="thumbnail">
               <StandardImageAspectRatio src={props.show.preview_image} />
             </div>

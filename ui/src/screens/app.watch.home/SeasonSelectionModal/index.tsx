@@ -53,7 +53,7 @@ function ShowModal(props: Props) {
               </UiPlainButton>
             </div>
 
-            <SeasonSelection show={props.show} defaultSelectedVideoId={props.party.video.group.id} onEpisodeClick={handleVideoClick} />
+            <SeasonSelection show={props.show} currentVideo={props.party.video} onEpisodeClick={handleVideoClick} />
           </React.Fragment>
         )}
       </UiModal>

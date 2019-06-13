@@ -126,7 +126,7 @@ function ChatWidget(props: Props) {
   const [state, dispatch] = useReducer(reducer, init)
 
   const chatbarRef = useRef<HTMLDivElement>(null)
-  
+
   const idleAudioRef = useRef<HTMLAudioElement>(null)
 
   const sendAudioRef = useRef<HTMLAudioElement>(null)
@@ -164,7 +164,7 @@ function ChatWidget(props: Props) {
 
     // We'll store the current status so we can scroll later if needed.
     const wasScrolledToBottom = isScrolledToBottom(chatbarRef.current)
-    
+
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
@@ -275,7 +275,8 @@ function ChatWidget(props: Props) {
             <div
               className={cx('watch-screen-chat-group', {
                 'is-self': group.user.id === auth.state.data.id
-              })} key={i}>
+              })}
+              key={i}>
               <div className="avatar">
                 <UiAvatar img={group.user.avatar} />
               </div>
@@ -294,11 +295,7 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <UiInput isDark isRound
-            placeholder="Write something..."
-            value={state.message.text}
-            onChange={handleInput}
-          />
+          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} onChange={handleInput} />
 
           <UiPlainButton className="button">
             <i className="fa fa-send" />
@@ -362,7 +359,7 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
 }
 
 /**
- * 
+ *
  */
 function scrollToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
   const treshold = opts.treshold || 0
@@ -371,7 +368,7 @@ function scrollToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
 
 function isScrolledToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
   const treshold = opts.treshold || 0
-  return el.scrollTop >= (el.scrollHeight - el.offsetHeight - treshold)
+  return el.scrollTop >= el.scrollHeight - el.offsetHeight - treshold
 }
 
 export default ChatWidget

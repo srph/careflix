@@ -3,6 +3,7 @@ import './style'
 import * as React from 'react'
 import UiButton from '~/components/UiButton'
 import UiAvatar from '~/components/UiAvatar'
+import UiInput from '~/components/UiInput'
 
 import immer from 'immer'
 import { useReducer, useMemo, useEffect } from 'react'
@@ -265,9 +266,8 @@ function AppWatchInvite(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
       <div className="invite-searchbar">
-        <input
+        <UiInput isDark
           type="text"
-          className="ui-input"
           placeholder="Search for a friend to invite..."
           value={state.input}
           onChange={handleInput}

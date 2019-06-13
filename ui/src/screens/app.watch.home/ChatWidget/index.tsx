@@ -2,6 +2,8 @@ import './style'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
+import UiInput from '~/components/UiInput'
+import UiPlainButton from '~/components/UiPlainButton'
 import cx from 'classnames'
 
 import { useUnstated } from '~/lib/unstated'
@@ -291,14 +293,16 @@ function ChatWidget(props: Props) {
       </div>
 
       <div className="watch-screen-chatbar">
-        <form onSubmit={handleMessage}>
-          <input
-            type="text"
-            className="ui-input"
+        <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
+          <UiInput isDark isRound
             placeholder="Write something..."
             value={state.message.text}
             onChange={handleInput}
           />
+
+          <UiPlainButton className="button">
+            <i className="fa fa-send" />
+          </UiPlainButton>
         </form>
       </div>
 

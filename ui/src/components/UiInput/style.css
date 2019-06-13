@@ -5,7 +5,19 @@
   width: 100%;
   color: var(--color-black-5);
   background: var(--color-black-2);
-  border: 0;
   outline: 0;
+  border: 1px solid transparent;
   border-radius: var(--border-radius);
+}
+
+.ui-input:focus {
+  border-color: rgb(29, 161, 242);
+}
+
+.ui-input.is-dark {
+  background: var(--color-black-1);
+}
+
+.ui-input.is-round {
+  border-radius: 25px;
 }

@@ -1,11 +1,12 @@
 import './style.css'
 import * as React from 'react'
+import cx from 'classnames'
 
-type Props = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement>
 
-function UiButton(props: Props) {
+function UiButton({ className, ...props }: Props) {
   return (
-    <button {...props} className="ui-plain-button">
+    <button {...props} className={cx('ui-plain-button', [className])}>
       {props.children}
     </button>
   )

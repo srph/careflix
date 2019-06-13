@@ -1,3 +1,23 @@
+.watch-screen-chatbar {
+  flex-shrink: 0;
+  padding: 16px;
+  background: var(--color-black-2);
+  border-top: 1px solid var(--color-black-1);
+}
+
+.watch-screen-chatbar-input {
+  position: relative;
+}
+
+.watch-screen-chatbar-input > .button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 12px;
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
 .chat-notification-audio {
   display: none;
 }

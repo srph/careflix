@@ -36,12 +36,12 @@ type Action =
   | ReducerAction<'request:success', { data: any[] }>
   | ReducerAction<'request:error'>
   | ReducerAction<'input', { input: string }>
-  | ReducerAction<'invitation.send:init', { id: number }>
-  | ReducerAction<'invitation.send:error', { id: number }>
-  | ReducerAction<'invitation.send:success', { id: number }>
-  | ReducerAction<'invitation.cancel:init', { id: number }>
-  | ReducerAction<'invitation.cancel:error', { id: number }>
-  | ReducerAction<'invitation.cancel:success', { id: number }>
+  | ReducerAction<'invitation.send:init', { id: AppId }>
+  | ReducerAction<'invitation.send:error', { id: AppId }>
+  | ReducerAction<'invitation.send:success', { id: AppId }>
+  | ReducerAction<'invitation.cancel:init', { id: AppId }>
+  | ReducerAction<'invitation.cancel:error', { id: AppId }>
+  | ReducerAction<'invitation.cancel:success', { id: AppId }>
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -130,8 +130,6 @@ const reducer = (state: State, action: Action) => {
       }
     }
   }
-
-  throw new Error(`app.watch.invite: ${action.type} is an invalid action type.`)
 }
 
 /**
@@ -203,7 +201,7 @@ function AppWatchInvite(props: ReactComponentWrapper) {
     return toSearchIndexObject(context.party.invitations, 'recipient.id')
   }, [context.party.invitations])
 
-  async function handleInvite(id: number) {
+  async function handleInvite(id: AppId) {
     if (state.isSendingInvitation[id]) {
       return
     }
@@ -314,8 +312,8 @@ interface UserItemProps {
   isMember: boolean
   isCancellingInvitation: boolean
   isSendingInvitation?: boolean
-  onInvite: (id: number) => void
-  onExpire: (invitation: id) => void
+  onInvite: (id: AppId) => void
+  onExpire: (invitation: AppPartyInvitation) => void
   onCancel: (invitation: AppPartyInvitation) => void
 }
 

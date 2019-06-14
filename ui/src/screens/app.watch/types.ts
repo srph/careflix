@@ -17,3 +17,7 @@ export type Action = ReducerAction<'data:init'>
  | ReducerAction<'data:update', { party: AppParty }>
  | ReducerAction<'invitation.send', { invitation: AppPartyInvitation }>
  | ReducerAction<'invitation.cancel', { invitation: AppPartyInvitation }>
+
+export interface RouteParams {
+  partyId: string
+}

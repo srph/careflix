@@ -91,7 +91,7 @@ function AppSettings(props: ReactComponentWrapper) {
           <h6 className="ui-subheading">Crafted by Kier Borromeo</h6>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   )
 }
 

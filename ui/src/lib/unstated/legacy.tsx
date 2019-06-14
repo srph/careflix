@@ -13,7 +13,13 @@ function Subscribe<C extends Container>(props: {
     const { to, children } = props;
     const instance = useUnstated(Array.isArray(to) ? to[0] : to);
 
-    return children(instance);
+    // This isn't part of the original unstated library (@gitbookIO/unstated).
+    // Since I couldn't make it work, I decided to copy-paste the library instead.
+    // @see https://github.com/GitbookIO/unstated/issues/1
+    // 
+    // But anyway, we'll fix it because want minimal modifications to the copy-paste.
+    // @see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/18051
+    return <React.Fragment>{children(instance)}</React.Fragment>;
 }
 
 export { Subscribe };

@@ -3,7 +3,6 @@ import * as React from 'react'
 import { NavLink } from 'react-router-dom'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
-import { useInterval } from '@use-it/interval'
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
 import { useAsyncEffect } from 'use-async-effect'
@@ -11,8 +10,8 @@ import useReactRouter from 'use-react-router'
 import axios from '~/lib/axios'
 import immer from 'immer'
 
-import { Context, usePartyContext } from './Context'
-import { State, ContextType, Action } from './types'
+import { Context } from './Context'
+import { State, ContextType, Action, RouteParams } from './types'
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -71,7 +70,7 @@ const reducer = (state: State, action: Action): State => {
  * Use this to create a route instead of typing everything down
  */
 function AppWatch(props: ReactComponentWrapper) {
-  const { match } = useReactRouter()
+  const { match } = useReactRouter<RouteParams>()
 
   const [state, dispatch] = useReducer(reducer, {
     party: null,

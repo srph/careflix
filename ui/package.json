@@ -36,6 +36,7 @@
     "@types/node": "^11.13.7",
     "@types/pusher-js": "^4.2.2",
     "@types/react": "^16.8.14",
+    "@types/react-dom": "^16.8.4",
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.2",
     "@types/uuid": "^3.4.4",

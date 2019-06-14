@@ -91,7 +91,7 @@ function AppHome() {
     })
   }
 
-  function handleShowClose(show: AppShow) {
+  function handleShowClose() {
     dispatch({
       type: 'show:close'
     })

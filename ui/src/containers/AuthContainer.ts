@@ -96,10 +96,13 @@ class AuthContainer extends Container<State> {
    * Remove the first invitation (called after accepted / declined / expired)
    */
   shiftInvitations = () => {
+    const data = immer(draft => {
+      draft.invitations.shift()
+      return draft
+    })(this.state.data)
+
     this.setState({
-      data: immer(this.state.data, draft => {
-        draft.invitations.shift()
-      })
+      data
     })
   }
 
@@ -108,9 +111,9 @@ class AuthContainer extends Container<State> {
    */
   receiveInvitation = (invitation: AppPartyInvitation) => {
     this.setState({
-      data: immer(this.state.data, draft => {
+      data: immer(draft => {
         draft.invitations.push(invitation)
-      })
+      })(this.state.data)
     })
   }
 
@@ -119,10 +122,10 @@ class AuthContainer extends Container<State> {
    */
   cancelInvitation = (particular: AppPartyInvitation) => {
     this.setState({
-      data: immer(this.state.data, draft => {
+      data: immer(draft => {
         const invitation = draft.invitations.find(invitation => invitation.id === particular.id)
         invitation.action = 'cancelled'
-      })
+      })(this.state.data)
     })
   }
 }

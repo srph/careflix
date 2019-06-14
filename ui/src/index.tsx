@@ -26,17 +26,29 @@ import { useAsyncEffect } from 'use-async-effect'
 import { Provider as UnstatedProvider, useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 
-function Root(props: { children: React.ReactNode }) {
+/**
+ * Block rendering and load the user data
+ *
+ * We're explicitly returning React.ReactElement here because
+ * Typescript has issues
+ */
+function Root(props: ReactComponentWrapper) {
   const [isLoading, setIsLoading] = React.useState<boolean>(true)
 
   const auth: typeof AuthContainer = useUnstated(AuthContainer)
 
-  useAsyncEffect(async () => {
-    await auth.getUserData()
-    setIsLoading(false)
-  }, null, [])
+  useAsyncEffect(
+    async () => {
+      await auth.getUserData()
+      setIsLoading(false)
+    },
+    null,
+    []
+  )
 
-  return isLoading ? <div /> : props.children
+  // We'll wrap in fragment, otherwise we'll get an error saying:
+  // JSX element type '{}' is not a constructor function for JSX elements.
+  return isLoading ? <div /> : <React.Fragment>{props.children}</React.Fragment>
 }
 
 function Mount() {
@@ -46,39 +58,42 @@ function Mount() {
 
       <GatewayProvider>
         <UnstatedProvider>
-          <Root>
-            <Router history={history}>
+          <Router history={history}>
+            <Root>
               <Switch>
                 <GuestRoute path="/login" exact component={Login} />
                 <GuestRoute path="/register" exact component={Register} />
                 <Route path="/logout" exact component={Logout} />
-                
-                <Route path="/" render={() => (
-                  <App>
-                    <Switch>
-                      <Route path="/" exact component={AppHome} />
-                      <PrivateRoute path="/settings" exact component={AppSettings} />
-                      <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
-                      <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
-                      <PrivateRoute path="/watch/:partyId" render={(matchProps) => (
-                        <AppWatch {...matchProps}>
-                          <Route path="/watch/:partyId" exact component={AppWatchHome} />
-                          <Route path="/watch/:partyId/invite" exact component={AppWatchInvite} />
-                        </AppWatch>
-                      )} />
-                    </Switch>
-                  </App>
-                )} />
+
+                <Route
+                  path="/"
+                  render={() => (
+                    <App>
+                      <Switch>
+                        <Route path="/" exact component={AppHome} />
+                        <PrivateRoute path="/settings" exact component={AppSettings} />
+                        <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
+                        <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
+                        <PrivateRoute
+                          path="/watch/:partyId"
+                          render={matchProps => (
+                            <AppWatch {...matchProps}>
+                              <Route path="/watch/:partyId" exact component={AppWatchHome} />
+                              <Route path="/watch/:partyId/invite" exact component={AppWatchInvite} />
+                            </AppWatch>
+                          )}
+                        />
+                      </Switch>
+                    </App>
+                  )}
+                />
               </Switch>
-            </Router>
-          </Root>
+            </Root>
+          </Router>
         </UnstatedProvider>
       </GatewayProvider>
     </React.Fragment>
   )
 }
 
-ReactDOM.render(
-  <Mount />,
-  document.getElementById('mount')
-)
+ReactDOM.render(<Mount />, document.getElementById('mount'))

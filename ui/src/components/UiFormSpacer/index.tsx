@@ -1,7 +1,7 @@
 import * as React from 'react'
 import UiSpacer from '~/components/UiSpacer'
 
-function UiFormSpacer(props: Props) {
+function UiFormSpacer() {
   return (
     <UiSpacer size={2} />
   )

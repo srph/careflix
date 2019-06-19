@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class ShowGroup extends Model
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title'
+    ];
+    
+    /**
      * The relationships that will always be eager-loaded
      *
      * @var array

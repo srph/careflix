@@ -20,7 +20,10 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
-                'preview_image' => ''
+                'preview_image' => '',
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:53:52')
             ],
             [
                 'title' => 'How To Train Your Dragon 2',
@@ -28,7 +31,10 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2014),
-                'preview_image' => ''
+                'preview_image' => '',
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:55')
             ],
             [
                 'title' => 'How To Train Your Dragon: The Hidden World',
@@ -36,7 +42,10 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2019),
-                'preview_image' => ''
+                'preview_image' => '',
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:23')
             ],
             [
                 'title' => 'Spider-Man: Into The Spider-Verse',
@@ -44,34 +53,20 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
-                'preview_image' => ''
-            ],
-            [
-                'title' => 'Spider-Man: Into The Spider-Verse',
-                'title_type' => 'movie',
-                'synopsis' => $faker->text,
-                'language' => 'English',
-                'air_start' => Carbon::create(2018),
-                'preview_image' => ''
+                'preview_image' => '',
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:56:48')
             ]
         ];
 
         foreach($movies as $movie) {
-            $show = App\Show::create([
-                'title' => $is_movie ? 'Avengers: Endgame' : 'Brooklyn Nine-Nine',
-                'title_type' => $title_type,
-                'synopsis' => $faker->text,
-                'language' => 'English',
-                'air_start' => Carbon::create(2000 + $i, 0, 0),
-                'air_end' => $is_movie ? null : Carbon::create(2000 + $i + 1, 0, 0),
-                'age_rating' => '13+',
-                'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
-            ]);
+            $show = App\Show::create(Arr::except($movie, ['duration']));
 
             App\ShowVideo::create([
                 'show_id' => $show->id,
-                'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.mp4',
-                'duration' => 596,
+                'video_url' => Helper::getVideoUrlFromMovieTitle($show->title),
+                'duration' => $movie['duration'],
                 'synopsis' => $faker->text,
             ]);
         }
@@ -84,64 +79,37 @@ class ShowSeeder extends Seeder
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
                 'preview_image' => '',
-                'age_rating' => 'G'
+                'age_rating' => 'G',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 1
+                    ]
+                ]
             ]
         ];
 
-        foreach($movies as $movie) {
-            $show = App\Show::create([
-                'title' => $is_movie ? 'Avengers: Endgame' : 'Brooklyn Nine-Nine',
-                'title_type' => $title_type,
-                'synopsis' => $faker->text,
-                'language' => 'English',
-                'air_start' => Carbon::create(2000 + $i, 0, 0),
-                'air_end' => $is_movie ? null : Carbon::create(2000 + $i + 1, 0, 0),
-                'age_rating' => '13+',
-                'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
-            ]);
+        foreach($series as $series) {
+            $show = App\Show::create(Arr::except($series, ['seasons']));
 
-            App\ShowVideo::create([
-                'show_id' => $show->id,
-                'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.mp4',
-                'duration' => 596,
-                'synopsis' => $faker->text,
-            ]);
-        }
-
-        $show = App\Show::create([
-            'title' => $is_movie ? 'Avengers: Endgame' : 'Brooklyn Nine-Nine',
-            'title_type' => $title_type,
-            'synopsis' => $faker->text,
-            'language' => 'English',
-            'air_start' => Carbon::create(2000 + $i, 0, 0),
-            'air_end' => $is_movie ? null : Carbon::create(2000 + $i + 1, 0, 0),
-            'age_rating' => '13+',
-            'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
-        ]);
-
-        if ($is_movie) {
-            App\ShowVideo::create([
-                'show_id' => $show->id,
-                'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.mp4',
-                'duration' => 596,
-                'synopsis' => $faker->text,
-            ]);
-        } else {
-            foreach (range(0, 2) as $j) {
+            foreach($show['seasons'] as $i => $season) {
                 $group = App\ShowGroup::create([
-                    'show_id' => $show->id,
-                    'title' => sprintf("Season %s", $j + 1)
+                    'title' => $season['title']
                 ]);
 
-                foreach(range(0, 5) as $k) {
+                for($j = 0; $j < $season['episodes']; $j++) {
                     App\ShowVideo::create([
-                        'show_id' => $show->id,
                         'show_group_id' => $group->id,
-                        'title' => sprintf("Episode %s", $k),
-                        'video_url' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/big-buck-bunny.mp4',
-                        'duration' => 596,
+                        'show_id' => $show->id,
+                        'title' => "Episode {$j}",
+                        'video_url' => \App\Support\Helper::getVideoUrlFromEpisode([
+                            'title' => $show->title,
+                            'season' => $i + 1,
+                            'episode' => $j + 1
+                        ]),
+                        'duration' => Helper::getDurationInSecondsFromReadableFormat('11:09'),
                         'synopsis' => $faker->text,
-                        'preview_image' => 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/big-buck-bunny/thumbnail.png'
                     ]);
                 }
             }

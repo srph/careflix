@@ -9,6 +9,8 @@
   position: relative;
   padding-bottom: 56.25%;
   background-size: cover;
+  /* @see https://github.com/facebook/react/issues/2055 */
+  cursor: pointer;
 }
 
 .watch-screen-video > video {

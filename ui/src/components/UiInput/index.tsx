@@ -11,11 +11,11 @@ interface OwnProps {
 
 type Props = HTMLProps & OwnProps
 
-function UiInput(props: Props) {
+function UiInput({ isDark, isRound, ...props }: Props) {
   return (
     <input {...props} className={cx('ui-input', {
-      'is-dark': props.isDark,
-      'is-round': props.isRound
+      'is-dark': isDark,
+      'is-round': isRound
     })} />
   )
 }

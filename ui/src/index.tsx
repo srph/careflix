@@ -8,6 +8,7 @@ import { Router, Route, Switch } from 'react-router-dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import history from '~/lib/history'
 import { GatewayProvider } from 'react-gateway'
+import WindowVhSetter from '~/components/WindowVhSetter'
 
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
@@ -55,6 +56,8 @@ function Mount() {
   return (
     <React.Fragment>
       <Helmet titleTemplate="%s - Care.tv" />
+
+      <WindowVhSetter />
 
       <GatewayProvider>
         <UnstatedProvider>

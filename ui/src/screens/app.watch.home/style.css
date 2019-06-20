@@ -1,7 +1,12 @@
+body {
+  overflow-y: hidden;
+  height: var(--window-vh);
+}
+
 .watch-screen {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 84px);
+  height: calc(var(--window-vh) - 84px);
 }
 
 .watch-screen-video {
@@ -25,7 +30,7 @@
 }
 
 .watch-screen-chat {
-  height: 100%;
+  flex: 1;
   overflow-y: scroll;
   background: var(--color-black-2);
 }

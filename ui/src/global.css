@@ -28,6 +28,11 @@ html, body {
   --text-shadow-default: 0 1px 1px var(--color-black-1);
   --form-size: 40px;
 
+  /**
+   * Initial window-vh for hooks/useVhSetter.
+   */
+  --window-vh: 0px;
+
   color: var(--color-white);
   font-size: var(--font-size);
   font-family: var(--font-family);

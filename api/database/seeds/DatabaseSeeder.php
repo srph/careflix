@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         $this->command->info('Seeding `users` table (1/1)');
 
-        $user = App\User::create([
+        App\User::create([
             'name' => $faker->name,
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true
         ]);
 
-        $user = App\User::create([
+        App\User::create([
             'name' => $faker->name,
             'email' => 'user@user.com',
             'email_verified_at' => now(),
@@ -91,15 +91,15 @@ class DatabaseSeeder extends Seeder
         // //////////////////////////////////
         // Create random users for search
         // //////////////////////////////////
-        foreach(range(0, 50) as $i) {
-            $user = App\User::create([
-                'name' => $faker->name,
-                'email' => $faker->email,
-                'email_verified_at' => now(),
-                'password' => 'password',
-                'remember_token' => Str::random(10),
-                'is_admin' => false
-            ]);
-        }
+        // foreach(range(0, 50) as $i) {
+        //     $user = App\User::create([
+        //         'name' => $faker->name,
+        //         'email' => $faker->email,
+        //         'email_verified_at' => now(),
+        //         'password' => 'password',
+        //         'remember_token' => Str::random(10),
+        //         'is_admin' => false
+        //     ]);
+        // }
     }
 }

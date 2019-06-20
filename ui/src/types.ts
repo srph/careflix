@@ -92,7 +92,7 @@ interface AppShow {
   id: AppId
   title: string
   title_type: 'movie' | 'series'
-  preview_image?: string
+  preview_image: string
   synopsis: string
   language: string
   air_start: string

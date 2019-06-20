@@ -36,7 +36,21 @@ class Show extends Model
         return $this->hasMany(ShowVideo::class);
     }
 
+    /**
+     * Create a getter to access the first and only video
+     * 
+     * @return string
+     */
     public function getMovieAttribute() {
         return $this->title_type === 'movie' ? $this->videos()->first() : null;
+    }
+
+    /**
+     * Add a fallback to the preview image
+     * 
+     * @return string
+     */
+    public function getPreviewImage() {
+        return $this->preview_image ?? \App\Support\Helper::cdn('videos/default-preview-16-9.jpg');
     }
 }

@@ -108,7 +108,7 @@ function AppHome() {
               <button
                 type="button"
                 className="show-carousel-card"
-                style={{ backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})` }}
+                style={{ backgroundImage: `url(${show.preview_image})` }}
                 onClick={() => handleShowClick(show)}>
                 <div className="overlay" />
 

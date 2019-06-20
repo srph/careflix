@@ -19,6 +19,13 @@ class Helper {
   }
 
   /**
+   * Properly prepend the provided path to the configurated cdn.
+   */
+  static public function cdn($path) {
+    return rtrim(config('config.cdn'), '/') . '/' . ltrim($path, '/');
+  }
+
+  /**
    * 1:53:02 -> 6782
    */
   static public function getDurationInSecondsFromReadableFormat($formatted) {
@@ -55,7 +62,12 @@ class Helper {
     // Spider-Man: Into The Spider-Verse -> spider--man:-into-the-spider--verse
     $hypenated = Str::kebab($title);
     // spider--man:-into-the-spider--verse -> spider-man-into-the-spider-verse
-    return preg_replace("/(--)|(:)/g", "", $hypenated);
+    $sanitized = preg_replace("/--/", "-", $hypenated);
+    $sanitized = preg_replace("/:/", "", $sanitized);
+    // how-to-train-your-dragon2 -> how-to-train-your-dragon-2
+    $sanitized = preg_replace("/(\w+)(\d+)/", "$1-$2", $sanitized);
+
+    return $sanitized;
   }
 
   /**
@@ -63,7 +75,7 @@ class Helper {
    */
   static public function getVideoUrlFromMovieTitle($title) {
     $filename = Helper::getVideoFilenameFromTitle($title);
-    return "https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/{$filename}/{$filename}.mp4";
+    return Helper::cdn("videos/{$filename}/{$filename}.mp4");
   }
 
   /**
@@ -73,6 +85,17 @@ class Helper {
     $filename = Helper::getVideoFilenameFromTitle($settings['title']);
     $index = "{$settings['season']}-{$settings['episode']}"; // s1-e11
     $ext = isset($settings['extension']) ?? 'mp4';
-    return "https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/{$filename}/{$filename}-{$index}.{$ext}";
+    return Helper::cdn("videos/{$filename}/{$filename}-{$index}.{$ext}");
+  }
+
+  /**
+   * @param string $title Spider-Man: Into The Spider-Verse
+   * @param string $ratio 16:9
+   */
+  static public function getPreviewUrlFromMovieTitle($title, $ratio) {
+    // 16:9 => 16-9
+    $ratio = preg_replace('/:/', '-', $ratio, 1);
+    $filename = Helper::getVideoFilenameFromTitle($title);
+    return Helper::cdn("videos/{$filename}/{$filename}-preview-{$ratio}.jpg");
   }
 }

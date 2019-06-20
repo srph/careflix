@@ -1,3 +1,5 @@
+import parseStandardTime from '~/utils/date/parseStandardTime'
+
 /**
  * For series, display season and episode index. For movies, display air date (2018)
  * 
@@ -8,5 +10,5 @@ export default function getVideoDetails(video: AppShowVideo) {
     return `${video.group.title}: ${video.title}`
   }
 
-  return new Date(video.show.air_start).getFullYear()
+  return parseStandardTime(video.show.air_start).getFullYear()
 }

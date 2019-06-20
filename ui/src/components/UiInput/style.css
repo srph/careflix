@@ -14,6 +14,12 @@
   border-color: rgb(29, 161, 242);
 }
 
+.ui-input,
+.ui-input:focus,
+.ui-input:hover {
+  font-size: var(--font-size);
+}
+
 .ui-input.is-dark {
   background: var(--color-black-1);
 }

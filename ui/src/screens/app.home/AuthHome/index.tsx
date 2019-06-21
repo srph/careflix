@@ -59,7 +59,7 @@ const reducer = (state: State, action: Action): State => {
   return state
 }
 
-function AppHome() {
+function AuthHome() {
   const [state, dispatch] = React.useReducer(reducer, {
     shows: [],
     isLoading: true,
@@ -175,4 +175,4 @@ function AppHome() {
   // )
 }
 
-export default AppHome
+export default AuthHome

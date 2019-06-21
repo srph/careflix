@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import axios from '~/lib/axios'
 import ShowModal from '../ShowModal'
+import parseStandardTime from '~/utils/date/parseStandardTime'
 
 interface State {
   shows: AppShow[]
@@ -114,7 +115,7 @@ function AuthHome() {
 
                 <div className="details">
                   <div className="tags">
-                    <span className="tag">{new Date(show.air_start).getFullYear()}</span>
+                    <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
                   </div>
 
                   <h3 className="title">{show.title}</h3>

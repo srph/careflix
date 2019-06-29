@@ -25,6 +25,9 @@ class UpdatePartyState extends FormRequest
     {
         return [
             'is_playing' => 'required|boolean',
+            // @TODO Should not be more than the current video's duration.
+            // Currently applies for connection losses, even if we don't fully support that anyway haha.
+            // Just to protect our data from becoming trashed.
             'current_time' => 'required|numeric'
         ];
     }

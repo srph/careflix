@@ -10,7 +10,7 @@ import useReactRouter from 'use-react-router'
 import axios from '~/lib/axios'
 import immer from 'immer'
 
-import { Context } from './Context'
+import { Context, usePartyContext } from './Context'
 import { State, ContextType, Action, RouteParams } from './types'
 
 const reducer = (state: State, action: Action): State => {
@@ -42,6 +42,13 @@ const reducer = (state: State, action: Action): State => {
         ...state,
         party: action.payload.party
       }
+    }
+
+    case 'data:sync-state': {
+      return immer(state, draft => {
+        draft.party.current_time = action.payload.state.current_time
+        draft.party.is_playing = action.payload.state.is_playing
+      })
     }
 
     case 'invitation.send': {
@@ -103,10 +110,10 @@ function AppWatch(props: ReactComponentWrapper) {
   usePusher(
     state.party ? `private-party.${state.party.id}` : '',
     'state',
-    function(event: { party: AppParty }) {
+    function(event: { state: AppPartyState }) {
       dispatch({
-        type: 'data:update',
-        payload: { party: event.party }
+        type: 'data:sync-state',
+        payload: { state: event.state }
       })
     },
     state.party == null

@@ -87,7 +87,7 @@ const reducer = (state: State, action: Action): State => {
 }
 
 /**
- * Use this to create a route instead of typing everything down
+ * @TODO Sync time every 5 minutes or so.
  */
 function AppWatchHome(props: ReactComponentWrapper) {
   const context = usePartyContext()
@@ -102,6 +102,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
   const $video = useRef<HTMLVideoElement>()
 
   useEffect(() => {
+    // Initialize the video to start on the current time.
     $video.current.currentTime = state.time
   }, [])
 

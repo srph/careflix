@@ -49,4 +49,19 @@ class PartyState implements ShouldBroadcast
     {
         return 'state';
     }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'state' => [
+                'is_playing' => $this->party->is_playing,
+                'current_time' => $this->party->current_time
+            ]
+        ];
+    }
 }

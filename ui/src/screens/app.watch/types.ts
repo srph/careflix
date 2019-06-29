@@ -15,6 +15,7 @@ export type Action = ReducerAction<'data:init'>
  | ReducerAction<'data:success', { party: AppParty }>
  | ReducerAction<'data:error'>
  | ReducerAction<'data:update', { party: AppParty }>
+ | ReducerAction<'data:sync-state', { state: AppPartyState }>
  | ReducerAction<'invitation.send', { invitation: AppPartyInvitation }>
  | ReducerAction<'invitation.cancel', { invitation: AppPartyInvitation }>
 

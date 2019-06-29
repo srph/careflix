@@ -121,3 +121,8 @@ interface AppParty {
   created_at: string
   updated_at: string
 }
+
+interface AppPartyState {
+  is_playing: boolean
+  current_time: number
+}

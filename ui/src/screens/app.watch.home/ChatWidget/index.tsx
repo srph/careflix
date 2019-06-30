@@ -131,7 +131,7 @@ function ChatWidget(props: Props) {
 
   const sendAudioRef = useRef<HTMLAudioElement>(null)
 
-  const isSubmittable = state.message.text.length > 0
+  const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
 
   useAsyncEffect(
     async () => {

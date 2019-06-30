@@ -10,10 +10,93 @@ import UiButton from '~/components/UiButton'
 import { Link } from 'react-router-dom'
 import Helmet from 'react-helmet'
 
+import axios from '~/lib/axios'
+import history from '~/lib/history'
+import { useUnstated } from '~/lib/unstated'
+import { AuthContainer } from '~/containers'
+import useFormState from '~/hooks/useFormState';
+
+const reducer = (state, action) => {
+  switch(action.type) {
+    case 'request': {
+      return {
+        ...state,
+        isLoading: true,
+        isError: false
+      }
+    }
+
+    case 'success': {
+      return {
+        ...state,
+        isLoading: false
+      }
+    }
+
+    case 'error': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true
+      }
+    }
+  }
+
+  return state
+}
+
 /**
  * Use this to create a route instead of typing everything down
  */
-function Login(props: ReactComponentWrapper) {
+function Register(props: ReactComponentWrapper) {
+  const auth = useUnstated(AuthContainer)
+
+  const [state, dispatch] = React.useReducer(reducer, {
+    isLoading: false,
+    isError: false
+  })
+
+  const form = useFormState({
+    email: '',
+    name: '',
+    password: '',
+    password_confirmation: ''
+  })
+
+  async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
+    evt.preventDefault()
+
+    if (state.isLoading) {
+      return
+    }
+
+    dispatch({ type: 'request' })
+
+    const [err] = await axios.post('/api/register', {
+      email: form.email,
+      name: form.name,
+      password: form.password,
+      password_confirmation: form.password_confirmation
+    })
+
+    if (err) {
+      return dispatch({ type: 'error' })
+    }
+
+    const [err2] = await auth.login({
+      username: form.email,
+      password: form.password
+    })
+
+    if (err2) {
+      return dispatch({ type: 'error' })
+    }
+    
+    dispatch({ type: 'success' })
+
+    history.push('/')
+  }
+
   return (
     <React.Fragment>
       <Helmet title="Create a new account" />
@@ -37,45 +120,46 @@ function Login(props: ReactComponentWrapper) {
 
         <h1 className="registration-title">Join in the fun!</h1>
 
-        <UiFormGroup label="Email">
-          <UiInput type="email" placeholder="johndoe@email.com" name="email" />
-        </UiFormGroup>
+        <form onSubmit={handleSubmit}>
+          <UiFormGroup label="Email">
+            <UiInput type="email" placeholder="johndoe@email.com" name="email" value={form.email} onChange={form.setEmail} />
+          </UiFormGroup>
 
-        <UiFormSpacer />
+          <UiFormSpacer />
 
-        <UiFormGroup label="Name">
-          <UiInput placeholder="johndoe" name="name" />
-        </UiFormGroup>
+          <UiFormGroup label="Name">
+            <UiInput placeholder="johndoe" name="name" value={form.name} onChange={form.setName} />
+          </UiFormGroup>
 
-        <UiFormSpacer />
+          <UiFormSpacer />
 
-        <UiFormGroup label="Password">
-          <UiInput type="password" placeholder="********" name="password" />
-        </UiFormGroup>
+          <UiFormGroup label="Password">
+            <UiInput type="password" placeholder="********" name="password" value={form.password} onChange={form.setPassword} />
+          </UiFormGroup>
 
-        <UiFormSpacer />
+          <UiFormSpacer />
 
-        <UiFormGroup label="Confirm Password">
-          <UiInput type="password" placeholder="********" name="password_confirmation" />
-        </UiFormGroup>
+          <UiFormGroup label="Confirm Password">
+            <UiInput type="password" placeholder="********" name="password_confirmation" value={form.password_confirmation} onChange={form.setPassword_confirmation} />
+          </UiFormGroup>
 
-        <UiFormSpacer />
+          <UiFormSpacer />
 
-        <div className="registration-action">
-          <UiButton variant="primary" block size="l">
-            Register
-          </UiButton>
-        </div>
+          <div className="registration-action">
+            <UiButton variant="primary" block size="l">
+              Register
+            </UiButton>
+          </div>
 
-
-        <div className="registration-byline">
-          <h5 className="ui-subheading">
-            Existing user? <Link to="/login">Sign in</Link>
-          </h5>
-        </div>
+          <div className="registration-byline">
+            <h5 className="ui-subheading">
+              Existing user? <Link to="/login">Sign in</Link>
+            </h5>
+          </div>
+        </form>
       </UiContainer>
     </React.Fragment>
   )
 }
 
-export default Login
+export default Register

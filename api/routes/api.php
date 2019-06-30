@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('register', 'MeController@register');
+
 Route::middleware('auth:api')->group(function() {
     Route::get('shows', 'ShowsController@index');
     Route::get('shows/{show}/groups', 'ShowsController@groups');

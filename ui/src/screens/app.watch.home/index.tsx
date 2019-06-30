@@ -102,6 +102,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
   const $video = useRef<HTMLVideoElement>()
 
+  const media = useMediaMode()
+
   useEffect(() => {
     // Initialize the video to start on the current time.
     $video.current.currentTime = state.time
@@ -149,6 +151,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }, [context.party.video.id])
 
   function handleVideoClick() {
+    console.log('click')
     if (state.isOpen) {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,
@@ -164,6 +167,11 @@ function AppWatchHome(props: ReactComponentWrapper) {
   const timeoutRef = useRef<number>(null)
 
   function handleVideoHover() {
+    // We don't want this event to be called on mobile.
+    if (media === 'mobile') {
+      return
+    }
+
     // @TODO Optimize by debounce since this event is called every mouse move.
     // For now, this is the least we can do so it's not "rerendering" all the fucking time.
     if (!state.isOpen) {

@@ -16,3 +16,16 @@
 .ui-modal.has-padding {
   padding: 0;
 }
+
+.ui-modal-overlay.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+.ui-modal-overlay.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ui-modal-overlay.ReactModal__Overlay--before-close {
+  opacity: 0;
+}

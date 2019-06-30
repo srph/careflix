@@ -11,7 +11,6 @@ interface Props {
   children?: React.ReactNode
   modalClassName?: string
   overlayClassName?: string
-  closeTimeoutMS?: number
 }
 
 function UiModal(props: Props) {
@@ -27,7 +26,7 @@ function UiModal(props: Props) {
       onRequestClose={props.onClose}
       className={cx('ui-modal', [props.modalClassName])}
       overlayClassName={cx('ui-modal-overlay', [props.overlayClassName])}
-      closeTimeoutMS={props.closeTimeoutMS}>
+      closeTimeoutMS={200}>
       {children}
     </ReactModal>
   )

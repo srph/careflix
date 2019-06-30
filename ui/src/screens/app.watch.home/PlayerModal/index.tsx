@@ -75,7 +75,7 @@ function PlayerModal({ party, ...props }: Props) {
       <div className="watch-player-modal">
         <div className="watch-player-actions">
           <div className="section">
-            <div className="action">
+            <div className="action is-close">
               <UiPlainButton onClick={props.onClose}>
                 <i className="fa fa-close" />
               </UiPlainButton>

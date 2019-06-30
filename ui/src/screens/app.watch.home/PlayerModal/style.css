@@ -1,24 +1,13 @@
-.watch-player-overlay.ReactModal__Overlay {
-  opacity: 0;
-  transition: opacity 200ms ease-in-out;
-  background: transparent;
-}
-
-.watch-player-overlay.ReactModal__Overlay--after-open {
-  opacity: 1;
-}
-
-
-.watch-player-overlay.ReactModal__Overlay--before-close {
-  opacity: 0;
+.watch-player-overlay {
+  overflow: hidden;
+  background-color: var(--color-modal-overlay);
 }
 
 @media (min-width: 720px) {
   .watch-player-overlay {
     top: 84px;
     right: 320px;
-    overflow: hidden;
-    background: var(--color-modal-overlay);
+    background-color: transparent;
     /**
      * On desktop mode, we want the user to click through the video instead of the overlay
      * (which triggers an onClose in the Modal).
@@ -106,6 +95,13 @@
   display: flex;
   align-items: center;
 }
+
 .watch-player-actions > .section > .action:not(:last-child) {
   margin-right: 24px;
+}
+
+@media (min-width: 720px) {
+  .watch-player-actions > .section > .action.is-close {
+    display: none;
+  }
 }

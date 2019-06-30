@@ -47,10 +47,6 @@ body {
 @media (min-width: 720px) {
   .watch-screen-video > video {
     position: static;
-    top: initial;
-    left: initial;
-    right: initial;
-    bottom: initial;
   }
 }
 

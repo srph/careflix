@@ -131,6 +131,8 @@ function ChatWidget(props: Props) {
 
   const sendAudioRef = useRef<HTMLAudioElement>(null)
 
+  const isSubmittable = state.message.text.length > 0
+
   useAsyncEffect(
     async () => {
       dispatch({
@@ -195,6 +197,10 @@ function ChatWidget(props: Props) {
 
   async function handleMessage(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault()
+
+    if (!isSubmittable) {
+      return
+    }
 
     const id = uuid()
 
@@ -297,9 +303,9 @@ function ChatWidget(props: Props) {
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
           <UiInput isDark isRound placeholder="Write something..." value={state.message.text} onChange={handleInput} />
 
-          <UiPlainButton className="button">
+          {isSubmittable && <UiPlainButton className="button">
             <i className="fa fa-send" />
-          </UiPlainButton>
+          </UiPlainButton>}
         </form>
       </div>
 

@@ -30,6 +30,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bumblebee', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:53:52')
             ],
             [
@@ -41,6 +42,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon 2', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:55')
             ],
             [
@@ -52,6 +54,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon: The Hidden World', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:23')
             ],
             [
@@ -63,6 +66,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spider-Man: Into The Spider-Verse', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:56:48')
             ],
             [
@@ -74,6 +78,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hachiko', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mkv',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:14')
             ],
             [
@@ -85,6 +90,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick Chapter 2', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:02:22')
             ],
             [
@@ -96,6 +102,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Rampage', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:16')
             ],
             [
@@ -107,7 +114,32 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Retreat', '16:9'),
                 'age_rating' => '',
                 //
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:24:40')
+            ],
+            [
+                'title' => 'Silent Hill',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2006),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill', '16:9'),
+                'age_rating' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:05:19')
+            ],
+            [
+                'title' => 'Silent Hill Revelation',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2012),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill Revelation', '16:9'),
+                'age_rating' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:46')
             ]
         ];
 
@@ -116,7 +148,7 @@ class ShowSeeder extends Seeder
 
             App\ShowVideo::create([
                 'show_id' => $show->id,
-                'video_url' => Helper::getVideoUrlFromMovieTitle($show->title),
+                'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['video_extension']),
                 'duration' => $movie['duration'],
                 'synopsis' => $faker->text,
             ]);

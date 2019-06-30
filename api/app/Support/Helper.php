@@ -73,9 +73,9 @@ class Helper {
   /**
    * 
    */
-  static public function getVideoUrlFromMovieTitle($title) {
+  static public function getVideoUrlFromMovieTitle($title, $ext = 'mp4') {
     $filename = Helper::getVideoFilenameFromTitle($title);
-    return Helper::cdn("videos/{$filename}/{$filename}.mp4");
+    return Helper::cdn("videos/{$filename}/{$filename}.{$ext}");
   }
 
   /**

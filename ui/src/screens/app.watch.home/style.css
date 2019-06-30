@@ -20,6 +20,7 @@ body {
   position: relative;
   padding-bottom: 56.25%;
   width: 100%;
+  background-color: var(--color-black);
   background-size: cover;
   /* @see https://github.com/facebook/react/issues/2055 */
   cursor: pointer;

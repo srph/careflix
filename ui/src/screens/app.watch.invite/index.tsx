@@ -4,6 +4,7 @@ import * as React from 'react'
 import UiButton from '~/components/UiButton'
 import UiAvatar from '~/components/UiAvatar'
 import UiInput from '~/components/UiInput'
+import UiLoader from '~/components/UiLoader'
 
 import immer from 'immer'
 import { useReducer, useMemo, useEffect } from 'react'
@@ -272,7 +273,7 @@ function AppWatchInvite(props: ReactComponentWrapper) {
         />
       </div>
 
-      {state.isLoading && 'Loading...'}
+      {state.isLoading && <UiLoader />}
 
       {!state.input &&
         context.party.invitations.map(invitation => (

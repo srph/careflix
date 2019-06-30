@@ -9,14 +9,28 @@ body {
   height: calc(var(--window-vh) - 84px);
 }
 
+@media (min-width: 720px) {
+  .watch-screen {
+    flex-direction: initial;
+  }
+}
+
 .watch-screen-video {
   flex-shrink: 0;
   position: relative;
   padding-bottom: 56.25%;
+  width: 100%;
   background-size: cover;
   /* @see https://github.com/facebook/react/issues/2055 */
   cursor: pointer;
 }
+
+@media (min-width: 720px) {
+  .watch-screen-video {
+    flex-shrink: 1;
+  }
+}
+
 
 .watch-screen-video > video {
   position: absolute;
@@ -30,6 +44,20 @@ body {
 }
 
 .watch-screen-chat {
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (min-width: 720px) {
+  .watch-screen-chat {
+    flex-shrink: 0;
+    width: 320px;
+  }
+}
+
+.watch-screen-chat-messages {
   flex: 1;
   overflow-y: scroll;
   background: var(--color-black-2);

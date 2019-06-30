@@ -23,6 +23,9 @@ interface State {
   isSeasonSelectionOpen: boolean
 }
 
+/**
+ * @TODO We might not need to use a modal here since it's only an overlay on desktop screens.
+ */
 function PlayerModal({ party, ...props }: Props) {
   const [state, setState] = useState(() => ({ isSeasonSelectionOpen: false }))
 
@@ -64,7 +67,10 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   return (
-    <UiModal isOpen={props.isOpen} shouldCloseOnOverlayClick={true} onClose={props.onClose}>
+    <UiModal isOpen={props.isOpen}
+      shouldCloseOnOverlayClick={true}
+      overlayClassName="watch-player-overlay"
+      onClose={props.onClose}>
       <div className="watch-player-modal">
         <div className="watch-player-actions">
           <div className="section">

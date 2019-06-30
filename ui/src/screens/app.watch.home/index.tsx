@@ -11,6 +11,7 @@ import { useBufferState } from '~/hooks/useBufferState'
 import axios from '~lib/axios'
 
 import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
+import { timeout } from 'q';
 
 interface State {
   time: number
@@ -153,6 +154,25 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
   }
 
+  const timeoutRef = useRef<number>(null)
+
+  function handleHoverOpen() {
+    if (!state.isOpen) {
+      dispatch({
+        type: 'controls:open'
+      })
+    }
+
+    // @TODO Optimize by debounce since this event is called every mouse move.
+    window.clearTimeout(timeoutRef.current)
+
+    timeoutRef.current = window.setTimeout(() => {
+      dispatch({
+        type: 'controls:close'
+      })
+    }, 2000)
+  }
+
   function handleClose() {
     dispatch({
       type: 'controls:close'
@@ -216,7 +236,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
           style={{
             backgroundImage: `url(${getVideoPreviewImage(context.party)})`
           }}
-          onClick={handleOpen}>
+          onClick={handleOpen}
+          onMouseOver={handleHoverOpen}>
           <video
             src={context.party.video.video_url}
             ref={$video}

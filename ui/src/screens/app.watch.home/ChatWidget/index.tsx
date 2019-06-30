@@ -250,8 +250,8 @@ function ChatWidget(props: Props) {
   }, [state.logs])
 
   return (
-    <React.Fragment>
-      <div className="watch-screen-chat" ref={chatbarRef}>
+    <div className="watch-screen-chat">
+      <div className="watch-screen-chat-messages" ref={chatbarRef}>
         {grouped.map((group, i) => {
           if (group.type === 'activity') {
             return (
@@ -310,7 +310,7 @@ function ChatWidget(props: Props) {
       <audio className="chat-notification-audio" ref={sendAudioRef}>
         <source src={asset_chatSend} type="audio/ogg" />
       </audio>
-    </React.Fragment>
+    </div>
   )
 }
 

@@ -64,6 +64,50 @@ class ShowSeeder extends Seeder
                 'age_rating' => '',
                 //
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:56:48')
+            ],
+            [
+                'title' => 'Hachiko',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2009),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hachiko', '16:9'),
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:14')
+            ],
+            [
+                'title' => 'John Wick Chapter 2',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2017),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick Chapter 2', '16:9'),
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:02:22')
+            ],
+            [
+                'title' => 'Rampage',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2018),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Rampage', '16:9'),
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:16')
+            ],
+            [
+                'title' => 'Silent Retreat',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2017),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Retreat', '16:9'),
+                'age_rating' => '',
+                //
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:24:40')
             ]
         ];
 

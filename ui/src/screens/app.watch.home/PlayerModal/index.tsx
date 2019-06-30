@@ -70,6 +70,7 @@ function PlayerModal({ party, ...props }: Props) {
     <UiModal isOpen={props.isOpen}
       shouldCloseOnOverlayClick={true}
       overlayClassName="watch-player-overlay"
+      closeTimeoutMS={200}
       onClose={props.onClose}>
       <div className="watch-player-modal">
         <div className="watch-player-actions">

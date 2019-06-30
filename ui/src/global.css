@@ -22,6 +22,7 @@ html, body {
   --color-primary: #E8368F;
   --color-secondary: #F7C948;
   --color-white: #fff;
+  --color-modal-overlay: rgba(0,0,0,0.7);
   --border-radius: 4px;
   --letter-spacing-subheading: 1px;
   --overlay-fade: linear-gradient(transparent, rgba(0,0,0,0.9));

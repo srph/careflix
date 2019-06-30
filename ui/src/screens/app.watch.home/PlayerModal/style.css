@@ -1,8 +1,24 @@
+.watch-player-overlay.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+  background: transparent;
+}
+
+.watch-player-overlay.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+
+.watch-player-overlay.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
 @media (min-width: 720px) {
   .watch-player-overlay {
     top: 84px;
     right: 320px;
     overflow: hidden;
+    background: var(--color-modal-overlay);
   }
 }
 

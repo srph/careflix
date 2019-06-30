@@ -18,9 +18,11 @@ interface State {
   isComplete: boolean
   isPlaying: boolean
   isOpen: boolean
+  isInitialized: boolean
 }
 
 type Action =
+  | ReducerAction<'init'>
   | ReducerAction<'controls:open'>
   | ReducerAction<'controls:close'>
   | ReducerAction<'controls:seek', { time: number }>
@@ -32,6 +34,13 @@ type Action =
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
+    case 'init': {
+      return {
+        ...state,
+        isInitialized: true
+      }
+    }
+
     case 'controls:open': {
       return {
         ...state,
@@ -97,7 +106,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     time: context.party.current_time,
     isComplete: false,
     isPlaying: false,
-    isOpen: false
+    isOpen: false,
+    isInitialized: false
   })
 
   const $video = useRef<HTMLVideoElement>()
@@ -151,7 +161,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }, [context.party.video.id])
 
   function handleVideoClick() {
-    console.log('click')
     if (state.isOpen) {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,
@@ -195,6 +204,12 @@ function AppWatchHome(props: ReactComponentWrapper) {
     dispatch({
       type: 'controls:close'
     })
+  }
+
+  function handleVideoLoadedData() {
+    if (!state.isInitialized) {
+      dispatch({ type: 'init' })
+    }
   }
 
   function handleSeek(time: number) {
@@ -251,7 +266,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
       <div className="watch-screen">
         <div
           className="watch-screen-video"
-          style={{
+          style={state.isInitialized ? {} : {
             backgroundImage: `url(${getVideoPreviewImage(context.party)})`
           }}
           onClick={handleVideoClick}
@@ -261,6 +276,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             ref={$video}
             onTimeUpdate={handleTimeUpdate}
             onEnded={handleVideoEnded}
+            onLoadedData={handleVideoLoadedData}
           />
 
           {changeEpisodeBuffer && (

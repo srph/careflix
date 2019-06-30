@@ -28,6 +28,7 @@ body {
 @media (min-width: 720px) {
   .watch-screen-video {
     flex-shrink: 1;
+    padding-bottom: 0;
   }
 }
 
@@ -42,6 +43,17 @@ body {
   width: 100%;
   pointer-events: none;
 }
+
+@media (min-width: 720px) {
+  .watch-screen-video > video {
+    position: static;
+    top: initial;
+    left: initial;
+    right: initial;
+    bottom: initial;
+  }
+}
+
 
 .watch-screen-chat {
   flex-shrink: 1;

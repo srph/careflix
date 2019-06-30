@@ -102,6 +102,12 @@ function InvitationModal() {
     }
   }, [invitation])
 
+  useEffect(() => {
+    // @TODO Make a reusable component that does this kasi tangina nito hahahah
+    // <Audio volume={pakyu} />
+    notificationRef.current.volume = 0.1
+  }, [])
+
   async function handleAccept() {
     dispatch({
       type: 'action:init',

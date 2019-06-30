@@ -188,6 +188,13 @@ function ChatWidget(props: Props) {
     }
   })
 
+  useEffect(() => {
+    // @TODO Make a reusable component that does this kasi tangina nito hahahah
+    // <Audio volume={pakyu} />
+    idleAudioRef.current.volume = 0.1
+    sendAudioRef.current.volume = 0.1
+  }, [])
+
   function handleInput(evt: React.FormEvent<HTMLInputElement>) {
     dispatch({
       type: 'chat:input',

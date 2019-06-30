@@ -144,11 +144,11 @@ class ShowSeeder extends Seeder
         ];
 
         foreach($movies as $movie) {
-            $show = App\Show::create(Arr::except($movie, ['duration']));
+            $show = App\Show::create(Arr::except($movie, ['duration', 'extension']));
 
             App\ShowVideo::create([
                 'show_id' => $show->id,
-                'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['video_extension']),
+                'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['extension']),
                 'duration' => $movie['duration'],
                 'synopsis' => $faker->text,
             ]);

@@ -8,10 +8,10 @@ import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { useBufferState } from '~/hooks/useBufferState'
+import { useMediaMode } from '~/hooks/useMediaMode'
 import axios from '~lib/axios'
 
 import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
-import { timeout } from 'q';
 
 interface State {
   time: number
@@ -148,7 +148,14 @@ function AppWatchHome(props: ReactComponentWrapper) {
     displayChangeEpisodeBuffer()
   }, [context.party.video.id])
 
-  function handleOpen() {
+  function handleVideoClick() {
+    if (state.isOpen) {
+      // If it's open, most probably it's been opened through hover (desktop).
+      // On desktop, we want overlay clicks to toggle play; for mobile screens,
+      // we want overlays to open the overlay.
+      return handlePlay()
+    }
+
     dispatch({
       type: 'controls:open'
     })
@@ -156,24 +163,27 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
   const timeoutRef = useRef<number>(null)
 
-  function handleHoverOpen() {
+  function handleVideoHover() {
+    // @TODO Optimize by debounce since this event is called every mouse move.
+    // For now, this is the least we can do so it's not "rerendering" all the fucking time.
     if (!state.isOpen) {
       dispatch({
         type: 'controls:open'
       })
     }
 
-    // @TODO Optimize by debounce since this event is called every mouse move.
     window.clearTimeout(timeoutRef.current)
 
     timeoutRef.current = window.setTimeout(() => {
       dispatch({
         type: 'controls:close'
       })
-    }, 2000)
+    }, 5000)
   }
 
-  function handleClose() {
+  function handleOverlayClose() {
+    // FYI, PlayerModal lets overlay clicks to pass through to the video.
+    // In turn, handleVideoOpen handles the proper action for desktop/mobile.
     dispatch({
       type: 'controls:close'
     })
@@ -224,7 +234,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
         time={state.time}
         isOpen={state.isOpen}
         isPlaying={state.isPlaying}
-        onClose={handleClose}
+        onClose={handleOverlayClose}
         onPlay={handlePlay}
         onSeek={handleSeek}
         onChangeVideo={context.onChangeVideo}
@@ -236,8 +246,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
           style={{
             backgroundImage: `url(${getVideoPreviewImage(context.party)})`
           }}
-          onClick={handleOpen}
-          onMouseOver={handleHoverOpen}>
+          onClick={handleVideoClick}
+          onMouseMove={handleVideoHover}>
           <video
             src={context.party.video.video_url}
             ref={$video}

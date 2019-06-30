@@ -19,6 +19,11 @@
     right: 320px;
     overflow: hidden;
     background: var(--color-modal-overlay);
+    /**
+     * On desktop mode, we want the user to click through the video instead of the overlay
+     * (which triggers an onClose in the Modal).
+     */
+    pointer-events: none;
   }
 }
 

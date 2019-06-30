@@ -91,7 +91,8 @@ class ShowSeeder extends Seeder
                 'seasons' => [
                     [
                         'title' => 'Season 1',
-                        'episodes' => 23
+                        'episodes' => 23,
+                        'extension' => 'mkv'
                     ]
                 ]
             ]
@@ -110,11 +111,12 @@ class ShowSeeder extends Seeder
                     App\ShowVideo::create([
                         'show_group_id' => $group->id,
                         'show_id' => $show->id,
-                        'title' => "Episode {$j}",
+                        'title' => 'Episode ' . ($j + 1),
                         'video_url' => \App\Support\Helper::getVideoUrlFromEpisode([
                             'title' => $show->title,
                             'season' => $i + 1,
-                            'episode' => $j + 1
+                            'episode' => $j + 1,
+                            'extension' => 'mkv'
                         ]),
                         'duration' => Helper::getDurationInSecondsFromReadableFormat('11:09'),
                         'synopsis' => $faker->text,

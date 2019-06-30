@@ -83,8 +83,8 @@ class Helper {
    */
   static public function getVideoUrlFromEpisode($settings) {
     $filename = Helper::getVideoFilenameFromTitle($settings['title']);
-    $index = "{$settings['season']}-{$settings['episode']}"; // s1-e11
-    $ext = isset($settings['extension']) ?? 'mp4';
+    $index = "s{$settings['season']}-e{$settings['episode']}"; // s1-e11
+    $ext = $settings['extension'] ?? 'mp4';
     return Helper::cdn("videos/{$filename}/{$filename}-{$index}.{$ext}");
   }
 

@@ -1,0 +1,19 @@
+.subtitle-slot {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  text-align: center;
+  font-size: 12px;
+  margin: 0;
+  color: var(--color-white);
+  text-shadow: var(--text-shadow-default);
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .subtitle-slot {
+    font-size: 14px;
+  }
+}

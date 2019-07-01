@@ -3,6 +3,7 @@ import './style'
 import * as React from 'react'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
+import SubtitleSlot from './SubtitleSlot'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -290,6 +291,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
               <h4>{context.party.video.group.title}: {context.party.video.title}</h4>
             </div>
           )}
+
+          {state.isInitialized && <SubtitleSlot video={context.party.video} time={state.time} />}
         </div>
 
         <ChatWidget party={context.party} />

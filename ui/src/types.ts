@@ -74,6 +74,7 @@ interface AppShowVideo {
   show?: AppShow
   group?: AppShowGroup
   duration: number
+  subtitle_url: string
   created_at: string
   updated_at: string
 }

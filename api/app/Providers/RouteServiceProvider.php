@@ -30,6 +30,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('party', \App\Party::class);
         Route::model('show', \App\Show::class);
         Route::model('invitation', \App\PartyInvitation::class);
+        Route::model('video', \App\ShowVideo::class);
     }
 
     /**

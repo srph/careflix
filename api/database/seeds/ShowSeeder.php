@@ -258,7 +258,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Stay Alive'),
                 'age_rating' => 'G',
                 //
-                'extension' => 'mp4',
+                'extension' => 'avi',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:25:28')
             ],
         ];

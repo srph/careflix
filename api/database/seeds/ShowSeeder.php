@@ -152,6 +152,18 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:46')
+            ],
+            [
+                'title' => 'Coco',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2019),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Coco', '16:9'),
+                'age_rating' => 'G',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:45:02')
             ]
         ];
 

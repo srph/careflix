@@ -98,4 +98,9 @@ class Helper {
     $filename = Helper::getVideoFilenameFromTitle($title);
     return Helper::cdn("videos/{$filename}/{$filename}-preview-{$ratio}.jpg");
   }
+
+  static public function getSubtitleUrlFromMovieTitle($title, $language = 'en') {
+    $filename = $filename = Helper::getVideoFilenameFromTitle($title);
+    return Helper::cdn("videos/{$filename}/{$filename}-{$language}.srt");
+  }
 }

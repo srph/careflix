@@ -29,6 +29,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bumblebee'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:53:52')
@@ -41,6 +42,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2014),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon 2'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:55')
@@ -53,6 +55,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2019),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon: The Hidden World'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:23')
@@ -65,6 +68,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spider-Man: Into The Spider-Verse'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:56:48')
@@ -77,6 +81,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2009),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hachiko'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mkv',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:14')
@@ -89,6 +94,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2017),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick Chapter 2'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:02:22')
@@ -101,6 +107,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Rampage'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:16')
@@ -113,6 +120,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2017),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Retreat'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:24:40')
@@ -125,6 +133,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2006),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:05:19')
@@ -137,6 +146,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2012),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill Revelation'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:46')
@@ -149,6 +159,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2019),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Shazam'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:46')
@@ -161,6 +172,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2019),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Coco'),
                 'age_rating' => 'G',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:45:02')
@@ -173,6 +185,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Annihilation'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:55:29')
@@ -185,6 +198,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Godzilla: The Planet Eater'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:30')
@@ -197,6 +211,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Littleman'),
                 'age_rating' => 'R18',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:37:39')
@@ -209,6 +224,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2018),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mandy'),
                 'age_rating' => '',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:10')
@@ -221,6 +237,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(1998),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mulan'),
                 'age_rating' => 'G',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:50')
@@ -233,6 +250,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2004),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mulan 2: The Final War'),
                 'age_rating' => 'G',
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:18:41')
@@ -245,6 +263,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2005),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Noroi: The Curse'),
                 'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Noroi: The Curse', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:54:43')
@@ -257,6 +276,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2006),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Stay Alive'),
                 'age_rating' => 'G',
+                'subtitle_url' => '',
                 //
                 'extension' => 'avi',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:25:28')
@@ -264,11 +284,12 @@ class ShowSeeder extends Seeder
         ];
 
         foreach($movies as $movie) {
-            $show = App\Show::create(Arr::except($movie, ['duration', 'extension']));
+            $show = App\Show::create(Arr::except($movie, ['duration', 'extension', 'subtitle_url']));
 
             App\ShowVideo::create([
                 'show_id' => $show->id,
                 'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['extension']),
+                'subtitle_url' => $movie['subtitle_url'],
                 'duration' => $movie['duration'],
                 'synopsis' => $faker->text,
             ]);

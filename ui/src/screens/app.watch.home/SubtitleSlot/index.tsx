@@ -48,9 +48,7 @@ function SubtitleSlot(props: Props) {
   })
   
   return (
-    <p className="subtitle-slot">
-      {subtitle}
-    </p>
+    <p className="subtitle-slot" dangerouslySetInnerHTML={{ __html: subtitle.replace('\n', '<br />') }} />
   )
 }
 

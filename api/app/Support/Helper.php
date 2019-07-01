@@ -92,7 +92,7 @@ class Helper {
    * @param string $title Spider-Man: Into The Spider-Verse
    * @param string $ratio 16:9
    */
-  static public function getPreviewUrlFromMovieTitle($title, $ratio) {
+  static public function getPreviewUrlFromMovieTitle($title, $ratio = '16:9') {
     // 16:9 => 16-9
     $ratio = preg_replace('/:/', '-', $ratio, 1);
     $filename = Helper::getVideoFilenameFromTitle($title);

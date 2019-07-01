@@ -27,7 +27,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bumblebee', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bumblebee'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -39,7 +39,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2014),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon 2', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon 2'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -51,7 +51,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2019),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon: The Hidden World', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon: The Hidden World'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -63,7 +63,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spider-Man: Into The Spider-Verse', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spider-Man: Into The Spider-Verse'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -75,7 +75,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2009),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hachiko', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hachiko'),
                 'age_rating' => '',
                 //
                 'extension' => 'mkv',
@@ -87,7 +87,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2017),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick Chapter 2', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick Chapter 2'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -99,7 +99,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Rampage', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Rampage'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -111,7 +111,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2017),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Retreat', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Retreat'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -123,7 +123,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2006),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -135,7 +135,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2012),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill Revelation', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Silent Hill Revelation'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -147,7 +147,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2019),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Shazam', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Shazam'),
                 'age_rating' => '',
                 //
                 'extension' => 'mp4',
@@ -159,12 +159,108 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2019),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Coco', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Coco'),
                 'age_rating' => 'G',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:45:02')
-            ]
+            ],
+            [
+                'title' => 'Annihilation',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2018),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Annihilation'),
+                'age_rating' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:55:29')
+            ],
+            [
+                'title' => 'Godzilla: The Planet Eater',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2018),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Godzilla: The Planet Eater'),
+                'age_rating' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:30')
+            ],
+            [
+                'title' => 'Littleman',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2018),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Littleman'),
+                'age_rating' => 'R18',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:37:39')
+            ],
+            [
+                'title' => 'Mandy',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2018),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mandy'),
+                'age_rating' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:10')
+            ],
+            [
+                'title' => 'Mulan',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(1998),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mulan'),
+                'age_rating' => 'G',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:50')
+            ],
+            [
+                'title' => 'Mulan 2: The Final War',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2004),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mulan 2: The Final War'),
+                'age_rating' => 'G',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:18:41')
+            ],
+            [
+                'title' => 'Noroi: The Curse',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2005),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Noroi: The Curse'),
+                'age_rating' => 'G',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:54:43')
+            ],
+            [
+                'title' => 'Stay Alive',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2006),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Stay Alive'),
+                'age_rating' => 'G',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:25:28')
+            ],
         ];
 
         foreach($movies as $movie) {
@@ -185,7 +281,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => $faker->text,
                 'language' => 'English',
                 'air_start' => Carbon::create(2018),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('We Bare Bears', '16:9'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('We Bare Bears'),
                 'age_rating' => 'G',
                 //
                 'seasons' => [

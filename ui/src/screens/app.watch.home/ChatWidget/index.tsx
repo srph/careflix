@@ -300,11 +300,14 @@ function ChatWidget(props: Props) {
                 {!isSelf && (
                   <div className="name">{group.user.name}</div>
                 )}
-                {group.logs.map(log => (
-                  <div className="message" key={log.id}>
-                    <div className="inner">{log.message.text}</div>
-                  </div>
-                ))}
+
+                <div className="list">
+                  {group.logs.map(log => (
+                    <div className="message" key={log.id}>
+                      <div className="inner">{log.message.text}</div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )

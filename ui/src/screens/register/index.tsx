@@ -73,10 +73,10 @@ function Register(props: ReactComponentWrapper) {
     dispatch({ type: 'request' })
 
     const [err] = await axios.post('/api/register', {
-      email: form.email,
-      name: form.name,
-      password: form.password,
-      password_confirmation: form.password_confirmation
+      email: form.state.email,
+      name: form.state.name,
+      password: form.state.password,
+      password_confirmation: form.state.password_confirmation
     })
 
     if (err) {
@@ -84,8 +84,8 @@ function Register(props: ReactComponentWrapper) {
     }
 
     const [err2] = await auth.login({
-      username: form.email,
-      password: form.password
+      username: form.state.email,
+      password: form.state.password
     })
 
     if (err2) {
@@ -122,25 +122,25 @@ function Register(props: ReactComponentWrapper) {
 
         <form onSubmit={handleSubmit}>
           <UiFormGroup label="Email">
-            <UiInput type="email" placeholder="johndoe@email.com" name="email" value={form.email} onChange={form.setEmail} />
+            <UiInput type="email" placeholder="johndoe@email.com" name="email" value={form.state.email} onChange={form.set('email')} />
           </UiFormGroup>
 
           <UiFormSpacer />
 
           <UiFormGroup label="Name">
-            <UiInput placeholder="johndoe" name="name" value={form.name} onChange={form.setName} />
+            <UiInput placeholder="johndoe" name="name" value={form.state.name} onChange={form.set('name')} />
           </UiFormGroup>
 
           <UiFormSpacer />
 
           <UiFormGroup label="Password">
-            <UiInput type="password" placeholder="********" name="password" value={form.password} onChange={form.setPassword} />
+            <UiInput type="password" placeholder="********" name="password" value={form.state.password} onChange={form.set('password')} />
           </UiFormGroup>
 
           <UiFormSpacer />
 
           <UiFormGroup label="Confirm Password">
-            <UiInput type="password" placeholder="********" name="password_confirmation" value={form.password_confirmation} onChange={form.setPassword_confirmation} />
+            <UiInput type="password" placeholder="********" name="password_confirmation" value={form.state.password_confirmation} onChange={form.set('password_confirmation')} />
           </UiFormGroup>
 
           <UiFormSpacer />

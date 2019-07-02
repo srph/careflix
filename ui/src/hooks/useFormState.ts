@@ -1,7 +1,10 @@
 import { useState, useMemo } from 'react'
 
-type Payload<T> = T & {
-  [key: string]: (evt: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void
+type SetCallbackEvent = React.FormEvent<HTMLInputElement | HTMLSelectElement>
+
+type Payload<T> = {
+  state: T,
+  set: (name: string) => (evt: SetCallbackEvent) => void
 }
 
 /**
@@ -12,19 +15,20 @@ function useFormState<T>(initial: T): Payload<T> {
   const [state, setState] = useState(initial)
   
   return useMemo(() => {
-    let out = {} as Payload<T>
-
-    Object.keys(state).forEach(key => {
-      out[key] = state[key]
-      
-      out[`set${ucFirst(key)}`] = (evt) => setState({
-        ...state,
-        [key]: evt.currentTarget.value
-      })
-    })
+    let out = {
+      state,
+      set(name: string) {
+        return (evt: SetCallbackEvent) => {
+          setState({
+            ...state,
+            [name]: evt.currentTarget.value
+          })
+        }
+      }
+    } as Payload<T>
   
     return out
-  }, [initial])
+  }, [state])
 }
 
 export default useFormState

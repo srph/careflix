@@ -1,8 +1,6 @@
 // declare module '@srph/react-notification'
 declare module 'cookie-machine'
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
 type AsyncGoReturn<T = any> = [Error] | [null, T] | []
 
 interface ReactComponentWrapper {

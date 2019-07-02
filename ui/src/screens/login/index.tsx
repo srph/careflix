@@ -68,8 +68,8 @@ function Login(props: ReactComponentWrapper) {
     dispatch({ type: 'request' })
 
     const [err] = await auth.login({
-      username: form.username,
-      password: form.password
+      username: form.state.username,
+      password: form.state.password
     })
 
     if (err) {
@@ -106,13 +106,13 @@ function Login(props: ReactComponentWrapper) {
 
         <form onSubmit={handleSubmit}>
           <UiFormGroup label="Email">
-            <UiInput value={form.username} onChange={form.setUsername} type="email" placeholder="johndoe" name="email" />
+            <UiInput value={form.state.username} onChange={form.set('username')} type="email" placeholder="johndoe" name="email" />
           </UiFormGroup>
 
           <UiFormSpacer />
 
           <UiFormGroup label="Password">
-            <UiInput value={form.password} onChange={form.setPassword} type="password" placeholder="********" name="password" />
+            <UiInput value={form.state.password} onChange={form.set('password')} type="password" placeholder="********" name="password" />
           </UiFormGroup>
 
           <UiFormSpacer />

@@ -28,7 +28,6 @@
     "react-router-dom": "^5.0.0",
     "react-use": "^9.0.0",
     "sanitize.css": "^8.0.0",
-    "srt-to-obj": "0.0.3",
     "use-async-effect": "^2.0.1",
     "use-react-router": "^1.0.6",
     "uuid": "^3.3.2"

@@ -76,15 +76,17 @@ class PartiesController extends Controller
 
         $action = null;
 
+        $time = Helper::getReadableFormatFromDurationInSeconds($payload['current_time']);
+
         if ($party->is_playing && !$payload['is_playing']) {
-            $action = 'paused the video';
+            $action = 'paused the video (' . $time . ')';
         } else if (!$party->is_playing && $payload['is_playing']) {
-            $action = 'played the video';
+            $action = 'played the video (' . $time . ')';
         } else {
             // By default, the user probably seeked.
             // This is pretty brittle because what if two users tried to play/pause
             // the video at the same time? Not urgent, but something to look at in the future.
-            $action = 'seeked to ' . Helper::getReadableFormatFromDurationInSeconds($payload['current_time']);
+            $action = 'seeked to ' . $time;
         }
 
         \Log::info(['action' => $action]);

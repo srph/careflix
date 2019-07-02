@@ -56,6 +56,24 @@ class Helper {
   }
 
   /**
+   * 6782 -> 1:53:02
+   * 
+   * @return int
+   */
+  static public function getReadableFormatFromDurationInSeconds(int $seconds) {
+    $hh = floor($seconds / 3600);
+    $mm = floor(($seconds % 3600) / 60);
+    $ss = floor($seconds % 60);
+
+    return implode(
+      ':',
+      array_map(function($unit) {
+        return str_pad($unit, '2', '0', STR_PAD_LEFT);
+      }, [$hh, $mm, $ss])
+    );
+  }
+
+  /**
    * 
    */
   static public function getVideoFilenameFromTitle($title) {

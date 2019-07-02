@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Helper;
 use App\Party;
 use App\Events\PartyState;
-use App\Events\PartyActivity;
+use App\PartyActivity;
 use App\Events\PartyVideoChanged;
+use App\Events\PartyLogEvent;
 
 class PartiesController extends Controller
 {
@@ -66,12 +68,46 @@ class PartiesController extends Controller
      */
     public function state(\App\Http\Requests\UpdatePartyState $request, Party $party)
     {
+        // Properly typecast the request data
+        $payload = [
+            'current_time' => (int) $request->get('current_time'),
+            'is_playing' => (boolean) $request->get('is_playing')
+        ];
+
+        $action = null;
+
+        if ($party->is_playing && !$payload['is_playing']) {
+            $action = 'paused the video';
+        } else if (!$party->is_playing && $payload['is_playing']) {
+            $action = 'played the video';
+        } else {
+            // By default, the user probably seeked.
+            // This is pretty brittle because what if two users tried to play/pause
+            // the video at the same time? Not urgent, but something to look at in the future.
+            $action = 'seeked to ' . Helper::getReadableFormatFromDurationInSeconds($payload['current_time']);
+        }
+
+        \Log::info(['action' => $action]);
+
         $party->fill([
             'current_time' => (int) $request->get('current_time'),
             'is_playing' => (boolean) $request->get('is_playing')
         ])->save();
 
+        $activity = PartyActivity::create([
+            'user_id' => $request->user()->id,
+            'party_id' => $party->id,
+            'text' => $action
+        ]);
+
+        $log = $party->logs()->create([
+            'loggable_type' => PartyActivity::class,
+            'loggable_id' => $activity->id
+        ]);
+
         broadcast(new PartyState($party))->toOthers();
+
+        broadcast(new PartyLogEvent($party, $log));
 
         return $party;
     }

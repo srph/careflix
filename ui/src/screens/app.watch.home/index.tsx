@@ -292,7 +292,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             </div>
           )}
 
-          {state.isInitialized && <SubtitleSlot video={context.party.video} time={state.time} />}
+          {state.isInitialized && <SubtitleSlot video={context.party.video} isPlayerOpen={state.isOpen} time={state.time} />}
         </div>
 
         <ChatWidget party={context.party} />

@@ -1,6 +1,7 @@
 import './style'
 
 import * as React from 'react'
+import cx from 'classnames'
 import { useState } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import fromReadableTime from '~/utils/date/fromReadableTime'
@@ -13,6 +14,7 @@ interface State {
 interface Props {
   video: AppShowVideo
   time: number
+  isPlayerOpen: boolean
 }
 
 function SubtitleSlot(props: Props) {
@@ -51,7 +53,7 @@ function SubtitleSlot(props: Props) {
   }
   
   return (
-    <p className="subtitle-slot" dangerouslySetInnerHTML={{ __html: subtitle.text.replace('\n', '<br />') }} />
+    <p className={cx('subtitle-slot', { 'is-player-open': props.isPlayerOpen })} dangerouslySetInnerHTML={{ __html: subtitle.text.replace('\n', '<br />') }} />
   )
 }
 

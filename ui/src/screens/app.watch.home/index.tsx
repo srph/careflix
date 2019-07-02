@@ -196,7 +196,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
       dispatch({
         type: 'controls:close'
       })
-    }, 5000)
+    }, 2000)
   }
 
   function handleOverlayClose() {

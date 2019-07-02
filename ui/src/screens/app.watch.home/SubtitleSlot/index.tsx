@@ -23,13 +23,7 @@ function SubtitleSlot(props: Props) {
       return
     }
 
-    const [err, res] = await axios.get(`api/videos/${props.video.id}/subtitle`, {
-      headers: {
-        'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Methods': 'GET, PUT, POST, HEAD, DELETE',
-        'Access-Control-Allow-Origin': '*'
-      }
-    })
+    const [err, res] = await axios.get(`api/videos/${props.video.id}/subtitle`)
 
     if (err != null) {
       return //
@@ -61,14 +55,6 @@ function SubtitleSlot(props: Props) {
   )
 }
 
-interface OriginalTrack {
-  index: string
-  timestamp: string
-  start: string
-  end: string
-  text: string
-}
-
 interface Track {
   index: string
   timestamp: string
@@ -95,6 +81,14 @@ function srt2obj(str: string): Track[] {
   })
 }
 
+interface OriginalTrack {
+  index: string
+  timestamp: string
+  start: string
+  end: string
+  text: string
+}
+
 // https://github.com/radiovisual/srt-to-obj/blob/master/parse-srt.js
 function originalSrt2Obj (srtData) {
 	const a = [];
@@ -104,7 +98,7 @@ function originalSrt2Obj (srtData) {
 
 	let o = {
 		text: ''
-	};
+	} as any;
 
 	for (let i = 0; i < len; i++) {
 		const line = lines[i].trim();

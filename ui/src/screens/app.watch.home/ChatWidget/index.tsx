@@ -284,10 +284,12 @@ function ChatWidget(props: Props) {
             )
           }
 
+          const isSelf = group.user.id === auth.state.data.id
+
           return (
             <div
               className={cx('watch-screen-chat-group', {
-                'is-self': group.user.id === auth.state.data.id
+                'is-self': isSelf
               })}
               key={i}>
               <div className="avatar">
@@ -295,6 +297,9 @@ function ChatWidget(props: Props) {
               </div>
 
               <div className="messages">
+                {!isSelf && (
+                  <div className="name">{group.user.name}</div>
+                )}
                 {group.logs.map(log => (
                   <div className="message" key={log.id}>
                     <div className="inner">{log.message.text}</div>

@@ -275,11 +275,76 @@ class ShowSeeder extends Seeder
                 'language' => 'English',
                 'air_start' => Carbon::create(2006),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Stay Alive'),
-                'age_rating' => 'G',
+                'age_rating' => '',
                 'subtitle_url' => '',
                 //
                 'extension' => 'avi',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:25:28')
+            ],
+            [
+                'title' => 'Alvin And The Chipmunks: The Road Chip',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2015),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Alvin And The Chipmunks: The Road Chip'),
+                'age_rating' => 'G',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:32:00')
+            ],
+            [
+                'title' => 'Don\'t Breathe',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2015),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Don\'t Breathe'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:28:32')
+            ],
+            [
+                'title' => 'Jumanji',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(1995),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Jumanji'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:06')
+            ],
+            [
+                'title' => 'Jumanji: Welcome to the Jungle',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2017),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Jumanji: Welcome to the Jungle'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:03')
+            ],
+            [
+                'title' => 'The Exorcism of Emily Rose',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2005),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Exorcism of Emily Rose'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'avi',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')
             ],
         ];
 

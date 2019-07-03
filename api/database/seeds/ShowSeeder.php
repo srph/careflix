@@ -406,7 +406,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2019),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hellboy 2019'),
                 'age_rating' => 'R',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hellboy 2019', 'en'),
+                'subtitle_url' => '',
                 //
                 'extension' => 'mkv',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:40')

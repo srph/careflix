@@ -356,7 +356,7 @@ class ShowSeeder extends Seeder
                 'age_rating' => '',
                 'subtitle_url' => '',
                 //
-                'extension' => 'mkv',
+                'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')
             ],
             [

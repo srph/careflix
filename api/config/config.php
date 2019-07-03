@@ -21,7 +21,7 @@ return [
     | Number of seconds to wait before an invitation expires.
     |
     */
-    'invitation_duration' => 300,
+    'invitation_duration' => 1800,
 
   ],
 

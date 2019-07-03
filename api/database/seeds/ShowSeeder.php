@@ -346,6 +346,58 @@ class ShowSeeder extends Seeder
                 'extension' => 'avi',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')
             ],
+            [
+                'title' => 'One Piece: Gold',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2016),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('One Piece: Gold'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mkv',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')
+            ],
+            [
+                'title' => 'One Piece: Z',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2012),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('One Piece: Z'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mkv',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')
+            ],
+            [
+                'title' => 'Hellboy',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2004),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hellboy'),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hellboy', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:12:29')
+            ],
+            [
+                'title' => 'Hellboy: The Golden Army',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2008),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hellboy: The Golden Army'),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hellboy: The Golden Army', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:49')
+            ]
         ];
 
         foreach($movies as $movie) {

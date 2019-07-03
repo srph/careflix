@@ -79,13 +79,14 @@ class Helper {
   static public function getVideoFilenameFromTitle($title) {
     // Spider-Man: Into The Spider-Verse -> spider--man:-into-the-spider--verse
     $hypenated = Str::kebab($title);
+    
     // spider--man:-into-the-spider--verse -> spider-man-into-the-spider-verse
     $sanitized = preg_replace("/--/", "-", $hypenated);
     $sanitized = preg_replace("/:/", "", $sanitized);
     // Remove apostrophes (Don't Breathe -> dont-breathe)
     $sanitized = preg_replace("/\'/", "", $sanitized);
     // how-to-train-your-dragon2 -> how-to-train-your-dragon-2
-    $sanitized = preg_replace("/(\w+)(\d+)/", "$1-$2", $sanitized);
+    $sanitized = preg_replace("/([A-Za-z]+)(\d+)/", "$1-$2", $sanitized);
 
     return $sanitized;
   }

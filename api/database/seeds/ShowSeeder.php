@@ -397,6 +397,19 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:49')
+            ],
+            [
+                'title' => 'Hellboy 2019',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2019),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hellboy 2019'),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hellboy 2019', 'en'),
+                //
+                'extension' => 'mkv',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:40')
             ]
         ];
 

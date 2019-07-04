@@ -410,6 +410,19 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mkv',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:40')
+            ],
+            [
+                'title' => 'Warcraft',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2016),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Warcraft'),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Warcraft', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:03:07')
             ]
         ];
 

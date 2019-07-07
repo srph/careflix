@@ -11,13 +11,13 @@ interface OwnProps {
 
 type Props = HTMLProps & OwnProps
 
-function UiInput({ isDark, isRound, ...props }: Props) {
+function UiInput({ isDark, isRound, ...props }: Props, ref: React.MutableRefObject<HTMLInputElement>) {
   return (
-    <input {...props} className={cx('ui-input', {
+    <input {...props} ref={ref} className={cx('ui-input', {
       'is-dark': isDark,
       'is-round': isRound
     })} />
   )
 }
 
-export default UiInput
+export default React.forwardRef(UiInput)

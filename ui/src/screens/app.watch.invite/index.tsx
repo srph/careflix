@@ -155,6 +155,14 @@ function AppWatchInvite(props: ReactComponentWrapper) {
     context.onCancel(event.invitation)
   })
 
+  usePusher(`private-party.${context.party.id}`, 'invitation.accepted', (event: { invitation: AppPartyInvitation, member: AppPartyMember }) => {
+    context.onAccept(event.invitation, event.member)
+  })
+
+  usePusher(`private-party.${context.party.id}`, 'invitation.declined', (event: { invitation: AppPartyInvitation }) => {
+    context.onDecline(event.invitation)
+  })
+
   useDebounce(
     async () => {
       // We don't want a search to happen on mount or when the state input is left blank.

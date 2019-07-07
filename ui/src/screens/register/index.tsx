@@ -6,7 +6,7 @@ import UiFormGroup from '~/components/UiFormGroup'
 import UiInput from '~/components/UiInput'
 import UiFormSpacer from '~/components/UiFormSpacer'
 import UiContainer from '~/components/UiContainer'
-import UiButton from '~/components/UiButton'
+import UiButtonLoader from '~/components/UiButtonLoader'
 import { Link } from 'react-router-dom'
 import Helmet from 'react-helmet'
 
@@ -146,9 +146,9 @@ function Register(props: ReactComponentWrapper) {
           <UiFormSpacer />
 
           <div className="registration-action">
-            <UiButton variant="primary" block size="l">
+            <UiButtonLoader variant="primary" block size="l" isLoading={state.isLoading}>
               Register
-            </UiButton>
+            </UiButtonLoader>
           </div>
 
           <div className="registration-byline">

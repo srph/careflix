@@ -83,8 +83,8 @@ body {
 }
 
 .watch-screen-chat-group > .messages {
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
 }
 
 .watch-screen-chat-group > .messages > .name {
@@ -92,6 +92,11 @@ body {
   margin-bottom: 4px;
   font-size: 12px;
   color: var(--color-black-5);
+}
+
+.watch-screen-chat-group > .messages > .list {
+  display: flex;
+  flex-direction: column;
 }
 
 .watch-screen-chat-group > .messages > .list > .message {

@@ -39,7 +39,7 @@ class PartyInvitationsController extends Controller
     public function search(\App\Http\Requests\SearchInvitableUsers $request, Party $party)
     {
         $search = $request->get('search');
-        
+
         return User::search($search)
             ->where('id', '!=', $request->user()->id)
             ->get();
@@ -88,6 +88,10 @@ class PartyInvitationsController extends Controller
             'is_active' => false
         ]);
 
+        // @TODO Find a way so we don't have to query the data again, and instead,
+        // get the data from the attach() method above. No idea at the moment.
+        $pivot = $invitation->party->members()->where('user_id', $request->user()->id)->first();
+
         $activity = \App\PartyActivity::create([
             'user_id' => $request->user()->id,
             'party_id' => $invitation->party->id,
@@ -99,7 +103,7 @@ class PartyInvitationsController extends Controller
             'loggable_id' => $activity->id
         ]);
 
-        broadcast(new PartyInvitationAccepted($invitation->party, $invitation))->toOthers();
+        broadcast(new PartyInvitationAccepted($invitation->party, $invitation, $pivot))->toOthers();
 
         broadcast(new PartyLogEvent($invitation->party, $log));
 

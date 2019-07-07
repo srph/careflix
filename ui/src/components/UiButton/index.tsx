@@ -27,4 +27,6 @@ function UiButton({ variant, size, block, link, ...props }: Props) {
     : <button {...(props as ButtonAttributes)} className={cls} />
 }
 
+export type UiButtonProps = Props
+
 export default UiButton

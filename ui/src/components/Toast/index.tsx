@@ -51,24 +51,26 @@ function Toast() {
   }, [])
 
   return (
-    <Transition
-      component='div'
-      className='toast-float'
-      transitionName={{
-        enter: '-enter',
-        leave: '-leave'
-      }}
-      transitionEnterTimeout={400}
-      transitionLeaveTimeout={400}>
-      {messages.map(message =>
-        <div className='item' key={message.id}>
-          {message.text}
-          <button className='close' onClick={() => close(message.id)}>
-            ×
-          </button>
-        </div>
-      )}
-    </Transition>
+    <div className="toast-container">
+      <Transition
+        component='div'
+        className='toast-float'
+        transitionName={{
+          enter: '-enter',
+          leave: '-leave'
+        }}
+        transitionEnterTimeout={400}
+        transitionLeaveTimeout={400}>
+        {messages.map(message =>
+          <div className='item' key={message.id}>
+            {message.text}
+            <button className='close' onClick={() => close(message.id)}>
+              ×
+            </button>
+          </div>
+        )}
+      </Transition>
+    </div>
   )
 }
 

@@ -3,7 +3,8 @@ import axios from '~/lib/axios'
 import * as cookie from 'cookie-machine'
 import history from '~/lib/history'
 import config from '~/config';
-import immer from 'immer';
+import immer from 'immer'
+import { toast } from '~/components/Toast'
 
 interface State {
   data: AppUser | null,
@@ -34,6 +35,8 @@ class AuthContainer extends Container<State> {
       client_id: config.api.clientId,
       client_secret: config.api.clientSecret,
       grant_type: 'password'
+    }, {
+      app: { validation: false }
     })
     if (err) {
       return [err]
@@ -45,7 +48,9 @@ class AuthContainer extends Container<State> {
     cookie.set('app_token', token, {
       path: '/'
     })
-    const [err2, dataResponse] = await axios.get('/api/me')
+    const [err2, dataResponse] = await axios.get('/api/me', {
+      app: { validation: false }
+    })
     if (err2) {
       return [err2]
     }
@@ -55,6 +60,7 @@ class AuthContainer extends Container<State> {
   }
 
   logout = () => {
+    toast('You have been logged out.')
     cookie.remove('app_token', {
       path: '/'
     })

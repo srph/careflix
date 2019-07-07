@@ -14,7 +14,8 @@ import axios from '~/lib/axios'
 import history from '~/lib/history'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
-import useFormState from '~/hooks/useFormState';
+import useFormState from '~/hooks/useFormState'
+import { toast } from '~/components/Toast'
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -73,8 +74,11 @@ function Login(props: ReactComponentWrapper) {
     })
 
     if (err) {
+      toast('Invalid email/password combination.')
       return dispatch({ type: 'error' })
     }
+
+    toast('Login was successful.')
     
     dispatch({ type: 'success' })
 

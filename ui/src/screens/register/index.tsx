@@ -14,7 +14,8 @@ import axios from '~/lib/axios'
 import history from '~/lib/history'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
-import useFormState from '~/hooks/useFormState';
+import useFormState from '~/hooks/useFormState'
+import { toast } from '~/components/Toast'
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -91,6 +92,8 @@ function Register(props: ReactComponentWrapper) {
     if (err2) {
       return dispatch({ type: 'error' })
     }
+
+    toast('Your account was created successfully!')
     
     dispatch({ type: 'success' })
 

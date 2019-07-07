@@ -125,8 +125,6 @@ function ChatWidget(props: Props) {
 
   const [state, dispatch] = useReducer(reducer, init)
 
-  const nextState = useNextState(state)
-
   const chatbarRef = useRef<HTMLDivElement>(null)
 
   const idleAudioRef = useRef<HTMLAudioElement>(null)
@@ -175,7 +173,7 @@ function ChatWidget(props: Props) {
 
   const isWindowVisible = useWindowVisibility()
 
-  usePusher(`private-party.${props.party.id}`, 'log', async (event: { log: AppPartyLog }) => {
+  usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
     // If the user was scrolled to the bottom before receiving a new message
     // we'll keep the illusion that they still are.
     shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current)

@@ -474,7 +474,7 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:32')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:25:40')
             ],
             [
                 'title' => 'Scary Movie 2',
@@ -487,7 +487,7 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:32')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:22:27')
             ],
             [
                 'title' => 'Scary Movie',

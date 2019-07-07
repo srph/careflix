@@ -15,7 +15,7 @@ class ShowsController extends Controller
      */
     public function index()
     {
-        return Show::orderBy('id', 'desc')->all();
+        return Show::orderBy('id', 'desc')->get();
     }
 
     public function groups(Show $show) {

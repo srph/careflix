@@ -2,8 +2,9 @@
 
 namespace App\Events;
 
+use App\User;
 use App\Party;
-use App\PartyInvitation as Invitation;
+use App\PartyInvitation;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -26,14 +27,20 @@ class PartyInvitationAccepted implements ShouldBroadcast
     public $invitation;
 
     /**
+     * @var User
+     */
+    public $member;
+
+    /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Party $party, Invitation $invitation)
+    public function __construct(Party $party, PartyInvitation $invitation, User $member)
     {
         $this->party = $party;
         $this->invitation = $invitation;
+        $this->member = $member;
     }
 
     /**
@@ -54,5 +61,18 @@ class PartyInvitationAccepted implements ShouldBroadcast
     public function broadcastAs()
     {
         return "invitation.accepted";
+    }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'invitation' => $this->invitation,
+            'member' => $this->member
+        ];
     }
 }

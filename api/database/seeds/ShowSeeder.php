@@ -162,7 +162,7 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:46')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:11:43')
             ],
             [
                 'title' => 'Coco',

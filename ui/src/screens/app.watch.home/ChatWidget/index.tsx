@@ -262,9 +262,15 @@ function ChatWidget(props: Props) {
     return groupPartyLogs(state.logs)
   }, [state.logs])
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function handleClickMessageList() {
+    inputRef.current.focus()
+  }
+
   return (
     <div className="watch-screen-chat">
-      <div className="watch-screen-chat-messages" ref={chatbarRef}>
+      <div className="watch-screen-chat-messages" ref={chatbarRef} onClick={handleClickMessageList}>
         {grouped.map((group, i) => {
           if (group.type === 'activity') {
             return (
@@ -316,7 +322,7 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} onChange={handleInput} />
+          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} ref={inputRef} onChange={handleInput} />
 
           {isSubmittable && <UiPlainButton className="button">
             <i className="fa fa-send" />

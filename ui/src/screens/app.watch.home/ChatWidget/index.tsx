@@ -268,6 +268,12 @@ function ChatWidget(props: Props) {
     inputRef.current.focus()
   }
 
+  function handleInputKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
+    if (evt.keyCode === 27) {
+      inputRef.current.blur()
+    }
+  }
+
   return (
     <div className="watch-screen-chat">
       <div className="watch-screen-chat-messages" ref={chatbarRef} onClick={handleClickMessageList}>
@@ -322,7 +328,7 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} ref={inputRef} onChange={handleInput} />
+          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} ref={inputRef} onChange={handleInput} onKeyDown={handleInputKeyDown} />
 
           {isSubmittable && <UiPlainButton className="button">
             <i className="fa fa-send" />

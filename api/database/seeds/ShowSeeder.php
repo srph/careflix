@@ -436,6 +436,71 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:39:34')
+            ],
+            [
+                'title' => 'Scary Movie 5',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2013),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Scary Movie 5'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:28:07')
+            ],
+            [
+                'title' => 'Scary Movie 4',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2006),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Scary Movie 4'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:32')
+            ],
+            [
+                'title' => 'Scary Movie 3',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2003),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Scary Movie 3'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:32')
+            ],
+            [
+                'title' => 'Scary Movie 2',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Scary Movie 2'),
+                'air_start' => Carbon::create(2001),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:32')
+            ],
+            [
+                'title' => 'Scary Movie',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Scary Movie'),
+                'air_start' => Carbon::create(2000),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:28:17')
             ]
         ];
 

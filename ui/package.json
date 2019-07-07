@@ -19,6 +19,7 @@
     "lodash.get": "^4.4.2",
     "pusher-js": "^4.4.0",
     "react": "^16.8.6",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-dom": "^16.8.6",
     "react-gateway": "^3.0.0",
     "react-helmet": "^5.2.1",

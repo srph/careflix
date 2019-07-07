@@ -1,0 +1,60 @@
+.toast-float {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.toast-float > .item {
+  position: relative;
+  display: inline-block;
+  padding: 16px;
+  padding-right: 40px;
+  font-size: 12px;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border-radius: var(--border-radius);
+  pointer-events: all;
+}
+
+.toast-float > .item > .close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-white);
+  border: 0;
+  opacity: 0.4;
+  outline: 0;
+}
+
+.toast-float > .item:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.toast-float > .item.-enter {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.toast-float > .item.-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: 0.3s all ease;
+}
+
+.toast-float > .item.-leave {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-float > .item.-leave-active {
+  opacity: 0;
+  transform: translateY(-16px);
+  transition: 0.3s all ease;
+}

@@ -9,6 +9,7 @@ import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import history from '~/lib/history'
 import { GatewayProvider } from 'react-gateway'
 import WindowVhSetter from '~/components/WindowVhSetter'
+import Toast from '~/components/Toast'
 
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
@@ -95,6 +96,8 @@ function Mount() {
           </Router>
         </UnstatedProvider>
       </GatewayProvider>
+
+      <Toast />
     </React.Fragment>
   )
 }

@@ -6,5 +6,7 @@ export default React.createContext<ContextType>({
   isLoading: false,
   onCancel: () => {},
   onInvite: () => {},
+  onAccept: () => {},
+  onDecline: () => {},
   onChangeVideo: () => {}
 })

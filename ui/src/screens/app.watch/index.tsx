@@ -10,7 +10,7 @@ import useReactRouter from 'use-react-router'
 import axios from '~/lib/axios'
 import immer from 'immer'
 
-import { Context, usePartyContext } from './Context'
+import { Context } from './Context'
 import { State, ContextType, Action, RouteParams } from './types'
 
 const reducer = (state: State, action: Action): State => {
@@ -61,6 +61,25 @@ const reducer = (state: State, action: Action): State => {
     }
 
     case 'invitation.cancel': {
+      return {
+        ...state,
+        party: immer(state.party, (draft) => {
+          draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+        })
+      }
+    }
+
+    case 'invitation.accept': {
+      return {
+        ...state,
+        party: immer(state.party, (draft) => {
+          draft.members.push(action.payload.member)
+          draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+        })
+      }
+    }
+
+    case 'invitation.decline': {
       return {
         ...state,
         party: immer(state.party, (draft) => {
@@ -133,6 +152,20 @@ function AppWatch(props: ReactComponentWrapper) {
     })
   }
 
+  function handleAccept(invitation: AppPartyInvitation, member: AppPartyMember) {
+    dispatch({
+      type: 'invitation.accept',
+      payload: { invitation, member }
+    })
+  }
+
+  function handleDecline(invitation: AppPartyInvitation) {
+    dispatch({
+      type: 'invitation.decline',
+      payload: { invitation }
+    })
+  }
+
   function handleChangeVideo(party: AppParty) {
     dispatch({
       type: 'data:update',
@@ -145,6 +178,8 @@ function AppWatch(props: ReactComponentWrapper) {
       ...state,
       onCancel: handleCancel,
       onInvite: handleInvite,
+      onAccept: handleAccept,
+      onDecline: handleDecline,
       onChangeVideo: handleChangeVideo
     }
   }, [state])

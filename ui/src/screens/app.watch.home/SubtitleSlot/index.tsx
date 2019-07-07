@@ -25,7 +25,9 @@ function SubtitleSlot(props: Props) {
       return
     }
 
-    const [err, res] = await axios.get(`api/videos/${props.video.id}/subtitle`)
+    const [err, res] = await axios.get(`api/videos/${props.video.id}/subtitle`, {
+      validation: false
+    })
 
     if (err != null) {
       return //

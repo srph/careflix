@@ -1,3 +1,4 @@
+
 import 'sanitize.css'
 import 'font-awesome/css/font-awesome.css'
 import './global.css'
@@ -9,7 +10,7 @@ import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import history from '~/lib/history'
 import { GatewayProvider } from 'react-gateway'
 import WindowVhSetter from '~/components/WindowVhSetter'
-import Toast from '~/components/Toast'
+import { Toast } from '~/components/Toast'
 
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'

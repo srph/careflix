@@ -1,9 +1,7 @@
 import './style.css'
 import * as React from 'react'
-import Transition from 'react-addons-css-transition-group'
 import { useEffect, useState, useRef } from 'react'
-
-console.log(Transition)
+import Transition from 'react-addons-css-transition-group'
 
 interface Message {
   id: number,
@@ -15,15 +13,19 @@ interface Instance {
   toast: (message: string) => void
 }
 
-let instance: null | Instance = null
+let instance: Instance = {
+  toast() {}
+}
 
-function Toast(props: { children?: React.ReactNode }) {
+function Toast() {
   const [messages, setMessages] = useState<Message[]>([])
   const counterRef = useRef<number>(0)
 
   function open(text: string) {
+    counterRef.current++
+
     const message = {
-      id: counterRef.current++,
+      id: counterRef.current + 1,
       text,
       duration: 5000
     }

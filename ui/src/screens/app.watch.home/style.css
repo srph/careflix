@@ -1,4 +1,4 @@
-body {
+.watch-screen-html-body {
   overflow-y: hidden;
   height: var(--window-vh);
 }

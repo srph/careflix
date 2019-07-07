@@ -4,6 +4,7 @@ import * as React from 'react'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
 import SubtitleSlot from './SubtitleSlot'
+import BodyClassName from 'react-body-classname'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -253,6 +254,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
   return (
     <React.Fragment>
+      <BodyClassName className="watch-screen-html-body" />
+      
       <PlayerModal
         party={context.party}
         time={state.time}

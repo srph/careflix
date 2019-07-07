@@ -423,6 +423,19 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:03:07')
+            ],
+            [
+                'title' => 'Escape Room',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2019),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Escape Room'),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:39:34')
             ]
         ];
 
@@ -439,23 +452,23 @@ class ShowSeeder extends Seeder
         }
 
         $series = [
-            [
-                'title' => 'We Bare Bears',
-                'title_type' => 'series',
-                'synopsis' => $faker->text,
-                'language' => 'English',
-                'air_start' => Carbon::create(2018),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('We Bare Bears'),
-                'age_rating' => 'G',
-                //
-                'seasons' => [
-                    [
-                        'title' => 'Season 1',
-                        'episodes' => 23,
-                        'extension' => 'mkv'
-                    ]
-                ]
-            ]
+            // [
+            //     'title' => 'We Bare Bears',
+            //     'title_type' => 'series',
+            //     'synopsis' => $faker->text,
+            //     'language' => 'English',
+            //     'air_start' => Carbon::create(2018),
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('We Bare Bears'),
+            //     'age_rating' => 'G',
+            //     //
+            //     'seasons' => [
+            //         [
+            //             'title' => 'Season 1',
+            //             'episodes' => 23,
+            //             'extension' => 'mkv'
+            //         ]
+            //     ]
+            // ]
         ];
 
         foreach($series as $series) {

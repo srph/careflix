@@ -36,12 +36,27 @@ class PartyInvitationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function search(\App\Http\Requests\SearchInvitableUsers $request, Party $party)
+    public function search(Request $request, Party $party)
     {
         $search = $request->get('search');
 
-        return User::search($search)
-            ->where('id', '!=', $request->user()->id)
+        return User::when($request->has('search'), function($query) use ($search) {
+                \Log::info(['hoyyyy']);
+
+                $query->search($search);
+            }, function($query) use($party) {
+                \Log::info(['heyyy']);
+
+                $query->select(
+                    'users.*',
+                    'party_user.party_id as member_party_id',
+                    'party_user.user_id as member_user_id'
+                )->leftJoin('party_user', function($join) use ($party) {
+                    $join->on('party_user.party_id', '=', \DB::raw($party->id));
+                    $join->on('party_user.user_id', '=', 'users.id');
+                })->orderBy('party_user.party_id', 'desc');
+            })
+            ->where('users.id', '!=', $request->user()->id)
             ->get();
     }
 

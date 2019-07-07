@@ -10,7 +10,7 @@ import immer from 'immer'
 import { useReducer, useMemo, useEffect } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { usePusher } from '~/hooks/usePusher'
-import useDebounce from 'react-use/lib/useDebounce'
+import { useUpdateDebounce } from '~/hooks/useUpdateDebounce'
 import axios from '~/lib/axios'
 import toSearchObject from '~/utils/toSearchObject'
 import toSearchIndexObject from '~/utils/toSearchIndexObject'
@@ -18,7 +18,7 @@ import toSearchIndexObject from '~/utils/toSearchIndexObject'
 import { useNow } from '~/hooks/useNow'
 import { isBefore, parse } from 'date-fns'
 import getRemainingTime from '~/utils/date/getRemainingTime'
-import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime';
+import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
 
 interface State {
   data: any[]
@@ -151,49 +151,56 @@ function AppWatchInvite(props: ReactComponentWrapper) {
     context.onInvite(event.invitation)
   })
 
-  usePusher(`private-party.${context.party.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
-    context.onCancel(event.invitation)
-  })
+  usePusher(
+    `private-party.${context.party.id}`,
+    'invitation.cancelled',
+    (event: { invitation: AppPartyInvitation }) => {
+      context.onCancel(event.invitation)
+    }
+  )
 
-  usePusher(`private-party.${context.party.id}`, 'invitation.accepted', (event: { invitation: AppPartyInvitation, member: AppPartyMember }) => {
-    context.onAccept(event.invitation, event.member)
-  })
+  usePusher(
+    `private-party.${context.party.id}`,
+    'invitation.accepted',
+    (event: { invitation: AppPartyInvitation; member: AppPartyMember }) => {
+      context.onAccept(event.invitation, event.member)
+    }
+  )
 
   usePusher(`private-party.${context.party.id}`, 'invitation.declined', (event: { invitation: AppPartyInvitation }) => {
     context.onDecline(event.invitation)
   })
 
-  useDebounce(
-    async () => {
-      // We don't want a search to happen on mount or when the state input is left blank.
-      if (!state.input) {
-        return
-      }
+  async function request() {
+    dispatch({
+      type: 'request:init'
+    })
 
-      dispatch({
-        type: 'request:init'
+    const [err, res] = await axios.get(`/api/parties/${context.party.id}/invitations/search`, {
+      params: state.input.length ? {
+        search: state.input
+      } : {}
+    })
+
+    if (err) {
+      return dispatch({
+        type: 'request:error'
       })
+    }
 
-      const [err, res] = await axios.get(`/api/parties/${context.party.id}/invitations/search`, {
-        params: {
-          search: state.input
-        }
-      })
+    dispatch({
+      type: 'request:success',
+      payload: { data: res.data }
+    })
+  }
 
-      if (err) {
-        return dispatch({
-          type: 'request:error'
-        })
-      }
+  useEffect(() => {
+    request()
+  }, [])
 
-      dispatch({
-        type: 'request:success',
-        payload: { data: res.data }
-      })
-    },
-    500,
-    [state.input]
-  )
+  // @TODO We don't want multiple requests initially. `react-use.useDebounce`
+  // doesn't do this, and our new function doesn't either. Investigate why.
+  useUpdateDebounce(request, 500, [state.input])
 
   function handleInput(evt: React.FormEvent<HTMLInputElement>) {
     dispatch({
@@ -273,7 +280,8 @@ function AppWatchInvite(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
       <div className="invite-searchbar">
-        <UiInput isDark
+        <UiInput
+          isDark
           type="text"
           placeholder="Search for a friend to invite..."
           value={state.input}
@@ -283,34 +291,19 @@ function AppWatchInvite(props: ReactComponentWrapper) {
 
       {state.isLoading && <UiLoader />}
 
-      {!state.input &&
-        context.party.invitations.map(invitation => (
-          <UserItem
-            key={invitation.id}
-            user={invitation.recipient}
-            invitation={invitation}
-            isMember={isMemberMap[invitation.recipient.id]}
-            isCancellingInvitation={state.isCancellingInvitation[invitation.recipient.id]}
-            onInvite={handleInvite}
-            onCancel={handleCancel}
-            onExpire={handleExpire}
-          />
-        ))}
-
-      {Boolean(state.input) &&
-        state.data.map(user => (
-          <UserItem
-            key={user.id}
-            user={user}
-            invitation={context.party.invitations[invitationMap[user.id]]}
-            isMember={isMemberMap[user.id]}
-            isCancellingInvitation={state.isCancellingInvitation[user.id]}
-            isSendingInvitation={state.isSendingInvitation[user.id]}
-            onInvite={handleInvite}
-            onCancel={handleCancel}
-            onExpire={handleExpire}
-          />
-        ))}
+      {state.data.map(user => (
+        <UserItem
+          key={user.id}
+          user={user}
+          invitation={context.party.invitations[invitationMap[user.id]]}
+          isMember={isMemberMap[user.id]}
+          isCancellingInvitation={state.isCancellingInvitation[user.id]}
+          isSendingInvitation={state.isSendingInvitation[user.id]}
+          onInvite={handleInvite}
+          onCancel={handleCancel}
+          onExpire={handleExpire}
+        />
+      ))}
     </React.Fragment>
   )
 }
@@ -342,7 +335,7 @@ function UserItem(props: UserItemProps) {
   const expiration = useMemo(() => {
     return props.invitation && parse(props.invitation.expires_at)
   }, [props.invitation && props.invitation.id])
-  
+
   const isExpired = useMemo(() => {
     return props.invitation && isBefore(expiration, now)
   }, [now])
@@ -362,7 +355,11 @@ function UserItem(props: UserItemProps) {
       <div className="details">
         <h4 className="name">{props.user.name}</h4>
         {props.isMember && <h6 className="meta">Already a member</h6>}
-        {Boolean(props.invitation) && <h6 className="meta">{isExpired ? 'Invitation expired' : `Expires in ${getFormattedRemainingTime(expiration, now)}`}</h6>}
+        {Boolean(props.invitation) && (
+          <h6 className="meta">
+            {isExpired ? 'Invitation expired' : `Expires in ${getFormattedRemainingTime(expiration, now)}`}
+          </h6>
+        )}
       </div>
 
       <div className="action">

@@ -86,6 +86,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Get all users except for the authenticated user
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  string $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeExceptSelf(\Illuminate\Database\Eloquent\Builder $query) {
+        return $query->where('id', '!=', request()->user()->id);
+    }
+
+    /**
      * Check user is the recipient of an invitation
      */
     public function isRecipientOf(PartyInvitation $invitation) {

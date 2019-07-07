@@ -125,11 +125,16 @@ function ChatWidget(props: Props) {
 
   const [state, dispatch] = useReducer(reducer, init)
 
+  const nextState = useNextState(state)
+
   const chatbarRef = useRef<HTMLDivElement>(null)
 
   const idleAudioRef = useRef<HTMLAudioElement>(null)
 
   const sendAudioRef = useRef<HTMLAudioElement>(null)
+
+  // One-off flag used to check if we're supposed to scroll to the bottom
+  const shouldScrollToBottomRef = useRef<boolean>(true)
 
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
 
@@ -158,30 +163,28 @@ function ChatWidget(props: Props) {
     []
   )
 
+  React.useLayoutEffect(() => {
+    if (shouldScrollToBottomRef.current) {
+      // Scroll to bottom whenever a new log gets sent
+      scrollToBottom(chatbarRef.current)
+    } else {
+      // Resetting the one-off flag variable
+      shouldScrollToBottomRef.current = true
+    }
+  }, [state.logs.length])
+
   const isWindowVisible = useWindowVisibility()
 
-  usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
-    // We'll store the current scrolling position so we can lock it later if needed.
-    const scrollTop = chatbarRef.current.scrollTop
-
-    // We'll store the current status so we can scroll later if needed.
-    const wasScrolledToBottom = isScrolledToBottom(chatbarRef.current)
-
+  usePusher(`private-party.${props.party.id}`, 'log', async (event: { log: AppPartyLog }) => {
+    // If the user was scrolled to the bottom before receiving a new message
+    // we'll keep the illusion that they still are.
+    shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current)
+  
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
     })
-
-    if (wasScrolledToBottom) {
-      // If the user was scrolled to the bottom before we pushed another log,
-      // we'll keep the illusion that they still are.
-      scrollToBottom(chatbarRef.current)
-    } else {
-      // However, if the user was somewhere else, we'll lock to the position where
-      // they were before the message was added.
-      chatbarRef.current.scrollTop = scrollTop
-    }
-
+    
     if (!isWindowVisible && event.log.type === 'message') {
       // Let's play a sound if the user receives a message while switched to another tab.
       idleAudioRef.current.play()
@@ -233,8 +236,6 @@ function ChatWidget(props: Props) {
       type: 'chat:init',
       payload: { log }
     })
-
-    scrollToBottom(chatbarRef.current)
 
     sendAudioRef.current.play()
 

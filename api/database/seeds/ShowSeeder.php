@@ -501,7 +501,72 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:28:17')
-            ]
+            ],
+            [
+                'title' => 'American Pie Reunion',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('American Pie Reunion'),
+                'air_start' => Carbon::create(2012),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:53:51')
+            ],
+            [
+                'title' => 'American Pie Presents: The Book Of Love',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('American Pie Presents: The Book Of Love'),
+                'air_start' => Carbon::create(2009),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:34')
+            ],
+            [
+                'title' => 'American Wedding',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('American Wedding'),
+                'air_start' => Carbon::create(2003),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:34')
+            ],
+            [
+                'title' => 'American Pie 2',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('American Pie 2'),
+                'air_start' => Carbon::create(2001),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:50:40')
+            ],
+            [
+                'title' => 'American Pie',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('American Pie'),
+                'air_start' => Carbon::create(1999),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:35:37')
+            ],
         ];
 
         foreach($movies as $movie) {

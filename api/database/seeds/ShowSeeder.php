@@ -567,6 +567,58 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:35:37')
             ],
+            [
+                'title' => 'Drinking Buddies',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Drinking Buddies'),
+                'air_start' => Carbon::create(2013),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:22')
+            ],
+            [
+                'title' => 'My Best Friend\'s Wedding',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Best Friend\'s Wedding'),
+                'air_start' => Carbon::create(1997),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:52')
+            ],
+            [
+                'title' => 'The Sweetest Thing',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Sweetest Thing'),
+                'air_start' => Carbon::create(2002),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:24:29')
+            ],
+            [
+                'title' => 'The Todo List',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Todo List'),
+                'air_start' => Carbon::create(2013),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:53')
+            ],
         ];
 
         foreach($movies as $movie) {

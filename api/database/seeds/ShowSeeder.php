@@ -619,6 +619,45 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:53')
             ],
+            [
+                'title' => 'The Todo List',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Todo List'),
+                'air_start' => Carbon::create(2013),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:53')
+            ],
+            [
+                'title' => 'Assassin\'s Creed',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Assassin\'s Creed'),
+                'air_start' => Carbon::create(2016),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:55:31')
+            ],
+            [
+                'title' => 'Saint Young Men',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Saint Young Men'),
+                'air_start' => Carbon::create(2013),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Saint Young Men', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:39')
+            ],
         ];
 
         foreach($movies as $movie) {

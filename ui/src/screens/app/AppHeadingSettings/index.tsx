@@ -16,9 +16,7 @@ function AppHeadingSettings(props: Props) {
       <Helmet title={props.title} />
 
       <Gateway into={constants.gateway.backUrl}>
-        <UiNavigation.Action to={props.backUrl}>
-          <i className="fa fa-angle-left" />
-        </UiNavigation.Action>
+        <UiNavigation.BackAction to={props.backUrl} />
       </Gateway>
 
       <Gateway into={constants.gateway.title}>

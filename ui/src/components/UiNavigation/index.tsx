@@ -29,6 +29,21 @@ UiNavigation.Action = function(props: ActionProps) {
   )
 }
 
+type BackActionProps = ActionProps;
+
+UiNavigation.BackAction = function(props: BackActionProps) {
+  return (
+    <div className="action is-back">
+      <Link {...(props as LinkProps)}>
+        <i className="fa fa-angle-left" />
+        <span className="action-text">
+          <h5 className="ui-subheading is-compact">Go Back</h5>
+        </span>
+      </Link>
+    </div>
+  )
+}
+
 UiNavigation.Title = function(props: Props) {
   return (
     <h6 className="ui-subheading">{props.children}</h6>

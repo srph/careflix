@@ -15,7 +15,36 @@
 }
 
 .ui-navigation > .action > a {
+  display: inline-block;
   color: var(--color-black-5);
+  text-decoration: none;
+}
+
+.ui-navigation > .action.is-back {
+  margin-left: -8px;
+}
+
+.ui-navigation > .action.is-back > a {
+  padding: 8px;
+}
+
+.ui-navigation > .action > a > .action-text {
+  display: none;
+  visibility: hidden;
+  margin-left: 8px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.ui-navigation > .action > a > .action-text > .ui-subheading {
+  display: inline-block;
+}
+
+@media (min-width: 720px) {
+  .ui-navigation > .action > a > .action-text {
+    display: inline-block;
+    visibility: visible;
+  }
 }
 
 .ui-navigation > .logo {

@@ -1,8 +1,19 @@
 .ui-container {
   padding-left: 16px;
   padding-right: 16px;
-  max-width: 768px;
   margin: 0 auto;
+}
+
+.ui-container.is-xl {
+  max-width: 1200px;
+}
+
+.ui-container.is-lg {
+  max-width: 992px;
+}
+
+.ui-container.is-md {
+  max-width: 768px;
 }
 
 .ui-container.is-sm {

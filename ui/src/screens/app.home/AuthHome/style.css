@@ -1,47 +1,50 @@
-.show-list {
-  margin-bottom: 32px;
-}
-
-.show-list > .ui-subheading {
-  padding-left: 16px;
-  padding-right: 16px;
-  margin-bottom: 8px;
-}
-
-.show-carousel {
-  overflow-x: scroll;
-}
-
-.show-carousel > .inner {
+.show-layout {
   display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin-left: -8px;
+  margin-right: -8px;
 }
 
-.show-carousel > .inner > .card {
-  flex-shrink: 0;
-  padding-right: 16px;
+@media (min-width: 768px) {
+  .show-layout {
+    flex-direction: row;
+  }
 }
 
-.show-carousel > .inner > .card:first-child {
-  padding-left: 16px;
+.show-layout > .column {
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
-.show-carousel > .inner > .card:last-child {
-  padding-left: 16px;
+@media (min-width: 768px) {
+  .show-layout > .column {
+    flex-shrink: 0;
+    width: 33.33%;
+  }
+}
+
+.show-carousel-card-button {
+  width: 100%;
+}
+
+.show-carousel-card-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  margin-bottom: 16px;
 }
 
 .show-carousel-card {
-  position: relative;
-  display: block;
-  width: 218px;
-  height: 146px;
-  padding: 0;
-  border: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   text-align: left;
   color: var(--color-white);
   border-radius: var(--border-radius);
-  background-color: #ddd;
   background-size: cover;
-  outline: 0;
 }
 
 .show-carousel-card > .overlay {
@@ -50,7 +53,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  background: linear-gradient(transparent, rgba(0,0,0,0.5));
   border-radius: var(--border-radius);
 }
 

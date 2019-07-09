@@ -3,6 +3,9 @@ import './style'
 import * as React from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import axios from '~/lib/axios'
+import UiContainer from '~/components/UiContainer'
+import UiPlainButton from '~/components/UiPlainButton'
+import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
@@ -12,7 +15,8 @@ interface State {
   selectedShow: AppShow | null
 }
 
-type Action = ReducerAction<'data:init'>
+type Action =
+  | ReducerAction<'data:init'>
   | ReducerAction<'data:success', { shows: AppShow[] }>
   | ReducerAction<'data:error'>
   | ReducerAction<'show:select', { show: AppShow }>
@@ -99,81 +103,39 @@ function AuthHome() {
   }
 
   return (
-    <div className="show-list">
+    <UiContainer size="xl">
       <h5 className="ui-subheading">New Releases</h5>
 
-      <div className="show-carousel">
-        <div className="inner">
-          {state.shows.map((show, j) => (
-            <div className="card" key={j}>
-              <button
-                type="button"
-                className="show-carousel-card"
-                style={{ backgroundImage: `url(${show.preview_image})` }}
-                onClick={() => handleShowClick(show)}>
-                <div className="overlay" />
+      <UiSpacer size={2} />
 
-                <div className="details">
-                  <div className="tags">
-                    <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
+      <div className="show-layout">
+        {state.shows.map((show, j) => (
+          <div className="column" key={j}>
+            <UiPlainButton className="show-carousel-card-button">
+              <div className="show-carousel-card-container">
+                <div
+                  className="show-carousel-card"
+                  style={{ backgroundImage: `url(${show.preview_image})` }}
+                  onClick={() => handleShowClick(show)}>
+                  <div className="overlay" />
+
+                  <div className="details">
+                    <div className="tags">
+                      <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
+                    </div>
+
+                    <h3 className="title">{show.title}</h3>
                   </div>
-
-                  <h3 className="title">{show.title}</h3>
                 </div>
-              </button>
-            </div>
-          ))}
-        </div>
+              </div>
+            </UiPlainButton>
+          </div>
+        ))}
       </div>
 
       <ShowModal show={state.selectedShow} onClose={handleShowClose} />
-    </div>
+    </UiContainer>
   )
-
-  // @TODO
-  // We're not supporting genres or tags yet
-  // Don't forget to bring group shows by genre, and display each show's genres
-  // return (
-  //   <React.Fragment>
-  //     {Array(10)
-  //       .fill(0)
-  //       .map((category, i) => (
-  //         <div className="show-list" key={i}>
-  //           <h5 className="ui-subheading">New Releases</h5>
-
-  //           <div className="show-carousel">
-  //             <div className="inner">
-  //               {Array(10)
-  //                 .fill(0)
-  //                 .map((show, j) => (
-  //                   <div className="card" key={j}>
-  //                     <button
-  //                       type="button"
-  //                       className="show-carousel-card"
-  //                       style={{ backgroundImage: `url(${require('~/assets/show-thumbnail-218x146.jpg')})` }}
-  //                       onClick={() => handleShowClick(j)}>
-  //                       <div className="overlay" />
-
-  //                       <div className="details">
-  //                         <div className="tags">
-  //                           <span className="tag">2018</span>
-
-  //                           <span className="tag">•</span>
-
-  //                           <span className="tag">Anime</span>
-  //                         </div>
-
-  //                         <h3 className="title">My Hero Academia</h3>
-  //                       </div>
-  //                     </button>
-  //                   </div>
-  //                 ))}
-  //             </div>
-  //           </div>
-  //         </div>
-  //       ))}
-  //   </React.Fragment>
-  // )
 }
 
 export default AuthHome

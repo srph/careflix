@@ -620,19 +620,6 @@ class ShowSeeder extends Seeder
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:53')
             ],
             [
-                'title' => 'The Todo List',
-                'title_type' => 'movie',
-                'synopsis' => $faker->text,
-                'language' => 'English',
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Todo List'),
-                'air_start' => Carbon::create(2013),
-                'age_rating' => '',
-                'subtitle_url' => '',
-                //
-                'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:53')
-            ],
-            [
                 'title' => 'Assassin\'s Creed',
                 'title_type' => 'movie',
                 'synopsis' => $faker->text,

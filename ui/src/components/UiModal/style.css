@@ -1,4 +1,4 @@
-.ReactModal__Body--open {
+.ui-modal-body.is-open {
   overflow-y: hidden;
 }
 

@@ -2,6 +2,7 @@ import './style.css'
 import * as React from 'react'
 import ReactModal from 'react-modal'
 import cx from 'classnames'
+import compensate from 'scrollbar-compensate'
 
 interface Props {
   isOpen: boolean
@@ -26,6 +27,7 @@ function UiModal(props: Props) {
       onRequestClose={props.onClose}
       className={cx('ui-modal', [props.modalClassName])}
       overlayClassName={cx('ui-modal-overlay', [props.overlayClassName])}
+      bodyOpenClassName="ui-modal-body is-open"
       closeTimeoutMS={200}>
       {children}
     </ReactModal>
@@ -35,6 +37,10 @@ function UiModal(props: Props) {
 UiModal.defaultProps = {
   padding: true
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  compensate(['.ui-modal-body.is-open'])
+})
 
 ReactModal.setAppElement('#mount')
 

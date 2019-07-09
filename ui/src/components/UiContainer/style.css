@@ -1,4 +1,10 @@
 .ui-container {
   padding-left: 16px;
   padding-right: 16px;
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.ui-container.is-sm {
+  max-width: 480px;
 }

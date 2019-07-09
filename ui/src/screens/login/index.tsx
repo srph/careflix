@@ -101,38 +101,40 @@ function Login(props: ReactComponentWrapper) {
         <UiNavigation.Action />
       </UiNavigation>
 
-      <UiContainer>
-        <div className="login-image">
-          <img src={require('~/assets/login-img.svg')} />
+      <UiContainer size="sm">
+        <div className="login-container">
+          <div className="login-image">
+            <img src={require('~/assets/login-img.svg')} />
+          </div>
+
+          <h1 className="login-title">Watch. Together.</h1>
+
+          <form onSubmit={handleSubmit}>
+            <UiFormGroup label="Email">
+              <UiInput value={form.state.username} onChange={form.set('username')} type="email" placeholder="johndoe" name="email" />
+            </UiFormGroup>
+
+            <UiFormSpacer />
+
+            <UiFormGroup label="Password">
+              <UiInput value={form.state.password} onChange={form.set('password')} type="password" placeholder="********" name="password" />
+            </UiFormGroup>
+
+            <UiFormSpacer />
+
+            <div className="login-action">
+              <UiButtonLoader variant="primary" block size="l" isLoading={state.isLoading}>
+                Login
+              </UiButtonLoader>
+            </div>
+
+            <div className="login-byline">
+              <h5 className="ui-subheading">
+                New here? <Link to="/register">Sign up</Link>
+              </h5>
+            </div>
+          </form>
         </div>
-
-        <h1 className="login-title">Watch. Together.</h1>
-
-        <form onSubmit={handleSubmit}>
-          <UiFormGroup label="Email">
-            <UiInput value={form.state.username} onChange={form.set('username')} type="email" placeholder="johndoe" name="email" />
-          </UiFormGroup>
-
-          <UiFormSpacer />
-
-          <UiFormGroup label="Password">
-            <UiInput value={form.state.password} onChange={form.set('password')} type="password" placeholder="********" name="password" />
-          </UiFormGroup>
-
-          <UiFormSpacer />
-
-          <div className="login-action">
-            <UiButtonLoader variant="primary" block size="l" isLoading={state.isLoading}>
-              Login
-            </UiButtonLoader>
-          </div>
-
-          <div className="login-byline">
-            <h5 className="ui-subheading">
-              New here? <Link to="/register">Sign up</Link>
-            </h5>
-          </div>
-        </form>
       </UiContainer>
     </React.Fragment>
   )

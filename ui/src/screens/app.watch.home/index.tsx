@@ -11,6 +11,7 @@ import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { useBufferState } from '~/hooks/useBufferState'
 import { useMediaMode } from '~/hooks/useMediaMode'
+import { useRouterBlock } from '~/hooks/useRouterBlock';
 import axios from '~lib/axios'
 
 import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
@@ -251,6 +252,18 @@ function AppWatchHome(props: ReactComponentWrapper) {
       type: 'video-complete'
     })
   }
+
+  useRouterBlock((location) => {
+    if (!state.isPlaying) {
+      return
+    }
+
+    if (location.pathname.startsWith('/watch')) {
+      return
+    }
+
+    return 'Are you sure you want to leave this page?'
+  }, [state.isPlaying])
 
   return (
     <React.Fragment>

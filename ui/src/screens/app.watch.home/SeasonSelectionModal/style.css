@@ -1,14 +1,14 @@
-.show-modal-overlay {
+.watch-home-season-selection-overlay {
   background: var(--color-black-1);
 }
 
-.show-modal-close {
+.watch-home-season-selection-close {
   position: absolute;
   top: 16px;
   right: 16px;
 }
 
-.show-modal-close-button {
+.watch-home-season-selection-close-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,36 +17,4 @@
   color: var(--color-white);
   background: var(--color-black-5);
   border-radius: 50%;
-}
-
-.show-modal-play-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  width: 40px;
-  color: var(--color-white);
-  background: var(--color-primary);
-  border-radius: 50%;
-  box-shadow: 0 0 16px var(--color-primary);
-}
-
-.show-modal-body {
-  padding: 16px;
-}
-
-.show-modal-heading {
-  margin-bottom: 24px;
-}
-
-.show-modal-heading > .tags {
-  color: var(--color-black-5);
-}
-
-.show-modal-heading > .title {
-  margin-bottom: 8px;
-}
-
-.show-modal-heading > .synopsis {
-  line-height: 1.5;
 }

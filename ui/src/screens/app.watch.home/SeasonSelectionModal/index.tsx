@@ -41,13 +41,13 @@ function ShowModal(props: Props) {
       <UiModal
         isOpen={props.isOpen}
         shouldCloseOnOverlayClick={false}
-        overlayClassName="show-modal-overlay"
+        overlayClassName="watch-home-season-selection-overlay"
         onClose={props.onClose}>
         {() => (
           <React.Fragment>
-            <div className="show-modal-close">
+            <div className="watch-home-season-selection-close">
               <UiPlainButton onClick={props.onClose}>
-                <div className="show-modal-close-button">
+                <div className="watch-home-season-selection-close-button">
                   <i className='fa fa-close' />
                 </div>
               </UiPlainButton>

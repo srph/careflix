@@ -2,14 +2,32 @@
   background: var(--color-black-1);
 }
 
+@media (min-width: 720px) {
+  .show-modal-overlay {
+    background: rgba(0,0,0,0.75);
+  }
+}
+
 .show-modal {
   padding: 0;
+}
+
+@media (min-width: 720px) {
+  .show-modal {
+    margin: 0 auto;
+    margin-top: 64px;
+    width: 360px;
+    color: var(--color-black-1);
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+  }
 }
 
 .show-modal-cover {
   position: relative;
   padding-bottom: 56.25%;
 }
+
 
 .show-modal-cover > .image {
   position: absolute;
@@ -19,6 +37,13 @@
   bottom: 0;
   height: 100%;
   width: 100%;
+}
+
+@media (min-width: 720px) {
+  .show-modal-cover > .image {
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+  }
 }
 
 .show-modal-cover > .overlay {

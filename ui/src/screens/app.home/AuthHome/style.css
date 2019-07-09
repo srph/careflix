@@ -1,20 +1,14 @@
 .show-layout {
   display: flex;
-  flex-direction: column;
   flex-wrap: wrap;
   margin-left: -8px;
   margin-right: -8px;
 }
 
-@media (min-width: 768px) {
-  .show-layout {
-    flex-direction: row;
-  }
-}
-
 .show-layout > .column {
   padding-left: 8px;
   padding-right: 8px;
+  width: 100%;
 }
 
 @media (min-width: 768px) {

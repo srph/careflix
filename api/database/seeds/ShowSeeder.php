@@ -645,6 +645,97 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:39')
             ],
+            [
+                'title' => 'American Pie: The Naked Mile',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('American Pie: The Naked Mile'),
+                'air_start' => Carbon::create(2013),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:47')
+            ],
+            [
+                'title' => 'Harry Potter and the Deathly Hallows: Part 1',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Harry Potter and the Deathly Hallows: Part 1'),
+                'air_start' => Carbon::create(2010),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:26:05')
+            ],
+            [
+                'title' => 'Harry Potter and the Deathly Hallows: Part 2',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Harry Potter and the Deathly Hallows: Part 2'),
+                'air_start' => Carbon::create(2011),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:26')
+            ],
+            [
+                'title' => 'The Matrix',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Matrix'),
+                'air_start' => Carbon::create(1999),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Matrix', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:16:17')
+            ],
+            [
+                'title' => 'The Matrix Reloaded',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Matrix Reloaded'),
+                'air_start' => Carbon::create(2003),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Matrix Reloaded', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:18:15')
+            ],
+            [
+                'title' => 'The Matrix Revolutions',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Matrix Revolutions'),
+                'air_start' => Carbon::create(2003),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Matrix Revolutions', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:09:16')
+            ],
+            [
+                'title' => 'The Wailing',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Wailing'),
+                'air_start' => Carbon::create(2016),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Wailing', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:36:08')
+            ],
         ];
 
         foreach($movies as $movie) {

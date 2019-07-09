@@ -1,3 +1,7 @@
+.ReactModal__Body--open {
+  overflow-y: hidden;
+}
+
 .ui-modal-overlay {
   position: fixed;
   top: 0;

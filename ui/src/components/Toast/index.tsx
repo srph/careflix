@@ -1,12 +1,17 @@
 import './style.css'
 import * as React from 'react'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Transition from 'react-addons-css-transition-group'
+import useSetState from 'react-use/lib/useSetState'
 
 interface Message {
   id: number,
   text: string
   duration: number
+}
+
+interface State {
+  messages: Message[]
 }
 
 interface Instance {
@@ -18,9 +23,11 @@ let instance: Instance = {
 }
 
 function Toast() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const counterRef = useRef<number>(0)
+  const [state, setState] = useSetState<State>({
+    messages: []
+  })
 
+  const counterRef = useRef<number>(0)
   function open(text: string) {
     counterRef.current++
 
@@ -30,10 +37,12 @@ function Toast() {
       duration: 5000
     }
 
-    setMessages([
-      ...messages,
-      message
-    ])
+    setState(state => ({
+      messages: [
+        ...state.messages,
+        message
+      ]
+    }))
 
     setTimeout(() => {
       close(message.id)
@@ -41,9 +50,9 @@ function Toast() {
   }
 
   function close(id: number) {
-    setMessages(
-      messages.filter(message => message.id !== id)
-    )
+    setState(state => ({
+      messages: state.messages.filter(message => message.id !== id)
+    }))
   }
 
   useEffect(() => {
@@ -61,7 +70,7 @@ function Toast() {
         }}
         transitionEnterTimeout={400}
         transitionLeaveTimeout={400}>
-        {messages.map(message =>
+        {state.messages.map(message =>
           <div className='item' key={message.id}>
             {message.text}
             <button className='close' onClick={() => close(message.id)}>

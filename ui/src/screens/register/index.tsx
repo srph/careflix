@@ -116,50 +116,52 @@ function Register(props: ReactComponentWrapper) {
         <UiNavigation.Action />
       </UiNavigation>
 
-      <UiContainer>
-        <div className="registration-image">
-          <img src={require('~/assets/register-img.svg')} />
+      <UiContainer size="sm">
+        <div className="registration-container">
+          <div className="registration-image">
+            <img src={require('~/assets/register-img.svg')} />
+          </div>
+
+          <h1 className="registration-title">Join in the fun!</h1>
+
+          <form onSubmit={handleSubmit}>
+            <UiFormGroup label="Email">
+              <UiInput type="email" placeholder="johndoe@email.com" name="email" value={form.state.email} onChange={form.set('email')} />
+            </UiFormGroup>
+
+            <UiFormSpacer />
+
+            <UiFormGroup label="Name">
+              <UiInput placeholder="johndoe" name="name" value={form.state.name} onChange={form.set('name')} />
+            </UiFormGroup>
+
+            <UiFormSpacer />
+
+            <UiFormGroup label="Password">
+              <UiInput type="password" placeholder="********" name="password" value={form.state.password} onChange={form.set('password')} />
+            </UiFormGroup>
+
+            <UiFormSpacer />
+
+            <UiFormGroup label="Confirm Password">
+              <UiInput type="password" placeholder="********" name="password_confirmation" value={form.state.password_confirmation} onChange={form.set('password_confirmation')} />
+            </UiFormGroup>
+
+            <UiFormSpacer />
+
+            <div className="registration-action">
+              <UiButtonLoader variant="primary" block size="l" isLoading={state.isLoading}>
+                Register
+              </UiButtonLoader>
+            </div>
+
+            <div className="registration-byline">
+              <h5 className="ui-subheading">
+                Existing user? <Link to="/login">Sign in</Link>
+              </h5>
+            </div>
+          </form>
         </div>
-
-        <h1 className="registration-title">Join in the fun!</h1>
-
-        <form onSubmit={handleSubmit}>
-          <UiFormGroup label="Email">
-            <UiInput type="email" placeholder="johndoe@email.com" name="email" value={form.state.email} onChange={form.set('email')} />
-          </UiFormGroup>
-
-          <UiFormSpacer />
-
-          <UiFormGroup label="Name">
-            <UiInput placeholder="johndoe" name="name" value={form.state.name} onChange={form.set('name')} />
-          </UiFormGroup>
-
-          <UiFormSpacer />
-
-          <UiFormGroup label="Password">
-            <UiInput type="password" placeholder="********" name="password" value={form.state.password} onChange={form.set('password')} />
-          </UiFormGroup>
-
-          <UiFormSpacer />
-
-          <UiFormGroup label="Confirm Password">
-            <UiInput type="password" placeholder="********" name="password_confirmation" value={form.state.password_confirmation} onChange={form.set('password_confirmation')} />
-          </UiFormGroup>
-
-          <UiFormSpacer />
-
-          <div className="registration-action">
-            <UiButtonLoader variant="primary" block size="l" isLoading={state.isLoading}>
-              Register
-            </UiButtonLoader>
-          </div>
-
-          <div className="registration-byline">
-            <h5 className="ui-subheading">
-              Existing user? <Link to="/login">Sign in</Link>
-            </h5>
-          </div>
-        </form>
       </UiContainer>
     </React.Fragment>
   )

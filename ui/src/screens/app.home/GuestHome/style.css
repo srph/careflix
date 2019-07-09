@@ -1,3 +1,10 @@
+@media (min-width: 720px) {
+  .guest-home-container {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
 .guest-home-logo {
   padding-top: 16px;
   margin-bottom: 32px;

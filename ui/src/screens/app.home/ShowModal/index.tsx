@@ -6,6 +6,7 @@ import SeasonSelection from '~/components/SeasonSelection'
 import axios from '~/lib/axios'
 import history from '~/lib/history'
 import getAirDetails from '~utils/shows/getAirDetails';
+import { useMediaMode } from '~/hooks/useMediaMode'
 
 interface Props {
   show: AppShow | null
@@ -35,11 +36,13 @@ function ShowModal(props: Props) {
     handleVideoClick(props.show.movie)
   }
 
+  const media = useMediaMode()
+
   return (
     <React.Fragment>
       <UiModal
         isOpen={Boolean(props.show)}
-        shouldCloseOnOverlayClick={false}
+        shouldCloseOnOverlayClick={media === 'desktop'}
         overlayClassName="show-modal-overlay"
         modalClassName="show-modal"
         onClose={props.onClose}>

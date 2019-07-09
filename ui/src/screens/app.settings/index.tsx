@@ -9,6 +9,8 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 
+import asset_author from '~/assets/author.jpg'
+
 /**
  * Use this to create a route instead of typing everything down
  */
@@ -85,7 +87,7 @@ function AppSettings(props: ReactComponentWrapper) {
 
         <div className="settings-credits">
           <div className="avatar">
-            <UiAvatar img={require('~/assets/dummy-avatar.png')} size="m" />
+            <UiAvatar img={asset_author} alt="Kier Borromeo" size="m" />
           </div>
 
           <h6 className="ui-subheading">Crafted by Kier Borromeo</h6>

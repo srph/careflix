@@ -5,6 +5,7 @@ import UiNavigation from '~/components/UiNavigation'
 import UiFormGroup from '~/components/UiFormGroup'
 import UiInput from '~/components/UiInput'
 import UiFormSpacer from '~/components/UiFormSpacer'
+import UiSpacer from '~/components/UiSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButtonLoader from '~/components/UiButtonLoader'
 import { Link } from 'react-router-dom'
@@ -16,6 +17,7 @@ import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 import useFormState from '~/hooks/useFormState'
 import { toast } from '~/components/Toast'
+import { useQueryParam, StringParam } from 'use-query-params'
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -46,6 +48,14 @@ const reducer = (state, action) => {
   return state
 }
 
+interface FormState {
+  email: string,
+  name: string,
+  password: string,
+  password_confirmation: string,
+  request_access_code: string
+}
+
 /**
  * Use this to create a route instead of typing everything down
  */
@@ -57,12 +67,15 @@ function Register(props: ReactComponentWrapper) {
     isError: false
   })
 
-  const form = useFormState({
+  const [initialRequestAccessCode] = useQueryParam('request_access_code', StringParam)
+
+  const form = useFormState<FormState>(() => ({
     email: '',
     name: '',
     password: '',
-    password_confirmation: ''
-  })
+    password_confirmation: '',
+    request_access_code: initialRequestAccessCode || ''
+  }))
 
   async function handleSubmit(evt: React.FormEvent<HTMLFormElement>) {
     evt.preventDefault()
@@ -73,12 +86,7 @@ function Register(props: ReactComponentWrapper) {
 
     dispatch({ type: 'request' })
 
-    const [err] = await axios.post('/api/register', {
-      email: form.state.email,
-      name: form.state.name,
-      password: form.state.password,
-      password_confirmation: form.state.password_confirmation
-    })
+    const [err] = await axios.post('/api/register', form.state)
 
     if (err) {
       return dispatch({ type: 'error' })
@@ -148,6 +156,12 @@ function Register(props: ReactComponentWrapper) {
             </UiFormGroup>
 
             <UiFormSpacer />
+
+            <UiFormGroup label="Request Access Code" hint={<span>Care.tv is a <strong>personal</strong> streaming platform. Please ask me directly for this.</span>}>
+              <UiInput type="text" placeholder="XXXXX-XXXXX" name="request_access_code" value={form.state.request_access_code} onChange={form.set('request_access_code')} />
+            </UiFormGroup>
+
+            <UiSpacer size={3} />
 
             <div className="registration-action">
               <UiButtonLoader variant="primary" block size="l" isLoading={state.isLoading}>

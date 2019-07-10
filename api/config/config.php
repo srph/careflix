@@ -33,6 +33,16 @@ return [
   | The base url to the Digital Ocean CDN
   |
   */
-  'cdn' => env('APP_CDN', 'https://caretv.sgp1.cdn.digitaloceanspaces.com/')
+  'cdn' => env('APP_CDN', 'https://caretv.sgp1.cdn.digitaloceanspaces.com/'),
+
+  /*
+  |--------------------------------------------------------------------------
+  | Request Access Code
+  |--------------------------------------------------------------------------
+  |
+  | Unique request code for user registration.
+  |
+  */
+  'request_access_code' => env('APP_REQUEST_ACCESS_CODE', '')
 
 ];

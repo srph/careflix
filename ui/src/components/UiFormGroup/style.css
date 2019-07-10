@@ -9,3 +9,16 @@
   color: var(--color-black-5);
   line-height: 1;
 }
+
+.ui-form-group > .hint {
+  display: block;
+  margin-top: 4px;
+  line-height: 1.5;
+  font-size: 14px;
+  color: var(--color-black-5);
+}
+
+.ui-form-group > .hint > .icon {
+  display: inline-block;
+  margin-right: 8px;
+}

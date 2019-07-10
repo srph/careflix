@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\RequestAccessCode;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterUser extends FormRequest
@@ -28,6 +29,7 @@ class RegisterUser extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|min:8',
+            'request_access_code' => ['required', new RequestAccessCode]
         ];
     }
 }

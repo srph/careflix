@@ -7,6 +7,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Router, Route, Switch } from 'react-router-dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
+import { QueryParamProvider } from 'use-query-params';
 import history from '~/lib/history'
 import { GatewayProvider } from 'react-gateway'
 import WindowVhSetter from '~/components/WindowVhSetter'
@@ -64,36 +65,38 @@ function Mount() {
       <GatewayProvider>
         <UnstatedProvider>
           <Router history={history}>
-            <Root>
-              <Switch>
-                <GuestRoute path="/login" exact component={Login} />
-                <GuestRoute path="/register" exact component={Register} />
-                <Route path="/logout" exact component={Logout} />
+            <QueryParamProvider ReactRouterRoute={Route}>
+              <Root>
+                <Switch>
+                  <GuestRoute path="/login" exact component={Login} />
+                  <GuestRoute path="/register" exact component={Register} />
+                  <Route path="/logout" exact component={Logout} />
 
-                <Route
-                  path="/"
-                  render={() => (
-                    <App>
-                      <Switch>
-                        <Route path="/" exact component={AppHome} />
-                        <PrivateRoute path="/settings" exact component={AppSettings} />
-                        <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
-                        <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
-                        <PrivateRoute
-                          path="/watch/:partyId"
-                          render={matchProps => (
-                            <AppWatch {...matchProps}>
-                              <Route path="/watch/:partyId" exact component={AppWatchHome} />
-                              <Route path="/watch/:partyId/invite" exact component={AppWatchInvite} />
-                            </AppWatch>
-                          )}
-                        />
-                      </Switch>
-                    </App>
-                  )}
-                />
-              </Switch>
-            </Root>
+                  <Route
+                    path="/"
+                    render={() => (
+                      <App>
+                        <Switch>
+                          <Route path="/" exact component={AppHome} />
+                          <PrivateRoute path="/settings" exact component={AppSettings} />
+                          <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
+                          <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
+                          <PrivateRoute
+                            path="/watch/:partyId"
+                            render={matchProps => (
+                              <AppWatch {...matchProps}>
+                                <Route path="/watch/:partyId" exact component={AppWatchHome} />
+                                <Route path="/watch/:partyId/invite" exact component={AppWatchInvite} />
+                              </AppWatch>
+                            )}
+                          />
+                        </Switch>
+                      </App>
+                    )}
+                  />
+                </Switch>
+              </Root>
+            </QueryParamProvider>
           </Router>
         </UnstatedProvider>
       </GatewayProvider>

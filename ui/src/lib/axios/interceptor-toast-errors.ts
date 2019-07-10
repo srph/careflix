@@ -9,7 +9,7 @@ import { toast }  from '~/components/Toast'
  * @example Provide a custom error message
  * axios({ appValidationError: 'An error occured trying to create a contact })
  */
-instance.interceptors.response.use(null, (err: AxiosError) => {
+instance.interceptors.response.use(null, (err: AxiosError<{ errors: AppValidationBag }>) => {
   if (err.config.method === 'get') {
     return Promise.reject(err)
   }
@@ -28,7 +28,7 @@ instance.interceptors.response.use(null, (err: AxiosError) => {
     const cfg = err.config.app.validation
 
     if (cfg == null) {
-      toast('Some fields were not properly provided.')
+      toast(getFirstValidationMessage(err.response.data.errors))
     } else if (typeof cfg === 'string') {
       toast(cfg)
     }
@@ -38,3 +38,8 @@ instance.interceptors.response.use(null, (err: AxiosError) => {
 
   return Promise.reject(err)
 })
+
+function getFirstValidationMessage(errors: AppValidationBag) {
+  const key = Object.keys(errors)[0]
+  return errors[key] ? errors[key][0] : ''
+}

@@ -7,12 +7,14 @@ type Payload<T> = {
   set: (name: string) => (evt: SetCallbackEvent) => void
 }
 
+type InitialState<T> = T | (() => T)
+
 /**
  * @source https://gist.github.com/srph/2053cf063d2e0cda850055f27f0db424
  * @todo Probably not possible, but if it is, type setPassword, etc.
  */
-function useFormState<T>(initial: T): Payload<T> {
-  const [state, setState] = useState(initial)
+function useFormState<T>(initial: InitialState<T>): Payload<T> {
+  const [state, setState] = useState<T>(initial)
   
   return useMemo(() => {
     let out = {
@@ -31,7 +33,10 @@ function useFormState<T>(initial: T): Payload<T> {
   }, [state])
 }
 
-export default useFormState
+export {
+  useFormState,
+  useFormState as default
+}
 
 function ucFirst(str) {
   return str.charAt(0).toUpperCase() + str.substr(1)

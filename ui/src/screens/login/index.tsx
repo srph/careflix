@@ -90,9 +90,7 @@ function Login(props: ReactComponentWrapper) {
       <Helmet title="Welcome back" />
       
       <UiNavigation>
-        <UiNavigation.Action to="/">
-          <i className='fa fa-angle-left' />
-        </UiNavigation.Action>
+        <UiNavigation.BackAction to="/" />
 
         <UiNavigation.Title>
           Welcome Back

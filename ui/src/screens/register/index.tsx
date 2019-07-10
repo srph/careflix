@@ -113,9 +113,7 @@ function Register(props: ReactComponentWrapper) {
       <Helmet title="Create a new account" />
 
       <UiNavigation>
-        <UiNavigation.Action to="/">
-          <i className='fa fa-angle-left' />
-        </UiNavigation.Action>
+        <UiNavigation.BackAction to="/" />
 
         <UiNavigation.Title>
           Create a new account

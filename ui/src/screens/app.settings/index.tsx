@@ -87,7 +87,7 @@ function AppSettings(props: ReactComponentWrapper) {
 
         <div className="settings-credits">
           <div className="avatar">
-            <UiAvatar img={asset_author} alt="Kier Borromeo" size="m" />
+            <UiAvatar img={asset_author} size="m" />
           </div>
 
           <h6 className="ui-subheading">Crafted by Kier Borromeo</h6>

@@ -22,3 +22,7 @@
   display: inline-block;
   margin-right: 8px;
 }
+
+.ui-form-group a {
+  color: #1da1f2;
+}

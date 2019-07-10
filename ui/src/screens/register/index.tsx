@@ -155,7 +155,7 @@ function Register(props: ReactComponentWrapper) {
 
             <UiFormSpacer />
 
-            <UiFormGroup label="Request Access Code" hint={<span>Care.tv is a <strong>personal</strong> streaming platform. Please ask me directly for this.</span>}>
+            <UiFormGroup label="Request Access Code" hint={<span>Care.tv is a <strong>personal</strong> streaming platform. Please ask <a href="https://twitter.com/_srph" target="_blank">me</a> (or any of our mutual friends) for this.</span>}>
               <UiInput type="text" placeholder="XXXXX-XXXXX" name="request_access_code" value={form.state.request_access_code} onChange={form.set('request_access_code')} />
             </UiFormGroup>
 

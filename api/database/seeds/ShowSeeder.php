@@ -354,7 +354,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2016),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('One Piece: Gold'),
                 'age_rating' => '',
-                'subtitle_url' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('One Piece: Gold', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')
@@ -367,7 +367,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2012),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('One Piece: Z'),
                 'age_rating' => '',
-                'subtitle_url' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('One Piece: Z', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:45')

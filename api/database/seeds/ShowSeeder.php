@@ -627,7 +627,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Assassin\'s Creed'),
                 'air_start' => Carbon::create(2016),
                 'age_rating' => '',
-                'subtitle_url' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Assassin\'s Creed', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:55:31')
@@ -761,6 +761,58 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:49:28')
+            ],
+            [
+                'title' => 'What Happened To Monday',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('What Happened To Monday'),
+                'air_start' => Carbon::create(2017),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('What Happened To Monday', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:03:31')
+            ],
+            [
+                'title' => 'Kingsman: The Secret Service',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kingsman: The Secret Service'),
+                'air_start' => Carbon::create(2014),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:08:37')
+            ],
+            [
+                'title' => 'Kingsman: The Golden Circle',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kingsman: The Golden Circle'),
+                'air_start' => Carbon::create(2017),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:21:02')
+            ],
+            [
+                'title' => 'Euro Trip',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Euro Trip'),
+                'air_start' => Carbon::create(2004),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:41')
             ],
         ];
 

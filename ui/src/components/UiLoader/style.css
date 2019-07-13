@@ -11,6 +11,10 @@
   transform-origin: 100% 50% 0;
 }
 
+.ui-loader.is-large > img {
+  width: 32px;
+}
+
 @keyframes ui-loader-animation {
   0% {
     transform: rotate(0deg);

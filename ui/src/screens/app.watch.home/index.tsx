@@ -1,10 +1,11 @@
 import './style'
 
 import * as React from 'react'
+import BodyClassName from 'react-body-classname'
+import UiLoader from '~/components/UiLoader'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
 import SubtitleSlot from './SubtitleSlot'
-import BodyClassName from 'react-body-classname'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -22,6 +23,7 @@ interface State {
   isPlaying: boolean
   isOpen: boolean
   isInitialized: boolean
+  isBuffering: boolean
 }
 
 type Action =
@@ -34,6 +36,7 @@ type Action =
   | ReducerAction<'controls:pause'>
   | ReducerAction<'video-complete'>
   | ReducerAction<'sync', { time: number; isPlaying: boolean }>
+  | ReducerAction<'buffer', { isBuffering: boolean }>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -94,6 +97,13 @@ const reducer = (state: State, action: Action): State => {
         time: action.payload.time
       }
     }
+
+    case 'buffer': {
+      return {
+        ...state,
+        isBuffering: action.payload.isBuffering
+      }
+    }
   }
 
   return state
@@ -110,7 +120,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isComplete: false,
     isPlaying: false,
     isOpen: false,
-    isInitialized: false
+    isInitialized: false,
+    isBuffering: false
   })
 
   const $video = useRef<HTMLVideoElement>()
@@ -265,6 +276,22 @@ function AppWatchHome(props: ReactComponentWrapper) {
     return 'Are you sure you want to leave this page?'
   }, [state.isPlaying])
 
+  function handleVideoBufferStart() {
+    console.log('Hey')
+    
+    dispatch({
+      type: 'buffer',
+      payload: { isBuffering: true }
+    })
+  }
+
+  function handleVideoBufferEnd() {
+    dispatch({
+      type: 'buffer',
+      payload: { isBuffering: false }
+    })
+  }
+
   return (
     <React.Fragment>
       <BodyClassName className="watch-screen-html-body" />
@@ -294,6 +321,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
             onTimeUpdate={handleTimeUpdate}
             onEnded={handleVideoEnded}
             onLoadedData={handleVideoLoadedData}
+            onWaiting={handleVideoBufferStart}
+            onPlaying={handleVideoBufferEnd}
           />
 
           {changeEpisodeBuffer && (
@@ -307,6 +336,10 @@ function AppWatchHome(props: ReactComponentWrapper) {
               <h4>{context.party.video.group.title}: {context.party.video.title}</h4>
             </div>
           )}
+
+          {state.isBuffering && <div className="watch-screen-video-loader">
+            <UiLoader size="large" />
+          </div>}
 
           {state.isInitialized && <SubtitleSlot video={context.party.video} isPlayerOpen={state.isOpen} time={state.time} />}
         </div>

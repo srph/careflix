@@ -814,6 +814,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:29:41')
             ],
+            [
+                'title' => 'Alita Battle Angel',
+                'title_type' => 'movie',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Alita Battle Angel'),
+                'air_start' => Carbon::create(2019),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:47')
+            ],
         ];
 
         foreach($movies as $movie) {

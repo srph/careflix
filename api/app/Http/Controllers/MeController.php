@@ -35,7 +35,7 @@ class MeController extends Controller
             // Notice we're not including is_dismissed in the query.
             // We don't want to get the most recent undismissed party.
             // Rather, we want to get the most recent party, and if it's dismissed return a null.
-            'party' => $party->pivot->is_dismissed ? null : $party
+            'party' => isset($party->pivot) && $party->pivot->is_dismissed ? null : $party
         ];
     }
 
@@ -45,7 +45,7 @@ class MeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function dismissRecentParty(Request $request) {
-        $party = $request->user()->parties()->where('party_id', $request->get('party_id'))->first();
+        $party = $request->user()->parties()->where('party_id', $request->get('party_id'))->firstOrFail();
         $party->pivot->is_dismissed = true;
         $party->pivot->save();
         return $party;

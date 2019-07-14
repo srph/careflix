@@ -827,18 +827,69 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:47')
             ],
+            [
+                'title' => 'Kyoukai no Kanata',
+                'title_type' => 'series',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2013, 10, 3),
+                'air_end' => Carbon::create(2013, 12, 19),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kyoukai no Kanata'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 12,
+                        'extension' => 'mp4'
+                    ]
+                ]
+            ]
         ];
 
         foreach($movies as $movie) {
-            $show = App\Show::create(Arr::except($movie, ['duration', 'extension', 'subtitle_url']));
+            if ($movie->title_type === 'movie') {
+                $show = App\Show::create(Arr::except($movie, ['duration', 'extension', 'subtitle_url']));
 
-            App\ShowVideo::create([
-                'show_id' => $show->id,
-                'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['extension']),
-                'subtitle_url' => $movie['subtitle_url'],
-                'duration' => $movie['duration'],
-                'synopsis' => $faker->text,
-            ]);
+                App\ShowVideo::create([
+                    'show_id' => $show->id,
+                    'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['extension']),
+                    'subtitle_url' => $movie['subtitle_url'],
+                    'duration' => $movie['duration'],
+                    'synopsis' => $faker->text,
+                ]);
+            } else {
+                $show = App\Show::create(Arr::except($movie, ['seasons']));
+
+                foreach($movie['seasons'] as $i => $season) {
+                    $group = App\ShowGroup::create([
+                        'show_id' => $show->id,
+                        'title' => $season['title']
+                    ]);
+    
+                    for($j = 0; $j < $season['episodes']; $j++) {
+                        App\ShowVideo::create([
+                            'show_group_id' => $group->id,
+                            'show_id' => $show->id,
+                            'title' => 'Episode ' . ($j + 1),
+                            'video_url' => \App\Support\Helper::getVideoUrlFromEpisode([
+                                'title' => $show->title,
+                                'season' => $i + 1,
+                                'episode' => $j + 1,
+                                'extension' => $season['extension']
+                            ]),
+                            'subtitle_url' => $season['has_subtitles'] ? Helper::getSubtitleUrlFromSeriesTitle([
+                                'title' => $show->title,
+                                'season' => $i + 1,
+                                'episode' => $j + 1,
+                                'extension' => $season['extension']
+                            ]) : '',
+                            'duration' => Helper::getDurationInSecondsFromReadableFormat('11:09'),
+                            'synopsis' => $faker->text,
+                        ]);
+                    }
+                }
+            }
         }
 
         $series = [

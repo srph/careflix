@@ -29,12 +29,14 @@ function Toast() {
 
   const counterRef = useRef<number>(0)
   function open(text: string) {
+    console.log('hey')
+
     counterRef.current++
 
     const message = {
       id: counterRef.current + 1,
       text,
-      duration: 5000
+      duration: 50000
     }
 
     setState(state => ({

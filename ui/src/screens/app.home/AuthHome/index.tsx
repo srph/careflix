@@ -7,6 +7,7 @@ import UiContainer from '~/components/UiContainer'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
+import YouWereWatching from '../YouWereWatching'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
 interface State {
@@ -103,38 +104,44 @@ function AuthHome() {
   }
 
   return (
-    <UiContainer size="xl">
-      <h5 className="ui-subheading">New Releases</h5>
+    <React.Fragment>
+      <YouWereWatching />
 
-      <UiSpacer size={2} />
+      <UiSpacer size={4} />
 
-      <div className="show-layout">
-        {state.shows.map((show, j) => (
-          <div className="column" key={j}>
-            <UiPlainButton className="show-carousel-card-button">
-              <div className="show-carousel-card-container">
-                <div
-                  className="show-carousel-card"
-                  style={{ backgroundImage: `url(${show.preview_image})` }}
-                  onClick={() => handleShowClick(show)}>
-                  <div className="overlay" />
+      <UiContainer size="xl">
+        <h5 className="ui-subheading">New Releases</h5>
 
-                  <div className="details">
-                    <div className="tags">
-                      <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
+        <UiSpacer size={2} />
+
+        <div className="show-layout">
+          {state.shows.map((show, j) => (
+            <div className="column" key={j}>
+              <UiPlainButton className="show-carousel-card-button">
+                <div className="show-carousel-card-container">
+                  <div
+                    className="show-carousel-card"
+                    style={{ backgroundImage: `url(${show.preview_image})` }}
+                    onClick={() => handleShowClick(show)}>
+                    <div className="overlay" />
+
+                    <div className="details">
+                      <div className="tags">
+                        <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
+                      </div>
+
+                      <h3 className="title">{show.title}</h3>
                     </div>
-
-                    <h3 className="title">{show.title}</h3>
                   </div>
                 </div>
-              </div>
-            </UiPlainButton>
-          </div>
-        ))}
-      </div>
+              </UiPlainButton>
+            </div>
+          ))}
+        </div>
 
-      <ShowModal show={state.selectedShow} onClose={handleShowClose} />
-    </UiContainer>
+        <ShowModal show={state.selectedShow} onClose={handleShowClose} />
+      </UiContainer>
+    </React.Fragment>
   )
 }
 

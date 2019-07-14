@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class MeController extends Controller
@@ -15,6 +16,39 @@ class MeController extends Controller
     public function data(Request $request)
     {
         return $request->user()->load('invitations');
+    }
+
+    /**
+     * Get the most recent party the user might have accidentally left.
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function getRecentParty(Request $request) {
+        $ago = Carbon::now()->subtract(30, 'minutes')->format('Y-m-d H:i:s');
+
+        $party = $request->user()->parties()
+            ->where('last_activity_at', '>=', $ago)
+            ->orderBy('last_activity_at', 'desc')
+            ->first();
+
+        return [
+            // Notice we're not including is_dismissed in the query.
+            // We don't want to get the most recent undismissed party.
+            // Rather, we want to get the most recent party, and if it's dismissed return a null.
+            'party' => $party->pivot->is_dismissed ? null : $party
+        ];
+    }
+
+    /**
+     * Dismiss the party
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function dismissRecentParty(Request $request) {
+        $party = $request->user()->parties()->where('party_id', $request->get('party_id'))->first();
+        $party->pivot->is_dismissed = true;
+        $party->pivot->save();
+        return $party;
     }
 
     /**

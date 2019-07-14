@@ -1,0 +1,13 @@
+.ui-avatar-group {
+  display: flex;
+  align-items: center;
+}
+
+.ui-avatar-group > .avatar:not(:last-child) {
+  margin-right: 2px;
+}
+
+.ui-avatar-group > .more {
+  flex-shrink: 0;
+  margin-left: 8px;
+}

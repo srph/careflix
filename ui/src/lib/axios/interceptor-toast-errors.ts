@@ -4,10 +4,10 @@ import { toast }  from '~/components/Toast'
 
 /**
  * @example Disable the default validation toast
- * axios({ appValidationError: false })
+ * axios({ app: { validation: false } })
  * 
  * @example Provide a custom error message
- * axios({ appValidationError: 'An error occured trying to create a contact })
+ * axios({ app: { validation: 'An error occured trying to create a contact } })
  */
 instance.interceptors.response.use(null, (err: AxiosError<{ errors: AppValidationBag }>) => {
   if (err.config.method === 'get') {

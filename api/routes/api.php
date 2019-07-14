@@ -44,4 +44,6 @@ Route::middleware('auth:api')->group(function() {
     Route::post('invitations/{invitation}/cancel', 'PartyInvitationsController@cancel');
 
     Route::get('me', 'MeController@data');
+    Route::get('me/recent-party', 'MeController@getRecentParty');
+    Route::put('me/dismiss-recent-party', 'MeController@dismissRecentParty');
 });

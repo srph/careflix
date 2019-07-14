@@ -93,7 +93,8 @@ class PartiesController extends Controller
 
         $party->fill([
             'current_time' => (int) $request->get('current_time'),
-            'is_playing' => (boolean) $request->get('is_playing')
+            'is_playing' => (boolean) $request->get('is_playing'),
+            'last_activity_at' => date('Y-m-d H:i:s')
         ])->save();
 
         $activity = PartyActivity::create([

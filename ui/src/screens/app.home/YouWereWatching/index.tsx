@@ -13,7 +13,6 @@ import getAirDetails from '~/utils/shows/getAirDetails';
 import { toast } from '~/components/Toast'
 
 /**
- * @TODO For series, include current season & episode
  * @TODO Update members real-time
  */
 function YouWereWatching() {
@@ -89,7 +88,7 @@ function YouWereWatching() {
             </div>}
 
             {party.video.show.title_type === 'series' && <div className="tags">
-              <span className="tag">{getAirDetails(party.video.show)}</span>
+              <span className="tag">{party.video.group.title}: {party.video.title}</span>
             </div>}
 
 

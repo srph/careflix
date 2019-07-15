@@ -1,6 +1,7 @@
 import './style'
 
 import * as React from 'react'
+import cx from 'classnames'
 import BodyClassName from 'react-body-classname'
 import UiLoader from '~/components/UiLoader'
 import PlayerModal from './PlayerModal'
@@ -37,6 +38,7 @@ type Action =
   | ReducerAction<'video-complete'>
   | ReducerAction<'sync', { time: number; isPlaying: boolean }>
   | ReducerAction<'buffer', { isBuffering: boolean }>
+  | ReducerAction<'change-video'>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -102,6 +104,14 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         isBuffering: action.payload.isBuffering
+      }
+    }
+
+    case 'change-video': {
+      return {
+        ...state,
+        isInitialized: false,
+        isBuffering: false
       }
     }
   }
@@ -171,6 +181,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     // We're not putting any other conditions here (if it's a series, etc.)
     // because we're in the assumption that only series will have a change
     // of videos.
+    dispatch({ type: 'change-video' })
+
     displayChangeEpisodeBuffer()
   }, [context.party.video.id])
 
@@ -309,7 +321,9 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
       <div className="watch-screen">
         <div
-          className="watch-screen-video"
+          className={cx('watch-screen-video', {
+            'has-overlay': changeEpisodeBuffer
+          })}
           style={state.isInitialized ? {} : {
             backgroundImage: `url(${getVideoPreviewImage(context.party)})`
           }}
@@ -327,13 +341,15 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
           {changeEpisodeBuffer && (
             <div className="watch-screen-message">
-              <div className="status">
-                <h5 className="ui-subheading">
-                  Now Playing
-                </h5>
-              </div>
+              <div className="content">
+                <div className="status">
+                  <h5 className="ui-subheading">
+                    Now Playing
+                  </h5>
+                </div>
 
-              <h4>{context.party.video.group.title}: {context.party.video.title}</h4>
+                <h4>{context.party.video.group.title}: {context.party.video.title}</h4>
+              </div>
             </div>
           )}
 

@@ -222,13 +222,18 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  background: rgba(0,0,0,0.5);
+}
+
+.watch-screen-message > .content {
+  position: relative;
   animation-name: watch-screen-message-animation;
   animation-duration: 4s;
   animation-timing-function: ease;
   animation-iteration-count: 1;
 }
 
-.watch-screen-message > .status {
+.watch-screen-message > .content > .status {
   opacity: 0.75;
   margin-bottom: 4px;
 }

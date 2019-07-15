@@ -60,7 +60,7 @@ function YouWereWatching() {
       <div className="overlay" />
 
       <div className="dismiss">
-        <UiContainer size="lg">
+        <UiContainer size="xl">
           <div className="you-were-watching-dismiss">
             <div className="desktop">
               <UiButton onClick={handleDismiss}>
@@ -80,7 +80,7 @@ function YouWereWatching() {
       </div>
 
       <div className="content">
-        <UiContainer size="lg">
+        <UiContainer size="xl">
           <div className="you-were-watching-content">
             {party.video.show.title_type === 'movie' && <div className="tags">
               <span className="tag">{getAirDetails(party.video.show)}</span>

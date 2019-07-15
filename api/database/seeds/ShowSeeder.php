@@ -842,7 +842,8 @@ class ShowSeeder extends Seeder
                         'title' => 'Season 1',
                         'episodes' => 12,
                         'extension' => 'mp4',
-                        'subtitle_language' => 'en'
+                        'subtitle_language' => 'en',
+                        'duration' => '23:42'
                     ]
                 ]
             ]
@@ -884,7 +885,7 @@ class ShowSeeder extends Seeder
                                 'season' => $i + 1,
                                 'episode' => $j + 1
                             ], $season['subtitle_language']) : '',
-                            'duration' => Helper::getDurationInSecondsFromReadableFormat('11:09'),
+                            'duration' => Helper::getDurationInSecondsFromReadableFormat($season['duration']),
                             'synopsis' => $faker->text,
                         ]);
                     }

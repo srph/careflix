@@ -1,9 +1,11 @@
 import './style'
 import * as React from 'react'
+import cx from 'classnames'
 import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import SeasonSelection from '~/components/SeasonSelection'
 import axios from '~/lib/axios' 
+import { useMediaMode } from '~/hooks/useMediaMode'
 
 interface Props {
   party: AppParty
@@ -32,6 +34,8 @@ function ShowModal(props: Props) {
     props.onChangeVideo(res.data)
   }
 
+  const media = useMediaMode()
+
   if (props.party.video.show.title_type !== 'series') {
     return null
   }
@@ -42,6 +46,7 @@ function ShowModal(props: Props) {
         isOpen={props.isOpen}
         shouldCloseOnOverlayClick={false}
         overlayClassName="watch-home-season-selection-overlay"
+        modalClassName="watch-home-season-selection-modal"
         onClose={props.onClose}>
         {() => (
           <React.Fragment>
@@ -53,7 +58,7 @@ function ShowModal(props: Props) {
               </UiPlainButton>
             </div>
 
-            <SeasonSelection show={props.show} currentVideo={props.party.video} onEpisodeClick={handleVideoClick} />
+            <SeasonSelection show={props.show} currentVideo={props.party.video} onEpisodeClick={handleVideoClick} mode={media === 'desktop' ? 'light' : 'dark'} />
           </React.Fragment>
         )}
       </UiModal>

@@ -34,7 +34,7 @@ function Toast() {
     const message = {
       id: counterRef.current + 1,
       text,
-      duration: 50000
+      duration: 4000
     }
 
     setState(state => ({

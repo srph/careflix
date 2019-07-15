@@ -7,13 +7,14 @@ import UiLoader from '~/components/UiLoader'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
 import SubtitleSlot from './SubtitleSlot'
+import SeasonSelectionModal from './SeasonSelectionModal'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { useBufferState } from '~/hooks/useBufferState'
 import { useMediaMode } from '~/hooks/useMediaMode'
-import { useRouterBlock } from '~/hooks/useRouterBlock';
+import { useRouterBlock } from '~/hooks/useRouterBlock'
 import axios from '~lib/axios'
 
 import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
@@ -25,6 +26,7 @@ interface State {
   isOpen: boolean
   isInitialized: boolean
   isBuffering: boolean
+  isSeasonSelectionOpen: boolean
 }
 
 type Action =
@@ -39,6 +41,7 @@ type Action =
   | ReducerAction<'sync', { time: number; isPlaying: boolean }>
   | ReducerAction<'buffer', { isBuffering: boolean }>
   | ReducerAction<'change-video'>
+  | ReducerAction<'season-selection:toggle', { isSeasonSelectionOpen: boolean }>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -114,6 +117,13 @@ const reducer = (state: State, action: Action): State => {
         isBuffering: false
       }
     }
+
+    case 'season-selection:toggle': {
+      return {
+        ...state,
+        isSeasonSelectionOpen: action.payload.isSeasonSelectionOpen
+      }
+    }
   }
 
   return state
@@ -131,7 +141,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isPlaying: false,
     isOpen: false,
     isInitialized: false,
-    isBuffering: false
+    isBuffering: false,
+    isSeasonSelectionOpen: false
   })
 
   const $video = useRef<HTMLVideoElement>()
@@ -187,6 +198,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }, [context.party.video.id])
 
   function handleVideoClick() {
+    console.log('WHAT')
+
     if (state.isOpen) {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,
@@ -276,21 +289,22 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
   }
 
-  useRouterBlock((location) => {
-    if (!state.isPlaying) {
-      return
-    }
+  useRouterBlock(
+    location => {
+      if (!state.isPlaying) {
+        return
+      }
 
-    if (location.pathname.startsWith('/watch')) {
-      return
-    }
+      if (location.pathname.startsWith('/watch')) {
+        return
+      }
 
-    return 'Are you sure you want to leave this page?'
-  }, [state.isPlaying])
+      return 'Are you sure you want to leave this page?'
+    },
+    [state.isPlaying]
+  )
 
   function handleVideoBufferStart() {
-    console.log('Hey')
-    
     dispatch({
       type: 'buffer',
       payload: { isBuffering: true }
@@ -304,60 +318,105 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
   }
 
+  function handleSeasonSelectionOpen() {
+    dispatch({
+      type: 'season-selection:toggle',
+      payload: { isSeasonSelectionOpen: true }
+    })
+  }
+
+  function handleSeasonSelectionClose() {
+    dispatch({
+      type: 'season-selection:toggle',
+      payload: { isSeasonSelectionOpen: false }
+    })
+  }
+
+  function handleChangeVideo(party: AppParty) {
+    dispatch({
+      type: 'season-selection:toggle',
+      payload: { isSeasonSelectionOpen: false }
+    })
+
+    handleOverlayClose()
+
+    context.onChangeVideo(party)
+  }
+
   return (
     <React.Fragment>
       <BodyClassName className="watch-screen-html-body" />
-      
-      <PlayerModal
-        party={context.party}
-        time={state.time}
-        isOpen={state.isOpen}
-        isPlaying={state.isPlaying}
-        onClose={handleOverlayClose}
-        onPlay={handlePlay}
-        onSeek={handleSeek}
-        onChangeVideo={context.onChangeVideo}
-      />
 
       <div className="watch-screen">
         <div
           className={cx('watch-screen-video', {
             'has-overlay': changeEpisodeBuffer
-          })}
-          style={state.isInitialized ? {} : {
-            backgroundImage: `url(${getVideoPreviewImage(context.party)})`
-          }}
-          onClick={handleVideoClick}
-          onMouseMove={handleVideoHover}>
-          <video
-            src={context.party.video.video_url}
-            ref={$video}
-            onTimeUpdate={handleTimeUpdate}
-            onEnded={handleVideoEnded}
-            onLoadedData={handleVideoLoadedData}
-            onWaiting={handleVideoBufferStart}
-            onPlaying={handleVideoBufferEnd}
-          />
+          })}>
+          <div
+            className="container"
+            style={
+              state.isInitialized
+                ? {}
+                : {
+                    backgroundImage: `url(${getVideoPreviewImage(context.party)})`
+                  }
+            }
+            onMouseMove={handleVideoHover}
+            onClick={handleVideoClick}>
+            <video
+              src={context.party.video.video_url}
+              ref={$video}
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={handleVideoEnded}
+              onLoadedData={handleVideoLoadedData}
+              onWaiting={handleVideoBufferStart}
+              onPlaying={handleVideoBufferEnd}
+            />
+          </div>
 
           {changeEpisodeBuffer && (
             <div className="watch-screen-message">
               <div className="content">
                 <div className="status">
-                  <h5 className="ui-subheading">
-                    Now Playing
-                  </h5>
+                  <h5 className="ui-subheading">Now Playing</h5>
                 </div>
 
-                <h4>{context.party.video.group.title}: {context.party.video.title}</h4>
+                <h4>
+                  {context.party.video.group.title}: {context.party.video.title}
+                </h4>
               </div>
             </div>
           )}
 
-          {state.isBuffering && <div className="watch-screen-video-loader">
-            <UiLoader size="large" />
-          </div>}
+          {state.isBuffering && (
+            <div className="watch-screen-video-loader">
+              <UiLoader size="large" />
+            </div>
+          )}
 
-          {state.isInitialized && <SubtitleSlot video={context.party.video} isPlayerOpen={state.isOpen} time={state.time} />}
+          {state.isInitialized && (
+            <SubtitleSlot video={context.party.video} isPlayerOpen={state.isOpen} time={state.time} />
+          )}
+
+          <PlayerModal
+            party={context.party}
+            time={state.time}
+            getVideoElement={() => $video.current}
+            isOpen={state.isOpen}
+            isPlaying={state.isPlaying}
+            onClose={handleOverlayClose}
+            onPlay={handlePlay}
+            onSeek={handleSeek}
+            onOpenSeasonSelection={handleSeasonSelectionOpen}
+          />
+
+          <SeasonSelectionModal
+            party={context.party}
+            show={context.party.video.show}
+            isOpen={state.isSeasonSelectionOpen}
+            onClose={handleSeasonSelectionClose}
+            onChangeVideo={handleChangeVideo}
+          />
         </div>
 
         <ChatWidget party={context.party} />

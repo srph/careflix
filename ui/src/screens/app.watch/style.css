@@ -1,5 +1,4 @@
 .nav-tabs {
-  margin-top: -16px;
   display: flex;
   border-top: 1px solid var(--color-black-1);
   border-bottom: 1px solid var(--color-black-1);

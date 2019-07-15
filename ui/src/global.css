@@ -42,6 +42,8 @@ html, body {
   --zindex-you-were-watching-overlay: 101;
   --zindex-you-were-watching-content: 102;
   --zindex-you-were-watching-dismiss: 103;
+  --zindex-player-overlay: 900;
+  --zindex-player-elements: 901;
   --zindex-modal: 1000;
 
   /**

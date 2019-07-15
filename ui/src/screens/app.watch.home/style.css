@@ -18,6 +18,10 @@
 .watch-screen-video {
   flex-shrink: 0;
   position: relative;
+}
+
+.watch-screen-video > .container {
+  position: relative;
   padding-bottom: 56.25%;
   width: 100%;
   background-color: var(--color-black);
@@ -34,7 +38,7 @@
 }
 
 
-.watch-screen-video > video {
+.watch-screen-video > .container > video {
   position: absolute;
   top: 0;
   left: 0;
@@ -46,7 +50,7 @@
 }
 
 @media (min-width: 720px) {
-  .watch-screen-video > video {
+  .watch-screen-video > .container > video {
     position: static;
   }
 }

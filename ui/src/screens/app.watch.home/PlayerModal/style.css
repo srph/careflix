@@ -1,28 +1,50 @@
 .watch-player-overlay {
-  overflow: hidden;
-  background-color: var(--color-modal-overlay);
-}
-
-@media (min-width: 720px) {
-  .watch-player-overlay {
-    top: 84px;
-    right: 320px;
-    background-color: transparent;
-    /**
-     * On desktop mode, we want the user to click through the video instead of the overlay
-     * (which triggers an onClose in the Modal).
-     */
-    pointer-events: none;
-  }
-}
-
-.watch-player-modal {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  pointer-events: none;
+  background-color: var(--color-modal-overlay);
+}
+
+@media (min-width: 720px) {
+  .watch-player-overlay {
+    position: absolute;
+    background-color: transparent;
+  }
+}
+
+.watch-player-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--zindex-player-overlay);
+}
+
+@media (min-width: 720px) {
+  .watch-player-container {
+    position: absolute;
+  }
+}
+
+.watch-player-container.-enter {
+  opacity: 0;
+}
+
+.watch-player-container.-enter-active {
+  opacity: 1;
+  transition: 0.1s all ease;
+}
+
+.watch-player-container.-leave {
+  opacity: 1;
+}
+
+.watch-player-container.-leave-active {
+  opacity: 0;
+  transition: 0.1s all ease;
 }
 
 .watch-player-contents {
@@ -30,7 +52,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  pointer-events: initial;
+  z-index: var(--zindex-player-elements);
 }
 
 .watch-player-modal-card {
@@ -88,7 +110,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  pointer-events: initial;
+  z-index: var(--zindex-player-elements);
 }
 
 .watch-player-actions > .section {

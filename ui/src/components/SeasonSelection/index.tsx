@@ -1,5 +1,6 @@
 import './style'
 import * as React from 'react'
+import cx from 'classnames'
 import { useReducer, useMemo } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import UiSelect from '~/components/UiSelect'
@@ -12,6 +13,7 @@ interface Props {
   currentVideo?: AppShowVideo
   onFetch?: (groups: AppShowGroup[]) => void
   onEpisodeClick: (video: AppShowVideo) => void
+  mode?: 'dark' | 'light'
 }
 
 interface State {
@@ -142,8 +144,10 @@ function ShowModal(props: Props) {
 
   return (
     <React.Fragment>
-      <div className="c-season-selection-select">
-        <UiSelect value={state.selectedGroupId} onChange={handleGroupChange}>
+      <div className={cx('c-season-selection-select', {
+        'is-light': props.mode === 'light'
+      })}>
+        <UiSelect value={state.selectedGroupId} onChange={handleGroupChange} mode={props.mode}>
           {state.groups.map(group => (
             <option value={group.id} key={group.id}>
               {group.title}
@@ -154,7 +158,9 @@ function ShowModal(props: Props) {
 
       <section>
         {group.videos.map(video => (
-          <button type="button" className="c-season-selection-episode" key={video.id} onClick={() => handleEpisodeClick(video)}>
+          <button type="button" className={cx('c-season-selection-episode', {
+            'is-light': props.mode === 'light'
+          })} key={video.id} onClick={() => handleEpisodeClick(video)}>
             <div className="thumbnail">
               <StandardImageAspectRatio src={props.show.preview_image} />
             </div>

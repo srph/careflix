@@ -13,6 +13,7 @@
   background: transparent;
   border: 0;
   outline: 0;
+  cursor: pointer;
 }
 
 .c-season-selection-episode:first-child {
@@ -42,4 +43,20 @@
 .c-season-selection-episode > .play {
   flex-shrink: 0;
   color: var(--color-black-5);
+}
+
+.c-season-selection-episode.is-light {
+  color: var(--color-black-4);
+}
+
+.c-season-selection-episode.is-light:first-child {
+  border-top: 1px solid var(--color-silver-2);
+}
+
+.c-season-selection-episode.is-light:not(:last-child) {
+  border-bottom: 1px solid var(--color-silver-2);
+}
+
+.c-season-selection-episode.is-light > .play {
+  color: var(--color-silver-3);
 }

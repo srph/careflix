@@ -84,7 +84,7 @@ function ShowModal(props: Props) {
                 <p className="synopsis">{props.show.synopsis}</p>
               </header>
 
-              <SeasonSelection show={props.show} onEpisodeClick={handleVideoClick} />
+              <SeasonSelection show={props.show} onEpisodeClick={handleVideoClick} mode={media === 'desktop' ? 'light' : 'dark'} />
             </div>
           </React.Fragment>
         )}

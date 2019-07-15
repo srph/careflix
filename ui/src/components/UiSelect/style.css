@@ -12,6 +12,13 @@
   border: 1px solid var(--color-black-5);
   border-radius: var(--border-radius);
   outline: 0;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.ui-select > select::-ms-expand {
+  display: none;
 }
 
 .ui-select > .caret {
@@ -20,4 +27,13 @@
   right: 12px;
   color: var(--color-white);
   pointer-events: none;
+}
+
+.ui-select.is-light > select {
+  color: var(--color-black-4);
+  border-color: var(--color-silver-3);
+}
+
+.ui-select.is-light > .caret {
+  color: var(--color-silver-5);
 }

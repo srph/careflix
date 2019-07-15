@@ -73,8 +73,15 @@ class Helper {
     );
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | Utility for movie-type titles
+  |--------------------------------------------------------------------------
+  |
+  */
+
   /**
-   * 
+   * How To Train Your Dragon 2 -> how-to-train-your-dragon-2
    */
   static public function getVideoFilenameFromTitle($title) {
     // Spider-Man: Into The Spider-Verse -> spider--man:-into-the-spider--verse
@@ -92,7 +99,7 @@ class Helper {
   }
 
   /**
-   * 
+   * cdn + videos/we-bare-bears/we-bare-bears.mp4
    */
   static public function getVideoUrlFromMovieTitle($title, $ext = 'mp4') {
     $filename = Helper::getVideoFilenameFromTitle($title);
@@ -100,13 +107,11 @@ class Helper {
   }
 
   /**
-   * we-bare-bears-s1-e23
+   * cdn + videos/one-piece-z/one-piece-z-en.srt
    */
-  static public function getVideoUrlFromEpisode($settings) {
-    $filename = Helper::getVideoFilenameFromTitle($settings['title']);
-    $index = "s{$settings['season']}-e{$settings['episode']}"; // s1-e11
-    $ext = $settings['extension'] ?? 'mp4';
-    return Helper::cdn("videos/{$filename}/{$filename}-{$index}.{$ext}");
+  static public function getSubtitleUrlFromMovieTitle($title, $language = 'en') {
+    $filename = Helper::getVideoFilenameFromTitle($title);
+    return Helper::cdn("videos/{$filename}/{$filename}-{$language}.srt");
   }
 
   /**
@@ -120,8 +125,38 @@ class Helper {
     return Helper::cdn("videos/{$filename}/{$filename}-preview-{$ratio}.jpg");
   }
 
-  static public function getSubtitleUrlFromMovieTitle($title, $language = 'en') {
-    $filename = $filename = Helper::getVideoFilenameFromTitle($title);
-    return Helper::cdn("videos/{$filename}/{$filename}-{$language}.srt");
+  /*
+  |--------------------------------------------------------------------------
+  | Utility for series
+  |--------------------------------------------------------------------------
+  |
+  */
+
+  /**
+   * we-bare-bears-s1-ep23
+   */
+  static public function getVideoFilenameFromEpisode($settings) {
+    $filename = Helper::getVideoFilenameFromTitle($settings['title']);
+    $index = "s{$settings['season']}-ep{$settings['episode']}"; // s1-e11
+    return "{$filename}-{$index}";
+  }
+
+  /**
+   * cdn + videos/we-bare-bears/we-bare-bears-s1-ep23.mp4
+   */
+  static public function getVideoUrlFromEpisode($settings) {
+    $directory = Helper::getVideoFilenameFromTitle($settings['title']);
+    $filename = Helper::getVideoFilenameFromEpisode($settings);
+    $ext = $settings['extension'] ?? 'mp4';
+    return Helper::cdn("videos/{$directory}/{$filename}.{$ext}");
+  }
+
+  /**
+   * cdn + videos/we-bare-bears/we-bare-bears-s1-ep23.srt
+   */
+  static public function getSubtitleUrlFromSeriesTitle($settings, $language = 'en') {
+    $directory = Helper::getVideoFilenameFromTitle($settings['title']);
+    $filename = Helper::getVideoFilenameFromEpisode($settings);
+    return Helper::cdn("videos/{$directory}/{$filename}-{$language}.srt");
   }
 }

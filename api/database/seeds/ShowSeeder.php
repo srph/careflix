@@ -841,14 +841,15 @@ class ShowSeeder extends Seeder
                     [
                         'title' => 'Season 1',
                         'episodes' => 12,
-                        'extension' => 'mp4'
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en'
                     ]
                 ]
             ]
         ];
 
         foreach($movies as $movie) {
-            if ($movie->title_type === 'movie') {
+            if ($movie['title_type'] === 'movie') {
                 $show = App\Show::create(Arr::except($movie, ['duration', 'extension', 'subtitle_url']));
 
                 App\ShowVideo::create([
@@ -878,12 +879,11 @@ class ShowSeeder extends Seeder
                                 'episode' => $j + 1,
                                 'extension' => $season['extension']
                             ]),
-                            'subtitle_url' => $season['has_subtitles'] ? Helper::getSubtitleUrlFromSeriesTitle([
+                            'subtitle_url' => $season['subtitle_language'] ? Helper::getSubtitleUrlFromSeriesTitle([
                                 'title' => $show->title,
                                 'season' => $i + 1,
-                                'episode' => $j + 1,
-                                'extension' => $season['extension']
-                            ]) : '',
+                                'episode' => $j + 1
+                            ], $season['subtitle_language']) : '',
                             'duration' => Helper::getDurationInSecondsFromReadableFormat('11:09'),
                             'synopsis' => $faker->text,
                         ]);

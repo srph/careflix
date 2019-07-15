@@ -2,6 +2,7 @@
   position: relative;
   height: 320px;
   overflow: hidden;
+  z-index: var(--zindex-you-were-watching);
 }
 
 @media (min-width: 720px) {

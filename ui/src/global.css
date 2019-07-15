@@ -32,10 +32,12 @@ html, body {
   --form-size: 40px;
   --screen-tablet: 720px;
 
+  --zindex-you-were-watching: 500;
   --zindex-you-were-watching-image: 100;
   --zindex-you-were-watching-overlay: 101;
   --zindex-you-were-watching-content: 102;
   --zindex-you-were-watching-dismiss: 103;
+  --zindex-modal: 1000;
 
   /**
    * Initial window-vh for hooks/useVhSetter.

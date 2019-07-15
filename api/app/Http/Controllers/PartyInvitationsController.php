@@ -41,12 +41,8 @@ class PartyInvitationsController extends Controller
         $search = $request->get('search');
 
         return User::when($request->has('search'), function($query) use ($search) {
-                \Log::info(['hoyyyy']);
-
                 $query->search($search);
             }, function($query) use($party) {
-                \Log::info(['heyyy']);
-
                 $query->select(
                     'users.*',
                     'party_user.party_id as member_party_id',

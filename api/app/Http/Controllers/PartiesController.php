@@ -89,8 +89,6 @@ class PartiesController extends Controller
             $action = 'seeked to ' . $time;
         }
 
-        \Log::info(['action' => $action]);
-
         $party->fill([
             'current_time' => (int) $request->get('current_time'),
             'is_playing' => (boolean) $request->get('is_playing'),

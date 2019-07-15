@@ -41,12 +41,7 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   function handleClickOverlay(evt: React.MouseEvent<HTMLDivElement>) {
-    // We're inside the container element for the video.
-    // We don't want to trigger its onClick while we're at it.
-    evt.stopPropagation()
-
     if (media === 'desktop') {
-      console.log(media)
       props.getVideoElement().click()
     } else {
       props.onClose()

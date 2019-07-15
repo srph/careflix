@@ -198,8 +198,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }, [context.party.video.id])
 
   function handleVideoClick() {
-    console.log('WHAT')
-
     if (state.isOpen) {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,

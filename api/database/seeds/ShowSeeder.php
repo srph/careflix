@@ -855,7 +855,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('White Chicks'),
                 'air_start' => Carbon::create(2004),
                 'age_rating' => '',
-                'subtitle_url' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('White Chicks', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:44')

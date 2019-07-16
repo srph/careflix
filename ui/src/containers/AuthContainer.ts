@@ -4,6 +4,7 @@ import * as cookie from 'cookie-machine'
 import history from '~/lib/history'
 import config from '~/config';
 import immer from 'immer'
+import { addYears } from 'date-fns'
 import { toast } from '~/components/Toast'
 
 interface State {
@@ -46,7 +47,8 @@ class AuthContainer extends Container<State> {
       token
     })
     cookie.set('app_token', token, {
-      path: '/'
+      path: '/',
+      expires: addYears(new Date(), 1)
     })
     const [err2, dataResponse] = await axios.get('/api/me', {
       app: { validation: false }

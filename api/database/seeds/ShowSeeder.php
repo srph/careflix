@@ -858,7 +858,7 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:47')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:44')
             ],
             [
                 'title' => 'How To Train Your Dragon',

@@ -37,7 +37,7 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'How To Train Your Dragon 2',
                 'title_type' => 'movie',
-                'synopsis' => $faker->text,
+                'synopsis' => 'When Hiccup and Toothless discover an ice cave that is home to hundreds of new wild dragons and the mysterious Dragon Rider, the two friends find themselves at the center of a battle to protect the peace.',
                 'language' => 'English',
                 'air_start' => Carbon::create(2014),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon 2'),
@@ -50,7 +50,7 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'How To Train Your Dragon: The Hidden World',
                 'title_type' => 'movie',
-                'synopsis' => $faker->text,
+                'synopsis' => 'When Hiccup discovers Toothless isn\'t the only Night Fury, he must seek "The Hidden World", a secret Dragon Utopia before a hired tyrant named Grimmel finds it first.',
                 'language' => 'English',
                 'air_start' => Carbon::create(2019),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('How To Train Your Dragon: The Hidden World'),

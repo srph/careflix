@@ -846,7 +846,33 @@ class ShowSeeder extends Seeder
                         'duration' => '23:42'
                     ]
                 ]
-            ]
+            ],
+            [
+                'title' => 'White Chicks',
+                'title_type' => 'movie',
+                'synopsis' => 'Two disgraced FBI agents go way undercover in an effort to protect hotel heiresses the Wilson Sisters from a kidnapping plot.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('White Chicks'),
+                'air_start' => Carbon::create(2004),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:47')
+            ],
+            [
+                'title' => 'How To Train Your Dragon',
+                'title_type' => 'movie',
+                'synopsis' => 'A hapless young Viking who aspires to hunt dragons becomes the unlikely friend of a young dragon himself, and learns there may be more to the creatures than he assumed.',
+                'language' => 'English',
+                'preview_image' => 'How To Train Your Dragon',
+                'air_start' => Carbon::create(2010),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('How To Train Your Dragon', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:37:51')
+            ],
         ];
 
         foreach($movies as $movie) {

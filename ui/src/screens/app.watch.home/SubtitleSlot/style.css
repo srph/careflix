@@ -31,4 +31,5 @@
 .subtitle-slot font {
   font-size: inherit;
   font-family: inherit;
+  font-weight: inherit;
 }

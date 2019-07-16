@@ -27,3 +27,8 @@
     padding-bottom: 180px;
   }
 }
+
+.subtitle-slot font {
+  font-size: inherit;
+  font-family: inherit;
+}

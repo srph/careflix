@@ -873,6 +873,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:37:51')
             ],
+            [
+                'title' => 'My Sassy Girl',
+                'title_type' => 'movie',
+                'synopsis' => 'A young man sees a drunk, cute woman standing too close to the tracks at a metro station in Seoul and pulls her back. She ends up getting him into trouble repeatedly after that, starting on the train.',
+                'language' => 'Korean',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Sassy Girl'),
+                'air_start' => Carbon::create(2001),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('My Sassy Girl', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:03:35')
+            ],
         ];
 
         foreach($movies as $movie) {

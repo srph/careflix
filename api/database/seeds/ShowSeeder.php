@@ -918,7 +918,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => 'Ignoring the eerie warning of a troubled mother suspected of child endangerment, a social worker and her own small kids are soon drawn into a frightening supernatural realm.',
                 'language' => 'English',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Curse of La Llorona'),
-                'air_start' => Carbon::create(2017),
+                'air_start' => Carbon::create(2019),
                 'age_rating' => '',
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Curse of La Llorona', 'en'),
                 //

@@ -904,10 +904,10 @@ class ShowSeeder extends Seeder
                 'title_type' => 'movie',
                 'synopsis' => 'In the summer of 1989, a group of bullied kids band together to destroy a shape-shifting monster, which disguises itself as a clown and preys on the children of Derry, their small Maine town.',
                 'language' => 'English',
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('It (2017)'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('It 2017'),
                 'air_start' => Carbon::create(2017),
                 'age_rating' => '',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('It (2017)', 'en'),
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('It 2017', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:14:22')

@@ -931,7 +931,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => 'A young couple dream of growing old together as they as they deal with the struggles of being in a long-term relationship.',
                 'language' => 'English',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Hows of Us'),
-                'air_start' => Carbon::create(2017),
+                'air_start' => Carbon::create(2018),
                 'age_rating' => '',
                 'subtitle_url' => '',
                 //

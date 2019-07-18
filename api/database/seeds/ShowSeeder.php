@@ -900,7 +900,7 @@ class ShowSeeder extends Seeder
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('3:07:25')
             ],
             [
-                'title' => 'It (2017)',
+                'title' => 'It 2017',
                 'title_type' => 'movie',
                 'synopsis' => 'In the summer of 1989, a group of bullied kids band together to destroy a shape-shifting monster, which disguises itself as a clown and preys on the children of Derry, their small Maine town.',
                 'language' => 'English',

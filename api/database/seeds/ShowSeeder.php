@@ -886,6 +886,58 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:03:35')
             ],
+            [
+                'title' => 'It',
+                'title_type' => 'movie',
+                'synopsis' => 'In 1960, seven preteen outcasts fight an evil demon that poses as a child-killing clown. Thirty years later, they reunite to stop the demon once and for all when it returns to their hometown.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('It'),
+                'air_start' => Carbon::create(1990),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('3:07:25')
+            ],
+            [
+                'title' => 'It (2017)',
+                'title_type' => 'movie',
+                'synopsis' => 'In the summer of 1989, a group of bullied kids band together to destroy a shape-shifting monster, which disguises itself as a clown and preys on the children of Derry, their small Maine town.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('It (2017)'),
+                'air_start' => Carbon::create(2017),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('It (2017)', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:14:22')
+            ],
+            [
+                'title' => 'The Curse of La Llorona',
+                'title_type' => 'movie',
+                'synopsis' => 'Ignoring the eerie warning of a troubled mother suspected of child endangerment, a social worker and her own small kids are soon drawn into a frightening supernatural realm.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Curse of La Llorona'),
+                'air_start' => Carbon::create(2017),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Curse of La Llorona', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:12')
+            ],
+            [
+                'title' => 'The Hows of Us',
+                'title_type' => 'movie',
+                'synopsis' => 'A young couple dream of growing old together as they as they deal with the struggles of being in a long-term relationship.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Hows of Us'),
+                'air_start' => Carbon::create(2017),
+                'age_rating' => '',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:57')
+            ],
         ];
 
         foreach($movies as $movie) {

@@ -951,6 +951,26 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:38:12')
             ],
+            [
+                'title' => 'Kimetsu no Yaiba',
+                'title_type' => 'series',
+                'synopsis' => $faker->text,
+                'language' => 'English',
+                'air_start' => Carbon::create(2019, 4, 6),
+                // 'air_end' => Carbon::create(2013, 12, 19),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kimetsu no Yaiba'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 16,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

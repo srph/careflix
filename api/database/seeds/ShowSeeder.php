@@ -938,6 +938,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:57')
             ],
+            [
+                'title' => 'My Boss, My Hero',
+                'title_type' => 'movie',
+                'synopsis' => 'A Korean gangster (Jun-ho Jeong) is sent back to high school by his boss so that he can earn a diploma and be eligible for promotion.',
+                'language' => 'Korean',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Boss, My Hero'),
+                'air_start' => Carbon::create(2001),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('My Boss, My Hero', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:38:12')
+            ],
         ];
 
         foreach($movies as $movie) {

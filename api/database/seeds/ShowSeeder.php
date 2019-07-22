@@ -1023,6 +1023,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:53')
             ],
+            [
+                'title' => 'You Are The Apple Of My Eye',
+                'title_type' => 'movie',
+                'synopsis' => 'A group of close friends who attend a private school all have a debilitating crush on the sunny star pupil, Shen Jiayi. The only member of the group who claims not to is Ke Jingteng, but he ends up loving her as well.',
+                'language' => 'Chinese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('You Are The Apple Of My Eye'),
+                'air_start' => Carbon::create(2011),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('You Are The Apple Of My Eye', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:49:34')
+            ],
         ];
 
         foreach($movies as $movie) {

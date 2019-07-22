@@ -954,8 +954,8 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'Kimetsu no Yaiba',
                 'title_type' => 'series',
-                'synopsis' => $faker->text,
-                'language' => 'English',
+                'synopsis' => 'Tanjiro Kamado is a kindhearted and intelligent boy who lives with his family, making money by selling charcoal. Everything changes when his family is attacked and slaughtered by demons.',
+                'language' => 'Japanese',
                 'air_start' => Carbon::create(2019, 4, 6),
                 // 'air_end' => Carbon::create(2013, 12, 19),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kimetsu no Yaiba'),
@@ -970,6 +970,58 @@ class ShowSeeder extends Seeder
                         'duration' => '23:40'
                     ]
                 ]
+            ],
+            [
+                'title' => 'Black Swan',
+                'title_type' => 'movie',
+                'synopsis' => 'A committed dancer struggles to maintain her sanity after winning the lead role in a production of Tchaikovsky\'s "Swan Lake".',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Black Swan'),
+                'air_start' => Carbon::create(2010),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Black Swan', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:07')
+            ],
+            [
+                'title' => 'Whiplash',
+                'title_type' => 'movie',
+                'synopsis' => 'A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student\'s potential.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Whiplash'),
+                'air_start' => Carbon::create(2014),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Whiplash', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:46:45')
+            ],
+            [
+                'title' => 'The Truman Show',
+                'title_type' => 'movie',
+                'synopsis' => 'An insurance salesman discovers his whole life is actually a reality TV show.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Truman Show'),
+                'air_start' => Carbon::create(1998),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Truman Show', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:57')
+            ],
+            [
+                'title' => 'Coherence',
+                'title_type' => 'movie',
+                'synopsis' => 'Strange things begin to happen when a group of friends gather for a dinner party on an evening when a comet is passing overhead.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Coherence'),
+                'air_start' => Carbon::create(2013),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Coherence', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:53')
             ],
         ];
 

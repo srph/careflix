@@ -90,6 +90,8 @@ class Helper {
     // spider--man:-into-the-spider--verse -> spider-man-into-the-spider-verse
     $sanitized = preg_replace("/--/", "-", $hypenated);
     $sanitized = preg_replace("/:/", "", $sanitized);
+    // my-boss,-my-hero -> my-boss-my-hero
+    $sanitized = preg_replace("/,/", "", $sanitized);
     // Remove apostrophes (Don't Breathe -> dont-breathe)
     $sanitized = preg_replace("/\'/", "", $sanitized);
     // how-to-train-your-dragon2 -> how-to-train-your-dragon-2

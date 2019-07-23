@@ -1049,6 +1049,32 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:06')
             ],
+            [
+                'title' => 'The Perfect Date',
+                'title_type' => 'movie',
+                'synopsis' => 'A high school student creates an app to offer his services as a fake date to make money for college. When he develops feelings for someone, his plan gets complicated.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Perfect Date'),
+                'air_start' => Carbon::create(2019, 3, 27),
+                'age_rating' => 'TV-14',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:40')
+            ],
+            [
+                'title' => 'Pee Mak',
+                'title_type' => 'movie',
+                'synopsis' => 'Mak returns from a war with four comrades he has invited to meet his beautiful wife and infant son. But Mak\'s friends begin to realize that Mak\'s family is really dead.',
+                'language' => 'Thai',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pee Mak'),
+                'air_start' => Carbon::create(2013, 3, 28),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pee Mak', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:40')
+            ],
         ];
 
         foreach($movies as $movie) {

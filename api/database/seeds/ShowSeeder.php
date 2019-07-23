@@ -1073,7 +1073,20 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pee Mak', 'en'),
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:40')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:51:52')
+            ],
+            [
+                'title' => 'Hentai Kamen 2: The Abnormal Crisis',
+                'title_type' => 'movie',
+                'synopsis' => 'News about the disappearance of panties is discovered every day. Kyosuke (Ryohei Suzuki) still wears Aiko Completo (Fumika Shimizu) panties to battle evil. Meanwhile, Aiko has mixed emotions and decide to get her panties back from Kyosuke. Kyosuke suffers from the loss of Aiko completo panties and disappears. The biggest enemy yet appears in front of Kyosuke.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hentai Kamen 2: The Abnormal Crisis'),
+                'air_start' => Carbon::create(2016, 5, 14),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hentai Kamen 2: The Abnormal Crisis', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:53')
             ],
         ];
 

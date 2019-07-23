@@ -1036,6 +1036,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:49:34')
             ],
+            [
+                'title' => 'The Boy and the Beast',
+                'title_type' => 'movie',
+                'synopsis' => 'Kyuta slips into an alternate universe where he is raised by the bear-man, Kumatetsu. Kyuta is eventually thrust into an adventure that spans both worlds.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Boy and the Beast'),
+                'air_start' => Carbon::create(2015),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Boy and the Beast', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:06')
+            ],
         ];
 
         foreach($movies as $movie) {

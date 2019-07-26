@@ -1088,6 +1088,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:53')
             ],
+            [
+                'title' => 'Men In Black: International',
+                'title_type' => 'movie',
+                'synopsis' => 'The Men in Black have always protected the Earth from the scum of the universe. In this new adventure, they tackle their biggest threat to date: a mole in the Men in Black organization.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Men In Black: International'),
+                'air_start' => Carbon::create(2019),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:54:57')
+            ],
         ];
 
         foreach($movies as $movie) {

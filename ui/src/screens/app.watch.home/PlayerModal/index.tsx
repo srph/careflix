@@ -81,6 +81,20 @@ function PlayerModal({ party, ...props }: Props) {
             Back to Browse
           </Link>
 
+          <div className="watch-player-mobile-actions">
+            <UiPlainButton className="action" onClick={handleBackward}>
+              <i className="fa fa-backward" />
+            </UiPlainButton>
+
+            <UiPlainButton className="play" onClick={props.onPlay}>
+              {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
+            </UiPlainButton>
+
+            <UiPlainButton className="action" onClick={handleForward}>
+              <i className="fa fa-forward" />
+            </UiPlainButton>
+          </div>
+
           <div className="watch-player-contents">
             <div className="watch-player-controls">
               <div className="time">

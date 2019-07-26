@@ -27,6 +27,7 @@ interface State {
   isInitialized: boolean
   isBuffering: boolean
   isSeasonSelectionOpen: boolean
+  isChatOpen: boolean
 }
 
 type Action =
@@ -42,6 +43,7 @@ type Action =
   | ReducerAction<'buffer', { isBuffering: boolean }>
   | ReducerAction<'change-video'>
   | ReducerAction<'season-selection:toggle', { isSeasonSelectionOpen: boolean }>
+  | ReducerAction<'toggle-chat'>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -124,6 +126,13 @@ const reducer = (state: State, action: Action): State => {
         isSeasonSelectionOpen: action.payload.isSeasonSelectionOpen
       }
     }
+
+    case 'toggle-chat': {
+      return {
+        ...state,
+        isChatOpen: !state.isChatOpen
+      }
+    }
   }
 
   return state
@@ -142,7 +151,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isOpen: true,
     isInitialized: false,
     isBuffering: false,
-    isSeasonSelectionOpen: false
+    isSeasonSelectionOpen: false,
+    isChatOpen: false
   })
 
   const $video = useRef<HTMLVideoElement>()
@@ -341,6 +351,12 @@ function AppWatchHome(props: ReactComponentWrapper) {
     context.onChangeVideo(party)
   }
 
+  function handleToggleChat() {
+    dispatch({
+      type: 'toggle-chat'
+    })
+  }
+
   return (
     <React.Fragment>
       <BodyClassName className="watch-screen-html-body" />
@@ -348,7 +364,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
       <div className="watch-screen">
         <div
           className={cx('watch-screen-video', {
-            'has-overlay': changeEpisodeBuffer
+            'has-overlay': changeEpisodeBuffer,
+            'is-chat-open': state.isChatOpen
           })}>
           <div
             className="container"
@@ -402,10 +419,12 @@ function AppWatchHome(props: ReactComponentWrapper) {
             getVideoElement={() => $video.current}
             isOpen={state.isOpen}
             isPlaying={state.isPlaying}
+            isChatOpen={state.isChatOpen}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}
             onOpenSeasonSelection={handleSeasonSelectionOpen}
+            onToggleChat={handleToggleChat}
           />
 
           <SeasonSelectionModal
@@ -417,7 +436,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           />
         </div>
 
-        <ChatWidget party={context.party} />
+        <ChatWidget party={context.party} isChatOpen={state.isChatOpen} />
       </div>
       {props.children}
     </React.Fragment>

@@ -16,10 +16,12 @@ interface Props {
   getVideoElement: () => HTMLVideoElement
   isOpen: boolean
   isPlaying: boolean
+  isChatOpen: boolean
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
   onOpenSeasonSelection: () => void
+  onToggleChat: () => void
 }
 
 /**
@@ -169,8 +171,8 @@ function PlayerModal({ party, ...props }: Props) {
                 </div>
 
                 <div className="action">
-                  <UiPlainButton className="icon">
-                    <i className="fa fa-comment-o" />
+                  <UiPlainButton className="icon" onClick={props.onToggleChat}>
+                    {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
                   </UiPlainButton>
                 </div>
               </div>

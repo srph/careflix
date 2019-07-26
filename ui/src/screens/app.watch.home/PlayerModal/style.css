@@ -123,8 +123,8 @@
 }
 
 @media (min-width: 992px) {
-  .watch-player-controls > .time:not(:last-child) {
-    margin-right: 32px;
+  .watch-player-modal-actions {
+    padding: 32px;
   }
 }
 
@@ -151,7 +151,7 @@
 
 @media (min-width: 992px) {
   .watch-player-modal-actions > .section:first-child > .action {
-    display: revert;
+    display: flex;
   }
 }
 

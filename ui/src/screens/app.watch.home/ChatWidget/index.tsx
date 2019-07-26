@@ -45,6 +45,7 @@ type Action =
 
 interface Props {
   party: AppParty
+  isChatOpen: boolean
 }
 
 interface GroupedLog {
@@ -274,7 +275,9 @@ function ChatWidget(props: Props) {
   }
 
   return (
-    <div className="watch-screen-chat">
+    <div className={cx('watch-screen-chat', {
+      'is-chat-open': props.isChatOpen
+    })}>
       <div className="watch-screen-chat-messages" ref={chatbarRef} onClick={handleClickMessageList}>
         {grouped.map((group, i) => {
           if (group.type === 'activity') {

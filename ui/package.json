@@ -30,6 +30,7 @@
     "react-router-dom": "^5.0.0",
     "react-use": "^9.0.0",
     "sanitize.css": "^8.0.0",
+    "screenfull": "^4.2.0",
     "scrollbar-compensate": "^0.2.2",
     "use-async-effect": "^2.0.1",
     "use-query-params": "^0.3.3",

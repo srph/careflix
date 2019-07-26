@@ -1,12 +1,14 @@
 import './style.css'
 import * as React from 'react'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import Transition from 'react-addons-css-transition-group'
 import UiPlainButton from '~/components/UiPlainButton'
 import Slider, { SliderValue } from 'react-input-slider'
 import toReadableTime from '~/utils/date/toReadableTime'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
+import { Link } from 'react-router-dom'
 import { useMediaMode } from '~/hooks/useMediaMode'
+import { useFullscreen } from '~/hooks/useFullscreen'
 
 interface Props {
   party: AppParty
@@ -27,6 +29,16 @@ function PlayerModal({ party, ...props }: Props) {
   const overlayRef = useRef<HTMLDivElement>()
 
   const media = useMediaMode()
+
+  const [isFullscreen, toggleIsFullsceen] = useFullscreen()
+
+  useEffect(() => {
+    return () => {
+      if (isFullscreen) {
+        toggleIsFullsceen()
+      }
+    }
+  }, [])
 
   function handleSeek({ x }: SliderValue) {
     props.onSeek(x)
@@ -61,58 +73,16 @@ function PlayerModal({ party, ...props }: Props) {
         <div className="watch-player-container">
           <div className="watch-player-overlay" ref={overlayRef} onClick={handleClickOverlay} />
 
-          <div className="watch-player-actions">
-            <div className="section">
-              <div className="action is-close">
-                <UiPlainButton onClick={props.onClose}>
-                  <i className="fa fa-close" />
-                </UiPlainButton>
-              </div>
-            </div>
+          <Link to="/" className="watch-player-browse">
+            <span className="icon">
+              <i className="fa fa-long-arrow-left" />
+            </span>
 
-            <div className="section">
-              {/* <div className="action">
-              <UiPlainButton>
-                <i className="fa fa-comments" />
-              </UiPlainButton>
-            </div> */}
-
-              {party.video.show.title_type === 'series' && (
-                <div className="action">
-                  <UiPlainButton onClick={props.onOpenSeasonSelection}>
-                    <i className="fa fa-list-ol" />
-                  </UiPlainButton>
-                </div>
-              )}
-
-              <div className="action">
-                <UiPlainButton>
-                  <i className="fa fa-cog" />
-                </UiPlainButton>
-              </div>
-            </div>
-          </div>
+            Back to Browse
+          </Link>
 
           <div className="watch-player-contents">
             <div className="watch-player-controls">
-              <div className="control">
-                <UiPlainButton onClick={props.onPlay}>
-                  {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
-                </UiPlainButton>
-              </div>
-
-              <div className="control">
-                <UiPlainButton onClick={handleBackward}>
-                  <i className="fa fa-fast-backward" />
-                </UiPlainButton>
-              </div>
-
-              <div className="control">
-                <UiPlainButton onClick={handleForward}>
-                  <i className="fa fa-fast-forward" />
-                </UiPlainButton>
-              </div>
-
               <div className="time">
                 {toReadableTime(props.time, {
                   max: party.video.duration > 3600 ? 'hh' : 'mm'
@@ -133,13 +103,63 @@ function PlayerModal({ party, ...props }: Props) {
               <div className="time">{toReadableTime(party.video.duration)}</div>
             </div>
 
-            <div className="watch-player-modal-card">
-              <div className="meta">
-                <h6 className="ui-subheading">{getVideoDetails(party.video)}</h6>
+            <div className="watch-player-modal-actions">
+              <div className="section">
+                <div className="action">
+                  <UiPlainButton className="icon" onClick={props.onPlay}>
+                    {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
+                  </UiPlainButton>
+                </div>
+
+                <div className="action">
+                  <UiPlainButton className="icon" onClick={handleBackward}>
+                    <i className="fa fa-backward" />
+                  </UiPlainButton>
+                </div>
+
+                <div className="action">
+                  <UiPlainButton className="icon" onClick={handleForward}>
+                    <i className="fa fa-forward" />
+                  </UiPlainButton>
+                </div>
+
+                <div className="action">
+                  <UiPlainButton className="icon">
+                    <i className="fa fa-volume-up" />
+                  </UiPlainButton>
+                </div>
+
+                <h3 className="watch-player-modal-title">
+                  <span className="title">Boku no Hero Academia</span>
+                  <span className="info">Season 1: Episode 2</span>
+                </h3>
               </div>
 
-              <h2 className="title">{party.video.show.title}</h2>
-              <p className="summary">{party.video.show.synopsis}</p>
+              <div className="section">
+                <div className="action">
+                  <UiPlainButton className="icon">
+                    <i className="fa fa-info-circle" />
+                  </UiPlainButton>
+                </div>
+
+                <div className="action">
+                  <UiPlainButton className="icon">
+                    <i className="fa fa-cog" />
+                  </UiPlainButton>
+                </div>
+
+                <div className="action" onClick={toggleIsFullsceen}>
+                  <UiPlainButton className="icon">
+                    {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
+                  </UiPlainButton>
+                </div>
+
+                <div className="action">
+                  <UiPlainButton className="icon">
+                    <i className="fa fa-comment-o" />
+                  </UiPlainButton>
+                </div>
+              </div>
             </div>
           </div>
         </div>

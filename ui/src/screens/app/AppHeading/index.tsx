@@ -3,8 +3,8 @@ import './style'
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import UiNavigation from '~/components/UiNavigation'
-import { Route } from 'react-router-dom'
 
+import useReactRouter from 'use-react-router'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 import GatewayDestWithFallback from '~/components/GatewayDestWithFallback'
@@ -13,7 +13,13 @@ import constants from '../constants'
 function AppHeading() {
   const auth = useUnstated(AuthContainer)
 
-  return <Route render={() => (
+  const route = useReactRouter()
+
+  if (route.location.pathname.includes('watch')) {
+    return null
+  }
+
+  return (
     <UiNavigation>
       <GatewayDestWithFallback name={constants.gateway.backUrl} fallback={<UiNavigation.Action />} />
 
@@ -23,7 +29,7 @@ function AppHeading() {
         <UiAvatar img={auth.state.data.avatar} />
       </UiNavigation.Action>
     </UiNavigation>
-  )} />
+  )
 }
 
 export default AppHeading

@@ -139,7 +139,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
     time: context.party.current_time,
     isComplete: false,
     isPlaying: false,
-    isOpen: false,
+    isOpen: true,
     isInitialized: false,
     isBuffering: false,
     isSeasonSelectionOpen: false
@@ -228,11 +228,11 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
     window.clearTimeout(timeoutRef.current)
 
-    timeoutRef.current = window.setTimeout(() => {
-      dispatch({
-        type: 'controls:close'
-      })
-    }, 2000)
+    // timeoutRef.current = window.setTimeout(() => {
+    //   dispatch({
+    //     type: 'controls:close'
+    //   })
+    // }, 2000)
   }
 
   function handleOverlayClose() {

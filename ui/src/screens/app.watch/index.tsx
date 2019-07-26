@@ -192,7 +192,7 @@ function AppWatch(props: ReactComponentWrapper) {
     <React.Fragment>
       <AppHeadingSettings title="Watch" backUrl="/" />
 
-      <div className="nav-tabs">
+      {/* <div className="nav-tabs">
         <NavLink to={`/watch/${state.party.id}`} className="link" exact activeClassName="is-active">
           Watch
         </NavLink>
@@ -200,7 +200,7 @@ function AppWatch(props: ReactComponentWrapper) {
         <NavLink to={`/watch/${state.party.id}/invite`} className="link" activeClassName="is-active">
           Invite Friends
         </NavLink>
-      </div>
+      </div> */}
 
       <Context.Provider value={context}>{props.children}</Context.Provider>
     </React.Fragment>

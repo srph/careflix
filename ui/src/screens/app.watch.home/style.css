@@ -8,7 +8,8 @@
   flex-direction: column;
   height: var(--window-vh);
   width: 100vw;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 @media (min-width: 720px) {

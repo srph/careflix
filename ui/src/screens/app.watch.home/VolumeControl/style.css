@@ -1,0 +1,21 @@
+.app-watch-volume-control {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  height: 120px;
+  padding: 16px;
+  background: rgba(0,0,0,0.75);
+  border-radius: var(--border-radius);
+  transform: translateX(-50%);
+  z-index: var(--zindex-player-volume-control);
+}
+
+.app-watch-volume-control-action.is-muted > .icon {
+  color: red;
+}
+
+.app-watch-volume-control-action {
+  position: relative;
+  padding: 16px 0;
+  margin-right: 16px;
+}

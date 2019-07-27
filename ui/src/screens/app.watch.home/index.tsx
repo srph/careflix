@@ -21,6 +21,7 @@ import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
 
 interface State {
   time: number
+  volume: number
   isComplete: boolean
   isPlaying: boolean
   isOpen: boolean
@@ -28,6 +29,7 @@ interface State {
   isBuffering: boolean
   isSeasonSelectionOpen: boolean
   isChatOpen: boolean
+  isMuted: boolean
 }
 
 type Action =
@@ -42,8 +44,10 @@ type Action =
   | ReducerAction<'sync', { time: number; isPlaying: boolean }>
   | ReducerAction<'buffer', { isBuffering: boolean }>
   | ReducerAction<'change-video'>
+  | ReducerAction<'change-volume', { volume: number }>
   | ReducerAction<'season-selection:toggle', { isSeasonSelectionOpen: boolean }>
   | ReducerAction<'toggle-chat'>
+  | ReducerAction<'toggle-mute'>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -120,6 +124,13 @@ const reducer = (state: State, action: Action): State => {
       }
     }
 
+    case 'change-volume': {
+      return {
+        ...state,
+        volume: action.payload.volume
+      }
+    }
+
     case 'season-selection:toggle': {
       return {
         ...state,
@@ -131,6 +142,13 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         isChatOpen: !state.isChatOpen
+      }
+    }
+
+    case 'toggle-mute': {
+      return {
+        ...state,
+        isMuted: !state.isMuted
       }
     }
   }
@@ -146,13 +164,15 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
   const [state, dispatch] = useReducer(reducer, {
     time: context.party.current_time,
+    volume: 1,
     isComplete: false,
     isPlaying: false,
     isOpen: true,
     isInitialized: false,
     isBuffering: false,
     isSeasonSelectionOpen: false,
-    isChatOpen: false
+    isChatOpen: false,
+    isMuted: false
   })
 
   const $video = useRef<HTMLVideoElement>()
@@ -357,6 +377,23 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
   }
 
+  function handleChangeVolume(volume: number) {
+    dispatch({
+      type: 'change-volume',
+      payload: { volume }
+    })
+
+    $video.current.volume = volume
+  }
+
+  function handleToggleMute() {
+    $video.current.muted = !state.isMuted
+
+    dispatch({
+      type: 'toggle-mute'
+    })
+  }
+
   return (
     <React.Fragment>
       <BodyClassName className="watch-screen-html-body" />
@@ -416,15 +453,19 @@ function AppWatchHome(props: ReactComponentWrapper) {
           <PlayerModal
             party={context.party}
             time={state.time}
+            volume={state.volume}
             getVideoElement={() => $video.current}
             isOpen={state.isOpen}
             isPlaying={state.isPlaying}
             isChatOpen={state.isChatOpen}
+            isMuted={state.isMuted}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}
             onOpenSeasonSelection={handleSeasonSelectionOpen}
+            onChangeVolume={handleChangeVolume}
             onToggleChat={handleToggleChat}
+            onToggleMute={handleToggleMute}
           />
 
           <SeasonSelectionModal

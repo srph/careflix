@@ -9,19 +9,24 @@ import getVideoDetails from '~/utils/shows/getVideoDetails'
 import { Link } from 'react-router-dom'
 import { useMediaMode } from '~/hooks/useMediaMode'
 import { useFullscreen } from '~/hooks/useFullscreen'
+import VolumeControl from '../VolumeControl'
 
 interface Props {
   party: AppParty
   time: number
+  volume: number
   getVideoElement: () => HTMLVideoElement
   isOpen: boolean
   isPlaying: boolean
   isChatOpen: boolean
+  isMuted: boolean
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
   onOpenSeasonSelection: () => void
+  onChangeVolume: (volume: number) => void
   onToggleChat: () => void
+  onToggleMute: () => void
 }
 
 /**
@@ -140,9 +145,7 @@ function PlayerModal({ party, ...props }: Props) {
                 </div>
 
                 <div className="action">
-                  <UiPlainButton className="icon">
-                    <i className="fa fa-volume-up" />
-                  </UiPlainButton>
+                  <VolumeControl volume={props.volume} isMuted={props.isMuted} onChangeVolume={props.onChangeVolume} onToggleMute={props.onToggleMute} />
                 </div>
 
                 <h3 className="watch-player-modal-title">

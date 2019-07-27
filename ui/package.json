@@ -28,6 +28,7 @@
     "react-modal": "^3.8.1",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
+    "react-tiny-popover": "^3.4.5",
     "react-use": "^9.0.0",
     "sanitize.css": "^8.0.0",
     "screenfull": "^4.2.0",

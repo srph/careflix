@@ -206,13 +206,13 @@ function PlayerModal({ party, ...props }: Props) {
                   </div>
                 )}
 
-                <div className="action" onClick={toggleIsFullsceen}>
+                <div className="action is-fs-icon" onClick={toggleIsFullsceen}>
                   <UiPlainButton className="icon">
                     {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
                   </UiPlainButton>
                 </div>
 
-                <div className="action">
+                <div className="action is-chat-icon">
                   <UiPlainButton className="icon" onClick={props.onToggleChat}>
                     {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
                   </UiPlainButton>

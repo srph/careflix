@@ -17,7 +17,6 @@ import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
 import AppWatch from '~/screens/app.watch'
 import AppWatchHome from '~/screens/app.watch.home'
-import AppWatchInvite from '~/screens/app.watch.invite'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsPassword from '~/screens/app.settings-password'
@@ -87,7 +86,6 @@ function Mount() {
                             render={matchProps => (
                               <AppWatch {...matchProps}>
                                 <Route path="/watch/:partyId" exact component={AppWatchHome} />
-                                <Route path="/watch/:partyId/invite" exact component={AppWatchInvite} />
                               </AppWatch>
                             )}
                           />

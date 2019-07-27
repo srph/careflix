@@ -5,7 +5,7 @@
   z-index: var(--zindex-you-were-watching);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching {
     height: 480px;
   }
@@ -63,13 +63,13 @@
   display: none
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching-dismiss > .desktop {
     display: block;
   }
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching-dismiss > .iconbtn {
     display: none;
   }
@@ -110,7 +110,7 @@
   font-weight: 600;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching-content > .title {
     font-size: 48px;
   }
@@ -124,7 +124,7 @@
   text-shadow: var(--text-shadow-default);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching-content > .description {
     font-size: 24px;
     margin-bottom: 24px;
@@ -137,7 +137,7 @@
   flex-direction: column;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching-content > .actions {
     align-items: center;
     flex-direction: row;
@@ -148,7 +148,7 @@
   margin-bottom: 8px;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .you-were-watching-content > .actions > .avatar {
     margin-bottom: 0;
     margin-right: 24px;

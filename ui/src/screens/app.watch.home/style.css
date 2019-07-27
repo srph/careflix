@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-screen {
     position: relative;
     flex-direction: initial;
@@ -25,19 +25,26 @@
   width: 100%;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-screen-video {
     flex-shrink: 1;
     padding-bottom: 0;
-    width: calc(100% - 320px);
+    width: calc(100% - var(--player-chat-pane-width-portrait));
     transition: 200ms all ease;
   }
+}
 
+@media (min-width: 992px) {
+  .watch-screen-video {
+    width: calc(100% - var(--player-chat-pane-width-desktop));
+  }
+}
+
+@media (min-width: 640px) {
   .watch-screen-video.is-chat-open {
     width: 100%;
   }
 }
-
 
 .watch-screen-video > .container {
   position: relative;
@@ -60,7 +67,7 @@
   pointer-events: none;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-screen-video > .container > video {
     position: static;
   }
@@ -86,15 +93,25 @@
   height: 100%;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-screen-chat {
     flex-shrink: 0;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
-    width: 320px;
+    width: 240px;
     transition: 200ms all ease;
+  }
+
+  .watch-screen-chat.is-chat-open {
+    right: -240px;
+  }
+}
+
+@media (min-width: 992px) {
+  .watch-screen-chat {
+    width: 320px;
   }
 
   .watch-screen-chat.is-chat-open {
@@ -198,9 +215,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 26px;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 8px;
   background: var(--color-black-1);
   border-radius: var(--border-radius);
 }

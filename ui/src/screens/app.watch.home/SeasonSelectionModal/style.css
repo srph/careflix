@@ -2,7 +2,7 @@
   background: var(--color-black-1);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-home-season-selection-overlay {
     background: rgba(0,0,0,0.75);
   }
@@ -12,7 +12,7 @@
   position: relative;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-home-season-selection-modal {
     margin: 64px auto;
     width: 360px;

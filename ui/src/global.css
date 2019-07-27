@@ -47,6 +47,9 @@ html, body {
   --zindex-player-volume-control: 600;
   --zindex-modal: 1000;
 
+  --player-chat-pane-width-portrait: 240px;
+  --player-chat-pane-width-desktop: 320px;
+
   /**
    * Initial window-vh for hooks/useVhSetter.
    */

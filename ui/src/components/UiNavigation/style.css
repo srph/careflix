@@ -39,7 +39,7 @@
   display: inline-block;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .ui-navigation > .action > a > .action-text {
     display: inline-block;
     visibility: visible;

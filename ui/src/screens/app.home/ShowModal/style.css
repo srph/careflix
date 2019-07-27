@@ -2,7 +2,7 @@
   background: var(--color-black-1);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .show-modal-overlay {
     background: rgba(0,0,0,0.75);
   }
@@ -12,7 +12,7 @@
   padding: 0;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .show-modal {
     margin: 64px auto;
     width: 360px;
@@ -38,7 +38,7 @@
   width: 100%;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .show-modal-cover > .image {
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);

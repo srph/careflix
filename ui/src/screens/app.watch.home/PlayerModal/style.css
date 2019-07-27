@@ -7,7 +7,7 @@
   background-color: var(--color-modal-overlay);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-player-overlay {
     position: absolute;
     background-color: transparent;
@@ -24,7 +24,7 @@
   z-index: var(--zindex-player-overlay);
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-player-container {
     position: absolute;
   }
@@ -178,7 +178,7 @@
   opacity: 0.75;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .watch-player-overlay {
     display : block;
   }

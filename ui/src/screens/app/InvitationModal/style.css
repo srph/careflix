@@ -2,7 +2,7 @@
   padding-top: 64px;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .invitation-modal {
     margin: 0 auto;
     width: 360px;

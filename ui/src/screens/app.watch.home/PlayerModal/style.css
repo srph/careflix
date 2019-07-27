@@ -202,11 +202,19 @@
 
 .watch-player-browse {
   position: absolute;
-  top: 32px;
-  left: 32px;
-  font-size: 20px;
+  top: 16px;
+  left: 16px;
+  font-size: 16px;
   color: var(--color-white);
   text-decoration: none;
+}
+
+@media (min-width: 992px) {
+  .watch-player-browse {
+    top: 16px;
+    left: 16px;
+    font-size: 20px;
+  }
 }
 
 .watch-player-browse > .icon {
@@ -222,6 +230,7 @@
   align-items: center;
   justify-content: center;
   transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .watch-player-mobile-actions > .play {
@@ -236,12 +245,14 @@
   color: var(--color-white);
   background: var(--color-primary);
   border-radius: 50%;
+  pointer-events: all;
 }
 
 .watch-player-mobile-actions > .action {
   padding: 16px;
   margin-right: 16px;
   font-size: 16px;
+  pointer-events: all;
 }
 
 @media (min-width: 992px) {

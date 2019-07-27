@@ -11,6 +11,7 @@
   .watch-player-overlay {
     position: absolute;
     background-color: transparent;
+    background: linear-gradient(0deg, rgba(0,0,0,0.75) 0%, rgba(255,255,255,0) 100%);
   }
 }
 

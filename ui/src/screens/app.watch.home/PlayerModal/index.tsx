@@ -174,7 +174,7 @@ function PlayerModal({ party, ...props }: Props) {
               </div>
 
               <div className="section">
-                <div className="action">
+                {/* <div className="action">
                   <UiPlainButton className="icon">
                     <i className="fa fa-info-circle" />
                   </UiPlainButton>
@@ -184,7 +184,7 @@ function PlayerModal({ party, ...props }: Props) {
                   <UiPlainButton className="icon">
                     <i className="fa fa-cog" />
                   </UiPlainButton>
-                </div>
+                </div> */}
 
                 <div className="action" onClick={toggleIsFullsceen}>
                   <UiPlainButton className="icon">

@@ -7,10 +7,13 @@
   display: flex;
   flex-direction: column;
   height: var(--window-vh);
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 @media (min-width: 720px) {
   .watch-screen {
+    position: relative;
     flex-direction: initial;
   }
 }

@@ -168,8 +168,8 @@ function PlayerModal({ party, ...props }: Props) {
                 </div>
 
                 <h3 className="watch-player-modal-title">
-                  <span className="title">Boku no Hero Academia</span>
-                  <span className="info">Season 1: Episode 2</span>
+                  <span className="title">{party.video.show.title}</span>
+                  <span className="info">{getVideoDetails(party.video)}</span>
                 </h3>
               </div>
 

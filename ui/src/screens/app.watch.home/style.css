@@ -8,7 +8,6 @@
   flex-direction: column;
   height: var(--window-vh);
   width: 100vw;
-  height: 100vh;
   overflow: hidden;
 }
 

@@ -186,6 +186,14 @@ function PlayerModal({ party, ...props }: Props) {
                   </UiPlainButton>
                 </div> */}
 
+                {party.video.show.title_type === 'series' && (
+                  <div className="action" onClick={props.onOpenSeasonSelection}>
+                    <UiPlainButton className="icon">
+                      <i className="fa fa-list-ol"></i>
+                    </UiPlainButton>
+                  </div>
+                )}
+
                 <div className="action" onClick={toggleIsFullsceen}>
                   <UiPlainButton className="icon">
                     {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}

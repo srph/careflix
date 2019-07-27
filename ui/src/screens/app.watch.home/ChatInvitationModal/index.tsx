@@ -313,7 +313,7 @@ function ChatInvitationModal(props: {}) {
         <div className="heading">
           <h5 className="ui-subheading">Invite people to join</h5>
 
-          <UiPlainButton className="close">
+          <UiPlainButton className="close" onClick={handleModalClose}>
             <i className="fa fa-close" />
           </UiPlainButton>
         </div>

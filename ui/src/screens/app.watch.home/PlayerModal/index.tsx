@@ -1,6 +1,6 @@
 import './style.css'
 import * as React from 'react'
-import { useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Transition from 'react-addons-css-transition-group'
 import UiPlainButton from '~/components/UiPlainButton'
 import Slider, { SliderValue } from 'react-input-slider'
@@ -39,6 +39,8 @@ function PlayerModal({ party, ...props }: Props) {
 
   const [isFullscreen, toggleIsFullsceen] = useFullscreen()
 
+  const [isVolumeControlOpen, setIsVolumeControlOpen] = useState(false)
+
   useEffect(() => {
     return () => {
       if (isFullscreen) {
@@ -67,6 +69,14 @@ function PlayerModal({ party, ...props }: Props) {
     }
   }
 
+  function handleOpenVolumeControl() {
+    setIsVolumeControlOpen(true)
+  }
+
+  function handleCloseVolumeControl() {
+    setIsVolumeControlOpen(false)
+  }
+
   return (
     <Transition
       component="div"
@@ -84,7 +94,6 @@ function PlayerModal({ party, ...props }: Props) {
             <span className="icon">
               <i className="fa fa-long-arrow-left" />
             </span>
-
             Back to Browse
           </Link>
 
@@ -103,26 +112,28 @@ function PlayerModal({ party, ...props }: Props) {
           </div>
 
           <div className="watch-player-contents">
-            <div className="watch-player-controls">
-              <div className="time">
-                {toReadableTime(props.time, {
-                  max: party.video.duration > 3600 ? 'hh' : 'mm'
-                })}
-              </div>
+            {!isVolumeControlOpen && (
+              <div className="watch-player-controls">
+                <div className="time">
+                  {toReadableTime(props.time, {
+                    max: party.video.duration > 3600 ? 'hh' : 'mm'
+                  })}
+                </div>
 
-              <div className="slider">
-                <Slider
-                  axis="x"
-                  x={props.time}
-                  xmin={0}
-                  xmax={party.video.duration}
-                  onChange={handleSeek}
-                  styles={{ track: { width: '100%' } }}
-                />
-              </div>
+                <div className="slider">
+                  <Slider
+                    axis="x"
+                    x={props.time}
+                    xmin={0}
+                    xmax={party.video.duration}
+                    onChange={handleSeek}
+                    styles={{ track: { width: '100%' } }}
+                  />
+                </div>
 
-              <div className="time">{toReadableTime(party.video.duration)}</div>
-            </div>
+                <div className="time">{toReadableTime(party.video.duration)}</div>
+              </div>
+            )}
 
             <div className="watch-player-modal-actions">
               <div className="section">
@@ -145,7 +156,15 @@ function PlayerModal({ party, ...props }: Props) {
                 </div>
 
                 <div className="action">
-                  <VolumeControl volume={props.volume} isMuted={props.isMuted} onChangeVolume={props.onChangeVolume} onToggleMute={props.onToggleMute} />
+                  <VolumeControl
+                    volume={props.volume}
+                    isMuted={props.isMuted}
+                    isOpen={isVolumeControlOpen}
+                    onChangeVolume={props.onChangeVolume}
+                    onOpen={handleOpenVolumeControl}
+                    onClose={handleCloseVolumeControl}
+                    onToggleMute={props.onToggleMute}
+                  />
                 </div>
 
                 <h3 className="watch-player-modal-title">

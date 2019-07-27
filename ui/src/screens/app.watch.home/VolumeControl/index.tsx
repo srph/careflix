@@ -7,22 +7,15 @@ import Slider, { SliderValue } from 'react-input-slider'
 
 interface Props {
   volume: number
+  isOpen: boolean
   isMuted: boolean
+  onOpen: () => void
+  onClose: () => void
   onChangeVolume: (volume: number) => void
   onToggleMute: () => void
 }
 
 function VolumeControl(props: Props) {
-  const [isOpen, setIsOpen] = useState(true)
-
-  function handleMouseEnter() {
-    setIsOpen(true)
-  }
-
-  function handleMouseLeave() {
-    setIsOpen(false)
-  }
-
   function handleChange({ y }: SliderValue) {
     props.onChangeVolume(y)
   }
@@ -30,12 +23,12 @@ function VolumeControl(props: Props) {
   return (
     <div className={cx('app-watch-volume-control-action', {
       'is-muted': props.isMuted
-    })} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    })} onMouseEnter={props.onOpen} onMouseLeave={props.onClose}>
       <UiPlainButton className="icon" onClick={props.onToggleMute}>
         <i className="fa fa-volume-up" />
       </UiPlainButton>
 
-      {isOpen && (
+      {props.isOpen && (
         <div className="app-watch-volume-control">
           <Slider
             axis="y"

@@ -122,6 +122,12 @@
   padding: 16px;
 }
 
+@media (min-width: 992px) {
+  .watch-player-modal-actions {
+    padding: 16px 32px;
+  }
+}
+
 .watch-player-modal-actions > .section {
   display: flex;
   align-items: center;

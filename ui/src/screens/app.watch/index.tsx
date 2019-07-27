@@ -1,6 +1,5 @@
 import './style'
 import * as React from 'react'
-import { NavLink } from 'react-router-dom'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useReducer, useMemo } from 'react'
@@ -191,16 +190,6 @@ function AppWatch(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
       <AppHeadingSettings title="Watch" backUrl="/" />
-
-      {/* <div className="nav-tabs">
-        <NavLink to={`/watch/${state.party.id}`} className="link" exact activeClassName="is-active">
-          Watch
-        </NavLink>
-
-        <NavLink to={`/watch/${state.party.id}/invite`} className="link" activeClassName="is-active">
-          Invite Friends
-        </NavLink>
-      </div> */}
 
       <Context.Provider value={context}>{props.children}</Context.Provider>
     </React.Fragment>

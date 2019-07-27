@@ -16,18 +16,12 @@
 }
 
 .watch-player-container {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: var(--zindex-player-overlay);
-}
-
-@media (min-width: 640px) {
-  .watch-player-container {
-    position: absolute;
-  }
 }
 
 .watch-player-container.-enter {

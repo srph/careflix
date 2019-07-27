@@ -18,7 +18,7 @@ function useFullscreen(): ReturnValue {
     return () => {
       screenfull.off('change', handleScreenfullChange)
     }
-  })
+  }, [])
 
   function toggleFullscreen() {
     if (!screenfull.enabled) {

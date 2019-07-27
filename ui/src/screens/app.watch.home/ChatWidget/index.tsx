@@ -4,6 +4,7 @@ import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import UiInput from '~/components/UiInput'
 import UiPlainButton from '~/components/UiPlainButton'
+import ChatInvitationModal from '../ChatInvitationModal'
 import cx from 'classnames'
 
 import { useUnstated } from '~/lib/unstated'
@@ -21,6 +22,7 @@ import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateT
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
+import UiAvatarGroup from '~components/UiAvatarGroup';
 
 interface State {
   logs: AppPartyLog[]
@@ -278,6 +280,12 @@ function ChatWidget(props: Props) {
     <div className={cx('watch-screen-chat', {
       'is-chat-open': props.isChatOpen
     })}>
+      <div className="watch-screen-canopy">
+        <UiAvatarGroup images={props.party.members.map(member => member.avatar)} />
+
+        <ChatInvitationModal />
+      </div>
+
       <div className="watch-screen-chat-messages" ref={chatbarRef} onClick={handleClickMessageList}>
         {grouped.map((group, i) => {
           if (group.type === 'activity') {

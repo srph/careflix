@@ -1,3 +1,23 @@
+.watch-screen-canopy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--color-black-2);
+  border-bottom: 1px solid var(--color-black-1);
+}
+
+.watch-screen-canopy > .invite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  color: var(--color-white);
+  background: var(--color-black-5);
+  border-radius: 50%;
+}
+
 .watch-screen-chatbar {
   flex-shrink: 0;
   padding: 16px;

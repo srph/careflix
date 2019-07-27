@@ -127,7 +127,19 @@ function PlayerModal({ party, ...props }: Props) {
                     xmin={0}
                     xmax={party.video.duration}
                     onChange={handleSeek}
-                    styles={{ track: { width: '100%' } }}
+                    styles={{
+                      active: { background: 'var(--color-primary)' },
+                      thumb: {
+                        background: 'var(--color-primary)',
+                        height: 28,
+                        width: 28
+                      },
+                      track: {
+                        width: '100%',
+                        height: 8,
+                        cursor: 'pointer'
+                      }
+                    }}
                   />
                 </div>
 
@@ -189,7 +201,7 @@ function PlayerModal({ party, ...props }: Props) {
                 {party.video.show.title_type === 'series' && (
                   <div className="action" onClick={props.onOpenSeasonSelection}>
                     <UiPlainButton className="icon">
-                      <i className="fa fa-list-ol"></i>
+                      <i className="fa fa-list-ol" />
                     </UiPlainButton>
                   </div>
                 )}

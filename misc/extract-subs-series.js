@@ -16,7 +16,7 @@ const dirname = name(input)
 files.filter(file => path.extname(file) === '.mkv')
   .sort()
   .forEach((file, i) => {
-    const updated = path.join(input, `${dirname}-s1-ep${i + 1}.srt`)
+    const updated = path.join(input, `${dirname}-s1-ep${i + 1}-en.srt`)
     const full = path.join(input, file)
     execSync(`ffmpeg -i '${full}' '${updated}'`, { stdio: 'inherit' })
     console.log(`[Extracted] ${name(full)} to ${name(updated)}`)

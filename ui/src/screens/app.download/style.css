@@ -1,0 +1,57 @@
+.app-download-heading {
+  padding-top: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.app-download-heading > img {
+  max-width: 160px;
+  margin-bottom: 24px;
+}
+
+.app-download-heading > .text {
+  font-size: 24px;
+}
+
+/**
+ *
+ */
+
+.app-download-step:not(:last-child) {
+  margin-bottom: 24px;
+}
+
+.app-download-step > .count {
+  margin-bottom: 8px;
+}
+
+.app-download-step > .thumb {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  border: 1px solid var(--color-black-5);
+  border-radius: var(--border-radius);
+}
+
+.app-download-step > .text {
+  line-height: 1.5;
+}
+
+.app-download-step > .text > .highlight {
+  border-bottom: 1px dashed var(--color-black-5);
+}
+
+/**
+ * =======================================
+ * Styling for apple note
+ * =======================================
+ */
+
+.app-download-apple-note > .soon {
+  margin-bottom: 4px;
+  color: var(--color-black-5);
+}
+
+.app-download-apple-note > .text {
+  line-height: 1.5;
+}

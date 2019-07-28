@@ -20,6 +20,7 @@ import AppWatchHome from '~/screens/app.watch.home'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsPassword from '~/screens/app.settings-password'
+import AppDownload from '~/screens/app.download'
 import Login from '~/screens/login'
 import Logout from '~/screens/logout'
 import Register from '~/screens/register'
@@ -78,6 +79,7 @@ function Mount() {
                       <App>
                         <Switch>
                           <Route path="/" exact component={AppHome} />
+                          <Route path="/download" exact component={AppDownload} />
                           <PrivateRoute path="/settings" exact component={AppSettings} />
                           <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
                           <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />

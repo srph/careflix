@@ -1,0 +1,32 @@
+.ui-accordion > .section {
+  border-bottom: 1px solid var(--color-black-3);
+}
+
+.ui-accordion > .section > .heading {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.ui-accordion > .section > .heading > .icon {
+  margin-right: 16px;
+  font-size: 16px;
+  color: var(--color-black-5);
+}
+
+.ui-accordion > .section > .heading > .caret {
+  margin-left: auto;
+  padding: 8px;
+}
+
+.ui-accordion > .section > .content {
+  overflow-y: hidden;
+  max-height: 0;
+  transition: 200ms max-height ease;
+}
+
+.ui-accordion > .section.is-open > .content {
+  padding-top: 16px;
+  padding-bottom: 16px;
+  max-height: 2000px;
+}

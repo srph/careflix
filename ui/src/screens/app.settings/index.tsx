@@ -9,6 +9,9 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 
+import { useIsPWA } from '~/hooks/useIsPWA'
+import useWindowSize from 'react-use/lib/useWindowSize'
+
 import asset_author from '~/assets/author.jpg'
 
 /**
@@ -16,6 +19,10 @@ import asset_author from '~/assets/author.jpg'
  */
 function AppSettings(props: ReactComponentWrapper) {
   const auth = useUnstated(AuthContainer)
+
+  const { width } = useWindowSize()
+
+  const isPWA = useIsPWA()
 
   return (
     <React.Fragment>
@@ -69,6 +76,22 @@ function AppSettings(props: ReactComponentWrapper) {
               <i className="fa fa-angle-right"></i>
             </div>
           </Link>
+
+          {width <= 1120 && !isPWA && (
+            <Link to="/download" className="item">
+              <div className="icon">
+                <i className="fa fa-android"></i>
+              </div>
+
+              <div className="text">
+                Download the app
+              </div>
+
+              <div className="caret">
+                <i className="fa fa-angle-right"></i>
+              </div>
+            </Link>
+          )}
 
           <Link to="/logout" className="item">
             <div className="icon">

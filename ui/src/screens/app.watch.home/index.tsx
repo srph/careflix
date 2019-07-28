@@ -168,7 +168,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
     volume: 1,
     isComplete: false,
     isPlaying: false,
-    isOpen: true,
+    isOpen: false,
     isInitialized: false,
     isBuffering: false,
     isSeasonSelectionOpen: false,

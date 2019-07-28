@@ -259,11 +259,11 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
     window.clearTimeout(timeoutRef.current)
 
-    // timeoutRef.current = window.setTimeout(() => {
-    //   dispatch({
-    //     type: 'controls:close'
-    //   })
-    // }, 2000)
+    timeoutRef.current = window.setTimeout(() => {
+      dispatch({
+        type: 'controls:close'
+      })
+    }, 2000)
   }
 
   function handleOverlayClose() {

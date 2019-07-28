@@ -1,11 +1,11 @@
 import './style.css'
 import * as React from 'react'
 import { useState, useEffect } from 'react'
+import { useIsPWA } from '~/hooks/useIsPWA'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiButton from '~/components/UiButton'
 import UiModal from '~/components/UiModal'
-import screenfull from 'screenfull'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 interface Props {
@@ -17,6 +17,8 @@ function MobileTitleBar(props: Props) {
   const { width, height } = useWindowSize()
 
   const [isNoteOpen, setIsNoteOpen] = useState(true)
+
+  const isPWA = useIsPWA()
 
   useEffect(() => {
     if (isNoteOpen && width >= 640) {
@@ -60,11 +62,25 @@ function MobileTitleBar(props: Props) {
           </h5>
         </div>
 
-        <p className="text">Manually rotate your device to go fullscreen mode.</p>
-        
-        <UiButton variant="primary" onClick={handleModalClose}>
-          Okay, Gotcha.
-        </UiButton>
+        {!isPWA && (
+          <React.Fragment>
+            <p className="text">Manually rotate your device to go fullscreen mode.</p>
+            
+            <UiButton variant="primary" onClick={handleModalClose}>
+              Okay, Gotcha.
+            </UiButton>
+          </React.Fragment>
+        )}
+
+        {isPWA && (
+          <React.Fragment>
+            <p className="text">Download the app (won't take a minute) to enable the entire fullscreen experience.</p>
+            
+            <UiButton link to="/download" variant="primary" onClick={handleModalClose}>
+              Download Now
+            </UiButton>
+          </React.Fragment>
+        )}
       </UiModal>
     </React.Fragment>
   )

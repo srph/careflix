@@ -1101,6 +1101,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:54:57')
             ],
+            [
+                'title' => 'Big Buck Bunny',
+                'title_type' => 'movie',
+                'synopsis' => 'A large and lovable rabbit deals with three tiny bullies, led by a flying squirrel, who are determined to squelch his happiness. For testing purposes.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Big Buck Bunny'),
+                'air_start' => Carbon::create(2008),
+                'age_rating' => 'G',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('9:56')
+            ],
         ];
 
         foreach($movies as $movie) {

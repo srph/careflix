@@ -1,34 +1,36 @@
 import { useState, useEffect } from 'react'
-import screenfull = require('screenfull')
+import screenfull, { Screenfull } from 'screenfull'
 
 type ReturnValue = [boolean, () => void]
 
 function useFullscreen(): ReturnValue {
-  const [isFullscreen, setIsFullscreen] = useState(screenfull.isFullscreen)
+  const sf = <Screenfull>screenfull
+
+  const [isFullscreen, setIsFullscreen] = useState(sf.isFullscreen)
 
   useEffect(() => {
     function handleScreenfullChange() {
-      setIsFullscreen(screenfull.isFullscreen)
+      setIsFullscreen(sf.isFullscreen)
     }
 
-    if (screenfull.enabled) {
-      screenfull.on('change', handleScreenfullChange)
+    if (sf.enabled) {
+      sf.on('change', handleScreenfullChange)
     }
 
     return () => {
-      screenfull.off('change', handleScreenfullChange)
+      sf.off('change', handleScreenfullChange)
     }
   }, [])
 
   function toggleFullscreen() {
-    if (!screenfull.enabled) {
+    if (!sf.enabled) {
       return
     }
 
-    if (screenfull.isFullscreen) {
-      screenfull.exit()
+    if (sf.isFullscreen) {
+      sf.exit()
     } else {
-      screenfull.request()
+      sf.request()
     }
   }
 

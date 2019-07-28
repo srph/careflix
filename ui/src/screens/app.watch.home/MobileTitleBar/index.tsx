@@ -5,6 +5,7 @@ import useWindowSize from 'react-use/lib/useWindowSize'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiButton from '~/components/UiButton'
 import UiModal from '~/components/UiModal'
+import screenfull from 'screenfull'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 interface Props {
@@ -58,10 +59,8 @@ function MobileTitleBar(props: Props) {
             How to fullscreen on mobile
           </h5>
         </div>
-
-        <p className="text">Manually rotate your device to go fullscreen mode.</p>
         
-        <UiButton>
+        <UiButton variant="primary" onClick={handleModalClose}>
           Okay, Gotcha.
         </UiButton>
       </UiModal>

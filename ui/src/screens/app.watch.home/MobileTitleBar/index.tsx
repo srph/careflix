@@ -59,6 +59,8 @@ function MobileTitleBar(props: Props) {
             How to fullscreen on mobile
           </h5>
         </div>
+
+        <p className="text">Manually rotate your device to go fullscreen mode.</p>
         
         <UiButton variant="primary" onClick={handleModalClose}>
           Okay, Gotcha.

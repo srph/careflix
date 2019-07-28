@@ -31,7 +31,7 @@ function AppDownload(props: ReactComponentWrapper) {
     <React.Fragment>
       <AppHeadingSettings title="Download The App" backUrl="/" />
 
-      <UiContainer size="xl">
+      <UiContainer size="sm">
         <div className="app-download-heading">
           <img src={asset_downloadImage} />
           <p className="text">Enjoy a more immersive experience. Now on Android.</p>

@@ -30,3 +30,17 @@
   padding-bottom: 16px;
   max-height: 2000px;
 }
+
+.ui-accordion > .section > .content > .close {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding-top: 4px;
+  color: var(--color-black-5);
+  text-transform: uppercase;
+  font-size: var(--font-size-subheading);
+}
+
+.ui-accordion > .section > .content > .close > .icon {
+  margin-left: 8px;
+}

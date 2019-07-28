@@ -5,11 +5,7 @@ import cx from 'classnames'
 import UiPlainButton from '~/components/UiPlainButton'
 
 function UiAccordion(props: ReactComponentWrapper) {
-  return (
-    <div className="ui-accordion">
-      {props.children}
-    </div>
-  )
+  return <div className="ui-accordion">{props.children}</div>
 }
 
 interface SectionProps {
@@ -26,9 +22,10 @@ UiAccordion.Section = function(props: SectionProps) {
   }
 
   return (
-    <div className={cx('section', {
-      'is-open': isOpen
-    })}>
+    <div
+      className={cx('section', {
+        'is-open': isOpen
+      })}>
       <div className="heading" onClick={handleClick}>
         <span className="icon">{props.icon}</span>
         <h4 className="title">{props.title}</h4>
@@ -40,6 +37,11 @@ UiAccordion.Section = function(props: SectionProps) {
 
       <div className="content">
         {props.children}
+
+        <UiPlainButton onClick={handleClick} className="close">
+          Close
+          <span className="icon"><i className="fa fa-angle-up" /></span>
+        </UiPlainButton>
       </div>
     </div>
   )

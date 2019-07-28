@@ -14,7 +14,6 @@
     "paths": {
       "~*": ["./src/*"]
     },
-    "esModuleInterop": true,
     "skipLibCheck": true
   },
   "exclude": [

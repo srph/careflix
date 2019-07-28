@@ -8,6 +8,7 @@ import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
 import SubtitleSlot from './SubtitleSlot'
 import SeasonSelectionModal from './SeasonSelectionModal'
+import MobileTitleBar from './MobileTitleBar'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -476,6 +477,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
             onChangeVideo={handleChangeVideo}
           />
         </div>
+
+        <MobileTitleBar party={context.party} onOpenSeasonSelection={handleSeasonSelectionOpen} />
 
         <ChatWidget party={context.party} isChatOpen={state.isChatOpen} />
       </div>

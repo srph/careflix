@@ -74,7 +74,13 @@
 .watch-player-controls {
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 16px;
+}
+
+@media (min-width: 640px) {
+  .watch-player-controls {
+    padding: 0 16px;
+  }
 }
 
 @media (min-width: 992px) {
@@ -111,10 +117,16 @@
 }
 
 .watch-player-modal-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: none;
   padding: 16px;
+}
+
+@media (min-width: 640px) {
+  .watch-player-modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 @media (min-width: 992px) {
@@ -138,7 +150,6 @@
 .watch-player-modal-actions > .section:last-child {
   flex-shrink: 0;
 }
-
 
 .watch-player-modal-actions > .section > .action {
   position: relative;

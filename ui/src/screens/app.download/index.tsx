@@ -68,7 +68,7 @@ function AppDownload(props: ReactComponentWrapper) {
                 <h5 className="ui-subheading">Step 3</h5>
               </div>
               <img src={asset_downloadStep4} className="thumb" />
-              <p className="text">Go back to your home screen, then find <span className="highlight">Care.tv</span>. You should be good to go!</p>
+              <p className="text">On your home screen, you should find <span className="highlight">Care.tv</span>.</p>
             </div>
           </UiAccordion.Section>
 

@@ -1114,6 +1114,26 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('9:56')
             ],
+            [
+                'title' => 'Golden Kamuy',
+                'title_type' => 'series',
+                'synopsis' => 'The magnificent nature of Hokkaido vs vicious convicts and the meeting with a pure Ainu girl, Ashiripa!! A survival battle for a hidden treasure hunt begins!',
+                'language' => 'English',
+                'air_start' => Carbon::create(2018, 4, 9),
+                'air_end' => Carbon::create(2018, 6, 25),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Golden Kamuy'),
+                'age_rating' => 'R-17+',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 1,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

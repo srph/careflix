@@ -1127,7 +1127,7 @@ class ShowSeeder extends Seeder
                 'seasons' => [
                     [
                         'title' => 'Season 1',
-                        'episodes' => 1,
+                        'episodes' => 12,
                         'extension' => 'mp4',
                         'subtitle_language' => 'en',
                         'duration' => '23:40'

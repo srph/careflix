@@ -1,0 +1,48 @@
+.key-castr {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 32px;
+  left: 32px;
+  pointer-events: none;
+  z-index: 5000;
+}
+
+.key-castr > .item {
+  position: relative;
+  display: inline-block;
+  padding: 12px;
+  width: auto;
+  font-size: 20px;
+  color: var(--color-white);
+  background: rgba(0,0,0,0.75);
+  border-radius: var(--border-radius);
+  align-self: stretch;
+  text-transform: uppercase;
+}
+
+.key-castr > .item:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.key-castr > .item.-enter {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.key-castr > .item.-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: 0.3s all ease;
+}
+
+.key-castr > .item.-leave {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.key-castr > .item.-leave-active {
+  opacity: 0;
+  transform: translateY(-16px);
+  transition: 0.3s all ease;
+}

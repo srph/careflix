@@ -483,6 +483,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
         <ChatWidget party={context.party} isChatOpen={state.isChatOpen} />
       </div>
+
       {props.children}
     </React.Fragment>
   )

@@ -349,7 +349,7 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'One Piece: Gold',
                 'title_type' => 'movie',
-                'synopsis' => $faker->text,
+                'synopsis' => 'The Straw Hat Pirates take on Gild Tesoro, one of the richest and most ambitious men in the world.',
                 'language' => 'Japanese',
                 'air_start' => Carbon::create(2016),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('One Piece: Gold'),
@@ -362,7 +362,7 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'One Piece: Z',
                 'title_type' => 'movie',
-                'synopsis' => $faker->text,
+                'synopsis' => 'A former Marine admiral steals the Dyna Stones, and stands in the way of the Straw Hat Pirates.',
                 'language' => 'Japanese',
                 'air_start' => Carbon::create(2012),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('One Piece: Z'),

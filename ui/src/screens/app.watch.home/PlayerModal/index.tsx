@@ -9,6 +9,7 @@ import getVideoDetails from '~/utils/shows/getVideoDetails'
 import { Link } from 'react-router-dom'
 import { useMediaMode } from '~/hooks/useMediaMode'
 import { useFullscreen } from '~/hooks/useFullscreen'
+import { usePlayerHotkeys } from '../usePlayerHotkeys'
 import VolumeControl from '../VolumeControl'
 
 interface Props {
@@ -20,6 +21,7 @@ interface Props {
   isPlaying: boolean
   isChatOpen: boolean
   isMuted: boolean
+  isSeasonSelectionOpen: boolean
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
@@ -48,6 +50,30 @@ function PlayerModal({ party, ...props }: Props) {
       }
     }
   }, [])
+
+  usePlayerHotkeys({
+    isDisabled() {
+      return props.isSeasonSelectionOpen
+    },
+    onFullscreen() {
+      toggleIsFullsceen()
+    },
+    onToggleChat() {
+      props.onToggleChat()
+    },
+    onToggleMute() {
+      props.onToggleMute()
+    },
+    onPlay() {
+      props.onPlay()
+    },
+    onForward() {
+      handleForward()
+    },
+    onBackward() {
+      handleBackward()
+    }
+  })
 
   function handleSeek({ x }: SliderValue) {
     props.onSeek(x)

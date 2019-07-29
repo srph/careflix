@@ -460,6 +460,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             isPlaying={state.isPlaying}
             isChatOpen={state.isChatOpen}
             isMuted={state.isMuted}
+            isSeasonSelectionOpen={state.isSeasonSelectionOpen}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}

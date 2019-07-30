@@ -1147,6 +1147,26 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:02')
             ],
+            [
+                'title' => 'Wotaku ni Koi wa Muzukashii',
+                'title_type' => 'series',
+                'synopsis' => 'Narumi Momose is a closet otaku who likes fujoshi. After a breakup due to these kind of interests, she quits her job and joins a new company.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2018, 4, 13),
+                'air_end' => Carbon::create(2018, 6, 22),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Wotaku ni Koi wa Muzukashii'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 11,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '22:54'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

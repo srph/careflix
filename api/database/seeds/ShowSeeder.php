@@ -1180,6 +1180,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('3:01:36')
             ],
+            [
+                'title' => 'Avengers: Infinity War',
+                'title_type' => 'movie',
+                'synopsis' => 'The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Avengers: Infinity War'),
+                'air_start' => Carbon::create(2018, 5, 27),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Avengers: Infinity War', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:29:21')
+            ],
         ];
 
         foreach($movies as $movie) {

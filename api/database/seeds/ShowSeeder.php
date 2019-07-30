@@ -1134,6 +1134,19 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Crows Zero',
+                'title_type' => 'movie',
+                'synopsis' => 'The son (Shun Oguri) of a Japanese gangster (Gorô Kishitani) attends a high school where the main student activity is brawling.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Crows Zero'),
+                'air_start' => Carbon::create(2007, 10, 27),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Crows Zero', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:02')
+            ],
         ];
 
         foreach($movies as $movie) {

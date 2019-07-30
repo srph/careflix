@@ -1167,6 +1167,19 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Avengers: Endgame',
+                'title_type' => 'movie',
+                'synopsis' => 'After the devastating events of Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Avengers: Endgame'),
+                'air_start' => Carbon::create(2019, 5, 26),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('3:01:36')
+            ],
         ];
 
         foreach($movies as $movie) {

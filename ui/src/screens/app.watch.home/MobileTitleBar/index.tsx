@@ -16,7 +16,7 @@ interface Props {
 function MobileTitleBar(props: Props) {
   const { width, height } = useWindowSize()
 
-  const [isNoteOpen, setIsNoteOpen] = useState(true)
+  const [isNoteOpen, setIsNoteOpen] = useState(false)
 
   const isPWA = useIsPWA()
 

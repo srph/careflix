@@ -389,7 +389,7 @@ function UserItem(props: UserItemProps) {
   return (
     <div className="user-item">
       <div className="avatar">
-        <UiAvatar img={props.user.avatar} size="m" />
+        <UiAvatar user={props.user} size="m" />
       </div>
 
       <div className="details">

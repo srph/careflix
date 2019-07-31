@@ -204,7 +204,7 @@ function InvitationModal() {
             <div className="invitation-modal-card">
               <div className="user">
                 <div className="avatar">
-                  <UiAvatar size="m" img={invitation.sender.avatar} />
+                  <UiAvatar size="m" user={invitation.sender} />
                 </div>
 
                 <div className="details">

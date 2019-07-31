@@ -15,15 +15,24 @@
     1px 1px 0 var(--color-black);
   line-height: 1.5;
   pointer-events: none;
+  z-index: var(--zindex-player-subtitles);
+  user-select: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .subtitle-slot {
     font-size: 24px;
     padding: 32px;
   }
+}
 
+.subtitle-slot.is-player-open {
+  display: none;
+}
+
+@media (min-width: 992px) {
   .subtitle-slot.is-player-open {
+    display: block;
     padding-bottom: 180px;
   }
 }

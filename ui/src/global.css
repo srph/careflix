@@ -43,7 +43,8 @@ html, body {
   --zindex-you-were-watching-content: 102;
   --zindex-you-were-watching-dismiss: 103;
   --zindex-player-overlay: 500;
-  --zindex-player-elements: 501;
+  --zindex-player-overlay-elements: 501;
+  --zindex-player-subtitles: 550;
   --zindex-player-volume-control: 600;
   --zindex-modal: 1000;
 

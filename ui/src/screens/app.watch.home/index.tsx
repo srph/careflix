@@ -228,8 +228,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     displayChangeEpisodeBuffer()
   }, [context.party.video.id])
 
-  function handleVideoClick() {
-    if (state.isOpen) {
+  function handleVideoClick() {    
+    if (media === 'desktop') {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,
       // we want overlays to open the overlay.
@@ -249,13 +249,11 @@ function AppWatchHome(props: ReactComponentWrapper) {
       return
     }
 
-    // @TODO Optimize by debounce since this event is called every mouse move.
-    // For now, this is the least we can do so it's not "rerendering" all the fucking time.
-    if (!state.isOpen) {
-      dispatch({
-        type: 'controls:open'
-      })
-    }
+    // No worries about optimizing this since `onMouseMove` no longer fires
+    // after we've opened the overlay; the overlay contains the entire player.
+    dispatch({
+      type: 'controls:open'
+    })
 
     window.clearTimeout(timeoutRef.current)
 

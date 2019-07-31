@@ -4,7 +4,7 @@ import cx from 'classnames'
 import UiAvatar from '~/components/UiAvatar'
 
 interface Props {
-  images: string[]
+  users?: AppUser[]
   size?: 'sm' | 'm' | 'l' | 'xl'
 }
 
@@ -16,14 +16,14 @@ function UiAvatarGroup(props: Props) {
       'is-l': props.size === 'l',
       'is-xl': props.size === 'xl'
     })}>
-      {props.images.slice(0, 4).map((image, i) =>
+      {props.users.slice(0, 4).map((user, i) =>
         <div className="avatar" key={i}>
-          <UiAvatar img={image} />
+          <UiAvatar user={user} />
         </div>
       )}
 
-      {props.images.length > 5 && <div className="more">
-        <h6 className="ui-subheading">+{props.images.length - 5} more</h6>
+      {props.users.length > 5 && <div className="more">
+        <h6 className="ui-subheading">+{props.users.length - 5} more</h6>
       </div>}
     </div>
   )

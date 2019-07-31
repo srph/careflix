@@ -1,5 +1,6 @@
 // declare module '@srph/react-notification'
 declare module 'cookie-machine'
+declare module 'color-hash'
 
 type AsyncGoReturn<T = any> = [Error] | [null, T] | []
 

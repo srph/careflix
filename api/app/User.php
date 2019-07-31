@@ -49,10 +49,6 @@ class User extends Authenticatable
         return $this->where('email', $username)->first();
     }
 
-    public function getAvatarAttribute($value) {
-        return $value ?? 'https://caretv.sgp1.digitaloceanspaces.com/app-pulse/user-avatars/VW9tSnytYIRgAwg0.png';
-    }
-
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }

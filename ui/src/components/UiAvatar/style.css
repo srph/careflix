@@ -1,10 +1,17 @@
 .ui-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 32px;
   width: 32px;
+  font-weight: bold;
   border-radius: 50%;
+  overflow: hidden;
 }
 
 .ui-avatar.is-sm {
+  font-size: 8px;
+  font-weight: 400;
   height: 16px;
   width: 16px;
 }

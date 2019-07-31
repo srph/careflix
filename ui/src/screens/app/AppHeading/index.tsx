@@ -26,7 +26,7 @@ function AppHeading() {
       <GatewayDestWithFallback name={constants.gateway.title} fallback={<UiNavigation.Logo />} />
 
       <UiNavigation.Action to="/settings">
-        <UiAvatar img={auth.state.data.avatar} />
+        <UiAvatar user={auth.state.data} />
       </UiNavigation.Action>
     </UiNavigation>
   )

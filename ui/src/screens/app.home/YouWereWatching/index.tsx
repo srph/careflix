@@ -98,7 +98,7 @@ function YouWereWatching() {
 
             <div className="actions">
               {party.members.length > 1 && <div className="avatar">
-                <UiAvatarGroup images={party.members.map(member => member.avatar)} />
+                <UiAvatarGroup users={party.members} />
               </div>}
 
               <UiButton link to={`/watch/${party.id}`} variant="primary">

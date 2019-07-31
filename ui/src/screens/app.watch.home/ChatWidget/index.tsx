@@ -281,7 +281,7 @@ function ChatWidget(props: Props) {
       'is-chat-open': props.isChatOpen
     })}>
       <div className="watch-screen-canopy">
-        <UiAvatarGroup images={props.party.members.map(member => member.avatar)} />
+        <UiAvatarGroup users={props.party.members} />
 
         <ChatInvitationModal />
       </div>
@@ -294,7 +294,7 @@ function ChatWidget(props: Props) {
                 {group.logs.map(log => (
                   <div className="activity" key={log.id}>
                     <div className="avatar">
-                      <UiAvatar img={log.activity.user.avatar} size="sm" />
+                      <UiAvatar user={log.activity.user} size="sm" />
                     </div>
 
                     <h6 className="ui-subheading">
@@ -315,7 +315,7 @@ function ChatWidget(props: Props) {
               })}
               key={i}>
               <div className="avatar">
-                <UiAvatar img={group.user.avatar} />
+                <UiAvatar user={group.user} />
               </div>
 
               <div className="messages">

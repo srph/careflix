@@ -62,7 +62,7 @@ function MobileTitleBar(props: Props) {
           </h5>
         </div>
 
-        {!isPWA && (
+        {isPWA && (
           <React.Fragment>
             <p className="text">Manually rotate your device to go fullscreen mode.</p>
             
@@ -72,7 +72,7 @@ function MobileTitleBar(props: Props) {
           </React.Fragment>
         )}
 
-        {isPWA && (
+        {!isPWA && (
           <React.Fragment>
             <p className="text">Download the app (won't take a minute) to enable the entire fullscreen experience.</p>
             

@@ -51,6 +51,13 @@ function PlayerModal({ party, ...props }: Props) {
     }
   }, [])
 
+  useEffect(() => {
+    // When the player overlay closes, we also want volume control to close in case it's open.
+    if (!props.isOpen && isVolumeControlOpen) {
+      setIsVolumeControlOpen(false)
+    }
+  }, [props.isOpen])
+
   usePlayerHotkeys({
     isDisabled() {
       return props.isSeasonSelectionOpen
@@ -198,6 +205,7 @@ function PlayerModal({ party, ...props }: Props) {
                     volume={props.volume}
                     isMuted={props.isMuted}
                     isOpen={isVolumeControlOpen}
+                    isOverlayOpen={props.isOpen}
                     onChangeVolume={props.onChangeVolume}
                     onOpen={handleOpenVolumeControl}
                     onClose={handleCloseVolumeControl}

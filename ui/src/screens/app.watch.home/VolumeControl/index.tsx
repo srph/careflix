@@ -9,6 +9,7 @@ interface Props {
   volume: number
   isOpen: boolean
   isMuted: boolean
+  isOverlayOpen: boolean
   onOpen: () => void
   onClose: () => void
   onChangeVolume: (volume: number) => void

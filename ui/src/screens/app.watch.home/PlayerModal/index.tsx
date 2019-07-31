@@ -135,8 +135,14 @@ function PlayerModal({ party, ...props }: Props) {
               <i className="fa fa-backward" />
             </UiPlainButton>
 
-            <UiPlainButton className="play" onClick={props.onPlay}>
-              {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
+            <UiPlainButton className="toggle" onClick={props.onPlay}>
+              {props.isPlaying ? (
+                <i className="fa fa-pause" />
+              ) : (
+                <span className="play">
+                  <i className="fa fa-play" />
+                </span>
+              )}
             </UiPlainButton>
 
             <UiPlainButton className="action" onClick={handleForward}>

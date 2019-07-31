@@ -260,12 +260,11 @@
   pointer-events: none;
 }
 
-.watch-player-mobile-actions > .play {
+.watch-player-mobile-actions > .toggle {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 16px;
-  padding-left: 2px;
   height: 40px;
   width: 40px;
   font-size: 16px;
@@ -273,6 +272,10 @@
   background: var(--color-primary);
   border-radius: 50%;
   pointer-events: all;
+}
+
+.watch-player-mobile-actions > .toggle > .play {
+  padding-left: 2px;
 }
 
 .watch-player-mobile-actions > .action {

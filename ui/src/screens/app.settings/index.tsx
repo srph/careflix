@@ -31,7 +31,7 @@ function AppSettings(props: ReactComponentWrapper) {
       <div className="settings-page">
         <div className="settings-user-info">
           <div className="avatar">
-            <UiAvatar img={auth.state.data.avatar} size="l" />
+            <UiAvatar user={auth.state.data} size="l" />
           </div>
 
           <div className="info">

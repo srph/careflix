@@ -61,4 +61,16 @@ class UserInvitationReceived implements ShouldBroadcast
     {
         return 'invitation.received';
     }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'invitation' => $this->invitation
+        ];
+    }
 }

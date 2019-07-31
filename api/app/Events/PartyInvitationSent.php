@@ -56,4 +56,16 @@ class PartyInvitationSent implements ShouldBroadcast
     {
         return 'invitation.sent';
     }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'invitation' => $this->invitation
+        ];
+    }
 }

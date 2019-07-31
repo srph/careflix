@@ -168,7 +168,12 @@ function AppWatch(props: ReactComponentWrapper) {
   function handleChangeVideo(party: AppParty) {
     dispatch({
       type: 'data:update',
-      payload: { party }
+      payload: {
+        party: {
+          ...party,
+          invitations: state.party.invitations
+        }
+      }
     })
   }
 

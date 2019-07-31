@@ -32,6 +32,7 @@ interface AppPartyInvitation {
   id: AppId
   party_id: AppId
   invitation_code: string
+  party?: AppParty
   sender: AppUser
   recipient: AppUser
   expires_at: string

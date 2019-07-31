@@ -31,7 +31,6 @@ interface State {
   isCancellingInvitation: {
     [key: number]: boolean
   }
-  isOpen: boolean
   input: string
 }
 
@@ -134,20 +133,19 @@ const reducer = (state: State, action: Action) => {
         })
       }
     }
-
-    case 'modal:toggle': {
-      return {
-        ...state,
-        isOpen: action.payload.open
-      }
-    }
   }
+}
+
+interface Props {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
 }
 
 /**
  * Use this to create a route instead of typing everything down
  */
-function ChatInvitationModal(props: {}) {
+function ChatInvitationModal(props: Props) {
   const context = usePartyContext()
 
   const [state, dispatch] = useReducer(reducer, {
@@ -155,7 +153,6 @@ function ChatInvitationModal(props: {}) {
     isLoading: false,
     isSendingInvitation: {},
     isCancellingInvitation: {},
-    isOpen: false,
     input: ''
   })
 
@@ -289,31 +286,17 @@ function ChatInvitationModal(props: {}) {
     context.onCancel(invitation)
   }
 
-  function handleModalOpen() {
-    dispatch({
-      type: 'modal:toggle',
-      payload: { open: true }
-    })
-  }
-
-  function handleModalClose() {
-    dispatch({
-      type: 'modal:toggle',
-      payload: { open: false }
-    })
-  }
-
   return (
     <React.Fragment>
-      <UiPlainButton className="invite" onClick={handleModalOpen}>
+      <UiPlainButton className="invite" onClick={props.onOpen}>
         <i className="fa fa-user-plus" />
       </UiPlainButton>
 
-      <UiModal isOpen={state.isOpen} onClose={handleModalClose} overlayClassName="app-watch-chat-invitation-overlay" modalClassName="app-watch-chat-invitation-modal">
+      <UiModal isOpen={props.isOpen} onClose={props.onClose} overlayClassName="app-watch-chat-invitation-overlay" modalClassName="app-watch-chat-invitation-modal">
         <div className="heading">
           <h5 className="ui-subheading">Invite people to join</h5>
 
-          <UiPlainButton className="close" onClick={handleModalClose}>
+          <UiPlainButton className="close" onClick={props.onClose}>
             <i className="fa fa-close" />
           </UiPlainButton>
         </div>

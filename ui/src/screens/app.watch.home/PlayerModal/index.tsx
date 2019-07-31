@@ -22,6 +22,7 @@ interface Props {
   isChatOpen: boolean
   isMuted: boolean
   isSeasonSelectionOpen: boolean
+  isInvitationOpen: boolean
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
@@ -60,7 +61,7 @@ function PlayerModal({ party, ...props }: Props) {
 
   usePlayerHotkeys({
     isDisabled() {
-      return props.isSeasonSelectionOpen
+      return props.isSeasonSelectionOpen || props.isInvitationOpen
     },
     onFullscreen() {
       toggleIsFullsceen()

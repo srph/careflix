@@ -6,6 +6,7 @@ import UiInput from '~/components/UiInput'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
 import cx from 'classnames'
+import { usePropRef } from '~/hooks/usePropRef'
 
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
@@ -48,6 +49,10 @@ type Action =
 interface Props {
   party: AppParty
   isChatOpen: boolean
+  isSeasonSelectionOpen: boolean
+  isInvitationOpen: boolean
+  onOpenInvitationModal: () => void
+  onCloseInvitationModal: () => void
 }
 
 interface GroupedLog {
@@ -199,6 +204,35 @@ function ChatWidget(props: Props) {
     sendAudioRef.current.volume = 0.1
   }, [])
 
+  const propsRef = usePropRef(props)
+
+  useEffect(() => {
+    function handleKeyDown(evt: KeyboardEvent) {
+      // We don't want keyboard events to fire while a modal is open
+      if (propsRef.current.isInvitationOpen || propsRef.current.isSeasonSelectionOpen) {
+        return
+      }
+
+      // We simply don't want to interfere if the user is focused on any input.
+      if (document.activeElement && document.activeElement.tagName.toLowerCase() === 'input') {
+        return
+      }
+
+      if (evt.keyCode === 191) {
+        // Otherwise, the `/` keydown would be appended to the input.
+        setTimeout(() => {
+          inputRef.current.focus()
+        }, 0)
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   function handleInput(evt: React.FormEvent<HTMLInputElement>) {
     dispatch({
       type: 'chat:input',
@@ -266,10 +300,6 @@ function ChatWidget(props: Props) {
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  function handleClickMessageList() {
-    inputRef.current.focus()
-  }
-
   function handleInputKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
     if (evt.keyCode === 27) {
       inputRef.current.blur()
@@ -283,10 +313,10 @@ function ChatWidget(props: Props) {
       <div className="watch-screen-canopy">
         <UiAvatarGroup users={props.party.members} />
 
-        <ChatInvitationModal />
+        <ChatInvitationModal isOpen={props.isInvitationOpen} onOpen={props.onOpenInvitationModal} onClose={props.onCloseInvitationModal} />
       </div>
 
-      <div className="watch-screen-chat-messages" ref={chatbarRef} onClick={handleClickMessageList}>
+      <div className="watch-screen-chat-messages" ref={chatbarRef}>
         {grouped.map((group, i) => {
           if (group.type === 'activity') {
             return (
@@ -338,7 +368,7 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} ref={inputRef} onChange={handleInput} onKeyDown={handleInputKeyDown} />
+          <UiInput isDark isRound placeholder={`Write something... (press "/" to focus)`} value={state.message.text} ref={inputRef} onChange={handleInput} onKeyDown={handleInputKeyDown} />
 
           {isSubmittable && <UiPlainButton className="button">
             <i className="fa fa-send" />

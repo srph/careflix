@@ -35,13 +35,13 @@
 
 @media (min-width: 992px) {
   .watch-screen-video {
-    width: calc(100% - var(--player-chat-pane-width-desktop));
+    width: 100%;
   }
 }
 
 @media (min-width: 640px) {
   .watch-screen-video.is-chat-open {
-    width: 100%;
+    width: calc(100% - var(--player-chat-pane-width-desktop));
   }
 }
 
@@ -97,24 +97,24 @@
     flex-shrink: 0;
     position: absolute;
     top: 0;
-    right: 0;
+    right: -240px;
     bottom: 0;
     width: 240px;
     transition: 200ms all ease;
   }
 
   .watch-screen-chat.is-chat-open {
-    right: -240px;
+    right: 0;
   }
 }
 
 @media (min-width: 992px) {
   .watch-screen-chat {
-    width: 320px;
+    right: -320px;
   }
 
   .watch-screen-chat.is-chat-open {
-    right: -320px;
+    width: 320px;
   }
 }
 

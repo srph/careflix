@@ -26,7 +26,7 @@ function usePlayerHotkeys(hookProps: Props) {
   useEffect(() => {
     function handleKeyDown(evt: KeyboardEvent) {
       // If any modals are open, we don't want any of the hotkeys to fire.
-      if (props.isDisabled()) {
+      if (props.current.isDisabled()) {
         return
       }
 
@@ -38,32 +38,32 @@ function usePlayerHotkeys(hookProps: Props) {
 
       switch (evt.keyCode) {
         case keys.LEFT_ARROW: {
-          props.onBackward();
+          props.current.onBackward();
           break;
         }
 
         case keys.RIGHT_ARROW: {
-          props.onForward();
+          props.current.onForward();
           break;
         }
 
         case keys.F: {
-          props.onFullscreen();
+          props.current.onFullscreen();
           break;
         }
 
         case keys.C: {
-          props.onToggleChat();
+          props.current.onToggleChat();
           break;
         }
 
         case keys.M: {
-          props.onToggleMute();
+          props.current.onToggleMute();
           break;
         }
 
         case keys.SPACE: {
-          props.onPlay();
+          props.current.onPlay();
           break;
         }
       }

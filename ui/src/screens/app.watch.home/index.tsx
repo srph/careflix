@@ -31,6 +31,7 @@ interface State {
   isBuffering: boolean
   isSeasonSelectionOpen: boolean
   isChatOpen: boolean
+  isInvitationOpen: boolean
   isMuted: boolean
 }
 
@@ -48,6 +49,7 @@ type Action =
   | ReducerAction<'change-video'>
   | ReducerAction<'change-volume', { volume: number }>
   | ReducerAction<'season-selection:toggle', { isSeasonSelectionOpen: boolean }>
+  | ReducerAction<'invitation-modal:toggle', { isInvitationOpen: boolean }>
   | ReducerAction<'toggle-chat'>
   | ReducerAction<'toggle-mute'>
 
@@ -140,6 +142,13 @@ const reducer = (state: State, action: Action): State => {
       }
     }
 
+    case 'invitation-modal:toggle': {
+      return {
+        ...state,
+        isInvitationOpen: action.payload.isInvitationOpen
+      }
+    }
+
     case 'toggle-chat': {
       return {
         ...state,
@@ -173,7 +182,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isInitialized: false,
     isBuffering: false,
     isSeasonSelectionOpen: false,
-    isChatOpen: false,
+    isChatOpen: true,
+    isInvitationOpen: false,
     isMuted: false
   })
 
@@ -229,7 +239,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
     displayChangeEpisodeBuffer()
   }, [context.party.video.id])
 
-  function handleVideoClick() {    
+  function handleVideoClick() {
     if (media === 'desktop') {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,
@@ -360,6 +370,22 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
   }
 
+  function handleInvitationOpen() {
+    console.log('haha')
+
+    dispatch({
+      type: 'invitation-modal:toggle',
+      payload: { isInvitationOpen: true }
+    })
+  }
+
+  function handleInvitationClose() {
+    dispatch({
+      type: 'invitation-modal:toggle',
+      payload: { isInvitationOpen: false }
+    })
+  }
+
   function handleChangeVideo(party: AppParty) {
     dispatch({
       type: 'season-selection:toggle',
@@ -462,6 +488,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             isChatOpen={state.isChatOpen}
             isMuted={state.isMuted}
             isSeasonSelectionOpen={state.isSeasonSelectionOpen}
+            isInvitationOpen={state.isInvitationOpen}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}
@@ -474,7 +501,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           <SeasonSelectionModal
             party={context.party}
             show={context.party.video.show}
-            isOpen={state.isSeasonSelectionOpen}
+            isOpen={log(state.isSeasonSelectionOpen)}
             onClose={handleSeasonSelectionClose}
             onChangeVideo={handleChangeVideo}
           />
@@ -482,12 +509,24 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
         <MobileTitleBar party={context.party} onOpenSeasonSelection={handleSeasonSelectionOpen} />
 
-        <ChatWidget party={context.party} isChatOpen={state.isChatOpen} />
+        <ChatWidget
+          party={context.party}
+          isChatOpen={state.isChatOpen}
+          isInvitationOpen={state.isInvitationOpen}
+          isSeasonSelectionOpen={state.isSeasonSelectionOpen}
+          onOpenInvitationModal={handleInvitationOpen}
+          onCloseInvitationModal={handleInvitationClose}
+        />
       </div>
 
       {props.children}
     </React.Fragment>
   )
+}
+
+function log(value) {
+  console.log(value)
+  return value
 }
 
 export default AppWatchHome

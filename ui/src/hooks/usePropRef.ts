@@ -16,7 +16,7 @@ function usePropRef<T = any>(props: T) {
     propRef.current = props
   }, [props])
 
-  return propRef.current
+  return propRef
 }
 
 export {

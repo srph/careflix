@@ -1193,6 +1193,58 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:29:21')
             ],
+            [
+                'title' => 'I Love You, Beth Cooper',
+                'title_type' => 'movie',
+                'synopsis' => 'A nerdy valedictorian proclaims his love for the hottest and most popular girl in school. Much to his surprise, Beth shows up at his door that very night and decides to show him the best night of his life.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('I Love You, Beth Cooper'),
+                'air_start' => Carbon::create(2009, 7, 10),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('I Love You, Beth Cooper', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:48')
+            ],
+            [
+                'title' => 'I Love You, Man',
+                'title_type' => 'movie',
+                'synopsis' => 'Friendless Peter Klaven goes on a series of man-dates to find a Best Man for his wedding. But, when his insta-bond with his new B.F.F. puts a strain on his relationship with his fiancée, can the trio learn to live happily ever after?',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('I Love You, Man'),
+                'air_start' => Carbon::create(2009, 3, 20),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('I Love You, Man', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:46')
+            ],
+            [
+                'title' => 'Paper Towns',
+                'title_type' => 'movie',
+                'synopsis' => 'After an all-night adventure, Quentin\'s lifelong crush, Margo, disappears, leaving behind clues that Quentin and his friends follow on the journey of a lifetime.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Paper Towns'),
+                'air_start' => Carbon::create(2015, 7, 24),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Paper Towns', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:49:05')
+            ],
+            [
+                'title' => 'Oldboy',
+                'title_type' => 'movie',
+                'synopsis' => 'After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to find that he must find his captor in five days.',
+                'language' => 'Korean',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Oldboy'),
+                'air_start' => Carbon::create(2003, 11, 21),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Oldboy', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:58')
+            ],
         ];
 
         foreach($movies as $movie) {

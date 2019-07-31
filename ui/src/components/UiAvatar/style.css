@@ -4,6 +4,7 @@
   justify-content: center;
   height: 32px;
   width: 32px;
+  color: var(--color-white);
   font-weight: bold;
   border-radius: 50%;
   overflow: hidden;

@@ -9,6 +9,7 @@ import ChatWidget from './ChatWidget'
 import SubtitleSlot from './SubtitleSlot'
 import SeasonSelectionModal from './SeasonSelectionModal'
 import MobileTitleBar from './MobileTitleBar'
+import PlayerStateBufferedIndicator from './PlayerStateBufferedIndicator'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -438,6 +439,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
               </div>
             </div>
           )}
+
+          <PlayerStateBufferedIndicator isPlaying={state.isPlaying} />
 
           {state.isBuffering && (
             <div className="watch-screen-video-loader">

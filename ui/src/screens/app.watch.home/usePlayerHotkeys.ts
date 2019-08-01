@@ -72,6 +72,8 @@ function usePlayerHotkeys(hookProps: Props) {
         case keys.SLASH: {
           // We want to trigger ?, not /
           if (evt.shiftKey) {
+            // @TODO Make toggle actually work because we're disabling all hotkeys
+            // while any modal is open. Ideally, we can make an exception for `?`
             props.current.onToggleKeyboardInfo()
           }
 

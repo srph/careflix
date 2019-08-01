@@ -1298,19 +1298,6 @@ class ShowSeeder extends Seeder
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:05')
             ],
             [
-                'title' => 'X-Men Origins: Wolverine',
-                'title_type' => 'movie',
-                'synopsis' => 'The early years of James Logan, featuring his rivalry with his brother Victor Creed, his service in the special forces team Weapon X, and his experimentation into the metal-lined mutant Wolverine.',
-                'language' => 'English',
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men Origins: Wolverine'),
-                'air_start' => Carbon::create(2009, 5, 1),
-                'age_rating' => 'PG-13',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men Origins: Wolverine', 'en'),
-                //
-                'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:05')
-            ],
-            [
                 'title' => 'X-Men: First Class',
                 'title_type' => 'movie',
                 'synopsis' => 'In the 1960s, superpowered humans Charles Xavier and Erik Lensherr work together to find others like them, but Erik\'s vengeful pursuit of an ambitious mutant who ruined his life causes a schism to divide them.',
@@ -1376,18 +1363,18 @@ class ShowSeeder extends Seeder
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:06')
             ],
             // [
-            //     'title' => 'X-Men: The Wolverine',
+            //     'title' => 'X-Men Origins: Wolverine',
             //     'title_type' => 'movie',
-            //     'synopsis' => 'In the 1960s, superpowered humans Charles Xavier and Erik Lensherr work together to find others like them, but Erik\'s vengeful pursuit of an ambitious mutant who ruined his life causes a schism to divide them.',
+            //     'synopsis' => 'The early years of James Logan, featuring his rivalry with his brother Victor Creed, his service in the special forces team Weapon X, and his experimentation into the metal-lined mutant Wolverine.',
             //     'language' => 'English',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: First Class'),
-            //     'air_start' => Carbon::create(2011, 6, 3),
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men Origins: Wolverine'),
+            //     'air_start' => Carbon::create(2009, 5, 1),
             //     'age_rating' => 'PG-13',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: First Class', 'en'),
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men Origins: Wolverine', 'en'),
             //     //
             //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:11:43')
-            // ]
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:05')
+            // ],
         ];
 
         foreach($movies as $movie) {

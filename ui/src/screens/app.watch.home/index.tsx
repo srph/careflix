@@ -10,6 +10,7 @@ import SubtitleSlot from './SubtitleSlot'
 import SeasonSelectionModal from './SeasonSelectionModal'
 import MobileTitleBar from './MobileTitleBar'
 import PlayerStateBufferedIndicator from './PlayerStateBufferedIndicator'
+import KeyboardInfoModal from './KeyboardInfoModal'
 
 import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -32,6 +33,7 @@ interface State {
   isSeasonSelectionOpen: boolean
   isChatOpen: boolean
   isInvitationOpen: boolean
+  isKeyboardInfoOpen: boolean
   isMuted: boolean
 }
 
@@ -50,6 +52,7 @@ type Action =
   | ReducerAction<'change-volume', { volume: number }>
   | ReducerAction<'season-selection:toggle', { isSeasonSelectionOpen: boolean }>
   | ReducerAction<'invitation-modal:toggle', { isInvitationOpen: boolean }>
+  | ReducerAction<'keyboard-info-modal:toggle', { isKeyboardInfoOpen: boolean }>
   | ReducerAction<'toggle-chat'>
   | ReducerAction<'toggle-mute'>
 
@@ -149,6 +152,13 @@ const reducer = (state: State, action: Action): State => {
       }
     }
 
+    case 'keyboard-info-modal:toggle': {
+      return {
+        ...state,
+        isKeyboardInfoOpen: action.payload.isKeyboardInfoOpen
+      }
+    }
+
     case 'toggle-chat': {
       return {
         ...state,
@@ -184,6 +194,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isSeasonSelectionOpen: false,
     isChatOpen: true,
     isInvitationOpen: false,
+    isKeyboardInfoOpen: false,
     isMuted: false
   })
 
@@ -371,8 +382,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }
 
   function handleInvitationOpen() {
-    console.log('haha')
-
     dispatch({
       type: 'invitation-modal:toggle',
       payload: { isInvitationOpen: true }
@@ -383,6 +392,20 @@ function AppWatchHome(props: ReactComponentWrapper) {
     dispatch({
       type: 'invitation-modal:toggle',
       payload: { isInvitationOpen: false }
+    })
+  }
+
+  function handleKeyboardInfoOpen() {
+    dispatch({
+      type: 'keyboard-info-modal:toggle',
+      payload: { isKeyboardInfoOpen: true }
+    })
+  }
+
+  function handleKeyboardInfoClose() {
+    dispatch({
+      type: 'keyboard-info-modal:toggle',
+      payload: { isKeyboardInfoOpen: false }
     })
   }
 
@@ -489,10 +512,13 @@ function AppWatchHome(props: ReactComponentWrapper) {
             isMuted={state.isMuted}
             isSeasonSelectionOpen={state.isSeasonSelectionOpen}
             isInvitationOpen={state.isInvitationOpen}
+            isKeyboardInfoOpen={state.isKeyboardInfoOpen}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}
             onOpenSeasonSelection={handleSeasonSelectionOpen}
+            onOpenKeyboardInfo={handleKeyboardInfoOpen}
+            onCloseKeyboardInfo={handleKeyboardInfoClose}
             onChangeVolume={handleChangeVolume}
             onToggleChat={handleToggleChat}
             onToggleMute={handleToggleMute}
@@ -514,12 +540,15 @@ function AppWatchHome(props: ReactComponentWrapper) {
           isChatOpen={state.isChatOpen}
           isInvitationOpen={state.isInvitationOpen}
           isSeasonSelectionOpen={state.isSeasonSelectionOpen}
+          isKeyboardInfoOpen={state.isKeyboardInfoOpen}
           onOpenInvitationModal={handleInvitationOpen}
           onCloseInvitationModal={handleInvitationClose}
         />
       </div>
 
       {props.children}
+      
+      <KeyboardInfoModal isOpen={state.isKeyboardInfoOpen} onClose={handleKeyboardInfoClose} />
     </React.Fragment>
   )
 }

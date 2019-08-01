@@ -51,6 +51,7 @@ interface Props {
   isChatOpen: boolean
   isSeasonSelectionOpen: boolean
   isInvitationOpen: boolean
+  isKeyboardInfoOpen: boolean
   onOpenInvitationModal: () => void
   onCloseInvitationModal: () => void
 }
@@ -208,8 +209,15 @@ function ChatWidget(props: Props) {
 
   useEffect(() => {
     function handleKeyDown(evt: KeyboardEvent) {
+      // @TODO Turn / into a shortcut to open up chat. At the moment,
+      // causes bugs like breaking layout because we're forcing focus to
+      // an element that's off-canvas.
+      if (!propsRef.current.isChatOpen) {
+        return
+      }
+
       // We don't want keyboard events to fire while a modal is open
-      if (propsRef.current.isInvitationOpen || propsRef.current.isSeasonSelectionOpen) {
+      if (propsRef.current.isInvitationOpen || propsRef.current.isSeasonSelectionOpen || propsRef.current.isKeyboardInfoOpen) {
         return
       }
 
@@ -218,7 +226,7 @@ function ChatWidget(props: Props) {
         return
       }
 
-      if (evt.keyCode === 191) {
+      if (evt.keyCode === 191 && !evt.shiftKey) {
         // Otherwise, the `/` keydown would be appended to the input.
         setTimeout(() => {
           inputRef.current.focus()

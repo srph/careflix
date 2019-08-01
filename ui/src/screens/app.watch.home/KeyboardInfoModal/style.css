@@ -1,0 +1,66 @@
+.app-watch-keyboard-info-overlay {
+  background: var(--color-black-2);
+}
+
+@media (min-width: 992px) {
+  .app-watch-keyboard-info-overlay {
+    background: rgba(0,0,0,0.75);
+  }
+}
+
+.app-watch-keyboard-info-modal {
+  padding: 0;
+}
+
+@media (min-width: 992px) {
+  .app-watch-keyboard-info-modal {
+    margin: 80px auto;
+    width: 480px;
+    background: var(--color-black-2);
+    border-radius: var(--border-radius);
+  }
+}
+
+.app-watch-keyboard-info-modal > .heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.app-watch-keyboard-info-modal > .heading > .close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  color: var(--color-white);
+  background: var(--color-black-5);
+  border-radius: 50%;
+}
+
+.app-watch-keyboard-info-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+}
+
+.app-watch-keyboard-info-item:not(:last-child) {
+  border-bottom: 1px solid var(--color-black-3);
+}
+
+.app-watch-keyboard-info-item > .combo {
+  flex-shrink: 0;
+  margin-left: 16px;
+  display: flex;
+  margin-left: auto;
+}
+
+.app-watch-keyboard-info-item > .combo > code {
+  display: inline-block;
+  padding: 4px 8px;
+  text-transform: uppercase;
+  background: var(--color-black-4);
+  border: 1px solid var(--color-black-5);
+  border-radius: 2px;
+}

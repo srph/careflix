@@ -184,6 +184,16 @@
   }
 }
 
+.watch-player-modal-actions > .section > .action.is-keyboard-icon {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .watch-player-modal-actions > .section > .action.is-keyboard-icon {
+    display: block;
+  }
+}
+
 .watch-player-modal-actions > .section > .action.is-chat-icon {
   display: none;
 }

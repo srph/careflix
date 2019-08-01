@@ -8,7 +8,8 @@ interface Props {
   onFullscreen: () => void
   onPlay: () => void
   onForward: () => void
-  onBackward: () => void
+  onBackward: () => void,
+  onToggleKeyboardInfo: () => void
 }
 
 const keys = {
@@ -17,7 +18,8 @@ const keys = {
   SPACE: 32,
   F: 70,
   C: 67,
-  M: 77
+  M: 77,
+  SLASH: 191
 }
 
 function usePlayerHotkeys(hookProps: Props) {
@@ -65,6 +67,15 @@ function usePlayerHotkeys(hookProps: Props) {
         case keys.SPACE: {
           props.current.onPlay();
           break;
+        }
+
+        case keys.SLASH: {
+          // We want to trigger ?, not /
+          if (evt.shiftKey) {
+            props.current.onToggleKeyboardInfo()
+          }
+
+          break
         }
       }
     }

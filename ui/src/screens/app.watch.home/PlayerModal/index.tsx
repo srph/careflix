@@ -23,10 +23,13 @@ interface Props {
   isMuted: boolean
   isSeasonSelectionOpen: boolean
   isInvitationOpen: boolean
+  isKeyboardInfoOpen: boolean
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
   onOpenSeasonSelection: () => void
+  onOpenKeyboardInfo: () => void
+  onCloseKeyboardInfo: () => void
   onChangeVolume: (volume: number) => void
   onToggleChat: () => void
   onToggleMute: () => void
@@ -61,7 +64,7 @@ function PlayerModal({ party, ...props }: Props) {
 
   usePlayerHotkeys({
     isDisabled() {
-      return props.isSeasonSelectionOpen || props.isInvitationOpen
+      return props.isSeasonSelectionOpen || props.isInvitationOpen || props.isKeyboardInfoOpen
     },
     onFullscreen() {
       toggleIsFullsceen()
@@ -80,6 +83,13 @@ function PlayerModal({ party, ...props }: Props) {
     },
     onBackward() {
       handleBackward()
+    },
+    onToggleKeyboardInfo() {
+      if (props.isKeyboardInfoOpen) {
+        props.onCloseKeyboardInfo()
+      } else {
+        props.onOpenKeyboardInfo()
+      }
     }
   })
 
@@ -238,6 +248,12 @@ function PlayerModal({ party, ...props }: Props) {
                     <i className="fa fa-cog" />
                   </UiPlainButton>
                 </div> */}
+
+                <div className="action is-keyboard-icon">
+                  <UiPlainButton className="icon" onClick={props.onOpenKeyboardInfo}>
+                    <i className="fa fa-keyboard-o" />
+                  </UiPlainButton>
+                </div>
 
                 {party.video.show.title_type === 'series' && (
                   <div className="action" onClick={props.onOpenSeasonSelection}>

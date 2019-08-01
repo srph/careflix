@@ -1362,6 +1362,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:06')
             ],
+            [
+                'title' => 'Zootopia',
+                'title_type' => 'movie',
+                'synopsis' => 'In a city of anthropomorphic animals, a rookie bunny cop and a cynical con artist fox must work together to uncover a conspiracy.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Zootopia'),
+                'air_start' => Carbon::create(2016, 3, 4),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Zootopia', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:32')
+            ],
             // [
             //     'title' => 'X-Men Origins: Wolverine',
             //     'title_type' => 'movie',

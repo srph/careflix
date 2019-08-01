@@ -4,6 +4,7 @@
 
 @media (min-width: 992px) {
   .app-watch-chat-invitation-overlay {
+    padding: 80px 0;
     background: rgba(0,0,0,0.75);
   }
 }
@@ -14,7 +15,7 @@
 
 @media (min-width: 992px) {
   .app-watch-chat-invitation-modal {
-    margin: 80px auto;
+    margin: 0 auto;
     width: 480px;
     background: var(--color-black-2);
     border-radius: var(--border-radius);
@@ -43,6 +44,11 @@
   flex-shrink: 0;
   padding: 16px;
   background: var(--color-black-2);
+}
+
+.user-list {
+  max-height: 480px;
+  overflow-y: scroll;
 }
 
 .user-item {

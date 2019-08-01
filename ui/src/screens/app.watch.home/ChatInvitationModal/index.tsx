@@ -313,19 +313,21 @@ function ChatInvitationModal(props: Props) {
 
         {state.isLoading && <UiLoader />}
 
-        {state.data.map(user => (
-          <UserItem
-            key={user.id}
-            user={user}
-            invitation={context.party.invitations[invitationMap[user.id]]}
-            isMember={isMemberMap[user.id]}
-            isCancellingInvitation={state.isCancellingInvitation[user.id]}
-            isSendingInvitation={state.isSendingInvitation[user.id]}
-            onInvite={handleInvite}
-            onCancel={handleCancel}
-            onExpire={handleExpire}
-          />
-        ))}
+        <div className="user-list">
+          {state.data.map(user => (
+            <UserItem
+              key={user.id}
+              user={user}
+              invitation={context.party.invitations[invitationMap[user.id]]}
+              isMember={isMemberMap[user.id]}
+              isCancellingInvitation={state.isCancellingInvitation[user.id]}
+              isSendingInvitation={state.isSendingInvitation[user.id]}
+              onInvite={handleInvite}
+              onCancel={handleCancel}
+              onExpire={handleExpire}
+            />
+          ))}
+        </div>
       </UiModal>
     </React.Fragment>
   )

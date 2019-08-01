@@ -43,8 +43,7 @@ function Root(props: ReactComponentWrapper) {
 
   useAsyncEffect(
     async () => {
-      const [x, y] = await auth.getUserData()
-      console.log(x, y)
+      await auth.getUserData()
       setIsLoading(false)
     },
     null,

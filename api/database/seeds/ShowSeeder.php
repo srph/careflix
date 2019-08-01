@@ -1245,6 +1245,149 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:58')
             ],
+            [
+                'title' => 'Oldboy',
+                'title_type' => 'movie',
+                'synopsis' => 'After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to find that he must find his captor in five days.',
+                'language' => 'Korean',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Oldboy'),
+                'air_start' => Carbon::create(2003, 11, 21),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Oldboy', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:58')
+            ],
+            [
+                'title' => 'X-Men',
+                'title_type' => 'movie',
+                'synopsis' => 'In a world where mutants (evolved super-powered humans) exist and are discriminated against, two groups form for an inevitable clash: the supremacist Brotherhood, and the pacifist X-Men.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men'),
+                'air_start' => Carbon::create(2000, 7, 14),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:20')
+            ],
+            [
+                'title' => 'X-Men 2',
+                'title_type' => 'movie',
+                'synopsis' => 'When anti-mutant Colonel William Stryker kidnaps Professor X and attacks his school, the X-Men must ally with their archenemy Magneto to stop him.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men 2'),
+                'air_start' => Carbon::create(2003, 5, 2),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men 2', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:13:47')
+            ],
+            [
+                'title' => 'X-Men: The Last Stand',
+                'title_type' => 'movie',
+                'synopsis' => 'The human government develops a cure for mutations, and Jean Gray becomes a darker uncontrollable persona called the Phoenix who allies with Magneto, causing escalation into an all-out battle for the X-Men.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: The Last Stand'),
+                'air_start' => Carbon::create(2006, 5, 26),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: The Last Stand', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:05')
+            ],
+            [
+                'title' => 'X-Men Origins: Wolverine',
+                'title_type' => 'movie',
+                'synopsis' => 'The early years of James Logan, featuring his rivalry with his brother Victor Creed, his service in the special forces team Weapon X, and his experimentation into the metal-lined mutant Wolverine.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men Origins: Wolverine'),
+                'air_start' => Carbon::create(2009, 5, 1),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men Origins: Wolverine', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:05')
+            ],
+            [
+                'title' => 'X-Men: First Class',
+                'title_type' => 'movie',
+                'synopsis' => 'In the 1960s, superpowered humans Charles Xavier and Erik Lensherr work together to find others like them, but Erik\'s vengeful pursuit of an ambitious mutant who ruined his life causes a schism to divide them.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: First Class'),
+                'air_start' => Carbon::create(2011, 6, 3),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: First Class', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:11:43')
+            ],
+            [
+                'title' => 'X-Men: Days Of Future Past',
+                'title_type' => 'movie',
+                'synopsis' => 'The X-Men send Wolverine to the past in a desperate effort to change history and prevent an event that results in doom for both humans and mutants.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: Days Of Future Past'),
+                'air_start' => Carbon::create(2014, 5, 23),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: Days Of Future Past', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:11:35')
+            ],
+            [
+                'title' => 'X-Men: Apocalypse',
+                'title_type' => 'movie',
+                'synopsis' => 'In the 1980s the X-Men must defeat an ancient all-powerful mutant, En Sabah Nur, who intends to thrive through bringing destruction to the world.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: Apocalypse'),
+                'air_start' => Carbon::create(2016, 5, 27),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: Apocalypse', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:23:57')
+            ],
+            [
+                'title' => 'Charlie\'s Angels',
+                'title_type' => 'movie',
+                'synopsis' => 'Three women, detectives with a mysterious boss, retrieve stolen voice-ID software, using martial arts, tech skills, and sex appeal.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Charlie\'s Angels'),
+                'air_start' => Carbon::create(2000, 11, 3),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Charlie\'s Angels', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:38:23')
+            ],
+            [
+                'title' => 'Charlie\'s Angels: Full Throttle',
+                'title_type' => 'movie',
+                'synopsis' => 'The Angels investigate a series of murders which occur after the theft of a witness protection profile database.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Charlie\'s Angels: Full Throttle'),
+                'air_start' => Carbon::create(2003, 6, 27),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Charlie\'s Angels: Full Throttle', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:06')
+            ],
+            // [
+            //     'title' => 'X-Men: The Wolverine',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'In the 1960s, superpowered humans Charles Xavier and Erik Lensherr work together to find others like them, but Erik\'s vengeful pursuit of an ambitious mutant who ruined his life causes a schism to divide them.',
+            //     'language' => 'English',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: First Class'),
+            //     'air_start' => Carbon::create(2011, 6, 3),
+            //     'age_rating' => 'PG-13',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: First Class', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:11:43')
+            // ]
         ];
 
         foreach($movies as $movie) {

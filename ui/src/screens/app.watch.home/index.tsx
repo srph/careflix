@@ -527,7 +527,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           <SeasonSelectionModal
             party={context.party}
             show={context.party.video.show}
-            isOpen={log(state.isSeasonSelectionOpen)}
+            isOpen={state.isSeasonSelectionOpen}
             onClose={handleSeasonSelectionClose}
             onChangeVideo={handleChangeVideo}
           />
@@ -551,11 +551,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
       <KeyboardInfoModal isOpen={state.isKeyboardInfoOpen} onClose={handleKeyboardInfoClose} />
     </React.Fragment>
   )
-}
-
-function log(value) {
-  console.log(value)
-  return value
 }
 
 export default AppWatchHome

@@ -1375,6 +1375,45 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:32')
             ],
+            [
+                'title' => 'Ant-Man',
+                'title_type' => 'movie',
+                'synopsis' => 'Armed with a super-suit with the astonishing ability to shrink in scale but increase in strength, cat burglar Scott Lang must embrace his inner hero and help his mentor, Dr. Hank Pym, plan and pull off a heist that will save the world.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ant-Man'),
+                'air_start' => Carbon::create(2015, 7, 17),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Ant-Man', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:06')
+            ],
+            [
+                'title' => 'Ant-Man and The Wasp',
+                'title_type' => 'movie',
+                'synopsis' => 'As Scott Lang balances being both a Super Hero and a father, Hope van Dyne and Dr. Hank Pym present an urgent new mission that finds the Ant-Man fighting alongside The Wasp to uncover secrets from their past.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ant-Man and The Wasp'),
+                'air_start' => Carbon::create(2018, 7, 6),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Ant-Man and The Wasp', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:58:06')
+            ],
+            [
+                'title' => 'Captain America: Civil War',
+                'title_type' => 'movie',
+                'synopsis' => 'Political involvement in the Avengers\' affairs causes a rift between Captain America and Iron Man.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Captain America: Civil War'),
+                'air_start' => Carbon::create(2018, 7, 6),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Captain America: Civil War', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:27:41')
+            ],
             // [
             //     'title' => 'X-Men Origins: Wolverine',
             //     'title_type' => 'movie',

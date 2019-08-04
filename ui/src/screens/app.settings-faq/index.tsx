@@ -19,7 +19,7 @@ import faqs from './faq'
 function AppSettingsFaq(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
-      <AppHeadingSettings title="FAQ" backUrl="/" />
+      <AppHeadingSettings title="FAQ" backUrl="/settings" />
 
       <UiContainer size="sm">
         <div className="app-settings-faq-heading">

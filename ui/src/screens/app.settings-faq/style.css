@@ -1,3 +1,22 @@
+.app-settings-faq-heading {
+  padding-top: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.app-settings-faq-heading > img {
+  max-width: 160px;
+  margin-bottom: 24px;
+}
+
+.app-settings-faq-heading > .text {
+  font-size: 24px;
+}
+
+/**
+ * FAQ Text
+ */
+
 .app-settings-faq-text {
   line-height: 1.5;
 }

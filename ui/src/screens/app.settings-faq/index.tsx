@@ -5,7 +5,7 @@ import UiContainer from '~/components/UiContainer'
 import UiSpacer from '~/components/UiSpacer'
 import UiAccordion from '~/components/UiAccordion'
 
-import asset_downloadImage from '~/assets/download-img.svg'
+import asset_faqImage from '~/assets/faq-img.svg'
 import faqs from './faq'
 
 // What is this?
@@ -22,9 +22,9 @@ function AppSettingsFaq(props: ReactComponentWrapper) {
       <AppHeadingSettings title="FAQ" backUrl="/" />
 
       <UiContainer size="sm">
-        <div className="app-download-heading">
-          <img src={asset_downloadImage} />
-          <p className="text">Enjoy a more immersive experience. Now on Android.</p>
+        <div className="app-settings-faq-heading">
+          <img src={asset_faqImage} />
+          <p className="text">Frequently Asked Questions.</p>
         </div>
 
         <UiAccordion>

@@ -39,9 +39,9 @@ class AppListPt extends Command
      */
     public function handle()
     {
-        $ago = Carbon::now()->subDays($this->argument('days'));
+        $ago = Carbon::now()->subDays((int) $this->argument('days'));
 
-        $parties = Party::where('created_at', '>=', $ago->format('Y-m-d') . '00:00:00')
+        $parties = Party::where('created_at', '>=', $ago->format('Y-m-d') . ' 00:00:00')
             ->orderBy('id', 'desc')
             ->get();
 

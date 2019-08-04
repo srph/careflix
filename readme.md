@@ -79,6 +79,14 @@ The web interface is hosted on Netlify for free. Set the root folder to `ui`; th
 npm run build
 ```
 
+### Custom API Commands
+```bash
+# Lists the most recent parties since 3 days ago
+php artisan app:list-pt
+# Lists the most recent parties since 5 days ago
+php artisan app:list-pt 5
+```
+
 ## Attribution
 - [DrawKit](https://www.drawkit.io/illustrations/drawing-woman-colour) for the free illustrations pack.
 - [Notification Sounds](https://notificationsounds.com/sound-effects) for the notification audio files.

@@ -1414,19 +1414,71 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:27:41')
             ],
-            // [
-            //     'title' => 'X-Men Origins: Wolverine',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'The early years of James Logan, featuring his rivalry with his brother Victor Creed, his service in the special forces team Weapon X, and his experimentation into the metal-lined mutant Wolverine.',
-            //     'language' => 'English',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men Origins: Wolverine'),
-            //     'air_start' => Carbon::create(2009, 5, 1),
-            //     'age_rating' => 'PG-13',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men Origins: Wolverine', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:05')
-            // ],
+            [
+                'title' => 'X-Men Origins: Wolverine',
+                'title_type' => 'movie',
+                'synopsis' => 'The early years of James Logan, featuring his rivalry with his brother Victor Creed, his service in the special forces team Weapon X, and his experimentation into the metal-lined mutant Wolverine.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men Origins: Wolverine'),
+                'air_start' => Carbon::create(2009, 5, 1),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men Origins: Wolverine', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:21')
+            ],
+            [
+                'title' => 'The Wolverine',
+                'title_type' => 'movie',
+                'synopsis' => 'Wolverine comes to Japan to meet an old friend whose life he saved years ago, and gets embroiled in a conspiracy involving yakuza and mutants.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Wolverine'),
+                'air_start' => Carbon::create(2013, 7, 26),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Wolverine', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:18:14')
+            ],
+            [
+                'title' => 'Logan',
+                'title_type' => 'movie',
+                'synopsis' => 'In a future where mutants are nearly extinct, an elderly and weary Logan leads a quiet life. But when Laura, a mutant child pursued by scientists, comes to him for help, he must get her to safety.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Logan'),
+                'air_start' => Carbon::create(2017, 3, 3),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Logan', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:17:23')
+            ],
+            [
+                'title' => 'Deadpool',
+                'title_type' => 'movie',
+                'synopsis' => 'A wisecracking mercenary gets experimented on and becomes immortal but ugly, and sets out to track down the man who ruined his looks.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Deadpool'),
+                'air_start' => Carbon::create(2016, 2, 12),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Deadpool', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:06')
+            ],
+            [
+                'title' => 'Deadpool 2',
+                'title_type' => 'movie',
+                'synopsis' => 'Foul-mouthed mutant mercenary Wade Wilson (AKA. Deadpool), brings together a team of fellow mutant rogues to protect a young boy with supernatural abilities from the brutal, time-traveling cyborg, Cable.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Deadpool 2'),
+                'air_start' => Carbon::create(2018, 5, 18),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Deadpool 2', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:13:59')
+            ],
         ];
 
         foreach($movies as $movie) {

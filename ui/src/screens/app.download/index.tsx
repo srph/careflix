@@ -17,15 +17,13 @@ import asset_downloadStep3 from '~/assets/download-step-3.png'
 import asset_downloadStep4 from '~/assets/download-step-4.png'
 
 function AppDownload(props: ReactComponentWrapper) {
-  const { width } = useWindowSize()
-
   const isPWA = useIsPWA()
 
   useEffect(() => {
-    if (width >= 1120 || isPWA) {
+    if (isPWA) {
       history.push('/')
     }
-  }, [width, isPWA])
+  }, [isPWA])
 
   return (
     <React.Fragment>

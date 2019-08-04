@@ -71,7 +71,7 @@ function AppSettings(props: ReactComponentWrapper) {
             </div>
           </Link>
 
-          {width <= 1120 && !isPWA && (
+          {!isPWA && (
             <Link to="/download" className="item">
               <div className="icon">
                 <i className="fa fa-android" />

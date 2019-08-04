@@ -28,11 +28,23 @@ function AppSettingsFaq(props: ReactComponentWrapper) {
         </div>
 
         <UiAccordion>
-          {faqs.map((faq, i) =>
+          {faqs.map((faq, i) => (
             <UiAccordion.Section icon={<i className="fa fa-android" />} title={faq.title} key={i}>
-              {faq.content.map((p, j) => <p className="app-settings-faq-text" key={j}>{p}</p>)}
+              {faq.content.map((p, j) => (
+                <p
+                  className="app-settings-faq-text"
+                  key={j}
+                  dangerouslySetInnerHTML={{
+                    __html: p
+                      .replace(':facebook', '<a href="https://www.facebook.com/kierb" target="_blank">Facebook</a>')
+                      .replace(':twitter', '<a href="https://twitter.com/_srph" target="_blank">Twitter</a>')
+                      .replace(':author', '<a href="https://kierb.com" target="_blank">Kier Borromeo</a>')
+                      .replace(':github', '<a href="https://github.com/srph/careflix" target="_blank">Github</a>')
+                  }}
+                />
+              ))}
             </UiAccordion.Section>
-          )}
+          ))}
         </UiAccordion>
       </UiContainer>
 

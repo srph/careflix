@@ -2,6 +2,12 @@
   line-height: 1.5;
 }
 
+.app-settings-faq-text a {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px dashed var(--color-black-5);
+}
+
 .app-settings-faq-text:not(:last-child) {
   margin-bottom: 16px;
 }

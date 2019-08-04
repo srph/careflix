@@ -1,6 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import UiLogo from '~/components/UiLogo'
+import UiContainer from '~/components/UiContainer'
 import { Link, LinkProps } from 'react-router-dom'
 
 interface Props {
@@ -9,8 +10,12 @@ interface Props {
 
 function UiNavigation(props: Props) {
   return (
-    <div className="ui-navigation">
-      {props.children}
+    <div className="ui-navigation-shape">
+      <UiContainer size="xl">
+        <div className="ui-navigation">
+          {props.children}
+        </div>
+      </UiContainer>
     </div>
   )
 }

@@ -26,14 +26,14 @@ UiAccordion.Section = function(props: SectionProps) {
       className={cx('section', {
         'is-open': isOpen
       })}>
-      <div className="heading" onClick={handleClick}>
+      <UiPlainButton className="heading" onClick={handleClick}>
         <span className="icon">{props.icon}</span>
         <h4 className="title">{props.title}</h4>
 
-        <UiPlainButton className="caret">
+        <div className="caret">
           {isOpen ? <i className="fa fa-angle-up" /> : <i className="fa fa-angle-down" />}
-        </UiPlainButton>
-      </div>
+        </div>
+      </UiPlainButton>
 
       <div className="content">
         {props.children}

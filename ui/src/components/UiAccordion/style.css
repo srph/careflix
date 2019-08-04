@@ -5,6 +5,8 @@
 .ui-accordion > .section > .heading {
   display: flex;
   align-items: center;
+  width: 100%;
+  text-align: left;
   padding: 8px 0;
 }
 

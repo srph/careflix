@@ -1,6 +1,6 @@
 import './style.css'
 import * as React from 'react'
-import { useEffect } from 'react'
+import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import { useBufferState } from '~/hooks/useBufferState'
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 function PlayerStateBufferedIndicator(props: Props) {
   const [isOpen, setIsOpen] = useBufferState({ timeout: 400 })
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     setIsOpen()
   }, [props.isPlaying])
 

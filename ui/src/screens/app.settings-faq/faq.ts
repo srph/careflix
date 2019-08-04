@@ -9,7 +9,7 @@ export default [
   {
     title: 'Who made Care.tv?',
     content: [
-      'Care.tv is a personal project by :author',
+      'Care.tv is a personal project by :author.',
       `I'm a designer-developer who likes to build software for myself and people close to me.`
     ]
   },

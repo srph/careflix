@@ -27,7 +27,7 @@ function AppSettings(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
       <AppHeadingSettings title="Settings" backUrl="/" />
-      
+
       <div className="settings-page">
         <div className="settings-user-info">
           <div className="avatar">
@@ -37,73 +37,75 @@ function AppSettings(props: ReactComponentWrapper) {
           <div className="info">
             <h2 className="name">{auth.state.data.name}</h2>
             <div className="description">
-              <h6 className="ui-subheading">
-                View Your Profile
-              </h6>
+              <h6 className="ui-subheading">View Your Profile</h6>
             </div>
           </div>
 
           <div className="caret">
-            <i className="fa fa-angle-right"></i>
+            <i className="fa fa-angle-right" />
           </div>
         </div>
 
         <div className="settings-menu-list">
           <Link to="/settings/profile" className="item">
             <div className="icon">
-              <i className="fa fa-cog"></i>
+              <i className="fa fa-cog" />
             </div>
 
-            <div className="text">
-              Account settings
-            </div>
+            <div className="text">Account settings</div>
 
             <div className="caret">
-              <i className="fa fa-angle-right"></i>
+              <i className="fa fa-angle-right" />
             </div>
           </Link>
 
           <Link to="/settings/password" className="item">
             <div className="icon">
-              <i className="fa fa-lock"></i>
+              <i className="fa fa-lock" />
             </div>
 
-            <div className="text">
-              Update password
-            </div>
+            <div className="text">Update password</div>
 
             <div className="caret">
-              <i className="fa fa-angle-right"></i>
+              <i className="fa fa-angle-right" />
             </div>
           </Link>
 
           {width <= 1120 && !isPWA && (
             <Link to="/download" className="item">
               <div className="icon">
-                <i className="fa fa-android"></i>
+                <i className="fa fa-android" />
               </div>
 
-              <div className="text">
-                Download the app
-              </div>
+              <div className="text">Download the app</div>
 
               <div className="caret">
-                <i className="fa fa-angle-right"></i>
+                <i className="fa fa-angle-right" />
               </div>
             </Link>
           )}
 
-          <Link to="/logout" className="item">
+          <Link to="/settings/faq" className="item">
             <div className="icon">
-              <i className="fa fa-long-arrow-left"></i>
+              <i className="fa fa-question" />
             </div>
 
-            <div className="text">
-              Logout
-            </div>
+            <div className="text">Frequently Asked Questions</div>
 
             <div className="caret">
-              <i className="fa fa-angle-right"></i>
+              <i className="fa fa-angle-right" />
+            </div>
+          </Link>
+
+          <Link to="/logout" className="item">
+            <div className="icon">
+              <i className="fa fa-long-arrow-left" />
+            </div>
+
+            <div className="text">Logout</div>
+
+            <div className="caret">
+              <i className="fa fa-angle-right" />
             </div>
           </Link>
         </div>

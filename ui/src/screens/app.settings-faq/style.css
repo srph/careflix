@@ -1,0 +1,7 @@
+.app-settings-faq-text {
+  line-height: 1.5;
+}
+
+.app-settings-faq-text:not(:last-child) {
+  margin-bottom: 16px;
+}

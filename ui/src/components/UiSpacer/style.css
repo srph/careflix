@@ -17,3 +17,23 @@
 .ui-spacer.is-size-5 {
   margin-bottom: 40px;
 }
+
+.ui-spacer.is-size-6 {
+  margin-bottom: 48px;
+}
+
+.ui-spacer.is-size-7 {
+  margin-bottom: 56px;
+}
+
+.ui-spacer.is-size-8 {
+  margin-bottom: 64px;
+}
+
+.ui-spacer.is-size-9 {
+  margin-bottom: 72px;
+}
+
+.ui-spacer.is-size-10 {
+  margin-bottom: 80px;
+}

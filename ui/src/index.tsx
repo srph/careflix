@@ -20,6 +20,7 @@ import AppWatchHome from '~/screens/app.watch.home'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsPassword from '~/screens/app.settings-password'
+import AppSettingsFaq from '~/screens/app.settings-faq'
 import AppDownload from '~/screens/app.download'
 import Login from '~/screens/login'
 import Logout from '~/screens/logout'
@@ -82,6 +83,7 @@ function Mount() {
                           <PrivateRoute path="/settings" exact component={AppSettings} />
                           <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
                           <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
+                          <PrivateRoute path="/settings/faq" exact component={AppSettingsFaq} />
                           <PrivateRoute
                             path="/watch/:partyId"
                             render={matchProps => (

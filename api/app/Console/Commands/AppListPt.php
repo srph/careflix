@@ -51,7 +51,7 @@ class AppListPt extends Command
             $when = $party->created_at->diffForHumans();
             
             if ($party->members->count()) {
-                $members = $party->members->pluck('name')->join(',', ', and ');
+                $members = $party->members->pluck('name')->join(', ', ', and ');
 
                 $this->info(
                     "{$master->name} watched {$party->video->show->title} with {$members} {$when}"

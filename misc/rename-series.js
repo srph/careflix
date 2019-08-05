@@ -7,7 +7,7 @@ const path = require('path')
 // node rename-series.js /home/srph/uploads/tarzan-x
 // Output ------------------------
 // [Renamed] Tarzan X 1.mp4 to tarzan-x-s1-ep1.mp4
-const input = process.argv[2]
+const input = untrail(process.argv[2])
 const files = fs.readdirSync(input)
 const dirname = name(input)
 
@@ -24,6 +24,13 @@ function last(arr) {
   return arr[arr.length - 1]
 }
 
+// Get direcotry/filename from path
+// /home/srph/uploads/tarzan-x -> tarzan-x
 function name(file) {
   return last(file.split(path.sep))
+}
+
+// Remove trailing slashes
+function untrail(path) {
+  return path.replace(/\/$/, '')
 }

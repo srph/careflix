@@ -1479,6 +1479,26 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:13:59')
             ],
+            [
+                'title' => 'Tate no Yuusha no Nariagari',
+                'title_type' => 'series',
+                'synopsis' => 'Naofumi Iwatani, an uncharismatic Otaku suddenly finds himself summoned to a parallel universe. He discovers he is one of four heroes equipped with legendary weapons and tasked with saving the world from its prophesied destruction.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2019, 1, 9),
+                'air_end' => Carbon::create(2019, 6, 26),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Tate no Yuusha no Nariagari'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 25,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

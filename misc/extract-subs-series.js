@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { execSync } = require('child_process')
-const { name, sort } = require('./utils')
+const { name, sort, untrail } = require('./utils')
 
 // Running ---------------------
 // node <extract-subs-series.js> <directory>
@@ -10,7 +10,7 @@ const { name, sort } = require('./utils')
 // Output ------------------------
 // [Extracted] kimetsu-no-yaiba-1.mkv to kimetsu-no-yaiba-1.srt
 // [Extracted] kimetsu-no-yaiba-2.mkv to kimetsu-no-yaiba-2.srt
-const input = process.argv[2]
+const input = untrail(process.argv[2])
 const files = fs.readdirSync(input)
 const dirname = name(input)
 

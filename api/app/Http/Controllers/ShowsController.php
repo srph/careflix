@@ -19,7 +19,7 @@ class ShowsController extends Controller
     }
 
     public function groups(Show $show) {
-        return $show->groups;
+        return $show->groups()->with('videos')->get();
     }
 
     /**

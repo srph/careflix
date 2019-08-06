@@ -58,4 +58,16 @@ class PartyVideoChanged implements ShouldBroadcast
     {
         return 'video-changed';
     }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'video' => $this->party->video
+        ];
+    }
 }

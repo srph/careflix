@@ -14,15 +14,6 @@ class ShowGroup extends Model
     protected $fillable = [
         'title'
     ];
-    
-    /**
-     * The relationships that will always be eager-loaded
-     *
-     * @var array
-     */
-    protected $with = [
-        'videos'
-    ];
 
     public function show() {
         return $this->belongsTo(Show::class);

@@ -55,4 +55,16 @@ class PartyLogEvent implements ShouldBroadcast
     {
         return 'log';
     }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array
+     */
+    public function broadcastWith()
+    {
+        return [
+            'log' => $this->log
+        ];
+    }
 }

@@ -1499,6 +1499,33 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Bungou Stray Dogs',
+                'title_type' => 'series',
+                'synopsis' => 'Nakajima Atsushi was kicked out of his orphanage, and now he has no place to go and no food. While he is standing by a river, on the brink of starvation, he rescues a man whimsically attempting suicide. That man is Dazai Osamu, and he and his partner Kunikida are members of a very special detective agency. They have supernatural powers and deal with cases that are too dangerous for the police or the military. They\'re tracking down a tiger that has appeared in the area recently, around the time Atsushi came to the area. The tiger seems to have a connection to Atsushi, and by the time the case is solved, it is clear that Atsushi\'s future will involve much more of Dazai and the rest of the detectives.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2016, 4, 7),
+                'air_end' => Carbon::create(2019, 6, 28),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bungou Stray Dogs'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 2',
+                        'episodes' => 12,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ],
+                    [
+                        'title' => 'Season 3',
+                        'episodes' => 12,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

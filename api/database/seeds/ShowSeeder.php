@@ -1533,6 +1533,39 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'A Taxi Driver',
+                'title_type' => 'movie',
+                'synopsis' => 'In 1980, a foreign journalist hires a down-on-his-luck taxi driver to take him to Gwangju, South Korea. They soon arrive to find a city under siege by student protesters and the military.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('A Taxi Driver'),
+                'air_start' => Carbon::create(2017, 8, 11),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('A Taxi Driver', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:17:27')
+            ],
+            [
+                'title' => 'Beck',
+                'title_type' => 'series',
+                'synopsis' => 'Fourteen-year-old Yukio "Koyuki" Tanaka is a dispirited young boy with no goals in life. However, this all changes when Koyuki saves a strange-looking dog named Beck from being harassed by a group of local kids.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2004, 10, 7),
+                'air_end' => Carbon::create(2005, 3, 31),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Beck'),
+                'age_rating' => 'R-17+',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 12,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '24:19'
+                    ]
+                ]
+            ],
             // [
             //     'title' => 'Aladdin',
             //     'title_type' => 'movie',

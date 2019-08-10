@@ -1670,19 +1670,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:52')
             ],
-            // [
-            //     'title' => '101 Dalmatians',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'When a litter of Dalmatian puppies are abducted by the minions of Cruella de Vil, the parents must find them before she uses them for a diabolical fashion statement.',
-            //     'language' => 'English',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('101 Dalmatians'),
-            //     'air_start' => Carbon::create(1961, 1, 25),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('101 Dalmatians', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:19:16')
-            // ],
+            [
+                'title' => '101 Dalmatians',
+                'title_type' => 'movie',
+                'synopsis' => 'When a litter of Dalmatian puppies are abducted by the minions of Cruella de Vil, the parents must find them before she uses them for a diabolical fashion statement.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('101 Dalmatians'),
+                'air_start' => Carbon::create(1961, 1, 25),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('101 Dalmatians', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:19:16')
+            ],
         ];
 
         foreach($movies as $movie) {

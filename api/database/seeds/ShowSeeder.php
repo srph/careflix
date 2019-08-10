@@ -1566,19 +1566,97 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
-            // [
-            //     'title' => 'Aladdin',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A kind-hearted street urchin and a power-hungry Grand Vizier vie for a magic lamp that has the power to make their deepest wishes come true.',
-            //     'language' => 'English',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Aladdin'),
-            //     'air_start' => Carbon::create(2019, 5, 24),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Aladdin', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:08:59')
-            // ],
+            [
+                'title' => 'Aladdin',
+                'title_type' => 'movie',
+                'synopsis' => 'A kind-hearted street urchin and a power-hungry Grand Vizier vie for a magic lamp that has the power to make their deepest wishes come true.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Aladdin'),
+                'air_start' => Carbon::create(2019, 5, 24),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Aladdin', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:07:58')
+            ],
+            [
+                'title' => 'Dumbo',
+                'title_type' => 'movie',
+                'synopsis' => 'A young elephant, whose oversized ears enable him to fly, helps save a struggling circus, but when the circus plans a new venture, Dumbo and his friends discover dark secrets beneath its shiny veneer.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dumbo'),
+                'air_start' => Carbon::create(2019, 3, 29 ),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Dumbo', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:51:56')
+            ],
+            [
+                'title' => 'Bao',
+                'title_type' => 'movie',
+                'synopsis' => 'A Chinese-Canadian woman suffering from empty nest syndrome gets a second shot at motherhood when one of her handmade dumplings comes alive.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bao'),
+                'air_start' => Carbon::create(2018, 6, 15),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Bao', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('7:41')
+            ],
+            [
+                'title' => 'Moana',
+                'title_type' => 'movie',
+                'synopsis' => 'In Ancient Polynesia, when a terrible curse incurred by the Demigod Maui reaches Moana\'s island, she answers the Ocean\'s call to seek out the Demigod to set things right.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Moana'),
+                'air_start' => Carbon::create(2016, 11, 23),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Moana', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:12')
+            ],
+            [
+                'title' => 'Inside Out',
+                'title_type' => 'movie',
+                'synopsis' => 'After young Riley is uprooted from her Midwest life and moved to San Francisco, her emotions - Joy, Fear, Anger, Disgust and Sadness - conflict on how best to navigate a new city, house, and school.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Inside Out'),
+                'air_start' => Carbon::create(2015, 6, 19),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Inside Out', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:37')
+            ],
+            [
+                'title' => 'Frozen',
+                'title_type' => 'movie',
+                'synopsis' => 'When the newly-crowned Queen Elsa accidentally uses her power to turn things into ice to curse her home in infinite winter, her sister Anna teams up with a mountain man, his playful reindeer, and a snowman to change the weather condition.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Frozen'),
+                'air_start' => Carbon::create(2013, 11, 27),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Frozen', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:37')
+            ],
+            [
+                'title' => 'Pinocchio',
+                'title_type' => 'movie',
+                'synopsis' => 'A living puppet, with the help of a cricket as his conscience, must prove himself worthy to become a real boy.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pinocchio'),
+                'air_start' => Carbon::create(1940, 2, 23),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pinocchio', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:44')
+            ],
         ];
 
         foreach($movies as $movie) {

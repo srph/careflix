@@ -167,11 +167,11 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'Coco',
                 'title_type' => 'movie',
-                'synopsis' => $faker->text,
+                'synopsis' => 'Aspiring musician Miguel, confronted with his family\'s ancestral ban on music, enters the Land of the Dead to find his great-great-grandfather, a legendary singer.',
                 'language' => 'English',
-                'air_start' => Carbon::create(2019),
+                'air_start' => Carbon::create(2017, 11, 22),
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Coco'),
-                'age_rating' => 'G',
+                'age_rating' => 'PG',
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Coco', 'en'),
                 //
                 'extension' => 'mp4',

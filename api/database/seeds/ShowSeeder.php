@@ -1670,19 +1670,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:52')
             ],
-            [
-                'title' => 'Big Hero 6',
-                'title_type' => 'movie',
-                'synopsis' => 'The special bond that develops between plus-sized inflatable robot Baymax, and prodigy Hiro Hamada, who team up with a group of friends to form a band of high-tech heroes.',
-                'language' => 'English',
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Big Hero 6'),
-                'air_start' => Carbon::create(1940, 2, 23),
-                'age_rating' => 'PG',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Big Hero 6', 'en'),
-                //
-                'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:52')
-            ],
+            // [
+            //     'title' => '101 Dalmatians',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'When a litter of Dalmatian puppies are abducted by the minions of Cruella de Vil, the parents must find them before she uses them for a diabolical fashion statement.',
+            //     'language' => 'English',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('101 Dalmatians'),
+            //     'air_start' => Carbon::create(1961, 1, 25),
+            //     'age_rating' => 'G',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('101 Dalmatians', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:19:16')
+            // ],
         ];
 
         foreach($movies as $movie) {

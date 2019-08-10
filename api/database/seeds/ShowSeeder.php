@@ -1657,6 +1657,32 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:44')
             ],
+            [
+                'title' => 'Big Hero 6',
+                'title_type' => 'movie',
+                'synopsis' => 'The special bond that develops between plus-sized inflatable robot Baymax, and prodigy Hiro Hamada, who team up with a group of friends to form a band of high-tech heroes.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Big Hero 6'),
+                'air_start' => Carbon::create(1940, 2, 23),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Big Hero 6', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:52')
+            ],
+            [
+                'title' => 'Big Hero 6',
+                'title_type' => 'movie',
+                'synopsis' => 'The special bond that develops between plus-sized inflatable robot Baymax, and prodigy Hiro Hamada, who team up with a group of friends to form a band of high-tech heroes.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Big Hero 6'),
+                'air_start' => Carbon::create(1940, 2, 23),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Big Hero 6', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:52')
+            ],
         ];
 
         foreach($movies as $movie) {

@@ -1663,7 +1663,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => 'The special bond that develops between plus-sized inflatable robot Baymax, and prodigy Hiro Hamada, who team up with a group of friends to form a band of high-tech heroes.',
                 'language' => 'English',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Big Hero 6'),
-                'air_start' => Carbon::create(1940, 2, 23),
+                'air_start' => Carbon::create(2014, 11, 7),
                 'age_rating' => 'PG',
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Big Hero 6', 'en'),
                 //

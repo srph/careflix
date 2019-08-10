@@ -7,6 +7,12 @@ export default [
     ]
   },
   {
+    title: 'Is Care.tv connected to Netflix?',
+    content: [
+      'No.',
+    ]
+  },
+  {
     title: 'Who made Care.tv?',
     content: [
       'Care.tv is a personal project by :author.',
@@ -20,12 +26,19 @@ export default [
     ]
   },
   {
+    title: 'Can I share this with my friends?',
+    content: [
+      "Of course, feel free to. In exchange, if you have the time, any sort of feedback would be nice.",
+      "Any public endorsements or appreciation is nice, but please try to keep our request access code private.",
+    ]
+  },
+  {
     title: 'How do you profit?',
     content: [
       `Care.tv will always be free of charge.`,
       `I don't make money out of this. This has been a long-time idea, and I enjoyed building this from the ground up.`,
       `Thanks for appreciating my work, and for providing me feedback.`,
-      `I only profit off this by having a portfolio to showcase to employers, and having a platform to learn building a product.`
+      `I only profit off this by having a portfolio to showcase to employers, and having a public platform to learn building a product.`
     ]
   },
   {
@@ -41,7 +54,7 @@ export default [
   },
   {
     title: 'Can you see our password?',
-    content: [`No, I don't. All of your passwords (including mine) is hashed by a one-way function called Bcrypt.`]
+    content: [`No, I don't. All of your passwords (including mine) are hashed by a one-way function called Bcrypt.`]
   },
   {
     title: 'But what if we forget our password?',
@@ -50,8 +63,8 @@ export default [
   {
     title: 'Can you see our messages?',
     content: [
-      `All of your messages are stored in the database. However, I am not interested in checking them at all.`,
-      `In the future, I plan to fix this by deleting all "completed" parties. But it's low-priority at the moment.`
+      `All of your messages are stored in the database. However, I will never be interested in checking them at all.`,
+      `In the future, I plan to fix this by deleting messages from "completed" parties. But it's low-priority at the moment.`
     ]
   },
   {
@@ -80,7 +93,7 @@ export default [
     title: 'How do I report bugs or request features?',
     content: [
       `Hit me up on :facebook or :twitter.`,
-      `Don't worry, I won't take feedback personally. In fact, I enjoy reading them, and usually base my priorities based on how many people want a specific feature or a bug fixed.`
+      `Don't worry, I won't take any feedback personally. In fact, I enjoy reading them, and usually base my priorities based on how many people want a specific feature or a bug fixed.`
     ]
   },
   {
@@ -93,7 +106,7 @@ export default [
   {
     title: 'Will it be possible to lower quality for slower connections?',
     content: [
-      `Having multiple qualities for one title can get very expensive fast, but this is in the roadmap.`
+      `Having multiple qualities for one title (this is called Adaptive Bitrate Streaming) can get very expensive fast, but this is in the roadmap.`
     ]
   },
 ]

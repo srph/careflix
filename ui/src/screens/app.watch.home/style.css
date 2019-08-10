@@ -39,7 +39,7 @@
   }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 992px) {
   .watch-screen-video.is-chat-open {
     width: calc(100% - var(--player-chat-pane-width-desktop));
   }

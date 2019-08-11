@@ -1703,6 +1703,19 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Parasite',
+                'title_type' => 'movie',
+                'synopsis' => 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Parasite'),
+                'air_start' => Carbon::create(2019, 11, 11),
+                'age_rating' => 'R-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Parasite', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:12:02')
+            ],
         ];
 
         foreach($movies as $movie) {

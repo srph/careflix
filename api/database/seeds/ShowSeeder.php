@@ -1707,7 +1707,7 @@ class ShowSeeder extends Seeder
                 'title' => 'Parasite',
                 'title_type' => 'movie',
                 'synopsis' => 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.',
-                'language' => 'English',
+                'language' => 'Korean',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Parasite'),
                 'air_start' => Carbon::create(2019, 11, 11),
                 'age_rating' => 'R-13',
@@ -1716,6 +1716,71 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:12:02')
             ],
+            // [
+            //     'title' => 'Kimi no na wa',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'A teenage boy and girl embark on a quest to meet each other for the first time after they magically swap bodies.',
+            //     'language' => 'Japanese',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kimi no na wa'),
+            //     'air_start' => Carbon::create(2016, 12, 14),
+            //     'age_rating' => 'PG',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Kimi no na wa', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:46:35')
+            // ],
+            // [
+            //     'title' => 'Colorful',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'A soul wakes up in the body of suicide victim Makoto and must find a way to fit into his existence. The soul must unravel two mysteries -- the secret of the great sin it committed in its previous life and why Makoto committed suicide.',
+            //     'language' => 'Japanese',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Colorful'),
+            //     'air_start' => Carbon::create(2010, 8, 21),
+            //     'age_rating' => 'PG-13',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Colorful', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:06:30')
+            // ],
+            // [
+            //     'title' => 'A Letter To Momo',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'Clinging to an unfinished letter written by her recently deceased father, young Momo moves with her mother from bustling Tokyo to the remote Japanese island of Shio.',
+            //     'language' => 'Japanese',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('A Letter To Momo'),
+            //     'air_start' => Carbon::create(2012, 4, 21),
+            //     'age_rating' => '',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('A Letter To Momo', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:18')
+            // ],
+            // [
+            //     'title' => 'Tekkonkinkreet',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'The tale of a pair of orphans who attempt to prevent the Yakuza and their assorted violent and corrupt allies from taking over their city.',
+            //     'language' => 'Japanese',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Tekkonkinkreet'),
+            //     'air_start' => Carbon::create(2006, 12, 11),
+            //     'age_rating' => 'R',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Tekkonkinkreet', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:50:36')
+            // ],
+            // [
+            //     'title' => 'Tokyo Godfathers',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'It\'s Christmas Eve and three homeless friends have experienced their own Christmas miracle: while rummaging in a dump for a Christmas present, they discover a newborn baby. Despite having nothing, the three take the baby in and name her Kiyoko, meaning Pure One.',
+            //     'language' => 'Japanese',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Tokyo Godfathers'),
+            //     'air_start' => Carbon::create(2003, 11, 8),
+            //     'age_rating' => 'PG-13',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Tokyo Godfathers', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:31:40')
+            // ],
         ];
 
         foreach($movies as $movie) {

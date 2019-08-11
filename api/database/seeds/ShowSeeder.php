@@ -1683,6 +1683,26 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:19:16')
             ],
+            [
+                'title' => 'Dororo',
+                'title_type' => 'series',
+                'synopsis' => 'This child is disposed of in a river and forgotten. But he is saved by a medicine man who provides him with prosthetics and weapons. He meets an orphan boy, and the unlikely pair now fights for their survival and humanity.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2019, 1, 7),
+                'air_end' => Carbon::create(2019, 6, 24),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dororo'),
+                'age_rating' => 'R-17+',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 24,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '24:00'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

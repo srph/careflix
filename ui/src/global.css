@@ -49,6 +49,9 @@ html, body {
   --zindex-player-volume-control: 700;
   --zindex-modal: 1000;
 
+  /**
+   * @TODO I think I meant landscape, not portrait lol.
+   */
   --player-chat-pane-width-portrait: 240px;
   --player-chat-pane-width-desktop: 320px;
 

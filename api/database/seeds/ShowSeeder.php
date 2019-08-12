@@ -1787,6 +1787,19 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [17, 19]
             ],
+            [
+                'title' => 'Detective Pikachu',
+                'title_type' => 'movie',
+                'synopsis' => 'In a world where people collect Pokémon to do battle, a boy comes across an intelligent talking Pikachu who seeks to be a detective.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Detective Pikachu'),
+                'air_start' => Carbon::create(2019, 5, 10),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Detective Pikachu', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:29')
+            ],
         ];
 
         foreach($movies as $movie) {

@@ -1781,11 +1781,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:31:40')
             ],
+            [
+                'title' => 'Kimetsu no Yaiba',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [17, 19]
+            ],
         ];
 
         foreach($movies as $movie) {
             if ($movie['title_type'] === 'movie') {
                 $show = App\Show::create(Arr::except($movie, ['duration', 'extension', 'subtitle_url']));
+
+                $this->command->info("[ShowSeeder]: Inserted {$show->title}");
 
                 App\ShowVideo::create([
                     'show_id' => $show->id,
@@ -1794,8 +1802,10 @@ class ShowSeeder extends Seeder
                     'duration' => $movie['duration'],
                     'synopsis' => $faker->text,
                 ]);
-            } else {
+            } else if ($movie['title_type'] === 'series') {
                 $show = App\Show::create(Arr::except($movie, ['seasons']));
+
+                $this->command->info("[ShowSeeder]: Inserted {$show->title}");
 
                 foreach($movie['seasons'] as $i => $season) {
                     $group = App\ShowGroup::create([
@@ -1824,52 +1834,40 @@ class ShowSeeder extends Seeder
                         ]);
                     }
                 }
-            }
-        }
+            } else if ($movie['title_type'] === 'series:append-episodes') {
+                $show = App\Show::where('title', $movie['title'])->first();
 
-        $series = [
-            // [
-            //     'title' => 'We Bare Bears',
-            //     'title_type' => 'series',
-            //     'synopsis' => $faker->text,
-            //     'language' => 'English',
-            //     'air_start' => Carbon::create(2018),
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('We Bare Bears'),
-            //     'age_rating' => 'G',
-            //     //
-            //     'seasons' => [
-            //         [
-            //             'title' => 'Season 1',
-            //             'episodes' => 23,
-            //             'extension' => 'mkv'
-            //         ]
-            //     ]
-            // ]
-        ];
+                $group = $show->groups()->where('title', $movie['season_name'])->first();
 
-        foreach($series as $series) {
-            $show = App\Show::create(Arr::except($series, ['seasons']));
+                $season = Helper::match($group->title, "/[0-9]/");
+                $start = $movie['range'][0];
+                $end = $movie['range'][1];
 
-            foreach($series['seasons'] as $i => $season) {
-                $group = App\ShowGroup::create([
-                    'show_id' => $show->id,
-                    'title' => $season['title']
-                ]);
-
-                for($j = 0; $j < $season['episodes']; $j++) {
+                foreach(range($start, $end) as $episode) {
                     App\ShowVideo::create([
                         'show_group_id' => $group->id,
                         'show_id' => $show->id,
-                        'title' => 'Episode ' . ($j + 1),
+                        'title' => 'Episode ' . $episode,
                         'video_url' => \App\Support\Helper::getVideoUrlFromEpisode([
                             'title' => $show->title,
-                            'season' => $i + 1,
-                            'episode' => $j + 1,
-                            'extension' => 'mkv'
+                            'season' => $season,
+                            'episode' => $episode,
+                            'extension' => 'mp4'
                         ]),
-                        'duration' => Helper::getDurationInSecondsFromReadableFormat('11:09'),
-                        'synopsis' => $faker->text,
+                        'subtitle_url' => Helper::getSubtitleUrlFromSeriesTitle([
+                            'title' => $show->title,
+                            'season' => $season,
+                            'episode' => $episode
+                        ]),
+                        'duration' => $group->videos->first()->duration,
+                        'synopsis' => $show->synopsis,
                     ]);
+                }
+
+                if ($start === $end) {
+                    $this->command->info("[ShowSeeder]: Appended episode {$start} for {$show->title} ({$group->title})");
+                } else {
+                    $this->command->info("[ShowSeeder]: Appended Episodes {$start}-{$end} for {$show->title} ({$group->title})");
                 }
             }
         }

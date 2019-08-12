@@ -19,6 +19,16 @@ class Helper {
   }
 
   /**
+   * Gets the first matched regex pattern
+   * 
+   * @return {string}
+   */
+  static public function match($string, $pattern) {
+    preg_match($pattern, $string, $matches);
+    return count($matches) ? $matches[0] : null;
+  }
+
+  /**
    * Properly prepend the provided path to the configurated cdn.
    */
   static public function cdn($path) {

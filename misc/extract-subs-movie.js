@@ -8,7 +8,7 @@ const { name } = require('./utils')
 // Example -----------------
 // node rename-movie.js /home/srph/uploads/tarzan-x
 // Output ------------------------
-// [Extracted Subtitle] tarzan-x.mp4 to tarzan-x-en.mp4
+// [Extracted Subtitle] tarzan-x.mkv to tarzan-x-en.srt
 const input = process.argv[2]
 const file = fs.readdirSync(input)
   .find(file => path.extname(file) === '.mkv')

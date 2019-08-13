@@ -1800,6 +1800,32 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:44:29')
             ],
+            [
+                'title' => 'Brightburn',
+                'title_type' => 'movie',
+                'synopsis' => 'What if a child from another world crash-landed on Earth, but instead of becoming a hero to mankind, he proved to be something far more sinister?',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Brightburn'),
+                'air_start' => Carbon::create(2019, 5, 24),
+                'age_rating' => 'R',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:30')
+            ],
+            [
+                'title' => 'Shoplifters',
+                'title_type' => 'movie',
+                'synopsis' => 'A family of small-time crooks take in a child they find outside in the cold.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Shoplifters'),
+                'air_start' => Carbon::create(2018, 11, 23),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Shoplifters', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:53')
+            ],
         ];
 
         foreach($movies as $movie) {

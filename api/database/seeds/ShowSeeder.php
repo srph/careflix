@@ -1948,7 +1948,7 @@ class ShowSeeder extends Seeder
                     ]);
                 }
 
-                $this->command->info("[ShowSeeder]: Appended Season {$season} ({$group->count()} episodes) to ({$group->title})");
+                $this->command->info("[ShowSeeder]: Appended Season {$season} ({$group->count()} episodes) to {$show->title}");
             }
         }
     }

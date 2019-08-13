@@ -1826,6 +1826,13 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:53')
             ],
+            [
+                'title' => 'Golden Kamuy',
+                'title_type' => 'series:append-season',
+                'season_name' => 'Season 2',
+                'episodes' => 12,
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('23:40')
+            ],
         ];
 
         foreach($movies as $movie) {
@@ -1904,10 +1911,44 @@ class ShowSeeder extends Seeder
                 }
 
                 if ($start === $end) {
-                    $this->command->info("[ShowSeeder]: Appended episode {$start} for {$show->title} ({$group->title})");
+                    $this->command->info("[ShowSeeder]: Appended Episode {$start} for {$show->title} ({$group->title})");
                 } else {
                     $this->command->info("[ShowSeeder]: Appended Episodes {$start}-{$end} for {$show->title} ({$group->title})");
                 }
+            } else if ($movie['title_type'] === 'series:append-season') {
+                $show = App\Show::where('title', $movie['title'])->first();
+
+                $group = App\ShowGroup::create([
+                    'show_id' => $show->id,
+                    'title' => $movie['season_name']
+                ]);
+
+                $season = Helper::match($group->title, "/[0-9]/");
+
+                for($i = 0; $i < $movie['episodes']; $i++) {
+                    $episode = $i + 1;
+
+                    App\ShowVideo::create([
+                        'show_group_id' => $group->id,
+                        'show_id' => $show->id,
+                        'title' => 'Episode ' . $episode,
+                        'video_url' => \App\Support\Helper::getVideoUrlFromEpisode([
+                            'title' => $show->title,
+                            'season' => $season,
+                            'episode' => $episode,
+                            'extension' => 'mp4'
+                        ]),
+                        'subtitle_url' => Helper::getSubtitleUrlFromSeriesTitle([
+                            'title' => $show->title,
+                            'season' => $season,
+                            'episode' => $episode
+                        ]),
+                        'duration' => $movie['duration'],
+                        'synopsis' => $show->synopsis,
+                    ]);
+                }
+
+                $this->command->info("[ShowSeeder]: Appended Season {$season} ({$group->count()} episodes) to ({$group->title})");
             }
         }
     }

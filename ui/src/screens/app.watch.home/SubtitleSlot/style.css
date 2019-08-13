@@ -19,6 +19,18 @@
   user-select: none;
 }
 
+/**
+ * @NOTE
+ * This is the only place we're supporting 768.
+ * A hotfix to improve my party with Brian for a split setup with his small MBP screen.
+ */
+@media (min-width: 768px) {
+  .subtitle-slot {
+    font-size: 20px;
+    padding-bottom: 48px;
+  }
+}
+
 @media (min-width: 992px) {
   .subtitle-slot {
     font-size: 24px;

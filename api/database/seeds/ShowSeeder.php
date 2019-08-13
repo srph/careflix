@@ -1833,6 +1833,19 @@ class ShowSeeder extends Seeder
                 'episodes' => 12,
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('23:40')
             ],
+            [
+                'title' => '5 Centimeters Per Second',
+                'title_type' => 'movie',
+                'synopsis' => 'Takaki Toono and Akari Shinohara, two very close friends and classmates, are torn apart when Akari\'s family is transferred to another region of Japan due to her family\'s job.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('5 Centimeters Per Second'),
+                'air_start' => Carbon::create(2007, 3, 3),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('5 Centimeters Per Second', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:02:46')
+            ],
         ];
 
         foreach($movies as $movie) {

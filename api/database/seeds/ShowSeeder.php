@@ -1846,6 +1846,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:02:46')
             ],
+            [
+                'title' => 'Godzilla: King of the Monsters',
+                'title_type' => 'movie',
+                'synopsis' => 'The crypto-zoological agency Monarch faces off against a battery of god-sized monsters, including the mighty Godzilla, who collides with Mothra, Rodan, and his ultimate nemesis, the three-headed King Ghidorah.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Godzilla: King of the Monsters'),
+                'air_start' => Carbon::create(2019, 5, 31),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Godzilla: King of the Monsters', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:11:39')
+            ],
         ];
 
         foreach($movies as $movie) {

@@ -1,0 +1,10 @@
+.app-watch-player-tooltip-popover-container {
+  z-index: var(--zindex-player-tooltip);
+}
+
+.app-watch-player-tooltip-popover {
+  padding: 16px;
+  font-size: 16px;
+  background: var(--color-black-2);
+  border-radius: var(--border-radius);
+}

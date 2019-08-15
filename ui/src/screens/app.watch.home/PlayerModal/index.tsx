@@ -11,6 +11,7 @@ import { useMediaMode } from '~/hooks/useMediaMode'
 import { useFullscreen } from '~/hooks/useFullscreen'
 import { usePlayerHotkeys } from '../usePlayerHotkeys'
 import VolumeControl from '../VolumeControl'
+import PlayerTooltip from '../PlayerTooltip'
 
 interface Props {
   party: AppParty
@@ -40,12 +41,10 @@ interface Props {
  */
 function PlayerModal({ party, ...props }: Props) {
   const overlayRef = useRef<HTMLDivElement>()
-
   const media = useMediaMode()
-
   const [isFullscreen, toggleIsFullsceen] = useFullscreen()
-
   const [isVolumeControlOpen, setIsVolumeControlOpen] = useState(false)
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -121,6 +120,14 @@ function PlayerModal({ party, ...props }: Props) {
     setIsVolumeControlOpen(false)
   }
 
+  function handleOpenTooltip() {
+    setIsTooltipOpen(true)
+  }
+
+  function handleCloseTooltip() {
+    setIsTooltipOpen(false)
+  }
+
   return (
     <Transition
       component="div"
@@ -162,7 +169,7 @@ function PlayerModal({ party, ...props }: Props) {
           </div>
 
           <div className="watch-player-contents">
-            {!isVolumeControlOpen && (
+            {(!isVolumeControlOpen && !isTooltipOpen) && (
               <div className="watch-player-controls">
                 <div className="time">
                   {toReadableTime(props.time, {
@@ -199,25 +206,31 @@ function PlayerModal({ party, ...props }: Props) {
 
             <div className="watch-player-modal-actions">
               <div className="section">
-                <div className="action">
-                  <UiPlainButton className="icon" onClick={props.onPlay}>
-                    {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
-                  </UiPlainButton>
-                </div>
+                <PlayerTooltip text={props.isPlaying ? 'Pause' : 'Play'} align="left" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item">
+                    <UiPlainButton className="icon" onClick={props.onPlay}>
+                      {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
+                    </UiPlainButton>
+                  </div>
+                </PlayerTooltip>
 
-                <div className="action">
-                  <UiPlainButton className="icon" onClick={handleBackward}>
-                    <i className="fa fa-backward" />
-                  </UiPlainButton>
-                </div>
+                <PlayerTooltip text="Rewind by 10 seconds" align="left" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item">
+                    <UiPlainButton className="icon" onClick={handleBackward}>
+                      <i className="fa fa-backward" />
+                    </UiPlainButton>
+                  </div>
+                </PlayerTooltip>
 
-                <div className="action">
-                  <UiPlainButton className="icon" onClick={handleForward}>
-                    <i className="fa fa-forward" />
-                  </UiPlainButton>
-                </div>
+                <PlayerTooltip text="Forward by 10 seconds" align="left" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item">
+                    <UiPlainButton className="icon" onClick={handleForward}>
+                      <i className="fa fa-forward" />
+                    </UiPlainButton>
+                  </div>
+                </PlayerTooltip>
 
-                <div className="action">
+                <div className="watch-player-modal-action-item">
                   <VolumeControl
                     volume={props.volume}
                     isMuted={props.isMuted}
@@ -249,31 +262,39 @@ function PlayerModal({ party, ...props }: Props) {
                   </UiPlainButton>
                 </div> */}
 
-                <div className="action is-keyboard-icon">
-                  <UiPlainButton className="icon" onClick={props.onOpenKeyboardInfo}>
-                    <i className="fa fa-keyboard-o" />
-                  </UiPlainButton>
-                </div>
-
-                {party.video.show.title_type === 'series' && (
-                  <div className="action" onClick={props.onOpenSeasonSelection}>
-                    <UiPlainButton className="icon">
-                      <i className="fa fa-list-ol" />
+                <PlayerTooltip text="View keyboard shortcuts" align="right" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item is-keyboard-icon">
+                    <UiPlainButton className="icon" onClick={props.onOpenKeyboardInfo}>
+                      <i className="fa fa-keyboard-o" />
                     </UiPlainButton>
                   </div>
+                </PlayerTooltip>
+
+                {party.video.show.title_type === 'series' && (
+                  <PlayerTooltip text="Open Episode Selection" align="right" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                    <div className="watch-player-modal-action-item" onClick={props.onOpenSeasonSelection}>
+                      <UiPlainButton className="icon">
+                        <i className="fa fa-list-ol" />
+                      </UiPlainButton>
+                    </div>
+                  </PlayerTooltip>
                 )}
 
-                <div className="action is-fs-icon" onClick={toggleIsFullsceen}>
-                  <UiPlainButton className="icon">
-                    {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
-                  </UiPlainButton>
-                </div>
+                <PlayerTooltip text={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} align="right" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item is-fs-icon" onClick={toggleIsFullsceen}>
+                    <UiPlainButton className="icon">
+                      {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
+                    </UiPlainButton>
+                  </div>
+                </PlayerTooltip>
 
-                <div className="action is-chat-icon">
-                  <UiPlainButton className="icon" onClick={props.onToggleChat}>
-                    {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
-                  </UiPlainButton>
-                </div>
+                <PlayerTooltip text={props.isChatOpen ? 'Close Chat' : 'Open Chat'} align="right" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item is-chat-icon">
+                    <UiPlainButton className="icon" onClick={props.onToggleChat}>
+                      {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
+                    </UiPlainButton>
+                  </div>
+                </PlayerTooltip>
               </div>
             </div>
           </div>

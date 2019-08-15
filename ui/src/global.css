@@ -47,6 +47,7 @@ html, body {
   --zindex-player-subtitles: 550;
   --zindex-player-state-buffered-indicator: 600;
   --zindex-player-volume-control: 700;
+  --zindex-player-tooltip: 700;
   --zindex-modal: 1000;
 
   /**

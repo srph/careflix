@@ -1937,6 +1937,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:36:53')
             ],
+            [
+                'title' => 'La La Land',
+                'title_type' => 'movie',
+                'synopsis' => 'While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('La La Land'),
+                'air_start' => Carbon::create(2016, 12, 25),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('La La Land', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:07:48')
+            ],
         ];
 
         foreach($movies as $movie) {

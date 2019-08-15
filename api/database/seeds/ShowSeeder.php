@@ -1885,6 +1885,58 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:39:220')
             ],
+            [
+                'title' => 'Pitch Perfect',
+                'title_type' => 'movie',
+                'synopsis' => 'Beca, a freshman at Barden University, is cajoled into joining The Bellas, her school\'s all-girls singing group. Injecting some much needed energy into their repertoire, The Bellas take on their male rivals in a campus competition.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pitch Perfect'),
+                'air_start' => Carbon::create(2012, 10, 5),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pitch Perfect', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:52:07')
+            ],
+            [
+                'title' => 'Pitch Perfect 2',
+                'title_type' => 'movie',
+                'synopsis' => 'After a humiliating command performance at The Kennedy Center, the Barden Bellas enter an international competition that no American group has ever won in order to regain their status and right to perform.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pitch Perfect 2'),
+                'air_start' => Carbon::create(2015, 5, 15),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pitch Perfect 2', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:54:46')
+            ],
+            [
+                'title' => 'Pitch Perfect 3',
+                'title_type' => 'movie',
+                'synopsis' => 'Following their win at the world championship, the now separated Bellas reunite for one last singing competition at an overseas USO tour, but face a group who uses both instruments and voices.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pitch Perfect 3'),
+                'air_start' => Carbon::create(2017, 12, 22),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pitch Perfect 3', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:02')
+            ],
+            [
+                'title' => 'Mean Girls',
+                'title_type' => 'movie',
+                'synopsis' => 'Cady Heron is a hit with The Plastics, the A-list girl clique at her new school, until she makes the mistake of falling for Aaron Samuels, the ex-boyfriend of alpha Plastic Regina George.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Mean Girls'),
+                'air_start' => Carbon::create(2004, 4, 30),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Mean Girls', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:36:53')
+            ],
         ];
 
         foreach($movies as $movie) {

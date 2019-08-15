@@ -1872,19 +1872,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:39')
             ],
-            // [
-            //     'title' => 'Ma',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A lonely woman befriends a group of teenagers and decides to let them party at her house. Just when the kids think their luck couldn\'t get any better, things start happening that make them question the intention of their host.',
-            //     'language' => 'English',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ma'),
-            //     'air_start' => Carbon::create(2019, 5, 31),
-            //     'age_rating' => 'R',
-            //     'subtitle_url' => '',
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:39:30')
-            // ],
+            [
+                'title' => 'Ma',
+                'title_type' => 'movie',
+                'synopsis' => 'A lonely woman befriends a group of teenagers and decides to let them party at her house. Just when the kids think their luck couldn\'t get any better, things start happening that make them question the intention of their host.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ma'),
+                'air_start' => Carbon::create(2019, 5, 31),
+                'age_rating' => 'R',
+                'subtitle_url' => '',
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:39:220')
+            ],
         ];
 
         foreach($movies as $movie) {

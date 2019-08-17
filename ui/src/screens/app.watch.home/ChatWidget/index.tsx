@@ -5,6 +5,7 @@ import UiAvatar from '~/components/UiAvatar'
 import UiInput from '~/components/UiInput'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
+import TextareaAutosize from 'react-textarea-autosize'
 import cx from 'classnames'
 import { usePropRef } from '~/hooks/usePropRef'
 
@@ -23,7 +24,7 @@ import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateT
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
-import UiAvatarGroup from '~components/UiAvatarGroup';
+import UiAvatarGroup from '~components/UiAvatarGroup'
 
 interface State {
   logs: AppPartyLog[]
@@ -140,6 +141,8 @@ function ChatWidget(props: Props) {
 
   const sendAudioRef = useRef<HTMLAudioElement>(null)
 
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
   // One-off flag used to check if we're supposed to scroll to the bottom
   const shouldScrollToBottomRef = useRef<boolean>(true)
 
@@ -186,12 +189,12 @@ function ChatWidget(props: Props) {
     // If the user was scrolled to the bottom before receiving a new message
     // we'll keep the illusion that they still are.
     shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current)
-  
+
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
     })
-    
+
     if (!isWindowVisible && event.log.type === 'message') {
       // Let's play a sound if the user receives a message while switched to another tab.
       idleAudioRef.current.play()
@@ -217,7 +220,11 @@ function ChatWidget(props: Props) {
       }
 
       // We don't want keyboard events to fire while a modal is open
-      if (propsRef.current.isInvitationOpen || propsRef.current.isSeasonSelectionOpen || propsRef.current.isKeyboardInfoOpen) {
+      if (
+        propsRef.current.isInvitationOpen ||
+        propsRef.current.isSeasonSelectionOpen ||
+        propsRef.current.isKeyboardInfoOpen
+      ) {
         return
       }
 
@@ -310,18 +317,34 @@ function ChatWidget(props: Props) {
 
   function handleInputKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
     if (evt.keyCode === 27) {
+      // We want to blur the input if the user presses escape to make it
+      // convenient to access video player hotkeys without having to press anywhere
       inputRef.current.blur()
+    }
+
+    if (evt.keyCode === 13 && !evt.shiftKey) {
+      // We want the message to be sent if the user presses enter;
+      // To make a new line, the user has to press shift.
+      buttonRef.current.click()
+
+      // If we don't call this, we would send the message then make a new line.
+      evt.preventDefault()
     }
   }
 
   return (
-    <div className={cx('watch-screen-chat', {
-      'is-chat-open': props.isChatOpen
-    })}>
+    <div
+      className={cx('watch-screen-chat', {
+        'is-chat-open': props.isChatOpen
+      })}>
       <div className="watch-screen-canopy">
         <UiAvatarGroup users={props.party.members} />
 
-        <ChatInvitationModal isOpen={props.isInvitationOpen} onOpen={props.onOpenInvitationModal} onClose={props.onCloseInvitationModal} />
+        <ChatInvitationModal
+          isOpen={props.isInvitationOpen}
+          onOpen={props.onOpenInvitationModal}
+          onClose={props.onCloseInvitationModal}
+        />
       </div>
 
       <div className="watch-screen-chat-messages" ref={chatbarRef}>
@@ -357,9 +380,7 @@ function ChatWidget(props: Props) {
               </div>
 
               <div className="messages">
-                {!isSelf && (
-                  <div className="name">{group.user.name}</div>
-                )}
+                {!isSelf && <div className="name">{group.user.name}</div>}
 
                 <div className="list">
                   {group.logs.map(log => (
@@ -376,11 +397,18 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <UiInput isDark isRound placeholder={`Write something... (press "/" to focus)`} value={state.message.text} ref={inputRef} onChange={handleInput} onKeyDown={handleInputKeyDown} />
+          <TextareaAutosize
+            placeholder={`Press / to focus`}
+            value={state.message.text}
+            inputRef={inputRef}
+            onChange={handleInput}
+            onKeyDown={handleInputKeyDown}
+            className="textarea"
+          />
 
-          {isSubmittable && <UiPlainButton className="button">
-            <i className="fa fa-send" />
-          </UiPlainButton>}
+          <UiPlainButton className="button" disabled={!isSubmittable} ref={buttonRef}>
+            <i className="fa fa-arrow-up" />
+          </UiPlainButton>
         </form>
       </div>
 

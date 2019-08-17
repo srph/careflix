@@ -25,17 +25,51 @@
   border-top: 1px solid var(--color-black-1);
 }
 
+/**
+ * .watch-screen-chatbar-input
+ */
 .watch-screen-chatbar-input {
   position: relative;
+  display: flex;
+
+  /* sanitize.css puts a margin to forms */
+  margin: 0;
 }
 
 .watch-screen-chatbar-input > .button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  padding: 12px;
+  flex-shrink: 0;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  width: 24px;
+  font-size: 10px;
   background: var(--color-primary);
   border-radius: 50%;
+  transition: 100ms background ease;
+}
+
+.watch-screen-chatbar-input > .button:disabled {
+  background: var(--color-black-5);
+}
+
+.watch-screen-chatbar-input > .textarea {
+  display: block;
+  margin-right: 16px;
+  padding: 16px;
+  width: 100%;
+  color: var(--color-black-5);
+  background: var(--color-black-2);
+  outline: 0;
+  background: var(--color-black-3);
+  border: 1px solid transparent;
+  border-radius: 25px;
+  resize: none;
+}
+
+.watch-screen-chatbar-input > .textarea:focus {
+  border-color: rgb(29, 161, 242);
 }
 
 .chat-notification-audio {

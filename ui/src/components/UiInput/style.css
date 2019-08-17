@@ -11,6 +11,7 @@
 }
 
 .ui-input:focus {
+  background: var(--color-black-1);
   border-color: rgb(29, 161, 242);
 }
 

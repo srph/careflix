@@ -4,12 +4,12 @@ import cx from 'classnames'
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement>
 
-function UiButton({ className, ...props }: Props) {
+function UiPlainButton({ className, ...props }: Props, ref: React.MutableRefObject<HTMLButtonElement>) {
   return (
-    <button {...props} className={cx('ui-plain-button', [className])}>
+    <button {...props} ref={ref} className={cx('ui-plain-button', [className])}>
       {props.children}
     </button>
   )
 }
 
-export default UiButton
+export default React.forwardRef(UiPlainButton)

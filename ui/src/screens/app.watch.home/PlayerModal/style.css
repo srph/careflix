@@ -199,6 +199,11 @@
   }
 }
 
+.watch-player-modal-action-item.is-subtitle-disabled {
+  opacity: 0.5;
+  transition: 200ms opacity ease;
+}
+
 .watch-player-modal-action-item.is-fs-icon {
   margin-right: 0;
 }

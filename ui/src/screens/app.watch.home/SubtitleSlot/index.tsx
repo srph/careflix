@@ -14,6 +14,7 @@ interface State {
 interface Props {
   video: AppShowVideo
   time: number
+  isEnabled: boolean
   isPlayerOpen: boolean
 }
 
@@ -43,6 +44,10 @@ function SubtitleSlot(props: Props) {
   }
 
   if (!state.tracks.length) {
+    return null
+  }
+
+  if (!props.isEnabled) {
     return null
   }
 

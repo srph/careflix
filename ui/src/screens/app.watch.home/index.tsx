@@ -35,6 +35,7 @@ interface State {
   isInvitationOpen: boolean
   isKeyboardInfoOpen: boolean
   isMuted: boolean
+  isSubtitleEnabled: boolean
 }
 
 type Action =
@@ -55,6 +56,7 @@ type Action =
   | ReducerAction<'keyboard-info-modal:toggle', { isKeyboardInfoOpen: boolean }>
   | ReducerAction<'toggle-chat'>
   | ReducerAction<'toggle-mute'>
+  | ReducerAction<'toggle-subtitle'>
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -172,6 +174,13 @@ const reducer = (state: State, action: Action): State => {
         isMuted: !state.isMuted
       }
     }
+
+    case 'toggle-subtitle': {
+      return {
+        ...state,
+        isSubtitleEnabled: !state.isSubtitleEnabled
+      }
+    }
   }
 
   return state
@@ -195,7 +204,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isChatOpen: true,
     isInvitationOpen: false,
     isKeyboardInfoOpen: false,
-    isMuted: false
+    isMuted: false,
+    isSubtitleEnabled: Boolean(context.party.video.subtitle_url)
   })
 
   const $video = useRef<HTMLVideoElement>()
@@ -443,6 +453,13 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
   }
 
+
+  function handleToggleSubtitle() {
+    dispatch({
+      type: 'toggle-subtitle'
+    })
+  }
+
   return (
     <React.Fragment>
       <BodyClassName className="watch-screen-html-body" />
@@ -498,7 +515,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           )}
 
           {state.isInitialized && (
-            <SubtitleSlot video={context.party.video} isPlayerOpen={state.isOpen} time={state.time} />
+            <SubtitleSlot video={context.party.video} isEnabled={state.isSubtitleEnabled} isPlayerOpen={state.isOpen} time={state.time} />
           )}
 
           <PlayerModal
@@ -513,6 +530,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             isSeasonSelectionOpen={state.isSeasonSelectionOpen}
             isInvitationOpen={state.isInvitationOpen}
             isKeyboardInfoOpen={state.isKeyboardInfoOpen}
+            isSubtitleEnabled={state.isSubtitleEnabled}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}
@@ -522,6 +540,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             onChangeVolume={handleChangeVolume}
             onToggleChat={handleToggleChat}
             onToggleMute={handleToggleMute}
+            onToggleSubtitle={handleToggleSubtitle}
           />
 
           <SeasonSelectionModal

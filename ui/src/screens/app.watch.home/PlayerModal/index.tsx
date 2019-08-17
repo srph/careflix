@@ -83,6 +83,12 @@ function PlayerModal({ party, ...props }: Props) {
     onBackward() {
       handleBackward()
     },
+    onIncreaseVolume() {
+      props.onChangeVolume(props.volume += 0.1)
+    },
+    onDecreaseVolume() {
+      props.onChangeVolume(props.volume -= 0.1)
+    },
     onToggleKeyboardInfo() {
       if (props.isKeyboardInfoOpen) {
         props.onCloseKeyboardInfo()

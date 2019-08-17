@@ -15,6 +15,15 @@ function PlayerSeeker(props: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const labelRef = useRef<HTMLDivElement>(null)
 
+  const translateX = useMemo(() => {
+    if (!labelRef.current || !containerRef.current) {
+      return ''
+    }
+    const containerWidth = containerRef.current.getBoundingClientRect().width
+    const labelWidth = labelRef.current.getBoundingClientRect().width
+    return percentage === -1 ? '' : `${percentage * containerWidth - labelWidth / 2}px`
+  }, [percentage])
+
   function handleSeek({ x }: SliderValue) {
     props.onSeek(x)
   }
@@ -29,17 +38,6 @@ function PlayerSeeker(props: Props) {
   function handleMouseLeave() {
     setPercentage(-1)
   }
-
-  const translateX = useMemo(() => {
-    if (!labelRef.current || !containerRef.current) {
-      return ''
-    }
-
-    const containerWidth = containerRef.current.getBoundingClientRect().width
-    const labelWidth = labelRef.current.getBoundingClientRect().width
-
-    return percentage === -1 ? '' : `${percentage * containerWidth - labelWidth / 2}px`
-  }, [percentage])
 
   return (
     <div

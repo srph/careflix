@@ -21,6 +21,8 @@ const shortcuts: Shortcut[] = [
   { name: 'Open/close chat', combo: 'C' },
   { name: 'Focus to chat input (while chat is open)', combo: '/' },
   { name: 'Open keyboard shortcuts info', combo: '?' },
+  { name: 'Increase volume', combo: '↑' },
+  { name: 'Decrease volume', combo: '↓' },
 ]
 
 function PlayerKeyboardInfoModal(props: Props) {

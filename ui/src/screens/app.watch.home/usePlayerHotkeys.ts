@@ -8,18 +8,22 @@ interface Props {
   onFullscreen: () => void
   onPlay: () => void
   onForward: () => void
-  onBackward: () => void,
+  onBackward: () => void
+  onIncreaseVolume: () => void
+  onDecreaseVolume: () => void
   onToggleKeyboardInfo: () => void
 }
 
 const keys = {
   LEFT_ARROW: 37,
   RIGHT_ARROW: 39,
+  UP_ARROW: 38,
+  DOWN_ARROW: 40,
   SPACE: 32,
   F: 70,
   C: 67,
   M: 77,
-  SLASH: 191
+  SLASH: 191,
 }
 
 function usePlayerHotkeys(hookProps: Props) {
@@ -46,6 +50,16 @@ function usePlayerHotkeys(hookProps: Props) {
 
         case keys.RIGHT_ARROW: {
           props.current.onForward();
+          break;
+        }
+
+        case keys.UP_ARROW: {
+          props.current.onIncreaseVolume();
+          break;
+        }
+
+        case keys.DOWN_ARROW: {
+          props.current.onDecreaseVolume();
           break;
         }
 

@@ -427,6 +427,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }
 
   function handleChangeVolume(volume: number) {
+    volume = Math.max(0, Math.min(volume, 1))
+
     dispatch({
       type: 'change-volume',
       payload: { volume }
@@ -436,8 +438,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }
 
   function handleToggleMute() {
-    $video.current.muted = !state.isMuted
-
     dispatch({
       type: 'toggle-mute'
     })
@@ -547,7 +547,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
       </div>
 
       {props.children}
-      
+
       <KeyboardInfoModal isOpen={state.isKeyboardInfoOpen} onClose={handleKeyboardInfoClose} />
     </React.Fragment>
   )

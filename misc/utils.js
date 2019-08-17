@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 
 function last(arr) {
   return arr[arr.length - 1]
@@ -21,4 +22,12 @@ exports.sort = function sort(files) {
 // Remove trailing slashes
 exports.untrail = function untrail(dir) {
   return dir.replace(/\/$/, '')
+}
+
+// Get all directories
+// @source https://stackoverflow.com/a/24594123/2698227
+exports.directories = function directories(path) {
+  return fs.readdirSync(path, { withFileTypes: true })
+    .filter(f => f.isDirectory())
+    .map(d => d.name)
 }

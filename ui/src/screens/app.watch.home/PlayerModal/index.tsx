@@ -3,13 +3,13 @@ import * as React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import Transition from 'react-addons-css-transition-group'
 import UiPlainButton from '~/components/UiPlainButton'
-import Slider, { SliderValue } from 'react-input-slider'
 import toReadableTime from '~/utils/date/toReadableTime'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 import { Link } from 'react-router-dom'
 import { useMediaMode } from '~/hooks/useMediaMode'
 import { useFullscreen } from '~/hooks/useFullscreen'
 import { usePlayerHotkeys } from '../usePlayerHotkeys'
+import PlayerSeeker from '../PlayerSeeker'
 import VolumeControl from '../VolumeControl'
 import PlayerTooltip from '../PlayerTooltip'
 
@@ -92,10 +92,6 @@ function PlayerModal({ party, ...props }: Props) {
     }
   })
 
-  function handleSeek({ x }: SliderValue) {
-    props.onSeek(x)
-  }
-
   function handleForward() {
     props.onSeek(Math.min(props.time + 10, party.video.duration))
   }
@@ -177,28 +173,7 @@ function PlayerModal({ party, ...props }: Props) {
                   })}
                 </div>
 
-                <div className="slider">
-                  <Slider
-                    axis="x"
-                    x={props.time}
-                    xmin={0}
-                    xmax={party.video.duration}
-                    onChange={handleSeek}
-                    styles={{
-                      active: { background: 'var(--color-primary)' },
-                      thumb: {
-                        background: 'var(--color-primary)',
-                        height: 28,
-                        width: 28
-                      },
-                      track: {
-                        width: '100%',
-                        height: 8,
-                        cursor: 'pointer'
-                      }
-                    }}
-                  />
-                </div>
+                <PlayerSeeker time={props.time} duration={party.video.duration} onSeek={props.onSeek} />
 
                 <div className="time">{toReadableTime(party.video.duration)}</div>
               </div>

@@ -1,0 +1,14 @@
+.app-watch-player-seeker {
+  position: relative;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.app-watch-player-seeker > .time {
+  position: absolute;
+  top: -32px;
+  left: 0;
+  padding: 8px;
+  background: var(--color-black-4);
+  border-radius:  var(--border-radius);
+}

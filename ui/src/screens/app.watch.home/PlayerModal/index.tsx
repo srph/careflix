@@ -182,7 +182,7 @@ function PlayerModal({ party, ...props }: Props) {
             <div className="watch-player-modal-actions">
               <div className="section">
                 <PlayerTooltip text={props.isPlaying ? 'Pause' : 'Play'} align="left" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item">
+                  <div className="watch-player-modal-action-item is-control">
                     <UiPlainButton className="icon" onClick={props.onPlay}>
                       {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
                     </UiPlainButton>
@@ -190,7 +190,7 @@ function PlayerModal({ party, ...props }: Props) {
                 </PlayerTooltip>
 
                 <PlayerTooltip text="Rewind by 10 seconds" align="left" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item">
+                  <div className="watch-player-modal-action-item is-control">
                     <UiPlainButton className="icon" onClick={handleBackward}>
                       <i className="fa fa-backward" />
                     </UiPlainButton>
@@ -198,14 +198,14 @@ function PlayerModal({ party, ...props }: Props) {
                 </PlayerTooltip>
 
                 <PlayerTooltip text="Forward by 10 seconds" align="left" onOpen={handleOpenTooltip} onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item">
+                  <div className="watch-player-modal-action-item is-control">
                     <UiPlainButton className="icon" onClick={handleForward}>
                       <i className="fa fa-forward" />
                     </UiPlainButton>
                   </div>
                 </PlayerTooltip>
 
-                <div className="watch-player-modal-action-item">
+                <div className="watch-player-modal-action-item is-control">
                   <VolumeControl
                     volume={props.volume}
                     isMuted={props.isMuted}

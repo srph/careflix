@@ -15,7 +15,10 @@
 
 @media (min-width: 992px) {
   .app-watch-chat-invitation-modal {
+    display: flex;
+    flex-direction: column;
     margin: 0 auto;
+    height: 100%;
     width: 480px;
     background: var(--color-black-2);
     border-radius: var(--border-radius);
@@ -23,6 +26,7 @@
 }
 
 .app-watch-chat-invitation-modal > .heading {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,7 +51,7 @@
 }
 
 .user-list {
-  max-height: 480px;
+  height: 100%;
   overflow-y: scroll;
 }
 

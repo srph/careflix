@@ -52,6 +52,7 @@
 
 .watch-screen-chatbar-input > .button:disabled {
   background: var(--color-black-5);
+  cursor: not-allowed;
 }
 
 .watch-screen-chatbar-input > .textarea {

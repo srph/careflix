@@ -287,6 +287,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 16px;
   margin-right: 16px;
   height: 40px;
   width: 40px;
@@ -303,7 +304,6 @@
 
 .watch-player-mobile-actions > .action {
   padding: 16px;
-  margin-right: 16px;
   font-size: 16px;
   pointer-events: all;
 }

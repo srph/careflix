@@ -1958,7 +1958,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hello, Love, Goodbye'),
                 'air_start' => Carbon::create(2019, 8, 9),
                 'age_rating' => 'PG-13',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hello, Love, Goodbye', 'en'),
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:23')

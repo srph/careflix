@@ -60,15 +60,16 @@
   padding: 16px;
   width: 100%;
   color: var(--color-black-5);
-  background: var(--color-black-2);
   outline: 0;
-  background: var(--color-black-3);
+  /* @TODO - Maybe update --color-black-4 in the future */
+  background: rgb(37, 51, 65);
   border: 1px solid transparent;
   border-radius: 25px;
   resize: none;
 }
 
 .watch-screen-chatbar-input > .textarea:focus {
+  background: var(--color-black-1);
   border-color: rgb(29, 161, 242);
 }
 

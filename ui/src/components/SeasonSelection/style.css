@@ -25,10 +25,34 @@
 }
 
 .c-season-selection-episode > .thumbnail {
+  position: relative;
   flex-shrink: 0;
   width: 120px;
   margin-right: 12px;
   cursor: pointer;
+}
+
+.c-season-selection-episode > .thumbnail > .img {
+  position: relative;
+  z-index: 500;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.c-season-selection-episode > .thumbnail > .playlabel {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: inline-block;
+  padding: 4px;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border-radius: var(--border-radius);
+  z-index: 501;
+}
+
+.c-season-selection-episode > .thumbnail > .playlabel > .ui-subheading {
+  font-size: 10px;
 }
 
 .c-season-selection-episode > .info {

@@ -9,6 +9,7 @@ import getFormattedDurationWithoutSeconds from '~/utils/date/getFormattedDuratio
 import axios from '~/lib/axios'
 
 interface Props {
+  party?: AppParty
   show: AppShow | null
   currentVideo?: AppShowVideo
   onFetch?: (groups: AppShowGroup[]) => void
@@ -43,10 +44,13 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         groups: action.payload.groups,
-        selectedGroupId: state.selectedGroupId === -1
-          // If no selectedGroupId was provided, we'll apply the first season if it exists.
-          ? (action.payload.groups.length ? action.payload.groups[0].id : -1)
-          : state.selectedGroupId,
+        selectedGroupId:
+          state.selectedGroupId === -1
+            ? // If no selectedGroupId was provided, we'll apply the first season if it exists.
+              action.payload.groups.length
+              ? action.payload.groups[0].id
+              : -1
+            : state.selectedGroupId,
         isLoading: false
       }
     }
@@ -144,9 +148,10 @@ function ShowModal(props: Props) {
 
   return (
     <React.Fragment>
-      <div className={cx('c-season-selection-select', {
-        'is-light': props.mode === 'light'
-      })}>
+      <div
+        className={cx('c-season-selection-select', {
+          'is-light': props.mode === 'light'
+        })}>
         <UiSelect value={state.selectedGroupId} onChange={handleGroupChange} mode={props.mode}>
           {state.groups.map(group => (
             <option value={group.id} key={group.id}>
@@ -157,27 +162,44 @@ function ShowModal(props: Props) {
       </div>
 
       <section>
-        {group.videos.map(video => (
-          <button type="button" className={cx('c-season-selection-episode', {
-            'is-light': props.mode === 'light'
-          })} key={video.id} onClick={() => handleEpisodeClick(video)}>
-            <div className="thumbnail">
-              <StandardImageAspectRatio src={props.show.preview_image} />
-            </div>
+        {group.videos.map(video => {
+          const active = Boolean(props.currentVideo) && props.currentVideo.id === video.id
 
-            <div className="info">
-              <div className="meta">
-                <h5 className="ui-subheading is-compact">{getFormattedDurationWithoutSeconds(video.duration)}</h5>
+          return (
+            <button
+              type="button"
+              className={cx('c-season-selection-episode', {
+                'is-light': props.mode === 'light'
+              })}
+              key={video.id}
+              onClick={() => handleEpisodeClick(video)}>
+              <div className="thumbnail">
+                {active && (
+                  <span className="playlabel">
+                    <h5 className="ui-subheading">Playing</h5>
+                  </span>
+                )}
+                <div className="img">
+                  <StandardImageAspectRatio src={props.show.preview_image} />
+                </div>
               </div>
 
-              <h3 className="title">{video.title}</h3>
-            </div>
+              <div className="info">
+                <div className="meta">
+                  <h5 className="ui-subheading is-compact">{getFormattedDurationWithoutSeconds(video.duration)}</h5>
+                </div>
 
-            <span className="play">
-              <i className="fa fa-play" />
-            </span>
-          </button>
-        ))}
+                <h3 className="title">{video.title}</h3>
+              </div>
+
+              {!active && (
+                <span className="play">
+                  <i className="fa fa-play" />
+                </span>
+              )}
+            </button>
+          )
+        })}
       </section>
     </React.Fragment>
   )

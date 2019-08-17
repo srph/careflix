@@ -1963,19 +1963,6 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:23')
             ],
-            [
-                'title' => 'Hello, Love, Goodbye',
-                'title_type' => 'movie',
-                'synopsis' => 'The film centers on the love story of Joy (Bernardo) and Ethan (Richards), Filipino workers based in Hong Kong. Ethan, a bartender, is keen on romantically pursuing Joy, a domestic helper who is wholly dedicated to providing for her family.',
-                'language' => 'Tagalog',
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hello, Love, Goodbye'),
-                'air_start' => Carbon::create(2019, 8, 9),
-                'age_rating' => 'PG-13',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Hello, Love, Goodbye', 'en'),
-                //
-                'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:23')
-            ],
             // [
             //     'title' => 'Arrietty',
             //     'title_type' => 'movie',

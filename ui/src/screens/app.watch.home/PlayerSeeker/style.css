@@ -11,4 +11,5 @@
   padding: 8px;
   background: var(--color-black-4);
   border-radius:  var(--border-radius);
+  pointer-events: none;
 }

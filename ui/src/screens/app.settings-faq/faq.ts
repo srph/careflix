@@ -2,8 +2,7 @@ export default [
   {
     title: 'What is Care.tv?',
     content: [
-      'Care.tv is like Netflix, but for personal use. On top of this, this app also has sync-play, chat, invitation system.',
-      'You are free to use it however you want—alone or with a friend.'
+      'Care.tv is like Netflix with sync-play, chat, and invitation system.',
     ]
   },
   {
@@ -30,6 +29,13 @@ export default [
     content: [
       "Of course, feel free to. In exchange, if you have the time, any sort of feedback would be nice.",
       "Any public endorsements or appreciation is nice, but please try to keep our request access code private.",
+    ]
+  },
+  {
+    title: 'Can I watch without a party invitation?',
+    content: [
+      `Yup! Watching a show creates a private room (which we call party) which can only be accessed by people you invite.`,
+      `You and your friends can host your own parties all at the same time without issues.`
     ]
   },
   {

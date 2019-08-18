@@ -12,5 +12,8 @@ export default {
     title: 'Pulse',
     tagline: 'An annual bullet journal to help you track your progress. ',
     description: 'Pulse is an annual bullet journal to help you track your progress. '
+  },
+  links: {
+    changelogs: 'https://www.notion.so/6591cc7552bf4b3f8f4a80ba7d7d9e00?v=ce00c057beda4f2495e733d5a38db73b'
   }
 }

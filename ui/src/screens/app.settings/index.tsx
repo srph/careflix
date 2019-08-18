@@ -13,6 +13,7 @@ import { AuthContainer } from '~/containers'
 import { useIsPWA } from '~/hooks/useIsPWA'
 import useWindowSize from 'react-use/lib/useWindowSize'
 
+import config from '~/config'
 import asset_author from '~/assets/author.jpg'
 
 /**
@@ -92,12 +93,24 @@ function AppSettings(props: ReactComponentWrapper) {
                 <i className="fa fa-question" />
               </div>
 
-              <div className="text">Frequently Asked Questions</div>
+              <div className="text">Frequently asked questions</div>
 
               <div className="caret">
                 <i className="fa fa-angle-right" />
               </div>
             </Link>
+
+            <a href={config.links.changelogs} target="_blank" className="item">
+              <div className="icon">
+                <i className="fa fa-newspaper-o" />
+              </div>
+
+              <div className="text">Changelogs</div>
+
+              <div className="caret">
+                <i className="fa fa-angle-right" />
+              </div>
+            </a>
 
             <Link to="/logout" className="item">
               <div className="icon">

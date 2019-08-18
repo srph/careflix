@@ -16,7 +16,7 @@ import axios from '~/lib/axios'
 import last from '~/utils/last'
 import uuid from '~/lib/uuid'
 import immer from 'immer'
-import { useReducer, useEffect, useMemo, useRef } from 'react'
+import { useReducer, useState, useEffect, useMemo, useRef } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePusher } from '~/hooks/usePusher'
 import { useWindowVisibility } from '~/hooks/useWindowVisibility'
@@ -25,7 +25,7 @@ import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateT
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
 import UiAvatarGroup from '~components/UiAvatarGroup'
-import isFocusedToInput from '~/utils/dom/isFocusedToInput';
+import isFocusedToInput from '~/utils/dom/isFocusedToInput'
 
 interface State {
   logs: AppPartyLog[]
@@ -136,6 +136,8 @@ function ChatWidget(props: Props) {
 
   const [state, dispatch] = useReducer(reducer, init)
 
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
+
   const chatbarRef = useRef<HTMLDivElement>(null)
 
   const idleAudioRef = useRef<HTMLAudioElement>(null)
@@ -146,6 +148,9 @@ function ChatWidget(props: Props) {
 
   // One-off flag used to check if we're supposed to scroll to the bottom
   const shouldScrollToBottomRef = useRef<boolean>(true)
+
+  // One-off flag used to check if it's a message sent through pusher
+  const isReceivingRef = useRef<boolean>(true)
 
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
 
@@ -175,18 +180,25 @@ function ChatWidget(props: Props) {
   )
 
   React.useLayoutEffect(() => {
-    if (shouldScrollToBottomRef.current) {
-      // Scroll to bottom whenever a new log gets sent
+    if (!isReceivingRef.current || shouldScrollToBottomRef.current) {
+      // Scroll to bottom whenever:
+      // A new log gets sent by someone else while we're scrolled a bit from above.
+      // We sent the message by ourself.
       scrollToBottom(chatbarRef.current)
-    } else {
-      // Resetting the one-off flag variable
-      shouldScrollToBottomRef.current = true
+    } else if (isReceivingRef.current) {
+      // If we received a message while not scrolled to the bottom.
+      // It may seem like it works if you remove the wrapping condition,
+      // but we don't want a race condition. We also don't want it to flash
+      // if it we sent the message ourself.
+      setHasUnreadMessages(true)
     }
   }, [state.logs.length])
 
   const isWindowVisible = useWindowVisibility()
 
   usePusher(`private-party.${props.party.id}`, 'log', (event: { log: AppPartyLog }) => {
+    isReceivingRef.current = true
+
     // If the user was scrolled to the bottom before receiving a new message
     // we'll keep the illusion that they still are.
     shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current)
@@ -283,6 +295,8 @@ function ChatWidget(props: Props) {
       updated_at: date
     }
 
+    isReceivingRef.current = false
+
     dispatch({
       type: 'chat:init',
       payload: { log }
@@ -333,6 +347,19 @@ function ChatWidget(props: Props) {
     }
   }
 
+  function handleMessagesContainerScroll(evt) {
+    if (hasUnreadMessages && isScrolledToBottom(chatbarRef.current)) {
+      // We'll remove the "has unread messages" note when the user scrolls to the bottom.
+      // This the removal of the unread messages when the user himself sends a message,
+      // since it also auto-scrolls the user to the bottom of the list.
+      setHasUnreadMessages(false)
+    }
+  }
+
+  function handleClickUnreadMessages() {
+    scrollToBottom(chatbarRef.current)
+  }
+
   return (
     <div
       className={cx('watch-screen-chat', {
@@ -348,54 +375,67 @@ function ChatWidget(props: Props) {
         />
       </div>
 
-      <div className="watch-screen-chat-messages" ref={chatbarRef}>
-        <ChatWidgetTip />
-        
-        {grouped.map((group, i) => {
-          if (group.type === 'activity') {
-            return (
-              <div className="watch-screen-activity-group" key={i}>
-                {group.logs.map(log => (
-                  <div className="activity" key={log.id}>
-                    <div className="avatar">
-                      <UiAvatar user={log.activity.user} size="sm" />
-                    </div>
+      <div className="watch-screen-chat-messages-container">
+        <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
+          <ChatWidgetTip />
 
-                    <h6 className="ui-subheading">
-                      {log.activity.user.name} {log.activity.text}.
-                    </h6>
-                  </div>
-                ))}
-              </div>
-            )
-          }
-
-          const isSelf = group.user.id === auth.state.data.id
-
-          return (
-            <div
-              className={cx('watch-screen-chat-group', {
-                'is-self': isSelf
-              })}
-              key={i}>
-              <div className="avatar">
-                <UiAvatar user={group.user} />
-              </div>
-
-              <div className="messages">
-                {!isSelf && <div className="name">{group.user.name}</div>}
-
-                <div className="list">
+          {grouped.map((group, i) => {
+            if (group.type === 'activity') {
+              return (
+                <div className="watch-screen-activity-group" key={i}>
                   {group.logs.map(log => (
-                    <div className="message" key={log.id}>
-                      <div className="inner">{log.message.text}</div>
+                    <div className="activity" key={log.id}>
+                      <div className="avatar">
+                        <UiAvatar user={log.activity.user} size="sm" />
+                      </div>
+
+                      <h6 className="ui-subheading">
+                        {log.activity.user.name} {log.activity.text}.
+                      </h6>
                     </div>
                   ))}
                 </div>
+              )
+            }
+
+            const isSelf = group.user.id === auth.state.data.id
+
+            return (
+              <div
+                className={cx('watch-screen-chat-group', {
+                  'is-self': isSelf
+                })}
+                key={i}>
+                <div className="avatar">
+                  <UiAvatar user={group.user} />
+                </div>
+
+                <div className="messages">
+                  {!isSelf && <div className="name">{group.user.name}</div>}
+
+                  <div className="list">
+                    {group.logs.map(log => (
+                      <div className="message" key={log.id}>
+                        <div className="inner">{log.message.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+
+        {hasUnreadMessages && (
+          <div className="watch-screen-chatbar-unread-note" onClick={handleClickUnreadMessages}>
+            <UiPlainButton type="button" className="note">
+              You have unread messages
+              <span className="icon">
+                <i className="fa fa-angle-down" />
+              </span>
+            </UiPlainButton>
+          </div>
+        )}
       </div>
 
       <div className="watch-screen-chatbar">

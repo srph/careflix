@@ -1,13 +1,14 @@
 import './style'
 
 import * as React from 'react'
+import cx from 'classnames'
 import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
 import TextareaAutosize from 'react-textarea-autosize'
-import cx from 'classnames'
-import { usePropRef } from '~/hooks/usePropRef'
+import ChatWidgetTip from '../ChatWidgetTip'
 
+import { usePropRef } from '~/hooks/usePropRef'
 import { useUnstated } from '~/lib/unstated'
 import { AuthContainer } from '~/containers'
 
@@ -348,6 +349,8 @@ function ChatWidget(props: Props) {
       </div>
 
       <div className="watch-screen-chat-messages" ref={chatbarRef}>
+        <ChatWidgetTip />
+        
         {grouped.map((group, i) => {
           if (group.type === 'activity') {
             return (

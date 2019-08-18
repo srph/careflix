@@ -15,6 +15,8 @@
   left: 0;
   padding: 8px;
   background: var(--color-black-4);
+  width: 80px;
+  text-align: center;
   border-radius:  var(--border-radius);
   pointer-events: none;
 }

@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useState, useRef, useMemo } from 'react'
 import Slider, { SliderValue } from 'react-input-slider'
 import toReadableTime from '~/utils/date/toReadableTime'
+import clamp from '~/utils/clamp'
 
 interface Props {
   time: number
@@ -10,18 +11,18 @@ interface Props {
   onSeek: (time: number) => void
 }
 
+const LABEL_WIDTH = 80
+
 function PlayerSeeker(props: Props) {
   const [percentage, setPercentage] = useState(-1)
   const containerRef = useRef<HTMLDivElement>(null)
-  const labelRef = useRef<HTMLDivElement>(null)
 
   const translateX = useMemo(() => {
-    if (!labelRef.current || !containerRef.current) {
+    if (!containerRef.current) {
       return ''
     }
     const containerWidth = containerRef.current.getBoundingClientRect().width
-    const labelWidth = labelRef.current.getBoundingClientRect().width
-    return percentage === -1 ? '' : `${percentage * containerWidth - labelWidth / 2}px`
+    return percentage === -1 ? '' : `${percentage * containerWidth - LABEL_WIDTH / 2}px`
   }, [percentage])
 
   function handleSeek({ x }: SliderValue) {
@@ -32,7 +33,7 @@ function PlayerSeeker(props: Props) {
     const box = evt.currentTarget.getBoundingClientRect()
     const x = evt.clientX - box.left
     const total = box.width
-    setPercentage(x / total)
+    setPercentage(clamp(x / total, 0, total))
   }
 
   function handleMouseLeave() {
@@ -46,7 +47,7 @@ function PlayerSeeker(props: Props) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}>
       {percentage != -1 && (
-        <div className="time" ref={labelRef} style={{ transform: `translateX(${translateX})` }}>
+        <div className="time" style={{ transform: `translateX(${translateX})` }}>
           {toReadableTime(props.duration * percentage, {
             max: props.duration > 3600 ? 'hh' : 'mm'
           })}

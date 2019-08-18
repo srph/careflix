@@ -3,8 +3,16 @@
 }
 
 .app-watch-player-tooltip-popover {
+  display: none;
   padding: 16px;
   font-size: 16px;
   background: var(--color-black-2);
   border-radius: var(--border-radius);
+}
+
+
+@media (min-width: 992px) {
+  .app-watch-player-tooltip-popover {
+    display: block;
+  }
 }

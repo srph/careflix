@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { usePropRef } from '~/hooks/usePropRef'
+import isFocusedToInput from '~/utils/dom/isFocusedToInput';
 
 interface Props {
   isDisabled: () => boolean
@@ -38,7 +39,7 @@ function usePlayerHotkeys(hookProps: Props) {
 
       // We could've put this in `isDisabled`, but the document tracks the focused element for us anyway.
       // We simply don't want to interfere if the user is focused on an input.
-      if (document.activeElement && document.activeElement.tagName.toLowerCase() === 'input') {
+      if (isFocusedToInput()) {
         return
       }
 

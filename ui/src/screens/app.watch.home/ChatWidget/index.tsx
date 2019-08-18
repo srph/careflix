@@ -2,7 +2,6 @@ import './style'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
-import UiInput from '~/components/UiInput'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
 import TextareaAutosize from 'react-textarea-autosize'
@@ -25,6 +24,7 @@ import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateT
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
 import UiAvatarGroup from '~components/UiAvatarGroup'
+import isFocusedToInput from '~/utils/dom/isFocusedToInput';
 
 interface State {
   logs: AppPartyLog[]
@@ -229,7 +229,7 @@ function ChatWidget(props: Props) {
       }
 
       // We simply don't want to interfere if the user is focused on any input.
-      if (document.activeElement && document.activeElement.tagName.toLowerCase() === 'input') {
+      if (isFocusedToInput()) {
         return
       }
 

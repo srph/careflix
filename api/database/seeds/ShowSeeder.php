@@ -1969,292 +1969,292 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [20, 20]
             ],
-            // [
-            //     'title' => 'Arrietty',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'The Clock family are four-inch-tall people who live anonymously in another family\'s residence, borrowing simple items to make their home. Life changes for the Clocks when their teenage daughter, Arrietty, is discovered.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Arrietty'),
-            //     'air_start' => Carbon::create(2010, 7, 17),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Arrietty', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:07')
-            // ],
-            // [
-            //     'title' => 'Castle in the Sky',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A young boy and a girl with a magic crystal must race against pirates and foreign agents in a search for a legendary floating castle.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Castle in the Sky'),
-            //     'air_start' => Carbon::create(1986, 8, 2),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Castle in the Sky', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:04:34')
-            // ],
-            // [
-            //     'title' => 'From Up on Poppy Hill',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A group of Yokohama teens look to save their school\'s clubhouse from the wrecking ball in preparations for the 1964 Tokyo Olympics.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('From Up on Poppy Hill'),
-            //     'air_start' => Carbon::create(2011, 7, 16),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('From Up on Poppy Hill', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:31:27')
-            // ],
-            // [
-            //     'title' => 'Grave of the Fireflies',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A young boy and his little sister struggle to survive in Japan during World War II.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Grave of the Fireflies'),
-            //     'air_start' => Carbon::create(1988, 4, 16),
-            //     'age_rating' => '',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Grave of the Fireflies', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:28:32')
-            // ],
-            // [
-            //     'title' => 'Howl\'s Moving Castle',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking castle.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Howl\'s Moving Castle'),
-            //     'air_start' => Carbon::create(2004, 11, 20),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Howl\'s Moving Castle', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:09')
-            // ],
-            // [
-            //     'title' => 'Kiki\'s Delivery Service',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A young witch, on her mandatory year of independent life, finds fitting into a new community difficult while she supports herself by running an air courier service.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kiki\'s Delivery Service'),
-            //     'air_start' => Carbon::create(1989, 7, 29),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Kiki\'s Delivery Service', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:04')
-            // ],
-            // [
-            //     'title' => 'My Neighbor Totoro',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'When two girls move to the country to be near their ailing mother, they have adventures with the wondrous forest spirits who live nearby.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Neighbor Totoro'),
-            //     'air_start' => Carbon::create(1988, 4, 16),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('My Neighbor Totoro', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:26:25')
-            // ],
-            // [
-            //     'title' => 'My Neighbors the Yamadas',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'Takashi Yamada and his wacky wife Matsuko, who has no talent for housework, navigate their way through the ups and downs of work, marriage and family life with a sharp-tongued grandmother who lives with them, a teenage son who wishes he had cooler parents, and a pesky daughter whose loud voice is unusual for someone so small. Even the family dog has issues!',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Neighbors the Yamadas'),
-            //     'air_start' => Carbon::create(1999, 7, 17),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('My Neighbors the Yamadas', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:40')
-            // ],
-            // [
-            //     'title' => 'Nausicaa of the Valley of the Wind',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'Warrior and pacifist Princess Nausicaä desperately struggles to prevent two warring nations from destroying themselves and their dying planet.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Nausicaa of the Valley of the Wind'),
-            //     'air_start' => Carbon::create(1984, 3, 11),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Nausicaa of the Valley of the Wind', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:02')
-            // ],
-            // [
-            //     'title' => 'Ocean Waves',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'As a young man returns home after his first year away at college he recalls his senior year of high school and the iron-willed, big city girl that turned his world upside down.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ocean Waves'),
-            //     'air_start' => Carbon::create(1993, 5, 5),
-            //     'age_rating' => 'PG-13',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Ocean Waves', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:12:08')
-            // ],
-            // [
-            //     'title' => 'Only Yesterday',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A twenty-seven-year-old office worker travels to the countryside while reminiscing about her childhood in Tokyo.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Only Yesterday'),
-            //     'air_start' => Carbon::create(1991, 7, 20),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Only Yesterday', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:12')
-            // ],
-            // [
-            //     'title' => 'Pom Poko',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A community of magical shape-shifting raccoon dogs struggle to prevent their forest home from being destroyed by urban development.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pom Poko'),
-            //     'air_start' => Carbon::create(1994, 6, 13),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pom Poko', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:11')
-            // ],
-            // [
-            //     'title' => 'Ponyo',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A five-year-old boy develops a relationship with Ponyo, a young goldfish princess who longs to become a human after falling in love with him.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ponyo'),
-            //     'air_start' => Carbon::create(2008, 7, 19),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Ponyo', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:40:50')
-            // ],
-            // [
-            //     'title' => 'Porco Rosso',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Porco Rosso'),
-            //     'air_start' => Carbon::create(1992, 7, 18),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Porco Rosso', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:19')
-            // ],
-            // [
-            //     'title' => 'Princess Mononoke',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara, a mining colony. In this quest he also meets San, the Mononoke Hime.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Princess Mononoke'),
-            //     'air_start' => Carbon::create(1997, 7, 12),
-            //     'age_rating' => 'PG-13',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Princess Mononoke', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:13:22')
-            // ],
-            // [
-            //     'title' => 'Spirited Away',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spirited Away'),
-            //     'air_start' => Carbon::create(2001, 7, 20),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Spirited Away', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:04:32')
-            // ],
-            // [
-            //     'title' => 'Tales from Earthsea',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'In a mythical land, a man and a young boy investigate a series of unusual occurrences.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Tales from Earthsea'),
-            //     'air_start' => Carbon::create(2006, 7, 29),
-            //     'age_rating' => 'PG-13',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Tales from Earthsea', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:55:32')
-            // ],
-            // [
-            //     'title' => 'The Cat Returns',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'After helping a cat, a 17-year-old girl finds herself involuntarily engaged to a cat prince in a magical world where her only hope of freedom lies with a dapper cat statuette come to life.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Cat Returns'),
-            //     'air_start' => Carbon::create(2002, 7, 20),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Cat Returns', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:15:04')
-            // ],
-            // [
-            //     'title' => 'The Tale of Princess Kaguya',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'Found inside a shining stalk of bamboo by an old bamboo cutter and his wife, a tiny girl grows rapidly into an exquisite young lady. The mysterious young princess enthralls all who encounter her, but ultimately she must confront her fate, the punishment for her crime.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Tale of Princess Kaguya'),
-            //     'air_start' => Carbon::create(2013, 11, 23),
-            //     'age_rating' => 'PG',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Tale of Princess Kaguya', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:21')
-            // ],
-            // [
-            //     'title' => 'The Wind Rises',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A look at the life of Jiro Horikoshi, the man who designed Japanese fighter planes during World War II.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Wind Rises'),
-            //     'air_start' => Carbon::create(2013, 7, 20),
-            //     'age_rating' => 'PG-13',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Wind Rises', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('2:06:31')
-            // ],
-            // [
-            //     'title' => 'When Marnie Was There',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A 12-year-old girl is sent to the country for health reasons, where she meets an unlikely friend in the form of Marnie, a young girl with long, flowing blonde hair. As the friendship unravels it is possible that Marnie has closer ties to the protagonist than we might expect.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('When Marnie Was There'),
-            //     'air_start' => Carbon::create(2014, 7, 19),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('When Marnie Was There', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:41')
-            // ],
-            // [
-            //     'title' => 'Whisper of the Heart',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A love story between a girl who loves reading books, and a boy who has previously checked out all of the library books she chooses.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Whisper of the Heart'),
-            //     'air_start' => Carbon::create(1995, 7, 15),
-            //     'age_rating' => 'G',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Whisper of the Heart', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:50:50')
-            // ],
+            [
+                'title' => 'Arrietty',
+                'title_type' => 'movie',
+                'synopsis' => 'The Clock family are four-inch-tall people who live anonymously in another family\'s residence, borrowing simple items to make their home. Life changes for the Clocks when their teenage daughter, Arrietty, is discovered.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Arrietty'),
+                'air_start' => Carbon::create(2010, 7, 17),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Arrietty', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:34:07')
+            ],
+            [
+                'title' => 'Castle in the Sky',
+                'title_type' => 'movie',
+                'synopsis' => 'A young boy and a girl with a magic crystal must race against pirates and foreign agents in a search for a legendary floating castle.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Castle in the Sky'),
+                'air_start' => Carbon::create(1986, 8, 2),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Castle in the Sky', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:04:34')
+            ],
+            [
+                'title' => 'From Up on Poppy Hill',
+                'title_type' => 'movie',
+                'synopsis' => 'A group of Yokohama teens look to save their school\'s clubhouse from the wrecking ball in preparations for the 1964 Tokyo Olympics.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('From Up on Poppy Hill'),
+                'air_start' => Carbon::create(2011, 7, 16),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('From Up on Poppy Hill', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:31:27')
+            ],
+            [
+                'title' => 'Grave of the Fireflies',
+                'title_type' => 'movie',
+                'synopsis' => 'A young boy and his little sister struggle to survive in Japan during World War II.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Grave of the Fireflies'),
+                'air_start' => Carbon::create(1988, 4, 16),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Grave of the Fireflies', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:28:32')
+            ],
+            [
+                'title' => 'Howl\'s Moving Castle',
+                'title_type' => 'movie',
+                'synopsis' => 'When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking castle.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Howl\'s Moving Castle'),
+                'air_start' => Carbon::create(2004, 11, 20),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Howl\'s Moving Castle', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:09')
+            ],
+            [
+                'title' => 'Kiki\'s Delivery Service',
+                'title_type' => 'movie',
+                'synopsis' => 'A young witch, on her mandatory year of independent life, finds fitting into a new community difficult while she supports herself by running an air courier service.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Kiki\'s Delivery Service'),
+                'air_start' => Carbon::create(1989, 7, 29),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Kiki\'s Delivery Service', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:04')
+            ],
+            [
+                'title' => 'My Neighbor Totoro',
+                'title_type' => 'movie',
+                'synopsis' => 'When two girls move to the country to be near their ailing mother, they have adventures with the wondrous forest spirits who live nearby.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Neighbor Totoro'),
+                'air_start' => Carbon::create(1988, 4, 16),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('My Neighbor Totoro', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:26:25')
+            ],
+            [
+                'title' => 'My Neighbors the Yamadas',
+                'title_type' => 'movie',
+                'synopsis' => 'Takashi Yamada and his wacky wife Matsuko, who has no talent for housework, navigate their way through the ups and downs of work, marriage and family life with a sharp-tongued grandmother who lives with them, a teenage son who wishes he had cooler parents, and a pesky daughter whose loud voice is unusual for someone so small. Even the family dog has issues!',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('My Neighbors the Yamadas'),
+                'air_start' => Carbon::create(1999, 7, 17),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('My Neighbors the Yamadas', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:40')
+            ],
+            [
+                'title' => 'Nausicaa of the Valley of the Wind',
+                'title_type' => 'movie',
+                'synopsis' => 'Warrior and pacifist Princess Nausicaä desperately struggles to prevent two warring nations from destroying themselves and their dying planet.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Nausicaa of the Valley of the Wind'),
+                'air_start' => Carbon::create(1984, 3, 11),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Nausicaa of the Valley of the Wind', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:57:02')
+            ],
+            [
+                'title' => 'Ocean Waves',
+                'title_type' => 'movie',
+                'synopsis' => 'As a young man returns home after his first year away at college he recalls his senior year of high school and the iron-willed, big city girl that turned his world upside down.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ocean Waves'),
+                'air_start' => Carbon::create(1993, 5, 5),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Ocean Waves', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:12:08')
+            ],
+            [
+                'title' => 'Only Yesterday',
+                'title_type' => 'movie',
+                'synopsis' => 'A twenty-seven-year-old office worker travels to the countryside while reminiscing about her childhood in Tokyo.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Only Yesterday'),
+                'air_start' => Carbon::create(1991, 7, 20),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Only Yesterday', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:00:12')
+            ],
+            [
+                'title' => 'Pom Poko',
+                'title_type' => 'movie',
+                'synopsis' => 'A community of magical shape-shifting raccoon dogs struggle to prevent their forest home from being destroyed by urban development.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Pom Poko'),
+                'air_start' => Carbon::create(1994, 6, 13),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Pom Poko', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:59:11')
+            ],
+            [
+                'title' => 'Ponyo',
+                'title_type' => 'movie',
+                'synopsis' => 'A five-year-old boy develops a relationship with Ponyo, a young goldfish princess who longs to become a human after falling in love with him.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Ponyo'),
+                'air_start' => Carbon::create(2008, 7, 19),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Ponyo', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:40:50')
+            ],
+            [
+                'title' => 'Porco Rosso',
+                'title_type' => 'movie',
+                'synopsis' => 'In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Porco Rosso'),
+                'air_start' => Carbon::create(1992, 7, 18),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Porco Rosso', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:19')
+            ],
+            [
+                'title' => 'Princess Mononoke',
+                'title_type' => 'movie',
+                'synopsis' => 'On a journey to find the cure for a Tatarigami\'s curse, Ashitaka finds himself in the middle of a war between the forest gods and Tatara, a mining colony. In this quest he also meets San, the Mononoke Hime.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Princess Mononoke'),
+                'air_start' => Carbon::create(1997, 7, 12),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Princess Mononoke', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:13:22')
+            ],
+            [
+                'title' => 'Spirited Away',
+                'title_type' => 'movie',
+                'synopsis' => 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spirited Away'),
+                'air_start' => Carbon::create(2001, 7, 20),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Spirited Away', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:04:32')
+            ],
+            [
+                'title' => 'Tales from Earthsea',
+                'title_type' => 'movie',
+                'synopsis' => 'In a mythical land, a man and a young boy investigate a series of unusual occurrences.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Tales from Earthsea'),
+                'air_start' => Carbon::create(2006, 7, 29),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Tales from Earthsea', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:55:32')
+            ],
+            [
+                'title' => 'The Cat Returns',
+                'title_type' => 'movie',
+                'synopsis' => 'After helping a cat, a 17-year-old girl finds herself involuntarily engaged to a cat prince in a magical world where her only hope of freedom lies with a dapper cat statuette come to life.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Cat Returns'),
+                'air_start' => Carbon::create(2002, 7, 20),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Cat Returns', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:15:04')
+            ],
+            [
+                'title' => 'The Tale of Princess Kaguya',
+                'title_type' => 'movie',
+                'synopsis' => 'Found inside a shining stalk of bamboo by an old bamboo cutter and his wife, a tiny girl grows rapidly into an exquisite young lady. The mysterious young princess enthralls all who encounter her, but ultimately she must confront her fate, the punishment for her crime.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Tale of Princess Kaguya'),
+                'air_start' => Carbon::create(2013, 11, 23),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Tale of Princess Kaguya', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:21')
+            ],
+            [
+                'title' => 'The Wind Rises',
+                'title_type' => 'movie',
+                'synopsis' => 'A look at the life of Jiro Horikoshi, the man who designed Japanese fighter planes during World War II.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Wind Rises'),
+                'air_start' => Carbon::create(2013, 7, 20),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Wind Rises', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:06:31')
+            ],
+            [
+                'title' => 'When Marnie Was There',
+                'title_type' => 'movie',
+                'synopsis' => 'A 12-year-old girl is sent to the country for health reasons, where she meets an unlikely friend in the form of Marnie, a young girl with long, flowing blonde hair. As the friendship unravels it is possible that Marnie has closer ties to the protagonist than we might expect.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('When Marnie Was There'),
+                'air_start' => Carbon::create(2014, 7, 19),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('When Marnie Was There', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:41')
+            ],
+            [
+                'title' => 'Whisper of the Heart',
+                'title_type' => 'movie',
+                'synopsis' => 'A love story between a girl who loves reading books, and a boy who has previously checked out all of the library books she chooses.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Whisper of the Heart'),
+                'air_start' => Carbon::create(1995, 7, 15),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Whisper of the Heart', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:50:50')
+            ],
         ];
 
         foreach($movies as $movie) {

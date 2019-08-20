@@ -128,3 +128,10 @@ interface AppPartyState {
   is_playing: boolean
   current_time: number
 }
+
+interface PusherPresenceEvent {
+  id: number
+  info: {
+    id: number
+  }
+}

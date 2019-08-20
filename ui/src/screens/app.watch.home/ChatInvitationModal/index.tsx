@@ -22,7 +22,7 @@ import { isBefore, parse } from 'date-fns'
 import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
 
 interface State {
-  data: any[]
+  data: AppUser[]
   isLoading: boolean
   isSendingInvitation: {
     [key: number]: boolean
@@ -45,6 +45,7 @@ type Action =
   | ReducerAction<'invitation.cancel:error', { id: AppId }>
   | ReducerAction<'invitation.cancel:success', { id: AppId }>
   | ReducerAction<'modal:toggle', { open: boolean }>
+  | ReducerAction<'presence', { id: AppId, isOnline: boolean }>
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -132,6 +133,17 @@ const reducer = (state: State, action: Action) => {
         })
       }
     }
+
+    case 'presence': {
+      return {
+        ...state,
+        data: immer(state.data, draft => {
+          console.log(action.payload.id)
+          const user = draft.find(user => user.id === Number(action.payload.id))
+          user.is_online = action.payload.isOnline
+        })
+      }
+    }
   }
 }
 
@@ -141,18 +153,41 @@ interface Props {
   onClose: () => void
 }
 
+const init = {
+  data: [],
+  isLoading: false,
+  isSendingInvitation: {},
+  isCancellingInvitation: {},
+  input: ''
+}
+
 /**
  * Use this to create a route instead of typing everything down
  */
 function ChatInvitationModal(props: Props) {
   const context = usePartyContext()
 
-  const [state, dispatch] = useReducer(reducer, {
-    data: [],
-    isLoading: false,
-    isSendingInvitation: {},
-    isCancellingInvitation: {},
-    input: ''
+  const [state, dispatch] = useReducer(reducer, init)
+
+  usePusher(`presence-chat`, 'pusher:member_added', (event: PusherPresenceEvent) => {
+    console.log(event)
+    dispatch({
+      type: 'presence',
+      payload: {
+        id: event.id,
+        isOnline: true
+      }
+    })
+  })
+
+  usePusher(`presence-chat`, 'pusher:member_removed', (event: PusherPresenceEvent) => {
+    dispatch({
+      type: 'presence',
+      payload: {
+        id: event.id,
+        isOnline: false
+      }
+    })
   })
 
   usePusher(`private-party.${context.party.id}`, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {

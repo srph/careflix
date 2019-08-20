@@ -25,6 +25,7 @@ interface AppUser {
   name: string
   avatar: string
   invitations?: AppPartyInvitation[]
+  is_online: boolean
   created_at: string
   updated_at: string
 }

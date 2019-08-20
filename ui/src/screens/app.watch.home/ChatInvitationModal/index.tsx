@@ -2,7 +2,7 @@ import './style'
 
 import * as React from 'react'
 import UiButton from '~/components/UiButton'
-import UiAvatar from '~/components/UiAvatar'
+import UiPresenceAvatar from '~/components/UiPresenceAvatar'
 import UiInput from '~/components/UiInput'
 import UiLoader from '~/components/UiLoader'
 import UiPlainButton from '~/components/UiPlainButton'
@@ -19,7 +19,6 @@ import toSearchIndexObject from '~/utils/toSearchIndexObject'
 
 import { useNow } from '~/hooks/useNow'
 import { isBefore, parse } from 'date-fns'
-import getRemainingTime from '~/utils/date/getRemainingTime'
 import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
 
 interface State {
@@ -374,7 +373,7 @@ function UserItem(props: UserItemProps) {
   return (
     <div className="user-item">
       <div className="avatar">
-        <UiAvatar user={props.user} size="m" />
+        <UiPresenceAvatar user={props.user} size="m" />
       </div>
 
       <div className="details">

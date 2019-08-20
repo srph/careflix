@@ -14,6 +14,10 @@ use App\Party;
 |
 */
 
+Broadcast::channel('chat', function (User $user) {
+    return ['id' => $user->id];
+});
+
 Broadcast::channel('user.{user}', function (User $user, User $receiver) {
     return $user->id === $receiver->id;
 });

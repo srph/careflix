@@ -68,4 +68,24 @@ class MeController extends Controller
 
         return response()->json($user);
     }
+
+    /**
+     * Marks the user as online
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function online(Request $request) {
+        $user = $request->user()->fill(['is_online' => true])->save();
+        return response()->json($user);
+    }
+
+    /**
+     * Marks the user as offline
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function offline(Request $request) {
+        $user = $request->user()->fill(['is_online' => false])->save();
+        return response()->json($user);
+    }
 }

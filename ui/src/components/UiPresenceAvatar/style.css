@@ -1,0 +1,24 @@
+.ui-presence-avatar {
+  position: relative;
+  opacity: 0.5;
+}
+
+.ui-presence-avatar.is-online {
+  opacity: 1;
+  transition: 200ms all ease;
+}
+
+.ui-presence-avatar > .status {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  height: 20px;
+  width: 20px;
+  background: var(--color-black-5);
+  border: 2px solid var(--color-black-2);
+  border-radius: 50%;
+}
+
+.ui-presence-avatar.is-online > .status {
+  background: var(--color-green);
+}

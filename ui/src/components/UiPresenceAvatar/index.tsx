@@ -14,7 +14,14 @@ function UiPresenceAvatar(props: Props) {
   const isActive = props.isActive != null ? props.isActive : props.user.is_online
 
   return (
-    <div className={cx('ui-presence-avatar', { 'is-online': isActive })}>
+    <div
+      className={cx('ui-presence-avatar', {
+        'is-sm': props.size === 'sm',
+        'is-m': props.size === 'm',
+        'is-l': props.size === 'l',
+        'is-xl': props.size === 'xl',
+        'is-online': isActive
+      })}>
       <UiAvatar user={props.user} size={props.size} />
       <div className="status" />
     </div>

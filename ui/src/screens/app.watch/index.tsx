@@ -53,7 +53,7 @@ const reducer = (state: State, action: Action): State => {
     case 'invitation.send': {
       return {
         ...state,
-        party: immer(state.party, (draft) => {
+        party: immer(state.party, draft => {
           draft.invitations.push(action.payload.invitation)
         })
       }
@@ -62,7 +62,7 @@ const reducer = (state: State, action: Action): State => {
     case 'invitation.cancel': {
       return {
         ...state,
-        party: immer(state.party, (draft) => {
+        party: immer(state.party, draft => {
           draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
         })
       }
@@ -71,7 +71,7 @@ const reducer = (state: State, action: Action): State => {
     case 'invitation.accept': {
       return {
         ...state,
-        party: immer(state.party, (draft) => {
+        party: immer(state.party, draft => {
           draft.members.push(action.payload.member)
           draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
         })
@@ -81,8 +81,19 @@ const reducer = (state: State, action: Action): State => {
     case 'invitation.decline': {
       return {
         ...state,
-        party: immer(state.party, (draft) => {
+        party: immer(state.party, draft => {
           draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+        })
+      }
+    }
+
+    case 'presence': {
+      return {
+        ...state,
+        party: immer(state.party, draft => {
+          const user = draft.members.find(user => user.id === Number(action.payload.id))
+          if (user == null) return
+          user.pivot.is_active = action.payload.isActive
         })
       }
     }
@@ -123,6 +134,36 @@ function AppWatch(props: ReactComponentWrapper) {
     },
     null,
     []
+  )
+
+  usePusher(
+    state.party ? `presence-chat-party.${state.party.id}` : '',
+    'pusher:member_added',
+    (event: PusherPresenceEvent) => {
+      dispatch({
+        type: 'presence',
+        payload: {
+          id: event.id,
+          isActive: true
+        }
+      })
+    },
+    state.party == null
+  )
+
+  usePusher(
+    state.party ? `presence-chat-party.${state.party.id}` : '',
+    'pusher:member_removed',
+    (event: PusherPresenceEvent) => {
+      dispatch({
+        type: 'presence',
+        payload: {
+          id: event.id,
+          isActive: false
+        }
+      })
+    },
+    state.party == null
   )
 
   usePusher(

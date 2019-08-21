@@ -129,9 +129,7 @@ interface AppPartyState {
   current_time: number
 }
 
-interface PusherPresenceEvent {
+interface PusherPresenceEvent<T = {}> {
   id: number
-  info: {
-    id: number
-  }
+  info: T
 }

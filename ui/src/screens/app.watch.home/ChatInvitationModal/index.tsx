@@ -45,7 +45,7 @@ type Action =
   | ReducerAction<'invitation.cancel:error', { id: AppId }>
   | ReducerAction<'invitation.cancel:success', { id: AppId }>
   | ReducerAction<'modal:toggle', { open: boolean }>
-  | ReducerAction<'presence', { id: AppId, isOnline: boolean }>
+  | ReducerAction<'presence', { id: AppId; isOnline: boolean }>
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -138,8 +138,8 @@ const reducer = (state: State, action: Action) => {
       return {
         ...state,
         data: immer(state.data, draft => {
-          console.log(action.payload.id)
           const user = draft.find(user => user.id === Number(action.payload.id))
+          if (user == null) return
           user.is_online = action.payload.isOnline
         })
       }
@@ -220,9 +220,11 @@ function ChatInvitationModal(props: Props) {
     })
 
     const [err, res] = await axios.get(`/api/parties/${context.party.id}/invitations/search`, {
-      params: state.input.length ? {
-        search: state.input
-      } : {}
+      params: state.input.length
+        ? {
+            search: state.input
+          }
+        : {}
     })
 
     if (err) {
@@ -326,7 +328,11 @@ function ChatInvitationModal(props: Props) {
         <i className="fa fa-user-plus" />
       </UiPlainButton>
 
-      <UiModal isOpen={props.isOpen} onClose={props.onClose} overlayClassName="app-watch-chat-invitation-overlay" modalClassName="app-watch-chat-invitation-modal">
+      <UiModal
+        isOpen={props.isOpen}
+        onClose={props.onClose}
+        overlayClassName="app-watch-chat-invitation-overlay"
+        modalClassName="app-watch-chat-invitation-modal">
         <div className="heading">
           <h5 className="ui-subheading">Invite people to join</h5>
 

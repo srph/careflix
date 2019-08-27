@@ -2255,6 +2255,58 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:50:50')
             ],
+            [
+                'title' => 'The Secret Life of Pets',
+                'title_type' => 'movie',
+                'synopsis' => 'The quiet life of a terrier named Max is upended when his owner takes in Duke, a stray whom Max instantly dislikes.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Secret Life of Pets'),
+                'air_start' => Carbon::create(2016, 7, 8),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Secret Life of Pets', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:26:27')
+            ],
+            [
+                'title' => 'The Secret Life of Pets 2',
+                'title_type' => 'movie',
+                'synopsis' => 'Continuing the story of Max and his pet friends, following their secret lives after their owners leave them for work or school each day.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Secret Life of Pets 2'),
+                'air_start' => Carbon::create(2016, 6, 7),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Secret Life of Pets 2', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:26:03')
+            ],
+            [
+                'title' => 'Astro Kid',
+                'title_type' => 'movie',
+                'synopsis' => 'Following the destruction of their ship, the young Willy is separated from his parents with whom he traveled in space. His spare capsule lands on a wild and unexplored planet. With the help of Buck, a survival robot, he will have to hold until the arrival of a rescue mission.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Astro Kid'),
+                'air_start' => Carbon::create(2019, 4, 3),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Astro Kid', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:03')
+            ],
+            [
+                'title' => 'John Wick: Chapter 3 - Parabellum',
+                'title_type' => 'movie',
+                'synopsis' => 'Super-assassin John Wick is on the run after killing a member of the international assassin\'s guild, and with a $14 million price tag on his head - he is the target of hit men and women everywhere.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick: Chapter 3 - Parabellum'),
+                'air_start' => Carbon::create(2019, 5, 17),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('John Wick: Chapter 3 - Parabellum', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:45')
+            ],
         ];
 
         foreach($movies as $movie) {

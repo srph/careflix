@@ -42,6 +42,9 @@ class AppListPt extends Command
         $ago = Carbon::now()->subDays((int) $this->argument('days'));
 
         $parties = Party::where('created_at', '>=', $ago->format('Y-m-d') . ' 00:00:00')
+            ->whereHas('members', function($query) {
+                $query->where('is_admin', 0);
+            })
             ->orderBy('id', 'desc')
             ->get();
 

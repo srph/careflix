@@ -2302,7 +2302,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('John Wick: Chapter 3 - Parabellum'),
                 'air_start' => Carbon::create(2019, 5, 17),
                 'age_rating' => 'R',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('John Wick: Chapter 3 - Parabellum', 'en'),
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:10:45')

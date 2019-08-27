@@ -2274,7 +2274,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => 'Continuing the story of Max and his pet friends, following their secret lives after their owners leave them for work or school each day.',
                 'language' => 'English',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Secret Life of Pets 2'),
-                'air_start' => Carbon::create(2016, 6, 7),
+                'air_start' => Carbon::create(2019, 6, 7),
                 'age_rating' => 'PG',
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Secret Life of Pets 2', 'en'),
                 //

@@ -2289,7 +2289,7 @@ class ShowSeeder extends Seeder
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Astro Kid'),
                 'air_start' => Carbon::create(2019, 4, 3),
                 'age_rating' => 'PG',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Astro Kid', 'en'),
+                'subtitle_url' => '',
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:30:03')

@@ -2313,6 +2313,71 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [21, 21]
             ],
+            [
+                'title' => 'Finding Neverland',
+                'title_type' => 'movie',
+                'synopsis' => 'The story of Sir J.M. Barrie\'s friendship with a family who inspired him to create Peter Pan.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Finding Neverland'),
+                'air_start' => Carbon::create(2004, 12, 17),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Finding Neverland', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:41:05')
+            ],
+            [
+                'title' => '500 Days of Summer',
+                'title_type' => 'movie',
+                'synopsis' => 'An offbeat romantic comedy about a woman who doesn\'t believe true love exists, and the young man who falls for her.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('500 Days of Summer'),
+                'air_start' => Carbon::create(2009, 8, 7),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('500 Days of Summer', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:35:04')
+            ],
+            [
+                'title' => 'The Perks of Being a Wallflower',
+                'title_type' => 'movie',
+                'synopsis' => 'An introvert freshman is taken under the wings of two seniors who welcome him to the real world.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Perks of Being a Wallflower'),
+                'air_start' => Carbon::create(2012, 10, 12),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Perks of Being a Wallflower', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:40')
+            ],
+            [
+                'title' => 'The Nightmare Before Christmas',
+                'title_type' => 'movie',
+                'synopsis' => 'Jack Skellington, king of Halloween Town, discovers Christmas Town, but his attempts to bring Christmas to his home causes confusion.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Nightmare Before Christmas'),
+                'air_start' => Carbon::create(1993, 10, 29),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Nightmare Before Christmas', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:16:36')
+            ],
+            // [
+            //     'title' => 'Sword of the Stranger',
+            //     'title_type' => 'movie',
+            //     'synopsis' => 'A swordsman from a strange land is caught in a struggle between morality, righteousness, and devotion as he reluctantly agrees to take a raggedy boy and his dog to a remote, Buddhist temple.',
+            //     'language' => 'Japanese',
+            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Sword of the Stranger'),
+            //     'air_start' => Carbon::create(2007, 2, 5),
+            //     'age_rating' => '',
+            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Sword of the Stranger', 'en'),
+            //     //
+            //     'extension' => 'mp4',
+            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:36')
+            // ],
         ];
 
         foreach($movies as $movie) {

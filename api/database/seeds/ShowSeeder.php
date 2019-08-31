@@ -2378,19 +2378,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:59')
             ],
-            // [
-            //     'title' => 'Sword of the Stranger',
-            //     'title_type' => 'movie',
-            //     'synopsis' => 'A swordsman from a strange land is caught in a struggle between morality, righteousness, and devotion as he reluctantly agrees to take a raggedy boy and his dog to a remote, Buddhist temple.',
-            //     'language' => 'Japanese',
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Sword of the Stranger'),
-            //     'air_start' => Carbon::create(2007, 2, 5),
-            //     'age_rating' => '',
-            //     'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Sword of the Stranger', 'en'),
-            //     //
-            //     'extension' => 'mp4',
-            //     'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:36')
-            // ],
+            [
+                'title' => 'Sword of the Stranger',
+                'title_type' => 'movie',
+                'synopsis' => 'A swordsman from a strange land is caught in a struggle between morality, righteousness, and devotion as he reluctantly agrees to take a raggedy boy and his dog to a remote, Buddhist temple.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Sword of the Stranger'),
+                'air_start' => Carbon::create(2007, 2, 5),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Sword of the Stranger', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:36')
+            ],
         ];
 
         foreach($movies as $movie) {

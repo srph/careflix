@@ -2365,6 +2365,19 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:16:36')
             ],
+            [
+                'title' => 'Song of the Sea',
+                'title_type' => 'movie',
+                'synopsis' => 'Ben, a young Irish boy, and his little sister Saoirse, a girl who can turn into a seal, go on an adventure to free the fairies and save the spirit world.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Song of the Sea'),
+                'air_start' => Carbon::create(2015, 11, 20),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Song of the Sea', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:33:59')
+            ],
             // [
             //     'title' => 'Sword of the Stranger',
             //     'title_type' => 'movie',

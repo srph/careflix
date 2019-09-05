@@ -2389,7 +2389,7 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Sword of the Stranger', 'en'),
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:43:36')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:34')
             ],
         ];
 

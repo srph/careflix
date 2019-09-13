@@ -2391,6 +2391,26 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:34')
             ],
+            [
+                'title' => 'Bokura wa Minna Kawaisou',
+                'title_type' => 'series',
+                'synopsis' => 'Usa, a high-school student aspiring to begin a bachelor lifestyle, moves into a new apartment. He soon discovers, his new boarding house Kawai Complex is far from ordinary.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2014, 4, 4),
+                'air_end' => Carbon::create(2014, 6, 20),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Bokura wa Minna Kawaisou'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 25,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '24:12'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

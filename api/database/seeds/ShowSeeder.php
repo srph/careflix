@@ -2460,11 +2460,11 @@ class ShowSeeder extends Seeder
             [
                 'title' => 'Hinamatsuri',
                 'title_type' => 'series',
-                'synopsis' => 'The story takes place inside the human body, where trillions of anthropomorphic cells each do their job to keep the body healthy. The series largely focuses on two such cells; a rookie red blood cell, AE3803, who often gets lost during deliveries, and a relentless white blood cell, U-1146, who fights against any germs that invade the body.',
+                'synopsis' => 'Nitta meets Hina through a peculiar capsule. Faced with no other choice, Nitta finds himself becoming her caregiver. It\'s the beginning of the dangerous and lively story of a nice-guy outlaw and psychokinetic girl!',
                 'language' => 'Japanese',
-                'air_start' => Carbon::create(2018, 7, 8),
-                'air_end' => Carbon::create(2018, 9, 30),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hataraku Saibou'),
+                'air_start' => Carbon::create(2018, 4, 6),
+                'air_end' => Carbon::create(2018, 6, 22),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hinamatsuri'),
                 'age_rating' => 'PG-13',
                 //
                 'seasons' => [

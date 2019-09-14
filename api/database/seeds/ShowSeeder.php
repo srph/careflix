@@ -2457,26 +2457,32 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:08:43')
             ],
-            // [
-            //     'title' => 'Hinamatsuri',
-            //     'title_type' => 'series',
-            //     'synopsis' => 'Nitta meets Hina through a peculiar capsule. Faced with no other choice, Nitta finds himself becoming her caregiver. It\'s the beginning of the dangerous and lively story of a nice-guy outlaw and psychokinetic girl!',
-            //     'language' => 'Japanese',
-            //     'air_start' => Carbon::create(2018, 4, 6),
-            //     'air_end' => Carbon::create(2018, 6, 22),
-            //     'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hinamatsuri'),
-            //     'age_rating' => 'PG-13',
-            //     //
-            //     'seasons' => [
-            //         [
-            //             'title' => 'Season 1',
-            //             'episodes' => 13,
-            //             'extension' => 'mp4',
-            //             'subtitle_language' => 'en',
-            //             'duration' => '23:40'
-            //         ]
-            //     ]
-            // ],
+            [
+                'title' => 'Hinamatsuri',
+                'title_type' => 'series',
+                'synopsis' => 'Nitta meets Hina through a peculiar capsule. Faced with no other choice, Nitta finds himself becoming her caregiver. It\'s the beginning of the dangerous and lively story of a nice-guy outlaw and psychokinetic girl!',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2018, 4, 6),
+                'air_end' => Carbon::create(2018, 6, 22),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hinamatsuri'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 13,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
+            [
+                'title' => 'Kimetsu no Yaiba',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [22, 23]
+            ],
         ];
 
         foreach($movies as $movie) {

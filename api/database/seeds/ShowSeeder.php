@@ -2411,6 +2411,72 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Hataraku Saibou',
+                'title_type' => 'series',
+                'synopsis' => 'The story takes place inside the human body, where trillions of anthropomorphic cells each do their job to keep the body healthy. The series largely focuses on two such cells; a rookie red blood cell, AE3803, who often gets lost during deliveries, and a relentless white blood cell, U-1146, who fights against any germs that invade the body.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2018, 7, 8),
+                'air_end' => Carbon::create(2018, 9, 30),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hataraku Saibou'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 13,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
+            [
+                'title' => 'X-Men: Dark Phoenix',
+                'title_type' => 'movie',
+                'synopsis' => 'Jean Grey begins to develop incredible powers that corrupt and turn her into a Dark Phoenix. Now the X-Men will have to decide if the life of a team member is worth more than all of humanity.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('X-Men: Dark Phoenix'),
+                'air_start' => Carbon::create(2019, 6, 7),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('X-Men: Dark Phoenix', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:53:56')
+            ],
+            [
+                'title' => 'Spider-Man: Far From Home',
+                'title_type' => 'movie',
+                'synopsis' => 'Following the events of Avengers: Endgame (2019), Spider-Man must step up to take on new threats in a world that has changed forever.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Spider-Man: Far From Home'),
+                'air_start' => Carbon::create(2019, 7, 2),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Spider-Man: Far From Home', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:08:43')
+            ],
+            [
+                'title' => 'Hinamatsuri',
+                'title_type' => 'series',
+                'synopsis' => 'The story takes place inside the human body, where trillions of anthropomorphic cells each do their job to keep the body healthy. The series largely focuses on two such cells; a rookie red blood cell, AE3803, who often gets lost during deliveries, and a relentless white blood cell, U-1146, who fights against any germs that invade the body.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2018, 7, 8),
+                'air_end' => Carbon::create(2018, 9, 30),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Hataraku Saibou'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 13,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:40'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

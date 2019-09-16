@@ -2483,6 +2483,26 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [22, 23]
             ],
+            [
+                'title' => 'Dumbell Nan Kilo Moteru?',
+                'title_type' => 'series',
+                'synopsis' => 'Sakura Hibiki decides to enroll in a nearby gym. Intimidated by body builders, she meets Machio whom convices her to pursue her quest for a hot bod.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2019, 7, 3),
+                'air_end' => Carbon::create(2019, 9, 18),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dumbell Nan Kilo Moteru?'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 11,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '23:50'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

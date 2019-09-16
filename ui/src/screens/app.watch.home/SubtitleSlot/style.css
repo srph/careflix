@@ -2,7 +2,6 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
   padding: 8px;
   text-align: center;
   font-size: 16px;
@@ -17,6 +16,52 @@
   pointer-events: none;
   z-index: var(--zindex-player-subtitles);
   user-select: none;
+}
+
+.subtitle-slot font {
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+}
+
+/**
+ * Positioning slots
+ */
+.subtitle-slot.is-top-left-subtitle,
+.subtitle-slot.is-top-center-subtitle,
+.subtitle-slot.is-top-right-subtitle {
+  top: 0;
+}
+
+.subtitle-slot.is-middle-left-subtitle,
+.subtitle-slot.is-middle-center-subtitle,
+.subtitle-slot.is-middle-right-subtitle {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.subtitle-slot.is-bottom-left-subtitle,
+.subtitle-slot.is-bottom-center-subtitle,
+.subtitle-slot.is-bottom-right-subtitle {
+  bottom: 0;
+}
+
+.subtitle-slot.is-top-left-subtitle,
+.subtitle-slot.is-middle-left-subtitle,
+.subtitle-slot.is-bottom-left-subtitle {
+  text-align: left;
+}
+
+.subtitle-slot.is-top-center-subtitle,
+.subtitle-slot.is-middle-center-subtitle,
+.subtitle-slot.is-bottom-center-subtitle {
+  text-align: center;
+}
+
+.subtitle-slot.is-top-right-subtitle,
+.subtitle-slot.is-middle-right-subtitle,
+.subtitle-slot.is-bottom-right-subtitle {
+  text-align: right;
 }
 
 /**
@@ -45,12 +90,11 @@
 @media (min-width: 992px) {
   .subtitle-slot.is-player-open {
     display: block;
+  }
+
+  .subtitle-slot.is-player-open.is-bottom-left-subtitle,
+  .subtitle-slot.is-player-open.is-bottom-center-subtitle,
+  .subtitle-slot.is-player-open.is-bottom-right-subtitle {
     padding-bottom: 180px;
   }
-}
-
-.subtitle-slot font {
-  font-size: inherit;
-  font-family: inherit;
-  font-weight: inherit;
 }

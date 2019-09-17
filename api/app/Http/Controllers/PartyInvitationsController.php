@@ -104,7 +104,7 @@ class PartyInvitationsController extends Controller
         // `attach()` above doesn't reload a collection, so we're forcing it by
         // calling `members` as a method instead of a property here. Calling
         // members->fresh() doesn't include the pivot, so here we are.
-        $member = $party->members()->where('id', $request->user()->id)->first();
+        $member = $party->members()->where('user_id', $request->user()->id)->first();
 
         $activity = \App\PartyActivity::create([
             'user_id' => $request->user()->id,

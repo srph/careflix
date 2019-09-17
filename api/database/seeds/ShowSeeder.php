@@ -2490,7 +2490,7 @@ class ShowSeeder extends Seeder
                 'language' => 'Japanese',
                 'air_start' => Carbon::create(2019, 7, 3),
                 'air_end' => Carbon::create(2019, 9, 18),
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dumbell Nan Kilo Moteru'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dumbell Nan Kilo Moteru?'),
                 'age_rating' => 'PG-13',
                 //
                 'seasons' => [

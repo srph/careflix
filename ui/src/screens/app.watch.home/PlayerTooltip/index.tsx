@@ -21,6 +21,14 @@ function VolumeControl(props: Props) {
     setIsOpen(true)
   }
 
+  // Added as a very basic workaround for remaining time tooltip.
+  // Hovering from "Toggle Chat" to "Remaining Time" without any pause
+  // causes the tooltip for the latter to not appear.
+  function handleMouseMove() {
+    if (!isOpen) return
+    props.onOpen()
+  }
+
   function handleMouseLeave() {
     props.onClose()
     setIsOpen(false)
@@ -34,7 +42,7 @@ function VolumeControl(props: Props) {
       content={<div className="app-watch-player-tooltip-popover">{props.text}</div>}
       containerClassName="app-watch-player-tooltip-popover-container"
       padding={props.padding}>
-      <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div onMouseMove={handleMouseEnter} onMouseEnter={handleMouseMove} onMouseLeave={handleMouseLeave}>
         {props.children}
       </div>
     </Popover>

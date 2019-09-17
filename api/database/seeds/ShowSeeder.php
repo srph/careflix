@@ -2503,6 +2503,12 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Kimetsu no Yaiba',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [24, 24]
+            ],
         ];
 
         foreach($movies as $movie) {

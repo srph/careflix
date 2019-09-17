@@ -170,7 +170,6 @@ function ChatInvitationModal(props: Props) {
   const [state, dispatch] = useReducer(reducer, init)
 
   usePusher(`presence-chat`, 'pusher:member_added', (event: PusherPresenceEvent) => {
-    console.log(event)
     dispatch({
       type: 'presence',
       payload: {

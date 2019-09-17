@@ -2509,6 +2509,26 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [24, 24]
             ],
+            [
+                'title' => 'Given',
+                'title_type' => 'series',
+                'synopsis' => 'Ritsuka Uenoyama lost interest in things he like: basketball and playing guitar. He meets Mafuyu Sato who\'s holding on to a broken guitar and decides to fix it. After hearing Mafuyu sing, he realizes his talent, and invites him to join the band.',
+                'language' => 'Japanese',
+                'air_start' => Carbon::create(2019, 7, 12),
+                'air_end' => Carbon::create(2019, 9, 20),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Given'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 11,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '22:55'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

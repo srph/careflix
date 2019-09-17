@@ -2,7 +2,7 @@ import './style'
 
 import * as React from 'react'
 import UiButton from '~/components/UiButton'
-import UiAvatar from '~/components/UiAvatar'
+import UiPresenceAvatar from '~/components/UiPresenceAvatar'
 import UiInput from '~/components/UiInput'
 import UiLoader from '~/components/UiLoader'
 import UiPlainButton from '~/components/UiPlainButton'
@@ -19,11 +19,10 @@ import toSearchIndexObject from '~/utils/toSearchIndexObject'
 
 import { useNow } from '~/hooks/useNow'
 import { isBefore, parse } from 'date-fns'
-import getRemainingTime from '~/utils/date/getRemainingTime'
 import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
 
 interface State {
-  data: any[]
+  data: AppUser[]
   isLoading: boolean
   isSendingInvitation: {
     [key: number]: boolean
@@ -46,6 +45,7 @@ type Action =
   | ReducerAction<'invitation.cancel:error', { id: AppId }>
   | ReducerAction<'invitation.cancel:success', { id: AppId }>
   | ReducerAction<'modal:toggle', { open: boolean }>
+  | ReducerAction<'presence', { id: AppId; isOnline: boolean }>
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -133,6 +133,17 @@ const reducer = (state: State, action: Action) => {
         })
       }
     }
+
+    case 'presence': {
+      return {
+        ...state,
+        data: immer(state.data, draft => {
+          const user = draft.find(user => user.id === Number(action.payload.id))
+          if (user == null) return
+          user.is_online = action.payload.isOnline
+        })
+      }
+    }
   }
 }
 
@@ -142,18 +153,40 @@ interface Props {
   onClose: () => void
 }
 
+const init = {
+  data: [],
+  isLoading: false,
+  isSendingInvitation: {},
+  isCancellingInvitation: {},
+  input: ''
+}
+
 /**
  * Use this to create a route instead of typing everything down
  */
 function ChatInvitationModal(props: Props) {
   const context = usePartyContext()
 
-  const [state, dispatch] = useReducer(reducer, {
-    data: [],
-    isLoading: false,
-    isSendingInvitation: {},
-    isCancellingInvitation: {},
-    input: ''
+  const [state, dispatch] = useReducer(reducer, init)
+
+  usePusher(`presence-chat`, 'pusher:member_added', (event: PusherPresenceEvent) => {
+    dispatch({
+      type: 'presence',
+      payload: {
+        id: event.id,
+        isOnline: true
+      }
+    })
+  })
+
+  usePusher(`presence-chat`, 'pusher:member_removed', (event: PusherPresenceEvent) => {
+    dispatch({
+      type: 'presence',
+      payload: {
+        id: event.id,
+        isOnline: false
+      }
+    })
   })
 
   usePusher(`private-party.${context.party.id}`, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
@@ -186,9 +219,11 @@ function ChatInvitationModal(props: Props) {
     })
 
     const [err, res] = await axios.get(`/api/parties/${context.party.id}/invitations/search`, {
-      params: state.input.length ? {
-        search: state.input
-      } : {}
+      params: state.input.length
+        ? {
+            search: state.input
+          }
+        : {}
     })
 
     if (err) {
@@ -292,7 +327,11 @@ function ChatInvitationModal(props: Props) {
         <i className="fa fa-user-plus" />
       </UiPlainButton>
 
-      <UiModal isOpen={props.isOpen} onClose={props.onClose} overlayClassName="app-watch-chat-invitation-overlay" modalClassName="app-watch-chat-invitation-modal">
+      <UiModal
+        isOpen={props.isOpen}
+        onClose={props.onClose}
+        overlayClassName="app-watch-chat-invitation-overlay"
+        modalClassName="app-watch-chat-invitation-modal">
         <div className="heading">
           <h5 className="ui-subheading">Invite people to join</h5>
 
@@ -374,7 +413,7 @@ function UserItem(props: UserItemProps) {
   return (
     <div className="user-item">
       <div className="avatar">
-        <UiAvatar user={props.user} size="m" />
+        <UiPresenceAvatar user={props.user} size="m" />
       </div>
 
       <div className="details">

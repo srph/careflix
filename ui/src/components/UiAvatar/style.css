@@ -8,6 +8,7 @@
   font-weight: bold;
   border-radius: 50%;
   overflow: hidden;
+  user-select: none;
 }
 
 .ui-avatar.is-sm {

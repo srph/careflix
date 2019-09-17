@@ -47,3 +47,5 @@ Route::middleware('auth:api')->group(function() {
     Route::get('me/recent-party', 'MeController@getRecentParty');
     Route::put('me/dismiss-recent-party', 'MeController@dismissRecentParty');
 });
+
+Route::post('hooks/pusher/presence', 'Hooks\PusherController@dispatcher');

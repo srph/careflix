@@ -25,6 +25,7 @@ interface AppUser {
   name: string
   avatar: string
   invitations?: AppPartyInvitation[]
+  is_online: boolean
   created_at: string
   updated_at: string
 }
@@ -126,4 +127,9 @@ interface AppParty {
 interface AppPartyState {
   is_playing: boolean
   current_time: number
+}
+
+interface PusherPresenceEvent<T = {}> {
+  id: number
+  info: T
 }

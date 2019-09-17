@@ -83,12 +83,15 @@ php artisan passport:client --password
 ```
 
 ### Front-end
-The web interface is hosted on Netlify for free. Set the root folder to `ui`; the public folder to `dist`. For the build command:
+The web interface is hosted on Netlify for free.
+- Set the root folder to `ui`; the public folder to `dist`.
+- Set the environment config accordingly.
+- For the build command:
 ```bash
 npm run build
 ```
 
-### Custom API Commands
+## Custom API Commands
 ```bash
 # Lists the most recent parties since 3 days ago
 php artisan app:list-pt

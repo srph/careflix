@@ -48,6 +48,8 @@ function PlayerModal({ party, ...props }: Props) {
   const [isFullscreen, toggleIsFullsceen] = useFullscreen()
   const [isVolumeControlOpen, setIsVolumeControlOpen] = useState(false)
   const [isTooltipOpen, setIsTooltipOpen] = useState(false)
+  const [isRemainingTimeToggled, setIsRemainingTimeToggled] = useState(false)
+  const [isRemainingTimeTooltipOpen, setIsRemainingTimeTooltipOpen] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -133,6 +135,16 @@ function PlayerModal({ party, ...props }: Props) {
     setIsTooltipOpen(false)
   }
 
+  function handleOpenRemainingTimeTooltip() {
+    setIsTooltipOpen(true)
+    setIsRemainingTimeTooltipOpen(true)
+  }
+
+  function handleCloseRemainingTimeTooltip() {
+    setIsTooltipOpen(false)
+    setIsRemainingTimeTooltipOpen(false)
+  }
+
   return (
     <Transition
       component="div"
@@ -174,7 +186,7 @@ function PlayerModal({ party, ...props }: Props) {
           </div>
 
           <div className="watch-player-contents">
-            {!isVolumeControlOpen && !isTooltipOpen && (
+            {!isVolumeControlOpen && (isRemainingTimeTooltipOpen || !isTooltipOpen) && (
               <div className="watch-player-controls">
                 <div className="time">
                   {toReadableTime(props.time, {
@@ -184,7 +196,20 @@ function PlayerModal({ party, ...props }: Props) {
 
                 <PlayerSeeker time={props.time} duration={party.video.duration} onSeek={props.onSeek} />
 
-                <div className="time">{toReadableTime(party.video.duration)}</div>
+                <div className="time">
+                  <PlayerTooltip
+                    text={isRemainingTimeToggled ? 'Display remaining time' : 'Display duration'}
+                    align="right"
+                    padding={16}
+                    onOpen={handleOpenRemainingTimeTooltip}
+                    onClose={handleCloseRemainingTimeTooltip}>
+                    <UiPlainButton onClick={() => setIsRemainingTimeToggled(!isRemainingTimeToggled)}>
+                      {isRemainingTimeToggled
+                        ? toReadableTime(party.video.duration - props.time)
+                        : toReadableTime(party.video.duration)}
+                    </UiPlainButton>
+                  </PlayerTooltip>
+                </div>
               </div>
             )}
 

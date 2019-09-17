@@ -9,6 +9,7 @@ interface Props {
   onClose: () => void
   text: string
   align: 'left' | 'right'
+  padding?: number
   children: React.ReactNode
 }
 
@@ -32,12 +33,16 @@ function VolumeControl(props: Props) {
       align={props.align === 'left' ? 'start' : 'end'}
       content={<div className="app-watch-player-tooltip-popover">{props.text}</div>}
       containerClassName="app-watch-player-tooltip-popover-container"
-      padding={32}>
+      padding={props.padding}>
       <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         {props.children}
       </div>
     </Popover>
   )
+}
+
+VolumeControl.defaultProps = {
+  padding: 32
 }
 
 export default VolumeControl

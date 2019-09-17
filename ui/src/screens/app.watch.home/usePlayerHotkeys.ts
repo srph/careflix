@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { usePropRef } from '~/hooks/usePropRef'
-import isFocusedToInput from '~/utils/dom/isFocusedToInput';
+import isFocusedToInput from '~/utils/dom/isFocusedToInput'
 
 interface Props {
   isDisabled: () => boolean
@@ -24,7 +24,7 @@ const keys = {
   F: 70,
   C: 67,
   M: 77,
-  SLASH: 191,
+  SLASH: 191
 }
 
 function usePlayerHotkeys(hookProps: Props) {
@@ -45,43 +45,46 @@ function usePlayerHotkeys(hookProps: Props) {
 
       switch (evt.keyCode) {
         case keys.LEFT_ARROW: {
-          props.current.onBackward();
-          break;
+          props.current.onBackward()
+          break
         }
 
         case keys.RIGHT_ARROW: {
-          props.current.onForward();
-          break;
+          props.current.onForward()
+          break
         }
 
         case keys.UP_ARROW: {
-          props.current.onIncreaseVolume();
-          break;
+          props.current.onIncreaseVolume()
+          break
         }
 
         case keys.DOWN_ARROW: {
-          props.current.onDecreaseVolume();
-          break;
+          props.current.onDecreaseVolume()
+          break
         }
 
         case keys.F: {
-          props.current.onFullscreen();
-          break;
+          props.current.onFullscreen()
+          break
         }
 
         case keys.C: {
-          props.current.onToggleChat();
-          break;
+          props.current.onToggleChat()
+          break
         }
 
         case keys.M: {
-          props.current.onToggleMute();
-          break;
+          props.current.onToggleMute()
+          break
         }
 
         case keys.SPACE: {
-          props.current.onPlay();
-          break;
+          // We don't want the spacebar to trigger focused buttons
+          evt.preventDefault()
+
+          props.current.onPlay()
+          break
         }
 
         case keys.SLASH: {
@@ -107,7 +110,4 @@ function usePlayerHotkeys(hookProps: Props) {
   return null
 }
 
-export {
-  usePlayerHotkeys,
-  usePlayerHotkeys as default
-}
+export { usePlayerHotkeys, usePlayerHotkeys as default }

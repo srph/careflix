@@ -1,7 +1,6 @@
 import './style.css'
 import * as React from 'react'
 import { useState } from 'react'
-import cx from 'classnames'
 import Popover from 'react-tiny-popover'
 
 interface Props {

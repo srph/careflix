@@ -2,7 +2,7 @@
 Care.tv makes it really easy to enjoy movies or watch TV shows with the people you care about, no matter how far!
 
 ## API Setup
-You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/).
+You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com)
 
 - Move to the `api` folder.
 ```bash
@@ -18,6 +18,18 @@ composer install
 cp .env.example .env
 ```
 
+- Run the migrations. Don't forget to store the client id and secret output from running `php artisan passport:client`.
+```bash
+php artisan migrate
+php artisan passport:install
+php artisan passport:client --password
+```
+
+- [Setup `ngrok`](https://dashboard.ngrok.com/get-started), then point it to port `8000`.
+```bash
+ngrok http 8000
+```
+
 - Setup [Pusher](https://pusher.com/) by logging in to its dashboard, and creating a client. When you're done, open up `.env`, and change the following with the details provided by Pusher:
 ```bash
 PUSHER_APP_ID=
@@ -26,12 +38,9 @@ PUSHER_APP_SECRET=
 PUSHER_APP_CLUSTER=
 ```
 
-- Bootstrap the application. Don't forget to store the client id and secret output from running `php artisan passport:client`.
-```bash
-php artisan migrate
-php artisan passport:install
-php artisan passport:client --password
-```
+- Go to the _Web Hooks_ tab, then paste ngrok's generated url (e.g., `http://9542199e.ngrok.io `) to the _Webhook URL_ input.
+
+- Select _Presence_ for the _Event Type_, then press _Add_.
 
 - You should be good to go
 ```bash

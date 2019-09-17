@@ -19,17 +19,17 @@ class PartyInvitationAccepted implements ShouldBroadcast
     /**
      * @var Party
      */
-    public $party;
+    protected $party;
 
     /**
      * @var PartyInvitation
      */
-    public $invitation;
+    protected $invitation;
 
     /**
-     * @var User
+     * @var array
      */
-    public $member;
+    protected $member;
 
     /**
      * Create a new event instance.
@@ -40,7 +40,7 @@ class PartyInvitationAccepted implements ShouldBroadcast
     {
         $this->party = $party;
         $this->invitation = $invitation;
-        $this->member = $member;
+        $this->member = $this->transformMember($member);
     }
 
     /**
@@ -71,8 +71,23 @@ class PartyInvitationAccepted implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'invitation' => $this->invitation,
+            'invitation' => $this->invitation->attributesToArray(),
             'member' => $this->member
         ];
+    }
+
+    /**
+     * We want to transform member in the constructor because we lose
+     * other data like `pivot` for some reason. We're using Laravel 5.8
+     * yet this still occurs.
+     * 
+     * @TODO Move over to Redis because it seems to be a bug with `QUEUE_DRIVER=sync`.
+     * 
+     * @see https://github.com/laravel/framework/issues/23068
+     */
+    protected function transformMember($member) {
+        $data = $member->attributesToArray();
+        $pivot = $member->pivot->toArray();
+        return array_merge($data, ['pivot' => $pivot]);
     }
 }

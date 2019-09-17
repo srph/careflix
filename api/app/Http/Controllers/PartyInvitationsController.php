@@ -95,30 +95,35 @@ class PartyInvitationsController extends Controller
             'action' => 'accepted'
         ])->save();
 
-        $invitation->party->members()->attach($request->user()->id, [
+        $party = $invitation->party;
+
+        $party->members()->attach($request->user()->id, [
             'is_active' => false
         ]);
 
-        // @TODO Find a way so we don't have to query the data again, and instead,
-        // get the data from the attach() method above. No idea at the moment.
-        $pivot = $invitation->party->members()->where('user_id', $request->user()->id)->first();
+        // `attach()` above doesn't reload a collection, so we're forcing it by
+        // calling `members` as a method instead of a property here. Calling
+        // members->fresh() doesn't include the pivot, so here we are.
+        $member = $party->members()->where('id', $request->user()->id)->first();
 
         $activity = \App\PartyActivity::create([
             'user_id' => $request->user()->id,
-            'party_id' => $invitation->party->id,
+            'party_id' => $party->id,
             'text' => 'joined the room'
         ]);
 
-        $log = $invitation->party->logs()->create([
+        $log = $party->logs()->create([
             'loggable_type' => \App\PartyActivity::class,
             'loggable_id' => $activity->id
         ]);
 
-        broadcast(new PartyInvitationAccepted($invitation->party, $invitation, $pivot))->toOthers();
+        broadcast(
+            new PartyInvitationAccepted($party, $invitation, $member)
+        )->toOthers();
 
-        broadcast(new PartyLogEvent($invitation->party, $log));
+        broadcast(new PartyLogEvent($party, $log));
 
-        return $invitation->party;
+        return $party;
     }
 
     /**

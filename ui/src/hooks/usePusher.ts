@@ -18,6 +18,7 @@ function usePusher(channelName: string, eventName: string, callback: Pusher.Even
       // let's check in the future the callback is being unbinded properly.
       if (channel) {
         channel.unbind(eventName, callback)
+        pusher().unsubscribe(channelName)
       }
     }
   }, [isDisabled])

@@ -155,6 +155,7 @@ function AppWatch(props: ReactComponentWrapper) {
     state.party ? `presence-chat-party.${state.party.id}` : '',
     'pusher:member_removed',
     (event: PusherPresenceEvent) => {
+      console.log(event)
       dispatch({
         type: 'presence',
         payload: {

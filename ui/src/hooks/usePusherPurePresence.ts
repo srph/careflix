@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import pusher from '~/lib/pusher'
 
 /** 
- * @REFACTOR Make a PusherProvider
+ * This hook simply subscribes you to the presence channel, with no events to subscribe to.
  */
 function usePusherPurePresence(channelName: string, isDisabled: boolean = false) {
   useEffect(() => {

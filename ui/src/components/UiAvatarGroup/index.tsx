@@ -25,8 +25,8 @@ function UiAvatarGroup(props: Props) {
       })}>
       {props.users.slice(0, 4).map((user, i) => (
         <div className="avatar" key={i}>
-          {auth.state.data.id !== user.id && user.pivot ? (
-            <UiPresenceAvatar user={user} isActive={user.pivot.is_active} />
+          {auth.state.data.id !== user.id && ('pivot' in user) ? (
+            <UiPresenceAvatar user={user} isActive={(user as AppPartyMember).pivot.is_active} />
           ) : (
             <UiAvatar user={user} />
           )}

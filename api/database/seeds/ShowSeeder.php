@@ -2529,6 +2529,12 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Dumbell Nan Kilo Moteru?',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [12, 12]
+            ],
         ];
 
         foreach($movies as $movie) {

@@ -2548,6 +2548,12 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:55')
             ],
+            [
+                'title' => 'Given',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [11, 11]
+            ],
         ];
 
         foreach($movies as $movie) {

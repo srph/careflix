@@ -2535,6 +2535,19 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [12, 12]
             ],
+            [
+                'title' => 'Dave Chapelle\'s Block Party',
+                'title_type' => 'movie',
+                'synopsis' => 'Actor, writer and comic Dave Chappelle loads up a bus with residents of his Ohio hometown and takes them to Brooklyn, N.Y. Once there, the travelers enjoy a concert featuring Kanye West, the Fugees, Big Daddy Kane and others.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dave Chapelle\'s Block Party'),
+                'air_start' => Carbon::create(2006, 3, 3),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Dave Chapelle\'s Block Party', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:55')
+            ],
         ];
 
         foreach($movies as $movie) {

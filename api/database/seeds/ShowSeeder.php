@@ -2547,6 +2547,32 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:42:55')
+            ],
+            [
+                'title' => 'Youjo Senki Movie',
+                'title_type' => 'movie',
+                'synopsis' => 'An elite salary man is reborn as a little girl and is destined to become the most dangerous sorcerer in the imperial army.',
+                'language' => 'Japanese',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Youjo Senki Movie'),
+                'air_start' => Carbon::create(2019, 2, 8),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Youjo Senki Movie', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:38:24')
+            ],
+            [
+                'title' => 'Sing',
+                'title_type' => 'movie',
+                'synopsis' => 'In a city of humanoid animals, a hustling theater impresario\'s attempt to save his theater with a singing competition becomes grander than he anticipates even as its finalists find that their lives will never be the same.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Sing'),
+                'air_start' => Carbon::create(2016, 12, 21),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Sing', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:25')
             ]
         ];
 

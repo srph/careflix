@@ -2572,7 +2572,7 @@ class ShowSeeder extends Seeder
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Sing', 'en'),
                 //
                 'extension' => 'mp4',
-                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:48:25')
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:36')
             ]
         ];
 

@@ -2573,7 +2573,46 @@ class ShowSeeder extends Seeder
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:47:36')
-            ]
+            ],
+            [
+                'title' => 'Crawl',
+                'title_type' => 'movie',
+                'synopsis' => 'A young woman, while attempting to save her father during a category 5 hurricane, finds herself trapped in a flooding house and must fight for her life against alligators.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Crawl'),
+                'air_start' => Carbon::create(2019, 7, 12),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Crawl', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:33')
+            ],
+            [
+                'title' => 'The Handmaiden',
+                'title_type' => 'movie',
+                'synopsis' => 'A woman is hired as a handmaiden to a Japanese heiress, but secretly she is involved in a plot to defraud her.',
+                'language' => 'Korean',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Handmaiden'),
+                'air_start' => Carbon::create(2016, 6, 1),
+                'age_rating' => '',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Handmaiden', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:48:27')
+            ],
+            [
+                'title' => 'Toy Story 4',
+                'title_type' => 'movie',
+                'synopsis' => 'When a new toy called "Forky" joins Woody and the gang, a road trip alongside old and new friends reveals how big the world can be for a toy.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Toy Story 4'),
+                'air_start' => Carbon::create(2019, 6, 21),
+                'age_rating' => 'G',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Toy Story 4', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:40:03')
+            ],
         ];
 
         foreach($movies as $movie) {

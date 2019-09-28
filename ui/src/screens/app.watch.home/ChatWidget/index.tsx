@@ -530,6 +530,10 @@ function scrollToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
   el.scrollTop = getScrollableContainerHeight(el) - treshold
 }
 
+/**
+ * In long terms "Scroll to <distance from bottom>".
+ * We'll use `distance` as relative scroll distance from the bottom.
+ */
 function scrollFromBottom(el: HTMLElement, distance: number) {
   el.scrollTop = getScrollableContainerHeight(el) - distance
 }

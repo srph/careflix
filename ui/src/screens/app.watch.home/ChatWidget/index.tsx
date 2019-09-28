@@ -20,6 +20,7 @@ import { useReducer, useState, useEffect, useMemo, useRef } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePusher } from '~/hooks/usePusher'
 import { useWindowVisibility } from '~/hooks/useWindowVisibility'
+import useWindowSize from 'react-use/lib/useWindowSize'
 import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateTime'
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
@@ -136,6 +137,8 @@ function ChatWidget(props: Props) {
 
   const [state, dispatch] = useReducer(reducer, init)
 
+  const { height } = useWindowSize()
+
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
 
   const chatbarRef = useRef<HTMLDivElement>(null)
@@ -148,6 +151,9 @@ function ChatWidget(props: Props) {
 
   // One-off flag used to check if we're supposed to scroll to the bottom
   const shouldScrollToBottomRef = useRef<boolean>(true)
+
+  // The last stored scroll distance from the bottom of our chat list container
+  const lastScrollDistanceFromBottom = useRef<number>(0)
 
   // One-off flag used to check if it's a message sent through pusher
   const isReceivingRef = useRef<boolean>(true)
@@ -261,6 +267,13 @@ function ChatWidget(props: Props) {
     }
   }, [])
 
+  // Whether the user toggles fullscreen or changes their orientation,
+  // we want to keep them at the same position as they were from the bottom.
+  // @TODO Maybe we can have a component that scrolls from the bottom.
+  useEffect(() => {
+    scrollFromBottom(chatbarRef.current, lastScrollDistanceFromBottom.current)
+  }, [height])
+
   function handleInput(evt: React.FormEvent<HTMLInputElement>) {
     dispatch({
       type: 'chat:input',
@@ -348,6 +361,8 @@ function ChatWidget(props: Props) {
   }
 
   function handleMessagesContainerScroll(evt) {
+    lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current)
+
     if (hasUnreadMessages && isScrolledToBottom(chatbarRef.current)) {
       // We'll remove the "has unread messages" note when the user scrolls to the bottom.
       // This the removal of the unread messages when the user himself sends a message,
@@ -510,17 +525,26 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
   return groups
 }
 
-/**
- *
- */
 function scrollToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
   const treshold = opts.treshold || 0
-  el.scrollTop = el.scrollHeight - el.offsetHeight - treshold
+  el.scrollTop = getScrollableContainerHeight(el) - treshold
+}
+
+function scrollFromBottom(el: HTMLElement, distance: number) {
+  el.scrollTop = getScrollableContainerHeight(el) - distance
+}
+
+function getScrollDistanceFromBottom(el: HTMLElement): number {
+  return getScrollableContainerHeight(el) - el.scrollTop
 }
 
 function isScrolledToBottom(el: HTMLElement, opts: { treshold?: number } = {}) {
   const treshold = opts.treshold || 0
-  return el.scrollTop >= el.scrollHeight - el.offsetHeight - treshold
+  return el.scrollTop >= getScrollableContainerHeight(el) - treshold
+}
+
+function getScrollableContainerHeight(el: HTMLElement) {
+  return el.scrollHeight - el.offsetHeight
 }
 
 export default ChatWidget

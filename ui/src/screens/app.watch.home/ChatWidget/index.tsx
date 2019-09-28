@@ -153,6 +153,7 @@ function ChatWidget(props: Props) {
   const shouldScrollToBottomRef = useRef<boolean>(true)
 
   // The last stored scroll distance from the bottom of our chat list container
+  // We want to update when then the user scrolls the container or the container size changes.
   const lastScrollDistanceFromBottom = useRef<number>(0)
 
   // One-off flag used to check if it's a message sent through pusher
@@ -198,6 +199,8 @@ function ChatWidget(props: Props) {
       // if it we sent the message ourself.
       setHasUnreadMessages(true)
     }
+
+    lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current)
   }, [state.logs.length])
 
   const isWindowVisible = useWindowVisibility()

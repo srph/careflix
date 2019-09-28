@@ -448,6 +448,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
   }
 
   function handleToggleMute() {
+    $video.current.muted = !state.isMuted
+    
     dispatch({
       type: 'toggle-mute'
     })

@@ -97,6 +97,11 @@ npm run build
 php artisan app:list-pt
 # Lists the most recent parties since 5 days ago
 php artisan app:list-pt 5
+
+# Lists the last 15 registrations
+php artisan app:list-users
+# Lists the last 30 registrations
+php artisan app:list-users 30
 ```
 
 ## Attribution

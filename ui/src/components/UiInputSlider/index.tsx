@@ -31,6 +31,7 @@ function UiInputSlider(props: Props) {
   function onClick() {
     props.onChange && props.onChange(slackXRef.current)
     props.onDragEnd && props.onDragEnd(slackXRef.current)
+    setIsDragging(false)
   }
 
   function onDragEnd() {

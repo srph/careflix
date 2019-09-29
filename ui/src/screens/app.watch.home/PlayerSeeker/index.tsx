@@ -1,7 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import { useState, useRef, useMemo } from 'react'
-import Slider, { SliderValue } from 'react-input-slider'
+import UiInputSlider from '~/components/UiInputSlider'
 import toReadableTime from '~/utils/date/toReadableTime'
 import clamp from '~/utils/clamp'
 
@@ -25,8 +25,8 @@ function PlayerSeeker(props: Props) {
     return percentage === -1 ? '' : `${percentage * containerWidth - LABEL_WIDTH / 2}px`
   }, [percentage])
 
-  function handleSeek({ x }: SliderValue) {
-    props.onSeek(x)
+  function handleSeek(time: number) {
+    props.onSeek(time)
   }
 
   function handleMouseMove(evt: React.MouseEvent<HTMLDivElement>) {
@@ -54,12 +54,11 @@ function PlayerSeeker(props: Props) {
         </div>
       )}
 
-      <Slider
-        axis="x"
-        x={props.time}
-        xmin={0}
-        xmax={props.duration}
-        onChange={handleSeek}
+      <UiInputSlider
+        value={props.time}
+        min={0}
+        max={props.duration}
+        onDragEnd={handleSeek}
         styles={{
           active: { background: 'var(--color-primary)' },
           thumb: {

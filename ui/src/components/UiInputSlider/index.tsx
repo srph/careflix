@@ -19,7 +19,7 @@ interface Props {
 
 function UiInputSlider(props: Props) {
   const [slackX, setSlackX] = useState<number>(() => props.value)
-  const slackXRef = useRef(slackX)
+  const slackXRef = useRef(slackX) // Access the updated slackX from the other event listeners
   const [isDragging, setIsDragging] = useState<boolean>(false)
 
   function onChange({ x }: SliderValue) {

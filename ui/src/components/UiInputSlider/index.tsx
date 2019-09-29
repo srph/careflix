@@ -24,9 +24,13 @@ function UiInputSlider(props: Props) {
 
   function onChange({ x }: SliderValue) {
     setIsDragging(true)
-    setSlackX(x)
     slackXRef.current = x
-    props.onChange && props.onChange(x)
+    setSlackX(x)
+  }
+
+  function onClick() {
+    props.onChange && props.onChange(slackXRef.current)
+    props.onDragEnd && props.onDragEnd(slackXRef.current)
   }
 
   function onDragEnd() {
@@ -41,6 +45,7 @@ function UiInputSlider(props: Props) {
       xmin={props.min}
       xmax={props.max}
       onChange={onChange}
+      onClick={onClick}
       onDragEnd={onDragEnd}
       styles={props.styles}
     />

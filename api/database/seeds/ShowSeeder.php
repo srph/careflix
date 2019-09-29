@@ -2613,6 +2613,12 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:40:03')
             ],
+            [
+                'title' => 'Kimetsu no Yaiba',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [25, 26]
+            ],
         ];
 
         foreach($movies as $movie) {

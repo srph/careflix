@@ -19,7 +19,6 @@ interface Props {
 /**
  * react-input-slider calls props.onChange each drag move.
  * This component lazily updates the value only after the drag / click.
- * @param props 
  */
 function UiInputSlider(props: Props) {
   const [slackX, setSlackX] = useState<number>(() => props.value)

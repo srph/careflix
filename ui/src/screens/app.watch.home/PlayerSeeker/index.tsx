@@ -58,7 +58,7 @@ function PlayerSeeker(props: Props) {
         value={props.time}
         min={0}
         max={props.duration}
-        onDragEnd={handleSeek}
+        onChange={handleSeek}
         styles={{
           active: { background: 'var(--color-primary)' },
           thumb: {

@@ -14,7 +14,6 @@ interface Props {
     track?: Style
   }
   onChange?: (value: number) => void
-  onDragEnd?: (value: number) => void
 }
 
 function UiInputSlider(props: Props) {
@@ -22,20 +21,14 @@ function UiInputSlider(props: Props) {
   const slackXRef = useRef(slackX) // Access the updated slackX from the other event listeners
   const [isDragging, setIsDragging] = useState<boolean>(false)
 
-  function onChange({ x }: SliderValue) {
+  function handleQueueChange({ x }: SliderValue) {
     setIsDragging(true)
     slackXRef.current = x
     setSlackX(x)
   }
 
-  function onClick() {
+  function handleCommitChange() {
     props.onChange && props.onChange(slackXRef.current)
-    props.onDragEnd && props.onDragEnd(slackXRef.current)
-    setIsDragging(false)
-  }
-
-  function onDragEnd() {
-    props.onDragEnd && props.onDragEnd(slackXRef.current)
     setIsDragging(false)
   }
 
@@ -45,9 +38,9 @@ function UiInputSlider(props: Props) {
       x={isDragging ? slackX : props.value}
       xmin={props.min}
       xmax={props.max}
-      onChange={onChange}
-      onClick={onClick}
-      onDragEnd={onDragEnd}
+      onChange={handleQueueChange}
+      onClick={handleCommitChange}
+      onDragEnd={handleCommitChange}
       styles={props.styles}
     />
   )

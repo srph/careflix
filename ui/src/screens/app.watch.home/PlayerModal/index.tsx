@@ -261,6 +261,8 @@ function PlayerModal({ party, ...props }: Props) {
                     onOpen={handleOpenVolumeControl}
                     onClose={handleCloseVolumeControl}
                     onToggleMute={props.onToggleMute}
+                    onOpenTooltip={handleOpenTooltip}
+                    onCloseTooltip={handleCloseTooltip}
                   />
                 </div>
 

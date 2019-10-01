@@ -16,7 +16,7 @@ declare module 'react-input-slider' {
     ystep?: number
     styles?: {}
     onClick?: (evt: React.ClickEvent<HTMLElement>) => void
-    onChange?: (SliderValue) => void
+    onChange?: (value: SliderValue) => void
     onDragEnd?: () => void
   }
 

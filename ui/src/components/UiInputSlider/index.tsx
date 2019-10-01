@@ -8,6 +8,7 @@ interface Props {
   value: number
   min: number
   max: number
+  step?: number
   styles?: {
     active?: Style
     thumb?: Style
@@ -42,6 +43,7 @@ function UiInputSlider(props: Props) {
       x={isDragging ? slackX : props.value}
       xmin={props.min}
       xmax={props.max}
+      xstep={props.step}
       onChange={handleQueueChange}
       onClick={handleCommitChange}
       onDragEnd={handleCommitChange}

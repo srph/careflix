@@ -1,21 +1,26 @@
-.app-watch-volume-control {
-  position: absolute;
-  top: -120px;
-  left: 50%;
-  height: 120px;
-  padding: 16px;
-  background: rgba(0,0,0,0.75);
-  border-radius: var(--border-radius);
-  transform: translateX(-50%);
-  z-index: var(--zindex-player-volume-control);
+.app-watch-volume-control-action {
+  display: flex;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.app-watch-volume-control-action > .slider {
+  width: 0;
+  opacity: 0;
+  transition: 200ms width ease, 400ms opacity ease;
+  transition-delay: 0ms, 200ms;
+}
+
+.app-watch-volume-control-action:hover > .icon {
+  margin-right: 16px;
+}
+
+.app-watch-volume-control-action:hover > .slider {
+  width: 80px;
+  opacity: 1;
+  transition-delay: 0ms, 0ms;
 }
 
 .app-watch-volume-control-action.is-muted > .icon {
   color: red;
-}
-
-.app-watch-volume-control-action {
-  position: relative;
-  padding: 16px 0;
-  margin-right: 16px;
 }

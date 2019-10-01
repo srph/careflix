@@ -57,10 +57,11 @@ function VolumeControl(props: Props) {
           styles={{
             active: { background: 'var(--color-primary)' },
             track: {
-              width: '100%'
+              width: '100%',
+              cursor: 'pointer'
             },
             thumb: {
-              display: isHovered ? 'block' : 'none'
+              display: isHovered ? 'block' : 'none',
             }
           }}
         />

@@ -2715,6 +2715,19 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Yesterday',
+                'title_type' => 'movie',
+                'synopsis' => 'A struggling musician realizes he\'s the only person on Earth who can remember The Beatles after waking up in an alternate timeline where they never existed.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Yesterday'),
+                'air_start' => Carbon::create(2019, 6, 28),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Yesterday', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:56:14')
+            ],
         ];
 
         foreach($movies as $movie) {

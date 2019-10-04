@@ -2625,14 +2625,17 @@ class ShowSeeder extends Seeder
                 'synopsis' => 'Gypsy\'s quest for independence opens up a Pandora\'s box of secrets, which ultimately leads to murder. The stranger-than-fiction true-crime series is based on a 2016 BuzzFeed article that detailed the shocking 2015 crime.',
                 'language' => 'English',
                 'air_start' => Carbon::create(2019, 3, 20),
-                'air_end' => '',
+                // 'air_end' => '',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Act'),
                 'age_rating' => 'TV-MA',
                 //
                 'seasons' => [
                     [
                         'title' => 'Season 1',
-                        'episodes' => 0
+                        'episodes' => 0,
+                        // 'extension' => 'mp4',
+                        // 'subtitle_language' => 'en',
+                        // 'duration' => '22:55'
                     ]
                 ]
             ],
@@ -2698,7 +2701,7 @@ class ShowSeeder extends Seeder
                 'synopsis' => 'Jake Peralta, an immature, but talented N.Y.P.D. detective in Brooklyn\'s 99th Precinct, comes into immediate conflict with his new commanding officer, the serious and stern Captain Ray Holt.',
                 'language' => 'English',
                 'air_start' => Carbon::create(2013, 9, 17),
-                'air_end' => '',
+                // 'air_end' => '',
                 'preview_image' => Helper::getPreviewUrlFromMovieTitle('Brooklyn Nine Nine'),
                 'age_rating' => 'TV-13',
                 //
@@ -2769,7 +2772,7 @@ class ShowSeeder extends Seeder
                 $end = $movie['range'][1];
 
                 foreach(range($start, $end) as $episode) {
-                    $duration = Arr::get($episode, 'duration', $group->videos()->firstOrFail()->duration);
+                    $duration = $movie['duration'] ?? $group->videos()->firstOrFail()->duration;
 
                     App\ShowVideo::create([
                         'show_group_id' => $group->id,

@@ -2740,6 +2740,8 @@ class ShowSeeder extends Seeder
                         'show_id' => $show->id,
                         'title' => $season['title']
                     ]);
+
+                    $season_index = Helper::getSeasonIndexFromTitle($group->title);
     
                     for($j = 0; $j < $season['episodes']; $j++) {
                         App\ShowVideo::create([
@@ -2748,13 +2750,13 @@ class ShowSeeder extends Seeder
                             'title' => 'Episode ' . ($j + 1),
                             'video_url' => \App\Support\Helper::getVideoUrlFromEpisode([
                                 'title' => $show->title,
-                                'season' => $i + 1,
+                                'season' => $season_index,
                                 'episode' => $j + 1,
                                 'extension' => $season['extension']
                             ]),
                             'subtitle_url' => $season['subtitle_language'] ? Helper::getSubtitleUrlFromSeriesTitle([
                                 'title' => $show->title,
-                                'season' => $i + 1,
+                                'season' => $season_index,
                                 'episode' => $j + 1
                             ], $season['subtitle_language']) : '',
                             'duration' => Helper::getDurationInSecondsFromReadableFormat($season['duration']),

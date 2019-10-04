@@ -173,4 +173,11 @@ class Helper {
     $filename = Helper::getVideoFilenameFromEpisode($settings);
     return Helper::cdn("videos/{$directory}/{$filename}-{$language}.srt");
   }
+
+  /**
+   * Season 6 -> 6
+   */
+  static public function getSeasonIndexFromTitle($title) {
+    return preg_replace("/Season\s/", "", $title);
+  }
 }

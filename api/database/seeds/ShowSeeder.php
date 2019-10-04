@@ -2619,6 +2619,99 @@ class ShowSeeder extends Seeder
                 'season_name' => 'Season 1',
                 'range' => [25, 26]
             ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series',
+                'synopsis' => 'Gypsy\'s quest for independence opens up a Pandora\'s box of secrets, which ultimately leads to murder. The stranger-than-fiction true-crime series is based on a 2016 BuzzFeed article that detailed the shocking 2015 crime.',
+                'language' => 'English',
+                'air_start' => Carbon::create(2019, 3, 20),
+                'air_end' => '',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Act'),
+                'age_rating' => 'TV-MA',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 0
+                    ]
+                ]
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [1, 1],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('53:08')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [2, 2],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('54:34')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [3, 3],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('53:06')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [4, 4],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('50:17')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [5, 5],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('57:29')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [6, 6],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('47:45')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [7, 7],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('47:58')
+            ],
+            [
+                'title' => 'The Act',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [8, 8],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('59:39')
+            ],
+            [
+                'title' => 'Brooklyn Nine Nine',
+                'title_type' => 'series',
+                'synopsis' => 'Jake Peralta, an immature, but talented N.Y.P.D. detective in Brooklyn\'s 99th Precinct, comes into immediate conflict with his new commanding officer, the serious and stern Captain Ray Holt.',
+                'language' => 'English',
+                'air_start' => Carbon::create(2013, 9, 17),
+                'air_end' => '',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Brooklyn Nine Nine'),
+                'age_rating' => 'TV-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 6',
+                        'episodes' => 18,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '21:30'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {
@@ -2676,6 +2769,8 @@ class ShowSeeder extends Seeder
                 $end = $movie['range'][1];
 
                 foreach(range($start, $end) as $episode) {
+                    $duration = Arr::get($episode, 'duration', $group->videos()->firstOrFail()->duration);
+
                     App\ShowVideo::create([
                         'show_group_id' => $group->id,
                         'show_id' => $show->id,
@@ -2691,7 +2786,7 @@ class ShowSeeder extends Seeder
                             'season' => $season,
                             'episode' => $episode
                         ]),
-                        'duration' => $group->videos->first()->duration,
+                        'duration' => $duration,
                         'synopsis' => $show->synopsis,
                     ]);
                 }

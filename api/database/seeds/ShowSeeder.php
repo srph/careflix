@@ -2728,6 +2728,61 @@ class ShowSeeder extends Seeder
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:56:14')
             ],
+            [
+                'title' => 'Chernobyl',
+                'title_type' => 'series',
+                'synopsis' => 'Brave men and women act heroically to mitigate catastrophic damage when the Chernobyl Nuclear Power Plant suffers a nuclear accident on April 26, 1986.',
+                'language' => 'English',
+                'air_start' => Carbon::create(2019, 5, 6),
+                'air_end' => Carbon::create(2019, 5, 6),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Chernobyl'),
+                'age_rating' => 'TV-MA',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 0,
+                        // 'extension' => 'mp4',
+                        // 'subtitle_language' => 'en',
+                        // 'duration' => '21:30'
+                    ]
+                ]
+            ],
+            [
+                'title' => 'Chernobyl',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [1, 1],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:00:11')
+            ],
+            [
+                'title' => 'Chernobyl',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [2, 2],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:05:51')
+            ],
+            [
+                'title' => 'Chernobyl',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [3, 3],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:03:29')
+            ],
+            [
+                'title' => 'Chernobyl',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [4, 4],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:06:48')
+            ],
+            [
+                'title' => 'Chernobyl',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [5, 5],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:12:26')
+            ],
         ];
 
         foreach($movies as $movie) {

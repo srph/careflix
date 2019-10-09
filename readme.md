@@ -18,6 +18,15 @@ composer install
 cp .env.example .env
 ```
 
+- Open up `.env`, then configure the cdn url & request access code
+```bash
+# Where your media is stored
+APP_CDN=https://your-digital-ocean-cdn.sgp1.cdn.digitaloceanspaces.com/
+
+# This is used for the registration, but you can leave empty.
+APP_REQUEST_ACCESS_CODE=
+```
+
 - Run the migrations. Don't forget to store the client id and secret output from running `php artisan passport:client`.
 ```bash
 php artisan migrate

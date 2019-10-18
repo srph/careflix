@@ -1,3 +1,4 @@
+![preview](preview.png)
 ## Care.tv
 Care.tv makes it really easy to enjoy movies or watch TV shows with the people you care about, no matter how far!
 

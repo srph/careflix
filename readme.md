@@ -2,6 +2,8 @@
 ## Care.tv
 Care.tv makes it really easy to enjoy movies or watch TV shows with the people you care about, no matter how far!
 
+Works for mobile, tablet, and desktop screens. Does not work with iOS at the moment.
+
 ## API Setup
 You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com)
 

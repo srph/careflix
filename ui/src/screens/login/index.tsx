@@ -10,7 +10,6 @@ import UiButtonLoader from '~/components/UiButtonLoader'
 import { Link } from 'react-router-dom'
 import Helmet from 'react-helmet'
 
-import axios from '~/lib/axios'
 import history from '~/lib/history'
 import { useAuth } from '~/contexts/Auth'
 import { useFormState } from '~/hooks/useFormState'

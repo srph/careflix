@@ -48,17 +48,19 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       const token: string = cookie.get('app_token') || ''
 
       if (!token.length) {
+        setIsLoading(false)
         return []
       }
 
-      setToken(token)
-
-      const [err, res] = await axios.get('/api/me')
+      const [err, res] = await axios.get('/api/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
 
       if (err) {
         return [err]
       }
 
+      setToken(token)
       setData(res.data)
       setIsLoading(false)
       return []
@@ -85,20 +87,20 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       return [err]
     }
     const token = tokenResponse.data.access_token
-    setToken(token)
-    cookie.set('app_token', token, {
-      path: '/',
-      expires: addYears(new Date(), 1)
-    })
     const [err2, dataResponse] = await axios.get('/api/me', {
-      app: { validation: false }
+      app: { validation: false },
+      headers: { 'Authorization': `Bearer ${token}` }
     })
     if (err2) {
       return [err2]
     }
     const data = dataResponse.data
-    setData(data)
+    cookie.set('app_token', token, {
+      path: '/',
+      expires: addYears(new Date(), 1)
+    })
     setToken(token)
+    setData(data)
     return []
   }
 
@@ -156,8 +158,8 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       value={{
         data,
         token,
-        isAuthenticated: token != null,
-        isGuest: token == null,
+        isAuthenticated: data != null,
+        isGuest: data == null,
         login,
         logout,
         updateUserData,
@@ -171,7 +173,9 @@ function AuthProvider({ children }: ReactComponentWrapper) {
 }
 
 function useAuth() {
-  return useContext(Context)
+  const context = useContext(Context)
+  console.log(context)
+  return context
 }
 
 export { AuthProvider, useAuth }

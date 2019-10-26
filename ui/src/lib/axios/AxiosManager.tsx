@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '~/contexts/Auth'
 
 import instance from './instance'
@@ -15,6 +15,7 @@ import pusher from './interceptor-pusher'
  */
 function AxiosManager({ children }: ReactComponentWrapper) {
   const auth = useAuth()
+  const [isInitialized, setIsInitialized] = useState<boolean>(false)
 
   useEffect(() => {
     const requests = [
@@ -28,6 +29,8 @@ function AxiosManager({ children }: ReactComponentWrapper) {
       toastErrors.setup()
     ]
 
+    setIsInitialized(true)
+
     return () => {
       requests.forEach((interceptor) => {
         instance.interceptors.request.eject(interceptor)
@@ -36,10 +39,12 @@ function AxiosManager({ children }: ReactComponentWrapper) {
       responses.forEach((interceptor) => {
         instance.interceptors.response.eject(interceptor)
       })
+
+      setIsInitialized(false)
     }
   }, [auth.token])
 
-  return <React.Fragment>{children}</React.Fragment>
+  return <React.Fragment>{isInitialized ? children : null}</React.Fragment>
 }
 
 export { AxiosManager } 

@@ -15,6 +15,7 @@ import { GatewayProvider } from 'react-gateway'
 import { Toast } from '~/components/Toast'
 import { AuthProvider } from '~/contexts/Auth'
 import { AxiosManager } from '~/lib/axios/AxiosManager'
+import { PusherManager } from '~/lib/pusher/PusherManager'
 import WindowVhSetter from '~/components/WindowVhSetter'
 
 import App from '~/screens/app'
@@ -41,37 +42,39 @@ function Mount() {
           <Router history={history}>
             <QueryParamProvider ReactRouterRoute={Route}>
               <AuthProvider>
-                <AxiosManager>
-                  <Switch>
-                    <GuestRoute path="/login" exact component={Login} />
-                    <GuestRoute path="/register" exact component={Register} />
-                    <Route path="/logout" exact component={Logout} />
+                <PusherManager>
+                  <AxiosManager>
+                    <Switch>
+                      <GuestRoute path="/login" exact component={Login} />
+                      <GuestRoute path="/register" exact component={Register} />
+                      <Route path="/logout" exact component={Logout} />
 
-                    <Route
-                      path="/"
-                      render={() => (
-                        <App>
-                          <Switch>
-                            <Route path="/" exact component={AppHome} />
-                            <Route path="/download" exact component={AppDownload} />
-                            <PrivateRoute path="/settings" exact component={AppSettings} />
-                            <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
-                            <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
-                            <PrivateRoute path="/settings/faq" exact component={AppSettingsFaq} />
-                            <PrivateRoute
-                              path="/watch/:partyId"
-                              render={matchProps => (
-                                <AppWatch {...matchProps}>
-                                  <Route path="/watch/:partyId" exact component={AppWatchHome} />
-                                </AppWatch>
-                              )}
-                            />
-                          </Switch>
-                        </App>
-                      )}
-                    />
-                  </Switch>
-                </AxiosManager>
+                      <Route
+                        path="/"
+                        render={() => (
+                          <App>
+                            <Switch>
+                              <Route path="/" exact component={AppHome} />
+                              <Route path="/download" exact component={AppDownload} />
+                              <PrivateRoute path="/settings" exact component={AppSettings} />
+                              <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
+                              <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
+                              <PrivateRoute path="/settings/faq" exact component={AppSettingsFaq} />
+                              <PrivateRoute
+                                path="/watch/:partyId"
+                                render={matchProps => (
+                                  <AppWatch {...matchProps}>
+                                    <Route path="/watch/:partyId" exact component={AppWatchHome} />
+                                  </AppWatch>
+                                )}
+                              />
+                            </Switch>
+                          </App>
+                        )}
+                      />
+                    </Switch>
+                  </AxiosManager>
+                </PusherManager>
               </AuthProvider>
             </QueryParamProvider>
           </Router>

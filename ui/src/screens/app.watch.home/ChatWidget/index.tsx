@@ -9,8 +9,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import ChatWidgetTip from '../ChatWidgetTip'
 
 import { usePropRef } from '~/hooks/usePropRef'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
+import { useAuth } from '~/contexts/Auth'
 
 import axios from '~/lib/axios'
 import last from '~/utils/last'
@@ -133,32 +132,21 @@ const init: State = {
 }
 
 function ChatWidget(props: Props) {
-  const auth = useUnstated(AuthContainer)
-
+  const auth = useAuth()
   const [state, dispatch] = useReducer(reducer, init)
-
   const { height } = useWindowSize()
-
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
-
   const chatbarRef = useRef<HTMLDivElement>(null)
-
   const idleAudioRef = useRef<HTMLAudioElement>(null)
-
   const sendAudioRef = useRef<HTMLAudioElement>(null)
-
   const buttonRef = useRef<HTMLButtonElement>(null)
-
   // One-off flag used to check if we're supposed to scroll to the bottom
   const shouldScrollToBottomRef = useRef<boolean>(true)
-
   // The last stored scroll distance from the bottom of our chat list container
   // We want to update when then the user scrolls the container or the container size changes.
   const lastScrollDistanceFromBottom = useRef<number>(0)
-
   // One-off flag used to check if it's a message sent through pusher
   const isReceivingRef = useRef<boolean>(true)
-
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
 
   useAsyncEffect(
@@ -302,7 +290,7 @@ function ChatWidget(props: Props) {
       message: {
         id: uuid(),
         text: state.message.text,
-        user: auth.state.data,
+        user: auth.data,
         created_at: date,
         updated_at: date
       },
@@ -416,7 +404,7 @@ function ChatWidget(props: Props) {
               )
             }
 
-            const isSelf = group.user.id === auth.state.data.id
+            const isSelf = group.user.id === auth.data.id
 
             return (
               <div

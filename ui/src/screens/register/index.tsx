@@ -13,9 +13,8 @@ import Helmet from 'react-helmet'
 
 import axios from '~/lib/axios'
 import history from '~/lib/history'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
-import useFormState from '~/hooks/useFormState'
+import { useAuth } from '~/contexts/Auth'
+import { useFormState } from '~/hooks/useFormState'
 import { toast } from '~/components/Toast'
 import { useQueryParam, StringParam } from 'use-query-params'
 
@@ -60,7 +59,7 @@ interface FormState {
  * Use this to create a route instead of typing everything down
  */
 function Register(props: ReactComponentWrapper) {
-  const auth = useUnstated(AuthContainer)
+  const auth = useAuth()
 
   const [state, dispatch] = React.useReducer(reducer, {
     isLoading: false,

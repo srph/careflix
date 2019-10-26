@@ -6,20 +6,19 @@ import AppHeading from './AppHeading'
 
 import { useCallback } from 'react'
 import { usePusher } from '~/hooks/usePusher'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
+import { useAuth } from '~/contexts/Auth'
 
 function App(props: ReactComponentWrapper) {
-  const auth = useUnstated(AuthContainer)
+  const auth = useAuth()
 
   const noop = useCallback(() => {}, [])
 
   // We don't really care about `random-event`, we just want to subscribe to `presence-chat`.
-  usePusher('presence-chat', 'random-event', noop, auth.isGuest())
+  usePusher('presence-chat', 'random-event', noop, auth.isGuest)
 
   return (
     <React.Fragment>
-      {auth.isAuthenticated() && (
+      {auth.isAuthenticated && (
         <React.Fragment>
           <AppHeading />
           <InvitationModal />

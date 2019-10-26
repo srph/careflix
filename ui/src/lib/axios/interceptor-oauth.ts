@@ -1,10 +1,14 @@
 import instance from './instance'
-import { AuthContainer } from '~/containers';
+import { AuthContext } from '~/contexts/Auth'
 
-instance.interceptors.request.use((config) => {
-  if (AuthContainer.state.token != null) {
-    config.headers['Authorization'] = `Bearer ${AuthContainer.state.token}`;
+export default {
+  setup: (auth: AuthContext): number => {
+    return instance.interceptors.request.use((config) => {
+      if (auth.token != null) {
+        config.headers['Authorization'] = `Bearer ${auth.token}`;
+      }
+
+      return config;
+    })
   }
-
-  return config;
-})
+}

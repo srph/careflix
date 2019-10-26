@@ -1,19 +1,11 @@
 import * as React from 'react'
 import GuestHome from './GuestHome'
 import AuthHome from './AuthHome'
-
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
-
+import { useAuth } from '~/contexts/Auth'
 
 function AppHome() {
-  const auth = useUnstated(AuthContainer)
-
-  if (auth.isGuest()) {
-    return <GuestHome />
-  }
-
-  return <AuthHome />
+  const auth = useAuth()
+  return auth.isGuest ? <GuestHome /> : <AuthHome />
 }
 
 export default AppHome

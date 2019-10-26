@@ -5,13 +5,12 @@ import UiAvatar from '~/components/UiAvatar'
 import UiNavigation from '~/components/UiNavigation'
 
 import useReactRouter from 'use-react-router'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
+import { useAuth } from '~/contexts/Auth'
 import GatewayDestWithFallback from '~/components/GatewayDestWithFallback'
 import constants from '../constants'
 
 function AppHeading() {
-  const auth = useUnstated(AuthContainer)
+  const auth = useAuth()
 
   const route = useReactRouter()
 
@@ -26,7 +25,7 @@ function AppHeading() {
       <GatewayDestWithFallback name={constants.gateway.title} fallback={<UiNavigation.Logo />} />
 
       <UiNavigation.Action to="/settings">
-        <UiAvatar user={auth.state.data} />
+        <UiAvatar user={auth.data} />
       </UiNavigation.Action>
     </UiNavigation>
   )

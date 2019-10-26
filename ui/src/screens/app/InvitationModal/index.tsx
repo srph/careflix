@@ -10,8 +10,7 @@ import axios from '~/lib/axios'
 import history from '~/lib/history'
 import { usePusher } from '~/hooks/usePusher'
 import { useRef, useEffect, useReducer, useMemo } from 'react'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
+import { useAuth } from '~/contexts/Auth'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 import { useNow } from '~/hooks/useNow';
@@ -72,14 +71,12 @@ const reducer = (state: State, action: Action): State => {
 }
 
 function InvitationModal() {
-  const auth = useUnstated(AuthContainer)
-
-  const invitation = auth.state.data.invitations[0]
-
+  const auth = useAuth()
+  const invitation = auth.data.invitations[0]
   const [state, dispatch] = useReducer(reducer, init())
 
   usePusher(
-    `private-user.${auth.state.data.id}`,
+    `private-user.${auth.data.id}`,
     'invitation.received',
     (event: { invitation: AppPartyInvitation }) => {
       auth.receiveInvitation(event.invitation)
@@ -87,7 +84,7 @@ function InvitationModal() {
   )
 
   usePusher(
-    `private-user.${auth.state.data.id}`,
+    `private-user.${auth.data.id}`,
     'invitation.cancelled',
     (event: { invitation: AppPartyInvitation }) => {
       auth.cancelInvitation(event.invitation)

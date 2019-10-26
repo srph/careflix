@@ -5,10 +5,7 @@ import UiAvatar from '~/components/UiAvatar'
 import { Link } from 'react-router-dom'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
-
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
-
+import { useAuth } from '~/contexts/Auth'
 import { useIsPWA } from '~/hooks/useIsPWA'
 import useWindowSize from 'react-use/lib/useWindowSize'
 
@@ -18,11 +15,9 @@ import asset_author from '~/assets/author.jpg'
  * Use this to create a route instead of typing everything down
  */
 function AppSettings(props: ReactComponentWrapper) {
-  const auth = useUnstated(AuthContainer)
-
-  const { width } = useWindowSize()
-
+  const auth = useAuth()
   const isPWA = useIsPWA()
+  const { width } = useWindowSize()
 
   return (
     <React.Fragment>
@@ -31,11 +26,11 @@ function AppSettings(props: ReactComponentWrapper) {
       <div className="settings-page">
         <div className="settings-user-info">
           <div className="avatar">
-            <UiAvatar img={auth.state.data.avatar} size="l" />
+            <UiAvatar img={auth.data.avatar} size="l" />
           </div>
 
           <div className="info">
-            <h2 className="name">{auth.state.data.name}</h2>
+            <h2 className="name">{auth.data.name}</h2>
             <div className="description">
               <h6 className="ui-subheading">
                 View Your Profile

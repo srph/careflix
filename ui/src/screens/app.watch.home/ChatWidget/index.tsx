@@ -7,14 +7,12 @@ import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
 import cx from 'classnames'
 
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
-
 import axios from '~/lib/axios'
 import last from '~/utils/last'
 import uuid from '~/lib/uuid'
 import immer from 'immer'
 import { useReducer, useEffect, useMemo, useRef } from 'react'
+import { useAuth } from '~/contexts/Auth'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePusher } from '~/hooks/usePusher'
 import { useWindowVisibility } from '~/hooks/useWindowVisibility'
@@ -22,7 +20,7 @@ import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateT
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
-import UiAvatarGroup from '~components/UiAvatarGroup';
+import UiAvatarGroup from '~components/UiAvatarGroup'
 
 interface State {
   logs: AppPartyLog[]
@@ -124,19 +122,13 @@ const init: State = {
 }
 
 function ChatWidget(props: Props) {
-  const auth = useUnstated(AuthContainer)
-
+  const auth = useAuth()
   const [state, dispatch] = useReducer(reducer, init)
-
   const chatbarRef = useRef<HTMLDivElement>(null)
-
   const idleAudioRef = useRef<HTMLAudioElement>(null)
-
   const sendAudioRef = useRef<HTMLAudioElement>(null)
-
   // One-off flag used to check if we're supposed to scroll to the bottom
   const shouldScrollToBottomRef = useRef<boolean>(true)
-
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
 
   useAsyncEffect(
@@ -180,12 +172,12 @@ function ChatWidget(props: Props) {
     // If the user was scrolled to the bottom before receiving a new message
     // we'll keep the illusion that they still are.
     shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current)
-  
+
     dispatch({
       type: 'logs:push',
       payload: { log: event.log }
     })
-    
+
     if (!isWindowVisible && event.log.type === 'message') {
       // Let's play a sound if the user receives a message while switched to another tab.
       idleAudioRef.current.play()
@@ -224,7 +216,7 @@ function ChatWidget(props: Props) {
       message: {
         id: uuid(),
         text: state.message.text,
-        user: auth.state.data,
+        user: auth.data,
         created_at: date,
         updated_at: date
       },
@@ -277,9 +269,10 @@ function ChatWidget(props: Props) {
   }
 
   return (
-    <div className={cx('watch-screen-chat', {
-      'is-chat-open': props.isChatOpen
-    })}>
+    <div
+      className={cx('watch-screen-chat', {
+        'is-chat-open': props.isChatOpen
+      })}>
       <div className="watch-screen-canopy">
         <UiAvatarGroup images={props.party.members.map(member => member.avatar)} />
 
@@ -306,7 +299,7 @@ function ChatWidget(props: Props) {
             )
           }
 
-          const isSelf = group.user.id === auth.state.data.id
+          const isSelf = group.user.id === auth.data.id
 
           return (
             <div
@@ -319,9 +312,7 @@ function ChatWidget(props: Props) {
               </div>
 
               <div className="messages">
-                {!isSelf && (
-                  <div className="name">{group.user.name}</div>
-                )}
+                {!isSelf && <div className="name">{group.user.name}</div>}
 
                 <div className="list">
                   {group.logs.map(log => (
@@ -338,11 +329,21 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <UiInput isDark isRound placeholder="Write something..." value={state.message.text} ref={inputRef} onChange={handleInput} onKeyDown={handleInputKeyDown} />
+          <UiInput
+            isDark
+            isRound
+            placeholder="Write something..."
+            value={state.message.text}
+            ref={inputRef}
+            onChange={handleInput}
+            onKeyDown={handleInputKeyDown}
+          />
 
-          {isSubmittable && <UiPlainButton className="button">
-            <i className="fa fa-send" />
-          </UiPlainButton>}
+          {isSubmittable && (
+            <UiPlainButton className="button">
+              <i className="fa fa-send" />
+            </UiPlainButton>
+          )}
         </form>
       </div>
 

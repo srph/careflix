@@ -9,9 +9,12 @@ import { Router, Route, Switch } from 'react-router-dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import { QueryParamProvider } from 'use-query-params';
 import history from '~/lib/history'
+
 import { GatewayProvider } from 'react-gateway'
-import WindowVhSetter from '~/components/WindowVhSetter'
+import { AuthProvider } from '~/contexts/Auth'
+import { AxiosManager } from '~lib/axios/AxiosManager'
 import { Toast } from '~/components/Toast'
+import WindowVhSetter from '~/components/WindowVhSetter'
 
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
@@ -26,35 +29,7 @@ import Logout from '~/screens/logout'
 import Register from '~/screens/register'
 import Helmet from 'react-helmet'
 
-import { useAsyncEffect } from 'use-async-effect'
-import { Provider as UnstatedProvider, useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
-
-/**
- * Block rendering and load the user data
- *
- * We're explicitly returning React.ReactElement here because
- * Typescript has issues
- */
-function Root(props: ReactComponentWrapper) {
-  const [isLoading, setIsLoading] = React.useState<boolean>(true)
-
-  const auth: typeof AuthContainer = useUnstated(AuthContainer)
-
-  useAsyncEffect(
-    async () => {
-      const [x, y] = await auth.getUserData()
-      console.log(x, y)
-      setIsLoading(false)
-    },
-    null,
-    []
-  )
-
-  // We'll wrap in fragment, otherwise we'll get an error saying:
-  // JSX element type '{}' is not a constructor function for JSX elements.
-  return isLoading ? <div /> : <React.Fragment>{props.children}</React.Fragment>
-}
+import { Provider as UnstatedProvider } from '~/lib/unstated'
 
 function Mount() {
   return (
@@ -67,36 +42,38 @@ function Mount() {
         <UnstatedProvider>
           <Router history={history}>
             <QueryParamProvider ReactRouterRoute={Route}>
-              <Root>
-                <Switch>
-                  <GuestRoute path="/login" exact component={Login} />
-                  <GuestRoute path="/register" exact component={Register} />
-                  <Route path="/logout" exact component={Logout} />
+              <AuthProvider>
+                <AxiosManager>
+                  <Switch>
+                    <GuestRoute path="/login" exact component={Login} />
+                    <GuestRoute path="/register" exact component={Register} />
+                    <Route path="/logout" exact component={Logout} />
 
-                  <Route
-                    path="/"
-                    render={() => (
-                      <App>
-                        <Switch>
-                          <Route path="/" exact component={AppHome} />
-                          <Route path="/download" exact component={AppDownload} />
-                          <PrivateRoute path="/settings" exact component={AppSettings} />
-                          <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
-                          <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
-                          <PrivateRoute
-                            path="/watch/:partyId"
-                            render={matchProps => (
-                              <AppWatch {...matchProps}>
-                                <Route path="/watch/:partyId" exact component={AppWatchHome} />
-                              </AppWatch>
-                            )}
-                          />
-                        </Switch>
-                      </App>
-                    )}
-                  />
-                </Switch>
-              </Root>
+                    <Route
+                      path="/"
+                      render={() => (
+                        <App>
+                          <Switch>
+                            <Route path="/" exact component={AppHome} />
+                            <Route path="/download" exact component={AppDownload} />
+                            <PrivateRoute path="/settings" exact component={AppSettings} />
+                            <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
+                            <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
+                            <PrivateRoute
+                              path="/watch/:partyId"
+                              render={matchProps => (
+                                <AppWatch {...matchProps}>
+                                  <Route path="/watch/:partyId" exact component={AppWatchHome} />
+                                </AppWatch>
+                              )}
+                            />
+                          </Switch>
+                        </App>
+                      )}
+                    />
+                  </Switch>
+                </AxiosManager>
+              </AuthProvider>
             </QueryParamProvider>
           </Router>
         </UnstatedProvider>

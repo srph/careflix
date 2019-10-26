@@ -1,16 +1,14 @@
 import * as React from 'react'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
+import { useAuth } from '~/contexts/Auth'
 import { Route, Redirect } from 'react-router-dom'
 import { RouteProps } from 'react-router'
 
-function GuestRoute({ component, render, ...rest }: RouteProps) {
-  const Component = component
-  const auth = useUnstated(AuthContainer)
+function GuestRoute({ component: Component, render, ...rest }: RouteProps) {
+  const auth = useAuth()
 
   return (
     <Route {...rest} render={(props) => (
-      auth.isGuest()
+      auth.isGuest
       ? (Component ? <Component {...props}  /> : render(props))
         : <Redirect to='/' />
     )} />

@@ -1,4 +1,5 @@
 import { AxiosRequestConfig as BaseAxiosRequestConfig, AxiosError as BaseAxiosError, AxiosResponse } from 'axios';
+import { AuthContext } from '~/contexts/Auth'
 
 export interface AxiosRequestConfig extends BaseAxiosRequestConfig {
   app?: {

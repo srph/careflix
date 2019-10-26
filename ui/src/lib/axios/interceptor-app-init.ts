@@ -1,11 +1,15 @@
 import instance from './instance'
-import { AxiosRequestConfig as BaseAxiosRequestConfig } from 'axios';
-import { AxiosRequestConfig } from './types';
+import { AxiosRequestConfig as BaseAxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig } from './types'
 
-instance.interceptors.request.use((config: BaseAxiosRequestConfig) => {
-  if (!('app' in config)) {
-    (<AxiosRequestConfig>config).app = {}
+export default {
+  setup: () => {
+    return instance.interceptors.request.use((config: BaseAxiosRequestConfig) => {
+      if (!('app' in config)) {
+        (<AxiosRequestConfig>config).app = {}
+      }
+    
+      return config as AxiosRequestConfig
+    })
   }
-
-  return config as AxiosRequestConfig
-})
+}

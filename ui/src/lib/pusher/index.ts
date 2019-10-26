@@ -5,7 +5,6 @@ import { AuthContext } from '~/contexts/Auth'
 let instance: Pusher.Pusher | null = null
 
 function pusher() {
-  console.log('pusher', instance)
   return instance
 }
 

@@ -4,7 +4,7 @@ import { useAuth } from '~/contexts/Auth'
 import pusher from './'
 
 /**
- * Setups the pusher instance
+ * Setup the pusher instance
  */
 function PusherManager({ children }: ReactComponentWrapper) {
   const [isInitialized, setIsInitialized] = useState<boolean>(false)

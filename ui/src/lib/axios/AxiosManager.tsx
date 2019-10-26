@@ -10,8 +10,7 @@ import toastErrors from './interceptor-toast-errors'
 import pusher from './interceptor-pusher'
 
 /**
- * Setups the 
- * @param param0
+ * Setup axios interceptors
  */
 function AxiosManager({ children }: ReactComponentWrapper) {
   const [isInitialized, setIsInitialized] = useState<boolean>(false)

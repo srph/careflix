@@ -173,9 +173,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
 }
 
 function useAuth() {
-  const context = useContext(Context)
-  console.log(context)
-  return context
+  return useContext(Context)
 }
 
 export { AuthProvider, useAuth }

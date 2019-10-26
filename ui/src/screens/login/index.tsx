@@ -25,13 +25,6 @@ const reducer = (state, action) => {
       }
     }
 
-    case 'success': {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-
     case 'error': {
       return {
         ...state,
@@ -77,7 +70,6 @@ function Login(props: ReactComponentWrapper) {
     }
 
     toast('Login was successful.')
-    dispatch({ type: 'success' })
     history.push('/')
   }
 

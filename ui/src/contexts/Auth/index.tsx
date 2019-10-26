@@ -167,7 +167,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
         receiveInvitation,
         cancelInvitation
       }}>
-      {isLoading ? <div /> : <React.Fragment>{children}</React.Fragment>}
+      {<React.Fragment>{isLoading ? null : children}</React.Fragment>}
     </Context.Provider>
   )
 }

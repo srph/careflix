@@ -24,9 +24,8 @@ function PusherManager({ children }: ReactComponentWrapper) {
     }
   }, [auth.token])
 
-  console.log(isInitialized)
-
-  return <React.Fragment>{isInitialized ? children : null}</React.Fragment>
+  // For guests, we'll just show the view. Otherwise, we'll wait for Pusher to be initialized.
+  return <React.Fragment>{!auth.token || isInitialized ? children : null}</React.Fragment>
 }
 
 export { PusherManager }

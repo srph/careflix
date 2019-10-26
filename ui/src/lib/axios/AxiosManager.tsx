@@ -14,8 +14,8 @@ import pusher from './interceptor-pusher'
  * @param param0
  */
 function AxiosManager({ children }: ReactComponentWrapper) {
-  const auth = useAuth()
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
+  const auth = useAuth()
 
   useEffect(() => {
     const requests = [

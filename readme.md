@@ -60,7 +60,7 @@ php artisan serve
 ```
 
 ## Front-end setup
-You will need npm `>=5` and Node.js `>=10`.
+You will need npm `>=6` and Node.js `>=11`.
 
 - Move to the `ui` folder
 ```bash

@@ -1,9 +1,8 @@
 import { useEffect } from 'react'
-import { useUnstated } from '~/lib/unstated'
-import { AuthContainer } from '~/containers'
+import { useAuth } from '~/contexts/Auth'
 
 function Logout() {
-  const auth = useUnstated(AuthContainer)
+  const auth = useAuth()
 
   useEffect(() => {
     auth.logout()

@@ -1,11 +1,15 @@
 import instance from './instance'
 import pusher from '~/lib/pusher'
-import { AuthContainer } from '~/containers';
+import { AuthContext } from '~/contexts/Auth'
 
-instance.interceptors.request.use((config) => {
-  if (AuthContainer.state.token != null) {
-    config.headers['X-Socket-ID'] = pusher().connection.socket_id;
+export default {
+  setup: (auth: AuthContext): number => {
+    return instance.interceptors.request.use((config) => {
+      if (auth.token != null) {
+        config.headers['X-Socket-ID'] = pusher().connection.socket_id;
+      }
+      
+      return config;
+    })
   }
-  
-  return config;
-})
+}

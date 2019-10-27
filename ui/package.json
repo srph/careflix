@@ -1,6 +1,10 @@
 {
   "name": "care.tv",
   "main": "src/index.ts",
+  "engines": {
+    "node": ">=v11.14.0",
+    "npm": ">=6.7.0"
+  },
   "scripts": {
     "start": "parcel src/index.html --no-cache",
     "typecheck": "tsc --noEmit",

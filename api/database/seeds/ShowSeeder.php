@@ -2827,10 +2827,10 @@ class ShowSeeder extends Seeder
                 'title_type' => 'movie',
                 'synopsis' => 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
                 'language' => 'English',
-                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Lion King (2019)'),
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Lion King 2019'),
                 'air_start' => Carbon::create(2019, 7, 19),
                 'age_rating' => 'PG',
-                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Lion King (2019)', 'en'),
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Lion King 2019', 'en'),
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:58:15')

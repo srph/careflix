@@ -106,6 +106,10 @@ class Helper {
     $sanitized = preg_replace("/\'/", "", $sanitized);
     // Remove quesion marks
     $sanitized = preg_replace("/\?/", "", $sanitized);
+    // Transform "&" to "and"
+    $sanitized = preg_replace("/\&/", "and", $sanitized);
+    // Remove dots (e.g., Dr. Stone -> dr-stone)
+    $sanitized = preg_replace("/\./", "", $sanitized);
     // how-to-train-your-dragon2 -> how-to-train-your-dragon-2
     $sanitized = preg_replace("/([A-Za-z]+)(\d+)/", "$1-$2", $sanitized);
 

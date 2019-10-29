@@ -5,7 +5,7 @@ Care.tv makes it really easy to enjoy movies or watch TV shows with the people y
 Works for mobile, tablet, and desktop screens. Does not work with iOS at the moment.
 
 ## API Setup
-You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com)
+You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com) _(Optional)_
 
 - Move to the `api` folder.
 ```bash
@@ -43,7 +43,7 @@ php artisan passport:install
 php artisan passport:client --password
 ```
 
-- [Setup `ngrok`](https://dashboard.ngrok.com/get-started), then point it to port `8000`.
+- _(Optional)_ [Setup `ngrok`](https://dashboard.ngrok.com/get-started), then point it to port `8000`.
 ```bash
 ngrok http 8000
 ```
@@ -56,9 +56,9 @@ PUSHER_APP_SECRET=
 PUSHER_APP_CLUSTER=
 ```
 
-- Go to the _Web Hooks_ tab, then paste ngrok's generated url (e.g., `http://9542199e.ngrok.io `) to the _Webhook URL_ input.
+- _(Optional)_ Go to the _Web Hooks_ tab, then paste ngrok's generated url (e.g., `http://9542199e.ngrok.io `) to the _Webhook URL_ input.
 
-- Select _Presence_ for the _Event Type_, then press _Add_.
+- _(Optional)_ Select _Presence_ for the _Event Type_, then press _Add_.
 
 - You should be good to go
 ```bash

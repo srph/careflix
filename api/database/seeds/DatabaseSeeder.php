@@ -18,27 +18,27 @@ class DatabaseSeeder extends Seeder
         // App\ShowGroup::truncate();
         // App\ShowVideo::truncate();
 
-        // $faker = Faker::create();
+        $faker = Faker::create();
 
-        // $this->command->info('Seeding `users` table (1/1)');
+        App\User::create([
+            'name' => $faker->name,
+            'email' => 'admin@admin.com',
+            'email_verified_at' => now(),
+            'password' => 'password',
+            'remember_token' => Str::random(10),
+            'is_admin' => true
+        ]);
 
-        // App\User::create([
-        //     'name' => $faker->name,
-        //     'email' => 'admin@admin.com',
-        //     'email_verified_at' => now(),
-        //     'password' => 'password',
-        //     'remember_token' => Str::random(10),
-        //     'is_admin' => true
-        // ]);
+        App\User::create([
+            'name' => $faker->name,
+            'email' => 'user@user.com',
+            'email_verified_at' => now(),
+            'password' => 'password',
+            'remember_token' => Str::random(10),
+            'is_admin' => false
+        ]);
 
-        // App\User::create([
-        //     'name' => $faker->name,
-        //     'email' => 'user@user.com',
-        //     'email_verified_at' => now(),
-        //     'password' => 'password',
-        //     'remember_token' => Str::random(10),
-        //     'is_admin' => false
-        // ]);
+        $this->command->info('Created sample users [admin@admin.com] & [user@user.com]');
 
         // foreach(range(0, 10) as $i) {
         //     $is_movie = $i < 5;
@@ -87,19 +87,20 @@ class DatabaseSeeder extends Seeder
         //     }
         // }
 
-
         // //////////////////////////////////
         // Create random users for search
         // //////////////////////////////////
-        // foreach(range(0, 50) as $i) {
-        //     $user = App\User::create([
-        //         'name' => $faker->name,
-        //         'email' => $faker->email,
-        //         'email_verified_at' => now(),
-        //         'password' => 'password',
-        //         'remember_token' => Str::random(10),
-        //         'is_admin' => false
-        //     ]);
-        // }
+        foreach(range(0, 49) as $i) {
+            $this->command->info("Seeding users table ({$i + 1} / 50)");
+
+            $user = App\User::create([
+                'name' => $faker->name,
+                'email' => $faker->email,
+                'email_verified_at' => now(),
+                'password' => 'password',
+                'remember_token' => Str::random(10),
+                'is_admin' => false
+            ]);
+        }
     }
 }

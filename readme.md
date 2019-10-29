@@ -33,6 +33,7 @@ APP_REQUEST_ACCESS_CODE=
 - Run the migrations. Don't forget to store the client id and secret output from running `php artisan passport:client`.
 ```bash
 php artisan migrate
+php artisan db:seed && php artisan db:seed --class=ShowSeeder
 php artisan passport:install
 php artisan passport:client --password
 ```

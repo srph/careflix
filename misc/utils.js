@@ -21,7 +21,7 @@ exports.sort = function sort(files) {
 
 // Remove trailing slashes
 exports.untrail = function untrail(dir) {
-  return dir.replace(/\/$/, '')
+  return dir.replace(/(\/|\\)$/, '')
 }
 
 // Get all directories

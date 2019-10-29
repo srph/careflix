@@ -2823,7 +2823,7 @@ class ShowSeeder extends Seeder
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('2:16:42')
             ],
             [
-                'title' => 'The Lion King (2019)',
+                'title' => 'The Lion King 2019',
                 'title_type' => 'movie',
                 'synopsis' => 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
                 'language' => 'English',

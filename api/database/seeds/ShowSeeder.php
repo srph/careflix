@@ -2783,6 +2783,118 @@ class ShowSeeder extends Seeder
                 'range' => [5, 5],
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:12:26')
             ],
+            [
+                'title' => 'Anna',
+                'title_type' => 'movie',
+                'synopsis' => 'Beneath Anna Poliatova\'s striking beauty lies a secret that will unleash her indelible strength and skill to become one of the world\'s most feared government assassins.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Anna'),
+                'air_start' => Carbon::create(2019, 6, 21),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Anna', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:58:58')
+            ],
+            [
+                'title' => 'Beavis and Butt-Head: Do America',
+                'title_type' => 'movie',
+                'synopsis' => 'The dim-witted teen duo of Beavis and Butt-Head travel across America in search of their stolen television set.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Beavis and Butt-Head: Do America'),
+                'air_start' => Carbon::create(1996, 12, 20),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Beavis and Butt-Head: Do America', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:20:52')
+            ],
+            [
+                'title' => 'Fast & Furious Presents: Hobbs & Shaw',
+                'title_type' => 'movie',
+                'synopsis' => 'Lawman Luke Hobbs and outcast Deckard Shaw form an unlikely alliance when a cyber-genetically enhanced villain threatens the future of humanity.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Fast & Furious Presents: Hobbs & Shaw'),
+                'air_start' => Carbon::create(2019, 8, 2),
+                'age_rating' => 'PG-13',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Fast & Furious Presents: Hobbs & Shaw', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:16:42')
+            ],
+            [
+                'title' => 'The Lion King (2019)',
+                'title_type' => 'movie',
+                'synopsis' => 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Lion King (2019)'),
+                'air_start' => Carbon::create(2019, 7, 19),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Lion King (2019)', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:58:15')
+            ],
+            [
+                'title' => 'The Possession of Hannah Grace',
+                'title_type' => 'movie',
+                'synopsis' => 'When a cop who is just out of rehab takes the graveyard shift in a city hospital morgue, she faces a series of bizarre, violent events caused by an evil entity in one of the corpses.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Possession of Hannah Grace'),
+                'air_start' => Carbon::create(2018, 11, 30),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Possession of Hannah Grace', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:25:44')
+            ],
+            [
+                'title' => 'Vinland Saga',
+                'title_type' => 'series',
+                'synopsis' => 'The war between England and the Danes grows worse with each passing year. Death has become commonplace, and the viking mercenaries are loving every moment of it. Among the chaos, Thorfinn must take his revenge and kill the man who murdered his father, Askeladd.',
+                'language' => 'English',
+                'air_start' => Carbon::create(2019, 7, 8),
+                // 'air_end' => '',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Vinland Saga'),
+                'age_rating' => 'R-17+',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 1,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '28:45'
+                    ]
+                ]
+            ],
+            [
+                'title' => 'Vinland Saga',
+                'title_type' => 'series:append-episodes',
+                'season_name' => 'Season 1',
+                'range' => [2, 16],
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('24:44')
+            ],
+            [
+                'title' => 'Dr. Stone',
+                'title_type' => 'series',
+                'synopsis' => 'A blinding light strikes Earth and petrifies mankind into stone. Several millennia later, Taiju awakens to find the modern world completely nonexistent, as nature has flourished in the years humanity stood still.  Among a stone world of statues, Taiju encounters one other living human: his science-loving friend Senkuu, who has been active for a few months.',
+                'language' => 'English',
+                'air_start' => Carbon::create(2019, 7, 5),
+                // 'air_end' => '',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Dr. Stone'),
+                'age_rating' => 'PG-13',
+                //
+                'seasons' => [
+                    [
+                        'title' => 'Season 1',
+                        'episodes' => 17,
+                        'extension' => 'mp4',
+                        'subtitle_language' => 'en',
+                        'duration' => '24:06'
+                    ]
+                ]
+            ],
         ];
 
         foreach($movies as $movie) {

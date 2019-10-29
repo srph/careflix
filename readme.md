@@ -30,6 +30,11 @@ APP_CDN=https://your-digital-ocean-cdn.sgp1.cdn.digitaloceanspaces.com/
 APP_REQUEST_ACCESS_CODE=
 ```
 
+- Publish unique key for Laravel.
+```bash
+php artisan key:generate
+```
+
 - Run the migrations. Don't forget to store the client id and secret output from running `php artisan passport:client`.
 ```bash
 php artisan migrate

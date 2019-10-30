@@ -20,7 +20,8 @@ class MeController extends Controller
 
     /**
      * Get the most recent party the user might have accidentally left.
-     * 
+     *
+     * @deprecated Use getRecentParties
      * @return \Illuminate\Http\Response
      */
     public function getRecentParty(Request $request) {
@@ -40,8 +41,22 @@ class MeController extends Controller
     }
 
     /**
+     * Get the most recent parties.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getRecentParties(Request $request) {
+        $parties = $request->user()->parties()
+            ->orderBy('created_at', 'desc')
+            ->limit(100)
+            ->get();
+
+        return ['parties' => $parties];
+    }
+
+    /**
      * Dismiss the party
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function dismissRecentParty(Request $request) {
@@ -53,7 +68,7 @@ class MeController extends Controller
 
     /**
      * Create a new user
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function register(\App\Http\Requests\RegisterUser $request) {
@@ -63,7 +78,7 @@ class MeController extends Controller
             'password' => $request->get('password'),
             'is_admin' => false
         ]);
-        
+
         $user->save();
 
         return response()->json($user);
@@ -71,7 +86,7 @@ class MeController extends Controller
 
     /**
      * Marks the user as online
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function online(Request $request) {
@@ -81,7 +96,7 @@ class MeController extends Controller
 
     /**
      * Marks the user as offline
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function offline(Request $request) {

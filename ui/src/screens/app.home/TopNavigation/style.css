@@ -1,0 +1,18 @@
+.app-home-top-navigation-shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--zindex-home-navigation);
+}
+
+.app-home-top-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+}
+
+.app-home-top-navigation > .avatar {
+  text-decoration: none;
+}

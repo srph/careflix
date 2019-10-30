@@ -1,108 +1,85 @@
 import './style.css'
 import * as React from 'react'
-import { useState, } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useState, useEffect } from 'react'
+import axios from '~/lib/axios'
+import history from '~/lib/history'
 import UiContainer from '~/components/UiContainer'
 import UiButton from '~/components/UiButton'
-import UiAvatarGroup from '~/components/UiAvatarGroup'
-import UiPlainButton from '~/components/UiPlainButton'
-import axios from '~/lib/axios'
-import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage';
 import getFormattedDuration from '~/utils/date/getFormattedDuration';
 import getAirDetails from '~/utils/shows/getAirDetails';
-import { toast } from '~/components/Toast'
 
 /**
  * @TODO Update members real-time
  */
 function YouWereWatching() {
   const [isLoading, setIsLoading] = useState(true)
-  const [party, setParty] = useState<AppParty>(null)
+  const [isCreating, setIsCreating] = useState<boolean>(false)
+  const [featured, setFeatured] = useState<AppShow>(null)
 
-  useAsyncEffect(async () => {
-    const [err, res] = await axios.get('/api/me/recent-party')
-
-    if (err != null) {
-      // Do something
+  useEffect(() => {
+    async function fetch() {
+      const [err, res] = await axios.get('/api/shows/featured')
+      setIsLoading(false)
+      setFeatured(res.data)
     }
 
-    setIsLoading(false)
-    setParty(res.data.party)
-  }, null, [])
+    fetch()
+  }, [])
 
   if (isLoading) {
     return null
   }
 
-  if (party == null) {
+  if (featured == null) {
     return null
   }
 
-  function handleDismiss() {
-    axios.put('/api/me/dismiss-recent-party', {
-      party_id: party.id
-    }, {
-      app: {
-        validation: false
-      }
+
+  async function handleWatch() {
+    if (isCreating) {
+      return
+    }
+
+    setIsCreating(true)
+    
+    const [err, res] = await axios.post('/api/parties', {
+      show_video_id: featured.movie.id
     })
 
-    toast('Party was dismissed.')
+    if (err) {
+      // Launch toast notification
+      return
+    }
 
-    setParty(null)
+    history.push(`/watch/${res.data.id}`)
   }
 
   return (
     <div className="you-were-watching">
-      <img src={getVideoPreviewImage(party)} className="cover" alt={party.video.show.title} />
+      <img src={featured.preview_image} className="cover" alt={featured.title} />
 
       <div className="overlay" />
-
-      <div className="dismiss">
-        <UiContainer size="xl">
-          <div className="you-were-watching-dismiss">
-            <div className="desktop">
-              <UiButton onClick={handleDismiss}>
-                Dismiss
-              </UiButton>
-            </div>
-
-            <div className="iconbtn">
-              <UiPlainButton type="button" onClick={handleDismiss}>
-                <div className="you-were-watching-dismiss-icon-button">
-                  <i className="fa fa-close" />
-                </div>
-              </UiPlainButton>
-            </div>
-          </div>
-        </UiContainer>
-      </div>
 
       <div className="content">
         <UiContainer size="xl">
           <div className="you-were-watching-content">
-            {party.video.show.title_type === 'movie' && <div className="tags">
-              <span className="tag">{getAirDetails(party.video.show)}</span>
+            {featured.title_type === 'movie' && <div className="tags">
+              <span className="tag">{getAirDetails(featured)}</span>
               <span className="tag">•</span>
-              <span className="tag">{getFormattedDuration(party.video.duration)}</span>
+              <span className="tag">{getFormattedDuration(featured.movie.duration)}</span>
             </div>}
 
-            {party.video.show.title_type === 'series' && <div className="tags">
-              <span className="tag">{party.video.group.title}: {party.video.title}</span>
-            </div>}
+            {/* {featured.title_type === 'series' && <div className="tags">
+              <span className="tag">{featured.video.group.title}: {featured.video.title}</span>
+            </div>} */}
 
+            <h1 className="title">{featured.title}</h1>
 
-            <h1 className="title">{party.video.show.title}</h1>
-
-            <p className="description">{party.video.show.synopsis}</p>
+            <p className="description">{featured.synopsis}</p>
 
             <div className="actions">
-              {party.members.length > 1 && <div className="avatar">
-                <UiAvatarGroup users={party.members} />
-              </div>}
-
-              <UiButton link to={`/watch/${party.id}`} variant="primary">
-                {party.members.length > 1 ? 'Rejoin Party' : 'Continue Watching'}
+              <UiButton onClick={handleWatch} variant="primary">
+                Watch Now
               </UiButton>
             </div>
           </div>

@@ -1,5 +1,3 @@
-.ui-logo {
-  font-family: var(--font-family-subheading);
-  font-size: var(--font-size-h4);
-  color: var(--color-primary);
+.ui-logo > img {
+  width: 100%;
 }

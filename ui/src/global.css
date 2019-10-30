@@ -24,8 +24,9 @@ html, body {
   --color-silver-3: #BCCCDC;
   --color-silver-4: #9FB3C8;
   --color-silver-5: #829AB1;
-  --color-primary: #E8368F;
+  --color-primary: #FF7795;
   --color-secondary: #F7C948;
+  --color-tertiary: #FFB077;
   --color-blue: #1da1f2;
   --color-green: #65D6AD;
   --color-white: #fff;
@@ -43,6 +44,7 @@ html, body {
   --zindex-you-were-watching-overlay: 101;
   --zindex-you-were-watching-content: 102;
   --zindex-you-were-watching-dismiss: 103;
+  --zindex-home-navigation: 600;
   --zindex-player-overlay: 500;
   --zindex-player-overlay-elements: 501;
   --zindex-player-subtitles: 550;

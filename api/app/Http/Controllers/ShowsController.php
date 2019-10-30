@@ -25,7 +25,7 @@ class ShowsController extends Controller
     /**
      * Proxy for the subtitle file because we're getting a CORS error
      * when we try to directly access the subtitle through AJAX.
-     * 
+     *
      * @return \Illuminate\Http\Response
      */
     public function subtitle(ShowVideo $video) {
@@ -36,5 +36,9 @@ class ShowsController extends Controller
         $client = new \GuzzleHttp\Client();
         $response = $client->request('GET', $video->subtitle_url);
         return response()->json([ 'subtitle' => (string) $response->getBody() ]);
+    }
+
+    public function featured() {
+        return Show::where('is_featured', 1)->first();
     }
 }

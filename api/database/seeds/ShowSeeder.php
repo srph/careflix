@@ -1032,6 +1032,7 @@ class ShowSeeder extends Seeder
                 'air_start' => Carbon::create(2011),
                 'age_rating' => '',
                 'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('You Are The Apple Of My Eye', 'en'),
+                'is_featured' => true,
                 //
                 'extension' => 'mp4',
                 'duration' => Helper::getDurationInSecondsFromReadableFormat('1:49:34')
@@ -2908,7 +2909,7 @@ class ShowSeeder extends Seeder
                     'video_url' => Helper::getVideoUrlFromMovieTitle($show->title, $movie['extension']),
                     'subtitle_url' => $movie['subtitle_url'],
                     'duration' => $movie['duration'],
-                    'synopsis' => $faker->text,
+                    'synopsis' => $faker->text
                 ]);
             } else if ($movie['title_type'] === 'series') {
                 $show = App\Show::create(Arr::except($movie, ['seasons']));
@@ -2922,7 +2923,7 @@ class ShowSeeder extends Seeder
                     ]);
 
                     $season_index = Helper::getSeasonIndexFromTitle($group->title);
-    
+
                     for($j = 0; $j < $season['episodes']; $j++) {
                         App\ShowVideo::create([
                             'show_group_id' => $group->id,

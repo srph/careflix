@@ -7,13 +7,13 @@
 
 @media (min-width: 640px) {
   .you-were-watching {
-    height: 480px;
+    height: 720px;
   }
 }
 
 @media (min-width: 992px) {
   .you-were-watching {
-    height: 640px;
+    height: 800px;
   }
 }
 
@@ -32,7 +32,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--overlay-fade-2);
+  background: linear-gradient(180deg, var(--color-black-1) 0%, transparent 10%, transparent 70%, var(--color-black-1) 100%);
   z-index: var(--zindex-you-were-watching-overlay);
 }
 
@@ -45,45 +45,6 @@
   display: flex;
   align-items: center;
   z-index: var(--zindex-you-were-watching-content);
-}
-
-.you-were-watching > .dismiss {
-  position: absolute;
-  top: 16px;
-  left: 0;
-  right: 0;
-  z-index: var(--zindex-you-were-watching-dismiss);
-}
-
-.you-were-watching-dismiss {
-  text-align: right;
-}
-
-.you-were-watching-dismiss > .desktop {
-  display: none
-}
-
-@media (min-width: 640px) {
-  .you-were-watching-dismiss > .desktop {
-    display: block;
-  }
-}
-
-@media (min-width: 640px) {
-  .you-were-watching-dismiss > .iconbtn {
-    display: none;
-  }
-}
-
-.you-were-watching-dismiss-icon-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  width: 32px;
-  color: var(--color-white);
-  background: var(--color-black-5);
-  border-radius: 50%;
 }
 
 .you-were-watching-content {

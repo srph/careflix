@@ -9,6 +9,7 @@ import UiPlainButton from '~/components/UiPlainButton'
 import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
 import { InfiniteScroll as Infinite } from 'react-simple-infinite-scroll'
+import TopNavigation from '../TopNavigation'
 import YouWereWatching from '../YouWereWatching'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
@@ -54,6 +55,8 @@ function AuthHome() {
 
   return (
     <React.Fragment>
+      <TopNavigation />
+      
       <YouWereWatching />
 
       <UiSpacer size={4} />

@@ -17,6 +17,7 @@ Route::post('register', 'MeController@register');
 
 Route::middleware('auth:api')->group(function() {
     Route::get('shows', 'ShowsController@index');
+    Route::get('shows/featured', 'ShowsController@featured');
     Route::get('shows/{show}/groups', 'ShowsController@groups');
     Route::get('videos/{video}/subtitle', 'ShowsController@subtitle');
     Route::post('parties', 'PartiesController@store');

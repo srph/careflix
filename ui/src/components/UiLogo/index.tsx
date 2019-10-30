@@ -1,10 +1,11 @@
 import './style.css'
 import * as React from 'react'
+import asset_logo from './logo.svg'
 
 function UiLogo() {
   return (
     <div className="ui-logo">
-      Care.tv
+      <img src={asset_logo} />
     </div>
   )
 }

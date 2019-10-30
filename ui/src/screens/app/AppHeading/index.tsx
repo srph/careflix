@@ -14,6 +14,10 @@ function AppHeading() {
 
   const route = useReactRouter()
 
+  if (route.location.pathname === '/') {
+    return null
+  }
+
   if (route.location.pathname.includes('watch')) {
     return null
   }

@@ -1,106 +1,55 @@
 import './style'
 
 import * as React from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useState, useEffect } from 'react'
+import { useCollectionState } from '~/hooks/useCollectionState'
 import axios from '~/lib/axios'
 import UiContainer from '~/components/UiContainer'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
+import { InfiniteScroll as Infinite } from 'react-simple-infinite-scroll'
 import YouWereWatching from '../YouWereWatching'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
-interface State {
-  shows: AppShow[]
-  isLoading: boolean
-  selectedShow: AppShow | null
-}
-
-type Action =
-  | ReducerAction<'data:init'>
-  | ReducerAction<'data:success', { shows: AppShow[] }>
-  | ReducerAction<'data:error'>
-  | ReducerAction<'show:select', { show: AppShow }>
-  | ReducerAction<'show:close', { show: AppShow }>
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'data:init': {
-      return {
-        ...state,
-        isLoading: true
-      }
-    }
-
-    case 'data:success': {
-      return {
-        ...state,
-        shows: action.payload.shows,
-        isLoading: false
-      }
-    }
-
-    case 'data:error': {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-
-    case 'show:select': {
-      return {
-        ...state,
-        selectedShow: action.payload.show
-      }
-    }
-
-    case 'show:close': {
-      return {
-        ...state,
-        selectedShow: null
-      }
-    }
-  }
-
-  return state
-}
+const PLACEHOLDER_BLOCKS = Array.from({ length: 5 })
 
 function AuthHome() {
-  const [state, dispatch] = React.useReducer(reducer, {
-    shows: [],
-    isLoading: true,
-    selectedShow: null
-  })
+  const [collection, setCollection] = useCollectionState<AppShow>()
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [selectedShow, setSelectedShow] = useState<AppShow | null>()
 
-  useAsyncEffect(
-    async () => {
-      const [err, res] = await axios.get('/api/shows')
+  useEffect(() => {
+    fetch()
+  }, [])
 
-      if (err) {
-        dispatch({ type: 'data:error' })
-        // Launch toast notification
-      }
+  async function fetch(page = 1) {
+    setIsLoading(true)
+    const [err, res] = await axios.get(`/api/shows?page=${page}`)
 
-      dispatch({
-        type: 'data:success',
-        payload: { shows: res.data }
-      })
-    },
-    null,
-    []
-  )
+    if (err) {
+      setError('An error occured.')
+      // @TODO Launch toast notification
+    }
+
+    setCollection({
+      ...res.data,
+      data: [...collection.data, ...res.data.data]
+    })
+    setIsLoading(false)
+  }
+
+  function handleLoadMore() {
+    fetch(collection.current_page + 1)
+  }
 
   async function handleShowClick(show: AppShow) {
-    dispatch({
-      type: 'show:select',
-      payload: { show }
-    })
+    setSelectedShow(show)
   }
 
   function handleShowClose() {
-    dispatch({
-      type: 'show:close'
-    })
+    setSelectedShow(null)
   }
 
   return (
@@ -109,37 +58,53 @@ function AuthHome() {
 
       <UiSpacer size={4} />
 
-      <UiContainer size="xl">
+      <UiContainer>
         <h5 className="ui-subheading">New Releases</h5>
 
         <UiSpacer size={2} />
 
-        <div className="show-layout">
-          {state.shows.map((show, j) => (
-            <div className="column" key={j}>
-              <UiPlainButton className="show-carousel-card-button">
-                <div className="show-carousel-card-container">
-                  <div
-                    className="show-carousel-card"
-                    style={{ backgroundImage: `url(${show.preview_image})` }}
-                    onClick={() => handleShowClick(show)}>
-                    <div className="overlay" />
+        <Infinite
+          throttle={100}
+          threshold={300}
+          isLoading={isLoading}
+          hasMore={collection.current_page === 1 || collection.current_page !== collection.last_page}
+          onLoadMore={handleLoadMore}
+          data={collection}>
+          <div className="show-layout">
+            {collection.data.map((show, j) => (
+              <div className="column" key={j}>
+                <UiPlainButton className="show-carousel-card-button">
+                  <div className="show-carousel-card-container">
+                    <div
+                      className="show-carousel-card"
+                      style={{ backgroundImage: `url(${show.preview_image})` }}
+                      onClick={() => handleShowClick(show)}>
+                      <div className="overlay" />
 
-                    <div className="details">
-                      <div className="tags">
-                        <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
+                      <div className="details">
+                        <div className="tags">
+                          <span className="tag">{parseStandardTime(show.air_start).getFullYear()}</span>
+                        </div>
+
+                        <h3 className="title">{show.title}</h3>
                       </div>
-
-                      <h3 className="title">{show.title}</h3>
                     </div>
                   </div>
-                </div>
-              </UiPlainButton>
-            </div>
-          ))}
-        </div>
+                </UiPlainButton>
+              </div>
+            ))}
 
-        <ShowModal show={state.selectedShow} onClose={handleShowClose} />
+            {isLoading && PLACEHOLDER_BLOCKS.map((_, i) => (
+              <div className="column">
+                <div className="show-carousel-placeholder" key={i}>
+                  <div className="block" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Infinite>
+
+        <ShowModal show={selectedShow} onClose={handleShowClose} />
       </UiContainer>
     </React.Fragment>
   )

@@ -12,6 +12,19 @@ type AppValidationBag = {
   [key: string]: string[]
 }
 
+interface AppCollection<T = any> {
+  data: T[]
+  current_page: number
+  last_page: number
+  from: number
+  to: number
+  path: string
+  first_page_url: string
+  per_page: number
+  prev_page_url: string | null
+  next_page_url: string | null
+}
+
 interface ReducerAction<T, P = {}> {
   type: T
   payload?: P

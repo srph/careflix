@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { createContext, useEffect, useState, useContext } from 'react'
-import useUpdateEffect from 'react-use/lib/useUpdateEffect'
 import * as cookie from 'cookie-machine'
 import immer from 'immer'
 import axios from '~/lib/axios'

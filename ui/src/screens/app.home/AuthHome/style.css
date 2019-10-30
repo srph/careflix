@@ -3,6 +3,7 @@
   flex-wrap: wrap;
   margin-left: -8px;
   margin-right: -8px;
+  margin-bottom: 160px;
 }
 
 .show-layout > .column {
@@ -14,9 +15,57 @@
 @media (min-width: 768px) {
   .show-layout > .column {
     flex-shrink: 0;
-    width: 33.33%;
+    width: 25%;
   }
 }
+
+
+@media (min-width: 1120px) {
+  .show-layout > .column {
+    flex-shrink: 0;
+    width: 20%;
+  }
+}
+
+/**
+ *
+ */
+
+ @keyframes show-carouse-placeholder-pulse {
+  0% {
+    opacity: .6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .6;
+  }
+}
+
+.show-carousel-placeholder {
+  position: relative;
+  padding-bottom: 56.25%;
+  margin-bottom: 16px;
+}
+
+.show-carousel-placeholder > .block {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-black-4);
+  background: linear-gradient(180deg, var(--color-black-4) 45%, var(--color-black-1) 100%);
+  border-radius: var(--border-radius);
+  animation-name: show-carouse-placeholder-pulse;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}
+
+/**
+ *
+ */
 
 .show-carousel-card-button {
   width: 100%;

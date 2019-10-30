@@ -94,13 +94,14 @@ function AuthHome() {
               </div>
             ))}
 
-            {isLoading && PLACEHOLDER_BLOCKS.map((_, i) => (
-              <div className="column">
-                <div className="show-carousel-placeholder" key={i}>
-                  <div className="block" />
+            {isLoading &&
+              PLACEHOLDER_BLOCKS.map((_, i) => (
+                <div className="column">
+                  <div className="show-carousel-placeholder" key={i}>
+                    <div className="block" />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </Infinite>
 

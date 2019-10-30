@@ -15,7 +15,7 @@ class ShowsController extends Controller
      */
     public function index()
     {
-        return Show::orderBy('id', 'desc')->get();
+        return Show::orderBy('id', 'desc')->paginate(30);
     }
 
     public function groups(Show $show) {

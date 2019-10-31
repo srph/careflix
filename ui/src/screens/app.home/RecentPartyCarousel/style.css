@@ -1,12 +1,15 @@
 .recent-party-carousel {
   position: relative;
-  margin-bottom: 120px;
   width: 100%;
+  margin-top: -120px;
+  overflow-x: hidden;
   z-index: var(--zindex-home-carousel);
 }
 
 .recent-party-carousel > .slider {
   display: flex;
+  margin-top: 120px;
+  margin-bottom: 120px;
   padding-left: 8px;
   padding-right: 8px;
 }
@@ -17,9 +20,105 @@
   padding-right: 8px;
 }
 
-.recent-party-carousel > .slider > .item > .card {
+.recent-party-carousel-card {
+  position: relative;
   width: 316px;
   height: 178px;
   background: red;
   border-radius: var(--border-radius);
+  background-size: cover;
+  cursor: pointer;
+}
+
+.recent-party-carousel-card > .rejoin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: none;
+  transition: 400ms opacity ease;
+}
+
+.recent-party-carousel-card:hover > .rejoin {
+  opacity: 1;
+  visibility: visible;
+}
+
+.recent-party-carousel-card > .progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  overflow: hidden;
+  opacity: 0;
+  visibility: none;
+  transition: 400ms opacity ease;
+}
+
+.recent-party-carousel-card:hover > .progress {
+  opacity: 1;
+  visibility: visible;
+}
+
+.recent-party-carousel-card > .progress > .bar {
+  height: 4px;
+  width: 50%;
+  background: var(--color-primary);
+}
+
+.recent-party-carousel-card > .progresstext {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  text-align: right;
+  opacity: 0;
+  visibility: none;
+  transition: 400ms opacity ease;
+}
+
+.recent-party-carousel-card:hover > .progresstext {
+  opacity: 1;
+  visibility: visible;
+}
+
+.recent-party-carousel-card > .overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.5));
+  border-radius: var(--border-radius);
+}
+
+.recent-party-carousel-card > .memberlist {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.recent-party-carousel-card > .timestamp {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+.recent-party-carousel-card > .details {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+}
+
+.recent-party-carousel-card > .details > .title {
+  text-shadow: var(--text-shadow-default);
+  font-weight: 600;
 }

@@ -6,11 +6,22 @@
   z-index: var(--zindex-home-navigation);
 }
 
+.app-home-top-navigation-shape::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+}
+
 .app-home-top-navigation {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 50px;
+  height: 60px;
 }
 
 .app-home-top-navigation > .avatar {

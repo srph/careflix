@@ -1,0 +1,9 @@
+.ui-show-card-detail-text {
+  text-shadow: var(--text-shadow-default);
+  font-family: var(--font-family-subheading);
+  font-size: var(--font-size-h6);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: 0.75;
+}

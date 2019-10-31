@@ -20,6 +20,11 @@
   background: var(--color-primary);
 }
 
+.ui-button.is-clear-white {
+  background: rgba(255,255,255,0.3);
+  border: 1px solid var(--color-white);
+}
+
 .ui-button.is-block {
   width: 100%;
 }

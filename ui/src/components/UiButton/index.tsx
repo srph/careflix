@@ -4,7 +4,7 @@ import cx from 'classnames'
 import { Link, LinkProps } from 'react-router-dom'
 
 interface OwnProps {
-  variant?: 'default' | 'primary'
+  variant?: 'default' | 'primary' | 'clear-white'
   size?: 's' | 'l'
   link?: boolean
   block?: boolean
@@ -17,6 +17,7 @@ type Props = OwnProps & Attributes
 
 function UiButton({ variant, size, block, link, ...props }: Props) {
   const cls = cx("ui-button", {
+    'is-clear-white': variant === 'clear-white',
     'is-primary': variant === 'primary',
     'is-block': block,
     'is-l': size === 'l',

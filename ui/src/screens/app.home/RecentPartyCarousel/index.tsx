@@ -21,6 +21,9 @@ function RecentPartyCarousel() {
         preview_image: 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/yesterday/yesterday-preview-16-9.jpg',
         air_start: '2019-10-12'
       },
+      video: {
+        video_url: 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/the-possession-of-hannah-grace/the-possession-of-hannah-grace.mp4'
+      },
       members: [{ id: 1, avatar: '', name: 'Kier' }]
     })
   })

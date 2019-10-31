@@ -5,8 +5,8 @@ import axios from '~/lib/axios'
 import history from '~/lib/history'
 import UiContainer from '~/components/UiContainer'
 import UiButton from '~/components/UiButton'
-import getFormattedDuration from '~/utils/date/getFormattedDuration';
-import getAirDetails from '~/utils/shows/getAirDetails';
+import getFormattedDuration from '~/utils/date/getFormattedDuration'
+import getAirDetails from '~/utils/shows/getAirDetails'
 
 /**
  * @TODO Update members real-time
@@ -19,21 +19,12 @@ function FeaturedShowJumbotron() {
   useEffect(() => {
     async function fetch() {
       const [err, res] = await axios.get('/api/shows/featured')
-      setIsLoading(false)
       setFeatured(res.data)
+      setIsLoading(false)
     }
 
     fetch()
   }, [])
-
-  if (isLoading) {
-    return null
-  }
-
-  if (featured == null) {
-    return null
-  }
-
 
   async function handleWatch() {
     if (isCreating) {
@@ -41,7 +32,7 @@ function FeaturedShowJumbotron() {
     }
 
     setIsCreating(true)
-    
+
     const [err, res] = await axios.post('/api/parties', {
       show_video_id: featured.movie.id
     })
@@ -56,35 +47,43 @@ function FeaturedShowJumbotron() {
 
   return (
     <div className="featured-show-jumbotron">
-      <img src={featured.preview_image} className="cover" alt={featured.title} />
+      {isLoading && <div className="placeholder" />}
 
-      <div className="overlay" />
+      {!isLoading && (
+        <React.Fragment>
+          <img src={featured.preview_image} className="cover" alt={featured.title} />
 
-      <div className="content">
-        <UiContainer size="xl">
-          <div className="featured-show-jumbotron-content">
-            {featured.title_type === 'movie' && <div className="tags">
-              <span className="tag">{getAirDetails(featured)}</span>
-              <span className="tag">•</span>
-              <span className="tag">{getFormattedDuration(featured.movie.duration)}</span>
-            </div>}
+          <div className="overlay" />
 
-            {/* {featured.title_type === 'series' && <div className="tags">
-              <span className="tag">{featured.video.group.title}: {featured.video.title}</span>
-            </div>} */}
+          <div className="content">
+            <UiContainer size="xl">
+              <div className="featured-show-jumbotron-content">
+                {featured.title_type === 'movie' && (
+                  <div className="tags">
+                    <span className="tag">{getAirDetails(featured)}</span>
+                    <span className="tag">•</span>
+                    <span className="tag">{getFormattedDuration(featured.movie.duration)}</span>
+                  </div>
+                )}
 
-            <h1 className="title">{featured.title}</h1>
+                {/* {featured.title_type === 'series' && <div className="tags">
+        <span className="tag">{featured.video.group.title}: {featured.video.title}</span>
+      </div>} */}
 
-            <p className="description">{featured.synopsis}</p>
+                <h1 className="title">{featured.title}</h1>
 
-            <div className="actions">
-              <UiButton onClick={handleWatch} variant="primary">
-                Watch Now
-              </UiButton>
-            </div>
+                <p className="description">{featured.synopsis}</p>
+
+                <div className="actions">
+                  <UiButton onClick={handleWatch} variant="primary">
+                    Watch Now
+                  </UiButton>
+                </div>
+              </div>
+            </UiContainer>
           </div>
-        </UiContainer>
-      </div>
+        </React.Fragment>
+      )}
     </div>
   )
 }

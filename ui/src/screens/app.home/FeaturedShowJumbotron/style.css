@@ -26,6 +26,20 @@
   z-index: var(--zindex-you-were-watching-image);
 }
 
+.featured-show-jumbotron > .placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--color-black-4);
+  background: linear-gradient(180deg, var(--color-black-3) 25%, var(--color-black-1) 100%);
+  border-radius: var(--border-radius);
+  animation-name: featured-show-jumbotron -placeholder-pulse;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}
+
 .featured-show-jumbotron > .overlay {
   position: absolute;
   top: 0;
@@ -113,5 +127,21 @@
   .featured-show-jumbotron-content > .actions > .avatar {
     margin-bottom: 0;
     margin-right: 24px;
+  }
+}
+
+/**
+ *
+ */
+
+ @keyframes featured-show-jumbotron-placeholder-pulse {
+  0% {
+    opacity: .6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .6;
   }
 }

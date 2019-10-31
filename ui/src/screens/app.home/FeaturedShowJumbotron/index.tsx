@@ -55,14 +55,14 @@ function FeaturedShowJumbotron() {
   }
 
   return (
-    <div className="you-were-watching">
+    <div className="featured-show-jumbotron">
       <img src={featured.preview_image} className="cover" alt={featured.title} />
 
       <div className="overlay" />
 
       <div className="content">
         <UiContainer size="xl">
-          <div className="you-were-watching-content">
+          <div className="featured-show-jumbotron-content">
             {featured.title_type === 'movie' && <div className="tags">
               <span className="tag">{getAirDetails(featured)}</span>
               <span className="tag">•</span>

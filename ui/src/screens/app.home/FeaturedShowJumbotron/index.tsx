@@ -11,7 +11,7 @@ import getAirDetails from '~/utils/shows/getAirDetails';
 /**
  * @TODO Update members real-time
  */
-function YouWereWatching() {
+function FeaturedShowJumbotron() {
   const [isLoading, setIsLoading] = useState(true)
   const [isCreating, setIsCreating] = useState<boolean>(false)
   const [featured, setFeatured] = useState<AppShow>(null)
@@ -89,4 +89,4 @@ function YouWereWatching() {
   )
 }
 
-export default YouWereWatching
+export default FeaturedShowJumbotron

@@ -45,6 +45,7 @@ html, body {
   --zindex-you-were-watching-content: 102;
   --zindex-you-were-watching-dismiss: 103;
   --zindex-home-navigation: 600;
+  --zindex-home-carousel: 600;
   --zindex-player-overlay: 500;
   --zindex-player-overlay-elements: 501;
   --zindex-player-subtitles: 550;

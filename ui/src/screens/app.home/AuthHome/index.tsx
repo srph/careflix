@@ -10,7 +10,8 @@ import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
 import { InfiniteScroll as Infinite } from 'react-simple-infinite-scroll'
 import TopNavigation from '../TopNavigation'
-import YouWereWatching from '../YouWereWatching'
+import FeaturedShowJumbotron from '../FeaturedShowJumbotron'
+import RecentPartyCarousel from '../RecentPartyCarousel'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
 const PLACEHOLDER_BLOCKS = Array.from({ length: 5 })
@@ -56,11 +57,9 @@ function AuthHome() {
   return (
     <React.Fragment>
       <TopNavigation />
-      
-      <YouWereWatching />
-
+      <FeaturedShowJumbotron />
+      <RecentPartyCarousel />
       <UiSpacer size={4} />
-
       <UiContainer>
         <h5 className="ui-subheading">New Releases</h5>
 
@@ -99,7 +98,7 @@ function AuthHome() {
 
             {isLoading &&
               PLACEHOLDER_BLOCKS.map((_, i) => (
-                <div className="column">
+                <div className="column" key={i}>
                   <div className="show-carousel-placeholder" key={i}>
                     <div className="block" />
                   </div>

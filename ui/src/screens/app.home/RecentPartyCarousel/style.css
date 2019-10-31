@@ -1,0 +1,25 @@
+.recent-party-carousel {
+  position: relative;
+  margin-bottom: 120px;
+  width: 100%;
+  z-index: var(--zindex-home-carousel);
+}
+
+.recent-party-carousel > .slider {
+  display: flex;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.recent-party-carousel > .slider > .item {
+  flex-shrink: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.recent-party-carousel > .slider > .item > .card {
+  width: 316px;
+  height: 178px;
+  background: red;
+  border-radius: var(--border-radius);
+}

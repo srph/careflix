@@ -7,7 +7,7 @@
   z-index: var(--zindex-home-carousel);
 }
 
-.recent-party-carousel > .slider {
+.recent-party-carousel > .inner {
   display: flex;
   margin-top: 120px;
   margin-bottom: 120px;
@@ -15,8 +15,9 @@
   padding-right: 8px;
 }
 
-.recent-party-carousel > .slider > .item {
+.recent-party-carousel > .inner > .item {
   flex-shrink: 0;
+  width: 20%;
   padding-left: 8px;
   padding-right: 8px;
 }

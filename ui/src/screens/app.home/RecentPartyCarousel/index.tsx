@@ -31,11 +31,11 @@ function RecentPartyCarousel(props: Props) {
 
   return (
     <div className="recent-party-carousel">
-      <div className="slider" ref={containerRef}>
+      <div className="inner" ref={containerRef}>
         {props.parties.map((party, i) => (
           <div
             className="item"
-            style={{ ...styles[i], width: slideWidth }}
+            style={styles[i]}
             onMouseEnter={() => setActive(i)}
             onMouseLeave={() => setActive(-1)}
             key={i}>

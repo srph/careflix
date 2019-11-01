@@ -7,7 +7,6 @@ function useElementSize(ref) {
   const [width, setWidth] = useState(0)
 
   useLayoutEffect(() => {
-    console.log(ref)
     if (!ref.current) {
       return
     }

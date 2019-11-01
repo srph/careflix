@@ -10,37 +10,28 @@ import parseStandardTime from '~/utils/date/parseStandardTime'
 import { SLIDE_HOVER_WIDTH, SLIDE_COUNT } from './constants'
 import { getOffset, getStyles } from './utils'
 
-function RecentPartyCarousel() {
-  const [active, setActive] = useState(-1)
-  const [data, setData] = useState(() => {
-    return Array.from({ length: 5 }).fill({
-      show: {
-        title: 'One Piece',
-        preview_image: 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/yesterday/yesterday-preview-16-9.jpg',
-        air_start: '2019-10-12'
-      },
-      video: {
-        video_url:
-          'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/the-possession-of-hannah-grace/the-possession-of-hannah-grace.mp4'
-      },
-      members: [{ id: 1, avatar: '', name: 'Kier' }]
-    })
-  })
+interface Props {
+  parties: AppParty[]
+  isLoading: boolean
+}
 
+function RecentPartyCarousel(props: Props) {
+  const [active, setActive] = useState(-1)
   const containerRef = useRef<HTMLDivElement>()
   const { width: containerWidth } = useElementSize(containerRef)
   const slideWidth = useMemo(() => containerWidth / SLIDE_COUNT, [containerWidth])
   const slideScale = useMemo(() => SLIDE_HOVER_WIDTH / slideWidth, [slideWidth])
   const slideTranslate = useMemo(() => (SLIDE_HOVER_WIDTH - slideWidth) / 2, [slideWidth])
-  const offset = useMemo(() => getOffset({ active, data }), [active])
-  const styles = useMemo(() => getStyles({ active, data, offset, scale: slideScale, translate: slideTranslate }), [
-    active
-  ])
+  const offset = useMemo(() => getOffset({ active, data: props.parties }), [active])
+  const styles = useMemo(
+    () => getStyles({ active, data: props.parties, offset, scale: slideScale, translate: slideTranslate }),
+    [active]
+  )
 
   return (
     <div className="recent-party-carousel">
       <div className="slider" ref={containerRef}>
-        {data.map((party, i) => (
+        {props.parties.map((party, i) => (
           <div
             className="item"
             style={{ ...styles[i], width: slideWidth }}
@@ -49,7 +40,7 @@ function RecentPartyCarousel() {
             key={i}>
             <StandardAspectRatioBox
               className="recent-party-carousel-card"
-              style={{ backgroundImage: `url(${party.show.preview_image})` }}
+              style={{ backgroundImage: `url(${party.video.show.preview_image})` }}
               onClick={() => handleShowClick(show)}>
               <div className="overlay" />
 
@@ -66,9 +57,11 @@ function RecentPartyCarousel() {
               </div>
 
               <div className="details">
-                <UiShowCardDetailText>{parseStandardTime(party.show.air_start).getFullYear()}</UiShowCardDetailText>
+                <UiShowCardDetailText>
+                  {parseStandardTime(party.video.show.air_start).getFullYear()}
+                </UiShowCardDetailText>
 
-                <h3 className="title">{party.show.title}</h3>
+                <h3 className="title">{party.video.show.title}</h3>
               </div>
 
               <div className="progresstext">

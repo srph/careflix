@@ -11,7 +11,7 @@ import ShowModal from '../ShowModal'
 import { InfiniteScroll as Infinite } from 'react-simple-infinite-scroll'
 import TopNavigation from '../TopNavigation'
 import FeaturedShowJumbotron from '../FeaturedShowJumbotron'
-import RecentPartyCarousel from '../RecentPartyCarousel'
+import RecentParty from '../RecentParty'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
 const PLACEHOLDER_BLOCKS = Array.from({ length: 5 })
@@ -58,7 +58,7 @@ function AuthHome() {
     <React.Fragment>
       <TopNavigation />
       <FeaturedShowJumbotron />
-      <RecentPartyCarousel />
+      <RecentParty />
       <UiSpacer size={4} />
       <UiContainer>
         <h5 className="ui-subheading">New Releases</h5>

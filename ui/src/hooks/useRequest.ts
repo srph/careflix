@@ -1,74 +1,37 @@
-import { useReducer } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useState, useEffect } from 'react'
 import axios from '~/lib/axios'
 
-interface State<T> {
+interface UseRequestPayload<T> {
   data: T,
   isLoading: boolean
 }
 
-const reducer = (state: State<any>, action) => {
-  switch (action.type) {
-    case 'data:init': {
-      return {
-        ...state,
-        isLoading: true
-      }
-    }
-
-    case 'data:success': {
-      return {
-        ...state,
-        data: action.payload.data,
-        isLoading: false
-      }
-    }
-
-    case 'data:error': {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-  }
-
-  return state
-}
-
 /**
  * Basic data resolver
- * @TODO Error handling
- * @TODO Refetch
  */
-function useRequest(endpoint: string) {
-  const [state, dispatch] = useReducer(reducer, {
-    data: null,
-    isLoading: true
-  })
+function useRequest<T>(endpoint: string): UseRequestPayload<T> {
+  const [data, setData] = useState<T>()
+  const [isLoading, setIsLoading] = useState(true)
 
-  useAsyncEffect(async () => {
-    dispatch({
-      type: 'data:init'
-    })
+  useEffect(() => {
+    async function fetch() {
+      setIsLoading(true)
 
-    const [err, res] = await axios.get(endpoint)
+      const [err, res] = await axios.get(endpoint)
 
-    if (err) {
-      return dispatch({
-        type: 'data:error',
-      })
+      if (err) {
+        setIsLoading(false)
+        return
+      }
+
+      setData(res.data)
+      setIsLoading(false)
     }
 
-    dispatch({
-      type: 'data:success',
-      payload: { data: res.data }
-    })
-  }, null, [endpoint])
+    fetch()
+  }, [endpoint])
 
-  return [
-    state.data,
-    state.isLoading
-  ]
+  return { data, isLoading }
 }
 
 

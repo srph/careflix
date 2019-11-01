@@ -48,7 +48,7 @@ class MeController extends Controller
     public function getRecentParties(Request $request) {
         $parties = $request->user()->parties()
             ->orderBy('created_at', 'desc')
-            ->limit(100)
+            ->limit(5)
             ->get();
 
         return ['parties' => $parties];

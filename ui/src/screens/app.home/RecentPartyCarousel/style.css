@@ -22,9 +22,7 @@
 
 .recent-party-carousel-card {
   position: relative;
-  width: 316px;
-  height: 178px;
-  background: red;
+  background: var(--color-black-4);
   border-radius: var(--border-radius);
   background-size: cover;
   cursor: pointer;

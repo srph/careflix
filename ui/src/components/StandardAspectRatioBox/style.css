@@ -1,0 +1,13 @@
+.c-standard-aspect-ratio-box {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+}
+
+.c-standard-aspect-ratio-box-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

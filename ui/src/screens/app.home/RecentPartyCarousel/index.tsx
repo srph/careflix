@@ -1,19 +1,20 @@
 import './style.css'
 import * as React from 'react'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
+import { useElementSize } from '~/hooks/useElementSize'
 import UiAvatarGroup from '~/components/UiAvatarGroup'
 import UiButton from '~/components/UiButton'
 import UiShowCardDetailText from '~/components/UiShowCardDetailText'
+import StandardAspectRatioBox from '~/components/StandardAspectRatioBox'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
 const c = {} as any
-c.SLIDE_WIDTH = 316
-c.SLIDE_HOVER_WIDTH = 500,
-c.SLIDE_SCALE = c.SLIDE_HOVER_WIDTH / c.SLIDE_WIDTH
-c.SLIDE_TRANSLATE = (c.SLIDE_HOVER_WIDTH - c.SLIDE_WIDTH) / 2
+c.SLIDE_HOVER_WIDTH = 500
+c.SLIDE_COUNT = 5
 c.SLIDE_MARGIN = 8
 
 function RecentPartyCarousel() {
+  const [active, setActive] = useState(-1)
   const [data, setData] = useState(() => {
     return Array.from({ length: 5 }).fill({
       show: {
@@ -22,12 +23,19 @@ function RecentPartyCarousel() {
         air_start: '2019-10-12'
       },
       video: {
-        video_url: 'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/the-possession-of-hannah-grace/the-possession-of-hannah-grace.mp4'
+        video_url:
+          'https://caretv.sgp1.cdn.digitaloceanspaces.com/videos/the-possession-of-hannah-grace/the-possession-of-hannah-grace.mp4'
       },
       members: [{ id: 1, avatar: '', name: 'Kier' }]
     })
   })
-  const [active, setActive] = useState(-1)
+
+  const containerRef = useRef<HTMLDivElement>()
+  const { width } = useElementSize(containerRef)
+  const containerWidth = width - 16
+  const slideWidth = useMemo(() => containerWidth / c.SLIDE_COUNT, [containerWidth])
+  const slideScale = useMemo(() => c.SLIDE_HOVER_WIDTH / slideWidth, [slideWidth])
+  const slideTranslate = useMemo(() => (c.SLIDE_HOVER_WIDTH - slideWidth) / 2, [slideWidth])
 
   const offset = useMemo(() => {
     if (active === 0) {
@@ -53,21 +61,21 @@ function RecentPartyCarousel() {
       if (active === i) {
         return {
           transition: '400ms all ease',
-          transform: `translateX(${offset}px) scale(${c.SLIDE_SCALE})`
+          transform: `translateX(${offset}px) scale(${slideScale})`
         }
       }
 
       if (i < active) {
         return {
           transition: '400ms all ease',
-          transform: `translateX(-${c.SLIDE_TRANSLATE - offset}px) scale(1)`
+          transform: `translateX(-${slideTranslate - offset}px) scale(1)`
         }
       }
 
       if (i > active) {
         return {
           transition: '400ms all ease',
-          transform: `translateX(${c.SLIDE_TRANSLATE + offset}px) scale(1)`
+          transform: `translateX(${slideTranslate + offset}px) scale(1)`
         }
       }
 
@@ -76,16 +84,16 @@ function RecentPartyCarousel() {
   }, [active])
 
   return (
-    <div className="recent-party-carousel">
+    <div className="recent-party-carousel" ref={containerRef}>
       <div className="slider">
         {data.map((party, i) => (
           <div
             className="item"
-            style={styles[i]}
+            style={{ ...styles[i], width: slideWidth }}
             onMouseEnter={() => setActive(i)}
             onMouseLeave={() => setActive(-1)}
             key={i}>
-            <div
+            <StandardAspectRatioBox
               className="recent-party-carousel-card"
               style={{ backgroundImage: `url(${party.show.preview_image})` }}
               onClick={() => handleShowClick(show)}>
@@ -116,7 +124,7 @@ function RecentPartyCarousel() {
               <div className="progress">
                 <div className="bar"></div>
               </div>
-            </div>
+            </StandardAspectRatioBox>
           </div>
         ))}
       </div>

@@ -6,8 +6,7 @@ import RecentPartyCarousel from '../RecentPartyCarousel'
 
 function RecentParty() {
   const { data, isLoading } = useRequest('/api/me/recent-parties')
-  if (isLoading) return null
-  return <RecentPartyCarousel parties={data.parties} isLoading={isLoading} />
+  return <RecentPartyCarousel parties={data && data.parties} isLoading={isLoading} />
 }
 
 export default RecentParty

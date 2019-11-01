@@ -121,3 +121,20 @@
   text-shadow: var(--text-shadow-default);
   font-weight: 600;
 }
+
+/**
+ * .recent-party-carousel-loader
+ */
+
+.recent-party-carousel-loader {
+  display: flex;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.recent-party-carousel-loader > .column {
+  flex-shrink: 0;
+  width: 20%;
+  padding-left: 8px;
+  padding-right: 8px;
+}

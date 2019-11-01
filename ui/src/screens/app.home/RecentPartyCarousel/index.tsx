@@ -6,9 +6,10 @@ import UiAvatarGroup from '~/components/UiAvatarGroup'
 import UiButton from '~/components/UiButton'
 import UiShowCardDetailText from '~/components/UiShowCardDetailText'
 import StandardAspectRatioBox from '~/components/StandardAspectRatioBox'
+import ShowCardPlaceholder from '~/components/ShowCardPlaceholder'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 import history from '~/lib/history'
-import { SLIDE_HOVER_WIDTH, SLIDE_COUNT } from './constants'
+import { SLIDE_HOVER_WIDTH, SLIDE_COUNT, LOADER_BLOCKS } from './constants'
 import { getOffset, getStyles } from './utils'
 
 interface Props {
@@ -82,4 +83,20 @@ function RecentPartyCarousel(props: Props) {
   )
 }
 
-export default RecentPartyCarousel
+function RecentPartyCarouselWrapper(props: Props) {
+  if (props.isLoading) {
+    return (
+      <div className="recent-party-carousel-loader">
+        {LOADER_BLOCKS.map((_, i) => (
+          <div className="column" key={i}>
+            <ShowCardPlaceholder />
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  return <RecentPartyCarousel {...props} />
+}
+
+export default RecentPartyCarouselWrapper

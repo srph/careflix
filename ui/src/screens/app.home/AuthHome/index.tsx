@@ -7,6 +7,7 @@ import axios from '~/lib/axios'
 import UiContainer from '~/components/UiContainer'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiSpacer from '~/components/UiSpacer'
+import ShowCardPlaceholder from '~/components/ShowCardPlaceholder'
 import ShowModal from '../ShowModal'
 import { InfiniteScroll as Infinite } from 'react-simple-infinite-scroll'
 import TopNavigation from '../TopNavigation'
@@ -99,9 +100,7 @@ function AuthHome() {
             {isLoading &&
               PLACEHOLDER_BLOCKS.map((_, i) => (
                 <div className="column" key={i}>
-                  <div className="show-carousel-placeholder" key={i}>
-                    <div className="block" />
-                  </div>
+                  <ShowCardPlaceholder />
                 </div>
               ))}
           </div>

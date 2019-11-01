@@ -1,0 +1,20 @@
+@keyframes show-card-paceholder-pulse {
+  0% {
+    opacity: .6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .6;
+  }
+}
+
+.c-show-card-placeholder {
+  background: var(--color-black-4);
+  background: linear-gradient(180deg, var(--color-black-4) 45%, var(--color-black-1) 100%);
+  border-radius: var(--border-radius);
+  animation-name: show-card-paceholder-pulse;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+}

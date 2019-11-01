@@ -1,3 +1,16 @@
+/**
+ * .recent-party-section
+ */
+.recent-party-section {
+  font-size: 36px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+/**
+ * .recent-party-carousel
+ */
+
 .recent-party-carousel {
   position: relative;
   width: 100%;
@@ -39,7 +52,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  visibility: none;
+  visibility: hidden;
   transition: 400ms opacity ease;
 }
 
@@ -58,7 +71,7 @@
   border-bottom-right-radius: var(--border-radius);
   overflow: hidden;
   opacity: 0;
-  visibility: none;
+  visibility: hidden;
   transition: 400ms opacity ease;
 }
 
@@ -79,7 +92,7 @@
   right: 8px;
   text-align: right;
   opacity: 0;
-  visibility: none;
+  visibility: hidden;
   transition: 400ms opacity ease;
 }
 
@@ -114,7 +127,7 @@
   position: absolute;
   bottom: 8px;
   left: 8px;
-  right: 8px;
+  width: 75%;
 }
 
 .recent-party-carousel-card > .details > .title {

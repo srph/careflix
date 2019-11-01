@@ -1,15 +1,21 @@
-import { SLIDE_HOVER_WIDTH, SLIDE_MARGIN } from './constants'
+import { SLIDE_MARGIN, SLIDE_COUNT } from './constants'
+
+interface GetOffsetPayload {
+  active: number
+  width: number
+  hoverWidth: number
+}
 
 /**
  * Get scale and translate offset
  */
-export function getOffset({ active, data }: { active: number; data: any[] }): number {
+export function getOffset({ active, width, hoverWidth }: GetOffsetPayload): number {
   if (active === 0) {
-    return SLIDE_HOVER_WIDTH / 4 - SLIDE_MARGIN * 4
+    return (hoverWidth - width) / 2
   }
 
-  if (active === data.length - 1) {
-    return -(SLIDE_HOVER_WIDTH / 4 - SLIDE_MARGIN * 4)
+  if (active === SLIDE_COUNT - 1) {
+    return -((hoverWidth - width) / 2)
   }
 
   return 0

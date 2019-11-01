@@ -7,11 +7,8 @@ import UiButton from '~/components/UiButton'
 import UiShowCardDetailText from '~/components/UiShowCardDetailText'
 import StandardAspectRatioBox from '~/components/StandardAspectRatioBox'
 import parseStandardTime from '~/utils/date/parseStandardTime'
-
-const c = {} as any
-c.SLIDE_HOVER_WIDTH = 500
-c.SLIDE_COUNT = 5
-c.SLIDE_MARGIN = 8
+import { SLIDE_HOVER_WIDTH, SLIDE_COUNT } from './constants'
+import { getOffset, getStyles } from './utils'
 
 function RecentPartyCarousel() {
   const [active, setActive] = useState(-1)
@@ -31,61 +28,18 @@ function RecentPartyCarousel() {
   })
 
   const containerRef = useRef<HTMLDivElement>()
-  const { width } = useElementSize(containerRef)
-  const containerWidth = width - 16
-  const slideWidth = useMemo(() => containerWidth / c.SLIDE_COUNT, [containerWidth])
-  const slideScale = useMemo(() => c.SLIDE_HOVER_WIDTH / slideWidth, [slideWidth])
-  const slideTranslate = useMemo(() => (c.SLIDE_HOVER_WIDTH - slideWidth) / 2, [slideWidth])
-
-  const offset = useMemo(() => {
-    if (active === 0) {
-      return c.SLIDE_HOVER_WIDTH / 4 - c.SLIDE_MARGIN * 4
-    }
-
-    if (active === data.length - 1) {
-      return -(c.SLIDE_HOVER_WIDTH / 4 - c.SLIDE_MARGIN * 4)
-    }
-
-    return 0
-  }, [active])
-
-  const styles = useMemo(() => {
-    return data.map((_, i) => {
-      if (active === -1) {
-        return {
-          transition: '400ms all ease',
-          transform: 'translateX(0) scale(1)'
-        }
-      }
-
-      if (active === i) {
-        return {
-          transition: '400ms all ease',
-          transform: `translateX(${offset}px) scale(${slideScale})`
-        }
-      }
-
-      if (i < active) {
-        return {
-          transition: '400ms all ease',
-          transform: `translateX(-${slideTranslate - offset}px) scale(1)`
-        }
-      }
-
-      if (i > active) {
-        return {
-          transition: '400ms all ease',
-          transform: `translateX(${slideTranslate + offset}px) scale(1)`
-        }
-      }
-
-      return {}
-    })
-  }, [active])
+  const { width: containerWidth } = useElementSize(containerRef)
+  const slideWidth = useMemo(() => containerWidth / SLIDE_COUNT, [containerWidth])
+  const slideScale = useMemo(() => SLIDE_HOVER_WIDTH / slideWidth, [slideWidth])
+  const slideTranslate = useMemo(() => (SLIDE_HOVER_WIDTH - slideWidth) / 2, [slideWidth])
+  const offset = useMemo(() => getOffset({ active, data }), [active])
+  const styles = useMemo(() => getStyles({ active, data, offset, scale: slideScale, translate: slideTranslate }), [
+    active
+  ])
 
   return (
-    <div className="recent-party-carousel" ref={containerRef}>
-      <div className="slider">
+    <div className="recent-party-carousel">
+      <div className="slider" ref={containerRef}>
         {data.map((party, i) => (
           <div
             className="item"

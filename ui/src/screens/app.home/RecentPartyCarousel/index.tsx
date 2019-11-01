@@ -7,6 +7,7 @@ import UiButton from '~/components/UiButton'
 import UiShowCardDetailText from '~/components/UiShowCardDetailText'
 import StandardAspectRatioBox from '~/components/StandardAspectRatioBox'
 import parseStandardTime from '~/utils/date/parseStandardTime'
+import history from '~/lib/history'
 import { SLIDE_HOVER_WIDTH, SLIDE_COUNT } from './constants'
 import { getOffset, getStyles } from './utils'
 
@@ -41,7 +42,9 @@ function RecentPartyCarousel(props: Props) {
             <StandardAspectRatioBox
               className="recent-party-carousel-card"
               style={{ backgroundImage: `url(${party.video.show.preview_image})` }}
-              onClick={() => handleShowClick(show)}>
+              onClick={() => {
+                history.push(`/watch/${party.id}`)
+              }}>
               <div className="overlay" />
 
               <div className="timestamp">

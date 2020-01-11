@@ -2895,6 +2895,58 @@ class ShowSeeder extends Seeder
                     ]
                 ]
             ],
+            [
+                'title' => 'Maleficent',
+                'title_type' => 'movie',
+                'synopsis' => 'A vengeful fairy is driven to curse an infant princess, only to discover that the child may be the one person who can restore peace to their troubled land.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Maleficent'),
+                'air_start' => Carbon::create(2014, 5, 30),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Maleficent', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:37:28')
+            ],
+            [
+                'title' => 'Maleficent: Mistress Of Evil',
+                'title_type' => 'movie',
+                'synopsis' => 'Maleficent and her goddaughter Aurora begin to question the complex family ties that bind them as they are pulled in different directions by impending nuptials, unexpected allies, and dark new forces at play.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Maleficent: Mistress Of Evil'),
+                'air_start' => Carbon::create(2019, 10, 18),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Maleficent: Mistress Of Evil', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:58:50')
+            ],
+            [
+                'title' => 'The Addams Family',
+                'title_type' => 'movie',
+                'synopsis' => 'The eccentrically macabre family moves to a bland suburb where Wednesday Addams\' friendship with the daughter of a hostile and conformist local reality show host exacerbates conflict between the families.',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('The Addams Family'),
+                'air_start' => Carbon::create(2019, 10, 11),
+                'age_rating' => 'PG',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('The Addams Family', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('1:27:01')
+            ],
+            [
+                'title' => 'Joker',
+                'title_type' => 'movie',
+                'synopsis' => 'In Gotham City, mentally troubled comedian Arthur Fleck is disregarded and mistreated by society. He then embarks on a downward spiral of revolution and bloody crime. This path brings him face-to-face with his alter-ego: the Joker',
+                'language' => 'English',
+                'preview_image' => Helper::getPreviewUrlFromMovieTitle('Joker'),
+                'air_start' => Carbon::create(2019, 10, 4),
+                'age_rating' => 'R',
+                'subtitle_url' => Helper::getSubtitleUrlFromMovieTitle('Joker', 'en'),
+                //
+                'extension' => 'mp4',
+                'duration' => Helper::getDurationInSecondsFromReadableFormat('2:01:49')
+            ],
         ];
 
         foreach($movies as $movie) {

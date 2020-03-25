@@ -1,4 +1,5 @@
 .watch-screen-canopy {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -56,8 +57,9 @@
 }
 
 .watch-screen-chat-messages-container {
-  height: 100%;
   position: relative;
+  min-height: 0;
+  height: 100%;
 }
 
 .watch-screen-chat-messages {

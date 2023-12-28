@@ -103,6 +103,8 @@ npm start
 
 It should open up to your a new browser window shortly. However, if it doesn't, you can manually open http://localhost:3000.
 
+You can either register or login with the following credentials: `admin@admin.com` (email) / `admin` (password)
+
 ## Deployment
 The API and front-end are deployed separately.
 
@@ -135,8 +137,6 @@ The web interface is hosted on Netlify for free.
 ```bash
 npm run build
 ```
-
-You can either register or login with the following credentials: `admin@admin.com` (email) / `admin` (password)
 
 ## Custom API Commands
 ```bash

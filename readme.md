@@ -43,10 +43,9 @@ php artisan passport:install
 php artisan passport:client --password
 ```
 
-- _(Optional)_ [Setup `ngrok`](https://dashboard.ngrok.com/get-started), then point it to port `8000`.
-```bash
-ngrok http 8000
-```
+This installs all required tables and creates a user with the following credentials: `admin@admin.com` (email) / `admin` (password)
+
+> Make sure to replace `<YOUR PASSWORD HERE>` with your desired password.
 
 - Setup [Pusher](https://pusher.com/) by logging in to its dashboard, and creating a client. When you're done, open up `.env`, and change the following with the details provided by Pusher:
 ```bash
@@ -56,14 +55,28 @@ PUSHER_APP_SECRET=
 PUSHER_APP_CLUSTER=
 ```
 
-- _(Optional)_ Go to the _Web Hooks_ tab, then paste ngrok's generated url (e.g., `http://9542199e.ngrok.io `) to the _Webhook URL_ input.
+- You should be good to go. Run the command below then head over to `http://localhost:8000`
 
-- _(Optional)_ Select _Presence_ for the _Event Type_, then press _Add_.
-
-- You should be good to go
 ```bash
 php artisan serve
 ```
+
+### API Setup: Enable Active Presence Locally (Optional)
+
+Active Presence is a feature that lets you know if a user invited to a room is active or not.
+
+If not enabled, users will simply be inactive by default.
+
+- If you're setting this up locally, [setup `ngrok`](https://dashboard.ngrok.com/get-started), then point it to port `8000` (port used by `php artisan serve`).
+```bash
+ngrok http 8000
+```
+
+- Open up Pusher, head over to the _Web Hooks_ tab.
+
+- Either paste the api's public url or ngrok's generated url (e.g., `http://9542199e.ngrok.io`) to the _Webhook URL_ input.
+
+- Select _Presence_ for the _Event Type_, then press _Add_.
 
 ## Front-end setup
 You will need npm `>=6` and Node.js `>=11`.
@@ -94,11 +107,25 @@ It should open up to your a new browser window shortly. However, if it doesn't, 
 The API and front-end are deployed separately.
 
 ### API
-Currently, Pulse is deployed on Laravel Forge. For the initial deployment, don't forget to run:
+Currently, Care.tv is deployed on Laravel Forge. If you follow the API setup instructions properly, things should work out of the box.
+
+- Initially, make sure to setup Laravel Passport:
+
 ```bash
 php artisan passport:install
 php artisan passport:client --password
 ```
+
+- Make sure to also change the default admin ceredentials as soon as possible:
+
+```bash
+php artisan tinker
+$user = User::first();
+$user->password = Hash::make('<YOUR PASSWORD HERE>');
+$user->save();
+```
+
+- Lastly, make sure to setup active presence - can also be seen above.
 
 ### Front-end
 The web interface is hosted on Netlify for free.
@@ -108,6 +135,8 @@ The web interface is hosted on Netlify for free.
 ```bash
 npm run build
 ```
+
+You can either register or login with the following credentials: `admin@admin.com` (email) / `admin` (password)
 
 ## Custom API Commands
 ```bash

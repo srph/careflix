@@ -16,10 +16,10 @@ class CreateUserAdminRecord extends Migration
     {
         // @TODO Add a prompt to change the password as soon as possible
         User::create([
-            'name' => 'Kier Borromeo',
-            'email' => 'seraphipod@gmail.com',
+            'name' => 'Tarka Ji',
+            'email' => 'admin@admin.com',
             'email_verified_at' => now(),
-            'password' => '12345',
+            'password' => 'admin',
             'remember_token' => Str::random(10),
             'is_admin' => true
         ]);

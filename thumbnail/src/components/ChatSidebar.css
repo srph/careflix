@@ -1,0 +1,217 @@
+/* ============================================================
+ * Chat sidebar — ported from the app's ChatWidget
+ * ============================================================ */
+
+.watch-screen-chat {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: var(--player-chat-pane-width-desktop);
+  background: var(--color-black-2);
+}
+
+/* ---- Canopy (online presence + invite) ---- */
+.watch-screen-canopy {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--color-black-2);
+  border-bottom: 1px solid var(--color-black-1);
+}
+
+.watch-screen-canopy .invite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 14px;
+  margin-left: 12px;
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  background: var(--color-black-4);
+  border-radius: 999px;
+  transition: 150ms background ease;
+}
+
+.watch-screen-canopy .invite:hover {
+  background: var(--color-black-5);
+}
+
+/* ---- Messages ---- */
+.watch-screen-chat-messages-container {
+  position: relative;
+  min-height: 0;
+  height: 100%;
+}
+
+.watch-screen-chat-messages {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--color-black-2);
+}
+
+.watch-screen-chat-group {
+  padding: 12px 16px;
+  display: flex;
+}
+
+.watch-screen-chat-group > .avatar {
+  align-self: flex-end;
+  margin-right: 8px;
+}
+
+.watch-screen-chat-group > .messages > .name {
+  margin-left: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--color-black-5);
+}
+
+.watch-screen-chat-group > .messages > .list {
+  display: flex;
+  flex-direction: column;
+}
+
+.watch-screen-chat-group > .messages > .list > .message {
+  display: flex;
+}
+
+.watch-screen-chat-group > .messages > .list > .message > .inner {
+  flex-grow: 0;
+  display: inline-block;
+  max-width: 100%;
+  padding: 9px 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  background: var(--color-black-4);
+  border-radius: 18px;
+}
+
+.watch-screen-chat-group > .messages > .list > .message:not(:last-child) > .inner {
+  margin-bottom: 3px;
+}
+
+/* Non-self bubbles sit next to the avatar on the left — flatten that side
+   between consecutive messages, iMessage-style, instead of a full 18px pill. */
+.watch-screen-chat-group:not(.is-self) > .messages > .list > .message:not(:first-child) > .inner {
+  border-top-left-radius: 6px;
+}
+
+.watch-screen-chat-group:not(.is-self) > .messages > .list > .message:not(:last-child) > .inner {
+  border-bottom-left-radius: 6px;
+}
+
+/* Self bubbles sit next to the avatar on the right — flatten that side instead. */
+.watch-screen-chat-group.is-self > .messages > .list > .message:not(:first-child) > .inner {
+  border-top-right-radius: 6px;
+}
+
+.watch-screen-chat-group.is-self > .messages > .list > .message:not(:last-child) > .inner {
+  border-bottom-right-radius: 6px;
+}
+
+.watch-screen-chat-group.is-self {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
+
+.watch-screen-chat-group.is-self > .avatar {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+.watch-screen-chat-group.is-self > .messages > .list > .message {
+  margin-left: auto;
+}
+
+.watch-screen-chat-group.is-self > .messages > .list > .message > .inner {
+  background: var(--color-primary);
+}
+
+/* ---- Activity groups ---- */
+.watch-screen-activity-group {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.watch-screen-activity-group > .activity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--color-black-5);
+}
+
+.watch-screen-activity-group > .activity .name {
+  color: var(--color-primary);
+}
+
+/* ---- Chatbar ---- */
+.watch-screen-chatbar {
+  flex-shrink: 0;
+  padding: 16px;
+  background: var(--color-black-2);
+  border-top: 1px solid var(--color-black-1);
+}
+
+.watch-screen-chatbar-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.watch-screen-chatbar-input > .button {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+  font-size: 10px;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border-radius: 50%;
+  transition: 100ms background ease;
+}
+
+.watch-screen-chatbar-input > .button:disabled {
+  background: var(--color-black-5);
+  cursor: not-allowed;
+}
+
+.watch-screen-chatbar-input > .textarea {
+  display: block;
+  padding: 12px 44px 12px 16px;
+  width: 100%;
+  color: var(--color-black-5);
+  font-family: inherit;
+  font-size: var(--font-size);
+  outline: 0;
+  background: rgb(37, 51, 65);
+  border: 1px solid transparent;
+  border-radius: 25px;
+  resize: none;
+}
+
+.watch-screen-chatbar-input > .textarea::placeholder {
+  color: var(--color-black-5);
+}
+
+.watch-screen-chatbar-input > .textarea:focus {
+  background: var(--color-black-1);
+  border-color: rgb(29, 161, 242);
+}

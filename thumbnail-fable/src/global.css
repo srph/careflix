@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Spline Sans Mono', ui-monospace, monospace;
+
+  /* Warm near-blacks — the room, lit by the screen */
+  --color-ink-950: #0b0806;
+  --color-ink-900: #141009;
+  --color-ink-800: #1e1810;
+  --color-ink-700: #2d2417;
+  --color-ink-500: #5c4f3e;
+  --color-ink-400: #8a7b68;
+  --color-ink-300: #b3a48f;
+  --color-ink-200: #d2c6b2;
+  --color-cream: #f6efe2;
+
+  /* Ember rose — the brand pink, warmed by candlelight */
+  --color-ember-300: #ff8ba8;
+  --color-ember-400: #ff5c86;
+  --color-ember-500: #ef3d78;
+  --color-brand: #e8368f;
+
+  /* Screen light */
+  --color-gold-200: #ffe3ae;
+  --color-gold-300: #ffce7a;
+  --color-gold-400: #f5a54a;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-ink-950);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+#mount {
+  height: 100%;
+}
+
+/* Thin, quiet scrollbar for the chat pane */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.12) transparent;
+}
+.chat-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: rgb(255 255 255 / 0.12);
+  border-radius: 999px;
+}

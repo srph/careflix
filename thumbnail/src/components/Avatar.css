@@ -1,0 +1,91 @@
+/* ---- UiAvatar ---- */
+.ui-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  color: var(--color-white);
+  font-weight: bold;
+  border-radius: 50%;
+  overflow: hidden;
+  user-select: none;
+  object-fit: cover;
+}
+
+.ui-avatar.is-more {
+  background: var(--color-black-4);
+  font-size: 11px;
+  letter-spacing: -0.2px;
+}
+
+.ui-avatar.is-sm {
+  font-size: 8px;
+  font-weight: 400;
+  height: 16px;
+  width: 16px;
+}
+
+.ui-avatar.is-m {
+  height: 48px;
+  width: 48px;
+}
+
+.ui-avatar.is-l {
+  height: 80px;
+  width: 80px;
+}
+
+/* ---- UiPresenceAvatar ---- */
+.ui-presence-avatar {
+  position: relative;
+  filter: grayscale(1);
+}
+
+.ui-presence-avatar > .status {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  height: 16px;
+  width: 16px;
+  background: var(--color-black-5);
+  border: 2px solid var(--color-black-2);
+  border-radius: 50%;
+}
+
+.ui-presence-avatar.is-online {
+  filter: none;
+  transition: 200ms filter ease;
+}
+
+.ui-presence-avatar.is-online > .status {
+  background: var(--color-green);
+}
+
+.ui-presence-avatar.is-m > .status {
+  height: 20px;
+  width: 20px;
+}
+
+/* ---- UiAvatarGroup ---- */
+.ui-avatar-group {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.ui-avatar-group > .avatar {
+  position: relative;
+  display: flex;
+}
+
+/* Every avatar overlaps the one before it (visually, to its left) — the "+N"
+   chip is first in the DOM/row-reverse order, so it's the one being overlapped. */
+.ui-avatar-group > .avatar:not(:last-child) {
+  margin-left: -10px;
+}
+
+/* Ring around each avatar disc so overlapping ones read as separate, stacked circles */
+.ui-avatar-group .ui-avatar {
+  box-shadow: 0 0 0 2px var(--color-black-2);
+}

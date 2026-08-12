@@ -1,0 +1,170 @@
+/* ============================================================
+ * Video stage — ported from the app's PlayerModal + PlayerSeeker
+ * ============================================================ */
+
+.watch-screen-video {
+  position: relative;
+  flex-shrink: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/*
+ * The poster surface. Drop in a frame capture later, e.g.:
+ *   .watch-screen-video > .poster {
+ *     background-image: url('./assets/my-frame.jpg');
+ *   }
+ */
+.watch-screen-video > .poster {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-black);
+  background-image: radial-gradient(circle at 50% 38%, #1c2938 0%, #0b1016 70%);
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* ---- Bottom overlay ---- */
+.watch-player-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60%;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.watch-player-contents {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* ---- Seeker row ---- */
+.watch-player-controls {
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+}
+
+.app-watch-player-seeker {
+  position: relative;
+  width: 100%;
+  margin-right: 32px;
+  padding: 16px 0;
+}
+
+.app-watch-player-seeker > .track {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.app-watch-player-seeker > .track > .fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--color-primary);
+}
+
+.app-watch-player-seeker > .track > .knob {
+  position: absolute;
+  top: 50%;
+  height: 14px;
+  width: 14px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(232, 54, 143, 0.25);
+}
+
+.watch-player-controls > .time {
+  flex-shrink: 0;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+.watch-player-controls > .time:not(:last-child) {
+  margin-right: 32px;
+}
+
+/* ---- Action row ---- */
+.watch-player-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+}
+
+.watch-player-modal-actions > .section {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.watch-player-modal-actions > .section:last-child {
+  flex-shrink: 0;
+}
+
+.watch-player-modal-action-item {
+  position: relative;
+  margin-right: 32px;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--color-white);
+}
+
+.watch-player-modal-action-item.is-fs-icon,
+.watch-player-modal-action-item.is-chat-icon {
+  /* keep the far-right icon tight to the edge */
+}
+
+.watch-player-modal-action-item.is-chat-icon {
+  margin-right: 0;
+}
+
+.watch-player-modal-action-item > .icon {
+  color: var(--color-white);
+  font-size: inherit;
+}
+
+/* ---- Title ---- */
+.watch-player-modal-title {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding-right: 32px;
+}
+
+.watch-player-modal-title > .info {
+  margin-left: 8px;
+  opacity: 0.75;
+}
+
+/* ---- Back to browse ---- */
+.watch-player-browse {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  font-size: 20px;
+  color: var(--color-white);
+  text-decoration: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+.watch-player-browse > .icon {
+  margin-right: 16px;
+}

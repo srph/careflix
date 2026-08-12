@@ -1,0 +1,113 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  /* ---- Type ---- */
+  --font-size-h6: 12px;
+  --font-size: 14px;
+  --font-size-h4: 16px;
+  --font-size-h3: 20px;
+  --font-size-h2: 24px;
+  --font-size-h1: 28px;
+  --font-size-heading: 20px;
+  --font-size-subheading: 12px;
+  --font-family: 'halyard-display', sans-serif;
+  --font-family-subheading: 'Work Sans', sans-serif;
+
+  /* ---- Color ---- */
+  --color-black: #000;
+  --color-black-1: #10171e;
+  --color-black-2: #15202b;
+  --color-black-3: #1c2938;
+  --color-black-4: #38444d;
+  --color-black-5: #8899a6;
+  --color-silver-1: #f0f4f8;
+  --color-silver-2: #d9e2ec;
+  --color-silver-3: #bcccdc;
+  --color-silver-4: #9fb3c8;
+  --color-silver-5: #829ab1;
+  --color-primary: #e8368f;
+  --color-secondary: #f7c948;
+  --color-blue: #1da1f2;
+  --color-green: #65d6ad;
+  --color-white: #fff;
+  --color-modal-overlay: rgba(0, 0, 0, 0.7);
+
+  --border-radius: 4px;
+  --letter-spacing-subheading: 1px;
+  --overlay-fade: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  --overlay-fade-2: linear-gradient(180deg, transparent 70%, var(--color-black-1) 100%);
+  --text-shadow-default: 0 1px 1px var(--color-black-1);
+  --form-size: 40px;
+  --screen-tablet: 720px;
+
+  --player-chat-pane-width-portrait: 240px;
+  --player-chat-pane-width-desktop: 320px;
+
+  color: var(--color-white);
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  background: var(--color-black-1);
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+}
+h2 {
+  font-size: var(--font-size-h2);
+}
+h3 {
+  font-size: var(--font-size-h3);
+}
+h4 {
+  font-size: var(--font-size-h4);
+}
+h5 {
+  font-size: var(--font-size);
+}
+h6 {
+  font-size: var(--font-size-h6);
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+.ui-subheading {
+  letter-spacing: 1px;
+  font-family: var(--font-family-subheading);
+  font-size: var(--font-size-subheading);
+  text-transform: uppercase;
+}
+
+.ui-subheading.is-compact {
+  letter-spacing: initial;
+}
+
+.u-text-center {
+  text-align: center;
+}
+
+/* Plain button reset (mirrors UiPlainButton) */
+.ui-plain-button {
+  display: inline-block;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+}

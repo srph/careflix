@@ -8,6 +8,7 @@ React/TypeScript front-end for Care.tv — the watch party experience (synced vi
 - React `^16.11.0` (class-free, hooks-based)
 - React Router `^5.0.0` (`react-router-dom`, `<Switch>`/`<Route>` API, not the v6 data router)
 - TypeScript `^3.4.5`, targeting `es5`, path alias `~` → `src/*` (see `tsconfig.json`)
+- Node `v11.15.0` (pinned in `.nvmrc`, run `nvm use`), npm `>=6.7.0` per `package.json` `engines`
 
 ### State management
 

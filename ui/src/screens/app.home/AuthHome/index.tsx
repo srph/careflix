@@ -1,10 +1,13 @@
 import './style'
 
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useCollectionState } from '~/hooks/useCollectionState'
+import { useUpdateDebounce } from '~/hooks/useUpdateDebounce'
+import { useQueryParam, StringParam } from 'use-query-params'
 import axios from '~/lib/axios'
 import UiContainer from '~/components/UiContainer'
+import UiInput from '~/components/UiInput'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
@@ -20,28 +23,63 @@ function AuthHome() {
   const [error, setError] = useState('')
   const [selectedShow, setSelectedShow] = useState<AppShow | null>()
 
+  const [search, setSearch] = useQueryParam('search', StringParam)
+
+  // The input is kept locally so typing stays instant -- `?search=` only
+  // catches up once typing settles, and that's what triggers the request.
+  const [input, setInput] = useState(search || '')
+
+  // Only the newest request may write to the collection, so a slow response
+  // for an earlier keystroke can't land on top of a newer one.
+  const requestRef = useRef(0)
+
+  useUpdateDebounce(
+    () => {
+      setSearch(input.trim() || undefined, 'replaceIn')
+    },
+    500,
+    [input]
+  )
+
   useEffect(() => {
     fetch()
-  }, [])
+  }, [search])
 
   async function fetch(page = 1) {
+    const request = ++requestRef.current
+
     setIsLoading(true)
-    const [err, res] = await axios.get(`/api/shows?page=${page}`)
+    setError('')
+
+    const [err, res] = await axios.get('/api/shows', {
+      params: search ? { page, search } : { page }
+    })
+
+    // A newer search already took over while this was in flight.
+    if (request !== requestRef.current) {
+      return
+    }
 
     if (err) {
       setError('An error occured.')
       // @TODO Launch toast notification
+      setIsLoading(false)
+      return
     }
 
-    setCollection({
+    setCollection(prev => ({
       ...res.data,
-      data: [...collection.data, ...res.data.data]
-    })
+      data: page === 1 ? res.data.data : [...prev.data, ...res.data.data]
+    }))
     setIsLoading(false)
   }
 
   function handleLoadMore() {
     fetch(collection.current_page + 1)
+  }
+
+  function handleSearchInput(evt: React.FormEvent<HTMLInputElement>) {
+    setInput(evt.currentTarget.value)
   }
 
   async function handleShowClick(show: AppShow) {
@@ -52,14 +90,28 @@ function AuthHome() {
     setSelectedShow(null)
   }
 
+  const isEmpty = !isLoading && !error && !collection.data.length
+
   return (
     <React.Fragment>
-      <YouWereWatching />
+      {!search && <YouWereWatching />}
 
       <UiSpacer size={4} />
 
       <UiContainer>
-        <h5 className="ui-subheading">New Releases</h5>
+        <div className="show-searchbar">
+          <UiInput
+            isRound
+            type="text"
+            placeholder="Search for a movie or show..."
+            value={input}
+            onChange={handleSearchInput}
+          />
+        </div>
+
+        <UiSpacer size={3} />
+
+        <h5 className="ui-subheading">{search ? `Results for "${search}"` : 'New Releases'}</h5>
 
         <UiSpacer size={2} />
 
@@ -67,7 +119,7 @@ function AuthHome() {
           throttle={100}
           threshold={300}
           isLoading={isLoading}
-          hasMore={collection.current_page === 1 || collection.current_page !== collection.last_page}
+          hasMore={collection.current_page < collection.last_page}
           onLoadMore={handleLoadMore}
           data={collection}>
           <div className="show-layout">
@@ -96,14 +148,22 @@ function AuthHome() {
 
             {isLoading &&
               PLACEHOLDER_BLOCKS.map((_, i) => (
-                <div className="column">
-                  <div className="show-carousel-placeholder" key={i}>
+                <div className="column" key={i}>
+                  <div className="show-carousel-placeholder">
                     <div className="block" />
                   </div>
                 </div>
               ))}
           </div>
         </Infinite>
+
+        {error && <p className="show-layout-message">{error}</p>}
+
+        {isEmpty && (
+          <p className="show-layout-message">
+            {search ? `No shows match "${search}".` : 'There are no shows yet.'}
+          </p>
+        )}
 
         <ShowModal show={selectedShow} onClose={handleShowClose} />
       </UiContainer>

@@ -13,9 +13,16 @@ class ShowsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Show::orderBy('id', 'desc')->paginate(30);
+        $search = $request->get('search');
+
+        return Show::when($request->filled('search'), function($query) use ($search) {
+                $query->search($search);
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(30)
+            ->appends($request->only('search'));
     }
 
     public function groups(Show $show) {

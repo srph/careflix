@@ -24,6 +24,18 @@ class Show extends Model
         'movie'
     ];
 
+    /**
+     * Filter shows down to the ones whose title matches the search term
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  string $search
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch(\Illuminate\Database\Eloquent\Builder $query, $search) {
+        // https://stackoverflow.com/a/21216559/2698227
+        return $query->whereRaw('lower(title) like (?)', '%' . mb_strtolower($search) . '%');
+    }
+
     public function genres() {
         return $this->belongsToMany(Genre::class);
     }

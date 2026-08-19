@@ -125,3 +125,21 @@
   text-shadow: var(--text-shadow-default);
   font-weight: 600;
 }
+/**
+ *
+ */
+
+.show-searchbar {
+  max-width: 480px;
+}
+
+.show-layout-message {
+  color: var(--color-black-5);
+  margin-bottom: 160px;
+}
+
+/* The layout carries the page's bottom spacing, but not when it has nothing
+   to show -- otherwise it pushes the empty/error message far down the page. */
+.show-layout:empty {
+  margin-bottom: 0;
+}

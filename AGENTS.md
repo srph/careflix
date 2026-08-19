@@ -12,11 +12,14 @@ The two are deployed and run independently — the UI talks to the API over HTTP
 ## Commands
 
 ```bash
-# API — from api/
-composer install
-php artisan serve
-
-# UI — from ui/
-npm install
-npm start
+make install   # composer + npm dependencies, copies .env.example -> .env
+make start     # API on :8000 and UI on :1234, together (Ctrl-C stops both)
 ```
+
+Per side: `make install-api`, `make install-ui`, `make start-api`, `make start-ui`.
+
+The Makefile routes PHP through `valet php` / `valet composer` and Node through
+`nvm use` (per `ui/.nvmrc`), falling back to `PATH` when either is missing.
+
+`make install` stops at dependencies — it prints the remaining database steps
+(`migrate`, `db:seed`, `passport:install`) to run by hand.

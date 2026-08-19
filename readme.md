@@ -4,6 +4,21 @@ Care.tv makes it really easy to enjoy movies or watch TV shows with the people y
 
 Works for mobile, tablet, and desktop screens. Does not work with iOS at the moment.
 
+## Quick start
+
+If you're on macOS with [Valet](https://laravel.com/docs/valet) and [nvm](https://github.com/nvm-sh/nvm), the Makefile at the repo root wires both sides up for you:
+
+```bash
+make install   # composer + npm dependencies, and copies the .env.example files
+make start     # API on http://localhost:8000, UI on http://localhost:1234
+```
+
+`make install` runs Composer through `valet composer` and npm through the Node version pinned in `ui/.nvmrc`, falling back to plain `composer`/`node` when Valet or nvm isn't around. It stops at dependencies — you still need to fill in the two `.env` files and run the database steps below (`migrate`, `db:seed`, `passport:install`), which it prints as a reminder when it finishes.
+
+`make start` runs both dev servers in the foreground; Ctrl-C stops the pair. Individual targets are there too: `make install-api`, `make install-ui`, `make start-api`, `make start-ui`.
+
+The rest of this document covers the same setup step by step, plus the bits `make` doesn't automate.
+
 ## API Setup
 You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com) _(Optional)_
 
@@ -101,7 +116,7 @@ cp .env.example .env
 npm start
 ```
 
-It should open up to your a new browser window shortly. However, if it doesn't, you can manually open http://localhost:3000.
+It should open up to your a new browser window shortly. However, if it doesn't, you can manually open http://localhost:1234.
 
 You can either register or login with the following credentials: `admin@admin.com` (email) / `admin` (password)
 

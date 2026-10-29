@@ -1,0 +1,22 @@
+services:
+  db:
+    image: mysql:5.7.44
+    # MySQL 5.7 matches the API; its image needs emulation on Apple Silicon.
+    platform: linux/amd64
+    environment:
+      MYSQL_DATABASE: tv
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$${MYSQL_ROOT_PASSWORD}\" mysql --host=127.0.0.1 --user=root --database=\"$${MYSQL_DATABASE}\" --execute='SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+volumes:
+  mysql-data:

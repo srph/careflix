@@ -13,10 +13,18 @@ The two are deployed and run independently — the UI talks to the API over HTTP
 
 ```bash
 make install   # composer + npm dependencies, copies .env.example -> .env
-make start     # API on :8000 and UI on :1234, together (Ctrl-C stops both)
+make start     # starts Docker MySQL, then API on :8000 and web on :1234
+make start:api # API only
+make start:db  # Docker MySQL 5.7 on 127.0.0.1:3307; root/root, database tv
+make start:web # web only
 ```
 
-Per side: `make install-api`, `make install-ui`, `make start-api`, `make start-ui`.
+`make start` waits for MySQL to be healthy before starting the servers. Ctrl-C
+stops both dev servers; MySQL stays running. Use `docker compose stop db` to
+stop it; data persists in a named Docker volume.
+
+Per-side install: `make install-api`, `make install-ui`. The original
+`make start-api` and `make start-ui` commands remain available as aliases.
 
 The Makefile routes PHP through `valet php` / `valet composer` and Node through
 `nvm use` (per `ui/.nvmrc`), falling back to `PATH` when either is missing.

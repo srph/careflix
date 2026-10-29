@@ -8,12 +8,12 @@ Laravel backend for Care.tv: auth, shows catalog, watch parties, chat, and invit
 -   Laravel `5.8.*` (`laravel/framework` v5.8.15 installed)
 -   Laravel Passport `^7.2` (v7.2.2 installed) — OAuth2 password-grant auth for the UI
 -   Pusher (`pusher/pusher-php-server` ~3.0) — broadcasts party sync, chat, and invitation events
--   MySQL `5.7` — run locally via **DBngin** (see Dev setup below)
+-   MySQL `5.7` — run locally via **Docker Compose** (see Dev setup below)
 
 ## Preferred Dev Setup
 
--   Serve via **Valet** (`valet link` / `valet park`), not `php artisan serve`, for day-to-day work — `valet` gives you the `.test` domain and HTTPS.
--   Use **DBngin** for MySQL 5.7 locally instead of a system-wide install.
+-   From the repo root, `make start:api` serves the API on `http://localhost:8000`. **Valet** (`valet link` / `valet park`) is also available for a `.test` domain and HTTPS.
+-   From the repo root, `make start:db` starts Docker MySQL 5.7 on `127.0.0.1:3307`, using database `tv` and credentials `root` / `root`. It waits for MySQL to be healthy. Data persists in a named Docker volume; `docker compose stop db` stops the service. The image uses `linux/amd64` emulation on Apple Silicon.
 -   Always invoke PHP through Valet's linked version (`valet use php@...` or just let Valet's shim resolve it) rather than a bare system `php`, since the composer.json constraint (`^7.1.3`) is far older than the system PHP.
 -   Config lives in `.env` (copy from `.env.example`). Key values: `APP_CDN` (where media assets live), `APP_REQUEST_ACCESS_CODE` (optional registration gate), `PUSHER_APP_*`.
 

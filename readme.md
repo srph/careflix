@@ -6,21 +6,39 @@ Works for mobile, tablet, and desktop screens. Does not work with iOS at the mom
 
 ## Quick start
 
-If you're on macOS with [Valet](https://laravel.com/docs/valet) and [nvm](https://github.com/nvm-sh/nvm), the Makefile at the repo root wires both sides up for you:
+Install Docker with Compose v2 and start its Docker engine. On macOS, the Makefile also uses [Valet](https://laravel.com/docs/valet) and [nvm](https://github.com/nvm-sh/nvm) when available:
 
 ```bash
-make install   # composer + npm dependencies, and copies the .env.example files
-make start     # API on http://localhost:8000, UI on http://localhost:1234
+make install   # composer + npm dependencies, and creates missing .env files
+make start:db  # start MySQL before running the database setup below
+make start     # MySQL + API on http://localhost:8000 + web on http://localhost:1234
 ```
 
-`make install` runs Composer through `valet composer` and npm through the Node version pinned in `ui/.nvmrc`, falling back to plain `composer`/`node` when Valet or nvm isn't around. It stops at dependencies — you still need to fill in the two `.env` files and run the database steps below (`migrate`, `db:seed`, `passport:install`), which it prints as a reminder when it finishes.
+`make install` runs Composer through `valet composer` and npm through the Node version pinned in `ui/.nvmrc`, falling back to plain `composer`/`node` when Valet or nvm isn't around. It preserves existing `.env` files and stops at dependencies. Fill in the two `.env` files and run the database steps below (`migrate`, `db:seed`, `passport:install`) before using the app; the command prints these steps when it finishes.
 
-`make start` runs both dev servers in the foreground; Ctrl-C stops the pair. Individual targets are there too: `make install-api`, `make install-ui`, `make start-api`, `make start-ui`.
+Run each service separately with `make start:api`, `make start:db`, or `make start:web`. The original `make start-api` and `make start-ui` commands remain available, along with `make install-api` and `make install-ui`.
+
+`make start` waits for MySQL to be healthy before launching both dev servers. Ctrl-C stops both dev servers. MySQL runs in the background; stop it with `docker compose stop db`. Its data persists in the `mysql-data` Docker volume.
+
+### Local MySQL
+
+Docker Compose runs MySQL 5.7, matching the API's existing database version. The image runs with `linux/amd64` emulation on Apple Silicon. Connect using:
+
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_DATABASE=tv
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+
+These values are the defaults in `api/.env.example`. If you already have an `api/.env`, update its `DB_*` values to match. Port `3307` keeps the Docker service separate from MySQL installations using port `3306`.
 
 The rest of this document covers the same setup step by step, plus the bits `make` doesn't automate.
 
 ## API Setup
-You will have to install these dependencies: [MySQL `5.7`](https://dev.mysql.com/downloads/mysql/5.7.html), [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com) _(Optional)_
+You will need the Docker MySQL service above, [php `>=7.2`](https://thishosting.rocks/install-php-on-ubuntu/) along with [Composer](https://getcomposer.org/), and [ngrok](https://ngrok.com) _(Optional)_
 
 - Move to the `api` folder.
 ```bash

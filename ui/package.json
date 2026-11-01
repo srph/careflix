@@ -6,7 +6,7 @@
     "npm": ">=6.7.0"
   },
   "scripts": {
-    "start": "parcel src/index.html --no-cache",
+    "start": "parcel src/index.html --no-cache --port 8484",
     "typecheck": "tsc --noEmit",
     "build": "npm run typecheck && parcel build src/index.html && cp netlify/_redirects dist"
   },

@@ -2,7 +2,7 @@
 ## Care.tv
 Care.tv makes it really easy to enjoy movies or watch TV shows with the people you care about, no matter how far!
 
-Works for mobile, tablet, and desktop screens. Does not work with iOS at the moment.
+Targets modern stable desktop and mobile browsers. See [MIGRATION.md](MIGRATION.md) for the browser policy, verification evidence, and existing limitations.
 
 ## Quick start
 
@@ -11,7 +11,7 @@ Install Docker with Compose v2 and start its Docker engine. On macOS, the Makefi
 ```bash
 make install   # composer + npm dependencies, and creates missing .env files
 make start:db  # start MySQL before running the database setup below
-make start     # MySQL + API on http://localhost:8000 + web on http://localhost:1234
+make start     # MySQL + API on http://localhost:8000 + web on http://localhost:8484
 ```
 
 `make install` runs Composer through `valet composer` and npm through the Node version pinned in `ui/.nvmrc`, falling back to plain `composer`/`node` when Valet or nvm isn't around. It preserves existing `.env` files and stops at dependencies. Fill in the two `.env` files and run the database steps below (`migrate`, `db:seed`, `passport:install`) before using the app; the command prints these steps when it finishes.
@@ -112,7 +112,7 @@ ngrok http 8000
 - Select _Presence_ for the _Event Type_, then press _Add_.
 
 ## Front-end setup
-You will need npm `>=6` and Node.js `>=11`.
+Use Node.js `24.19.0` (pinned in `ui/.nvmrc`) and npm `>=11`. The UI uses React 19, TypeScript, and Vite.
 
 - Move to the `ui` folder
 ```bash
@@ -124,17 +124,17 @@ cd ui
 npm i
 ```
 
-- Copy `.env.example` to `.env`, and setup your environment config. Update the `API_CLIENT_*` based on the output from `php artisan passport:client --password` (refer to instructions above).
+- Copy `.env.example` to `.env`, and setup your environment config. Update the `VITE_API_CLIENT_*` based on the output from `php artisan passport:client --password` (refer to instructions above).
 ```bash
 cp .env.example .env
 ```
 
-- Start Parcel, and you're all good.
+- Start Vite.
 ```bash
 npm start
 ```
 
-It should open up to your a new browser window shortly. However, if it doesn't, you can manually open http://localhost:1234.
+Open http://localhost:8484. Set `VITE_API_BASE_URL` to your API URL (the default `make start:api` URL is http://localhost:8000). Existing unprefixed environment variables remain supported through an explicit allowlist; new configuration uses `VITE_*`.
 
 You can either register or login with the following credentials: `admin@admin.com` (email) / `admin` (password)
 

@@ -1,6 +1,6 @@
 # Frontend migration
 
-Modernize the frontend before implementing the redesign so it can use current UI and animation libraries. This document records the agreed replacements, execution milestones, verification evidence, and acceptance criteria. Execution is underway on `v2`; milestones and evidence below record actual progress.
+Modernize the frontend before implementing the redesign so it can use current UI and animation libraries. This document records the agreed replacements, execution milestones, verification evidence, and acceptance criteria. Execution is complete on `v2` for the agreed migration scope. Milestones and evidence below record the checks and the proven baseline failures left unchanged.
 
 ## Execution workflow
 
@@ -23,7 +23,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 | M2 | React 18.3 checkpoint and focused tests | Complete | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
 | M3 | Component and hook replacements | Complete | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
 | M4 | React 19 and current router | Complete | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
-| M5 | Final integration verification | Pending | The acceptance checklist is verified across the browser targets and two live sessions; remaining limitations and developer instructions are documented. |
+| M5 | Final integration verification | Complete with documented baseline exceptions | The acceptance checklist is verified across the browser targets and two live sessions; remaining limitations and developer instructions are documented. |
 
 ### Ownership and user input
 
@@ -90,10 +90,10 @@ React 19-native metadata and the current router are completed in M4. Add tests t
 
 ### M5: final verification
 
-- [ ] Run the browser smoke suite with Chromium, Firefox, and WebKit, plus a manual mobile pass for touch controls, fullscreen, and media behavior.
-- [ ] Use two separate browser sessions with the real API/Pusher path to verify invitations, presence, chat, synchronized playback/seek, episode changes, and reconnecting.
-- [ ] Update the acceptance checklist with evidence. Tests with mocked API/Pusher responses do not satisfy the live two-session criteria.
-- [ ] Update developer instructions, final commands, port documentation, and the completed milestone record.
+- [x] Run the browser smoke suite with Chromium, Firefox, and WebKit, plus a manual mobile pass for touch controls, fullscreen, and media behavior.
+- [x] Use two separate browser sessions with the real API/Pusher path to verify invitations, presence, chat, synchronized playback/seek, episode changes, and reconnecting.
+- [x] Update the acceptance checklist with evidence. Tests with mocked API/Pusher responses do not satisfy the live two-session criteria.
+- [x] Update developer instructions, final commands, port documentation, and the completed milestone record.
 
 ### Test scope
 
@@ -114,6 +114,41 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 | Dialogs and tooltips | Dismissal, Escape handling, focus restoration, hints, and animations preserve usable interactions. | Browser interaction checks against migrated components. | M3; cross-browser confirmation in M5. |
 | Chat textarea | Input remains usable within height bounds, with and without CSS auto-sizing support. | Browser checks of progressive enhancement and the scrollable fallback. | M3 and M5. |
 | Watch-party integration | Two distinct users receive invitations, presence, and chat; playback/seek and episode changes synchronize; reconnecting works. | Two browser sessions, real API/Pusher, two test accounts, playable media, subtitles, and a multi-episode series. | Live baseline in M0 if available; final verification in M5. |
+
+### M5 final evidence
+
+- M4 checkpoint: `cc5d78b`. Final route compatibility checkpoint: `4ff10a0`. The new router initially showed its default error page on unmatched URLs; an explicit fallback now retains the original app shell. The same smoke case passes on original Parcel output and the migrated production build.
+- The final development server passes all 10 auth/navigation smoke cases. Production checks cover those cases across Chromium, Firefox, WebKit, Pixel-sized Chromium, and iPhone-sized WebKit. Physical devices and native Edge/Safari applications are not tested by this engine/emulation matrix.
+- The real two-session scenario verifies UI invitations, presence, chat, unread state/scroll recovery, play/pause, a pointer seek with zero requests during drag and one after release, subtitles/toggling, reload recovery, forced Pusher disconnect/reconnect, and no duplicate received chat. Subscription readiness is tracked per connection so a closing connection cannot satisfy the reconnect check.
+- Live controls verify keyboard and touch seeking, desktop volume/mute/fullscreen, mobile fullscreen guidance, CSS textarea fallback, Font Awesome loading, and leave-party confirmation/back navigation. Annotated baseline exceptions below remain unchanged.
+- The API's existing `throttle:60,1` limit caused HTTP 429 responses during repeated verification, exposing existing error/cleanup paths. Tests now run live cases serially, reserve available quota, and use short valid history fixtures. Backend limits/configuration are unchanged. This is test pacing, not a repaired application defect.
+- Manual mobile visual pass: inspected portrait controls, fullscreen guidance after its transition, and landscape layout in iPhone-sized WebKit. The 844×390 landscape viewport had an 844px document width and a 604px video region, with chat input present. Screenshots: `.migration-evidence/mobile-portrait.png`, `mobile-fullscreen-guidance.png`, and `mobile-landscape.png`. No physical-device verification is claimed.
+- Dialog exit compatibility checkpoint: `d9e2166`. The first migrated wrapper unmounted within about 9ms, unlike the original 200ms fade. Opacity transitions now live on Base UI’s tracked popup/backdrop, with the existing overlay colors retained. All five browser targets verify that a fully opened dialog remains mounted during exit and then restores focus.
+- Final production suite: **56 checks passed in 56 attempts, with zero failures, skips, or retries**. This includes 50 controlled auth/navigation cases across five browser targets, five live media/control cases, and the live two-session scenario. Three explicit baseline-defect annotations record the exceptions below; these are parity checks, not claims that those existing features work.
+- Final developer-server smoke suite: all 10 Chromium cases pass after the dialog fix. Type checking and production build pass; the focused suite passes all 17 tests in six files. The final dependency tree reports no problems. Font Awesome 4.7.0 loads and renders in all five targets, with no observed migration conflicts.
+- Manual player pass (local party 76): `/` focus, Escape blur, M mute/unmute, up/down volume, C chat toggle, ? shortcut dialog, F fullscreen, Space play/pause, and left/right seeking pass. Controls hide and reopen correctly during actual playback. Buffering indicator appearance/clear was checked with controlled `waiting`/`playing` media events; this does not simulate a real network stall. Playback advanced beyond five seconds with no captured browser errors. Screenshot: `.migration-evidence/player-manual.png`.
+- Verification harness checkpoint: `ccb03a6`. Run instructions and fixture requirements are in `ui/TESTING.md`. Root/UI developer instructions and README now describe Vite, the final versions, and port 8484.
+
+| Final gate | Command or evidence | Result |
+| --- | --- | --- |
+| Clean dependency install | `npm --prefix ui ci --strict-peer-deps --legacy-peer-deps=false --force=false` | Passed without peer-check bypasses. |
+| Dependency tree | `npm --prefix ui ls --all` | No dependency problems; one React / React DOM 19.3.1 tree. |
+| Type check and production build | `VITE_API_BASE_URL=http://localhost:8487 npm --prefix ui run build` | Passed. The retained bundle-size advisory is documented in M4. |
+| Focused tests | `npm --prefix ui test` | 17 passed. |
+| Development smoke | `E2E_BASE_URL=http://localhost:8486 npm --prefix ui run test:e2e -- migration.spec --project=chromium` | 10 passed. |
+| Production browser/live suite | `E2E_BASE_URL=http://localhost:8489 E2E_LIVE_FIXTURES=/tmp/careflix-v2-fixtures.json npm --prefix ui run test:e2e` | 56 passed; three baseline-defect annotations. |
+| Production assets/configuration | Manifest and SPA redirects match `public/`; images, fonts, and audio exist; isolated API URL is present; Pusher server secret is absent from JavaScript. | Passed. |
+| Manual UI/player review | Portrait/landscape and fullscreen-guidance review; player shortcuts, control visibility, advancing playback, and controlled buffering events. | Passed within engine/emulation coverage; no physical-device claim. |
+
+Raw local Playwright evidence: `/tmp/careflix-v2-final-e2e.json` and `ui/playwright-report/index.html`. A compact result/annotation record is saved in `.migration-evidence/final-verification.json`. These local artifacts are ignored by Git. No required migration check remains unavailable.
+
+### Proven baseline findings from final verification
+
+- Remote episode changes: the original Parcel/React 16 UI receives the real `video-changed` Pusher event but keeps the old episode URL (baseline parties 8 and 28). The current source also has no listener for that event. The migrated UI reproduces this; selecting an episode updates the host and reload fetches the new episode for the other user. No repair is authorized. The live test annotates this parity check explicitly; it is not a pass for remote episode synchronization.
+- In-place party switching: on the original UI, accepting a second invitation changes the URL but retains the first room/video (baseline party 28 followed by a second party). The original route-loading effect has an empty dependency array, and the shared subscription hook also ignores channel-name changes. The migrated route reproduces this; reload fetches the correct room and subscriptions. The live scenario records this baseline exception separately.
+- Unsupported fullscreen cleanup: original iPhone-sized WebKit navigation reproduced `off is not a function`, followed by existing request/Pusher cleanup errors and a blank watch route (baseline party 39). `screenfull` 4.2 exports `{ enabled: false }` without `off()` when the API is unavailable; the original `useFullscreen` cleanup calls it unconditionally. The migrated app can surface the same failure through the router error boundary. Its specific cause and reload recovery are checked; the hook and Pusher cleanup are not repaired.
+- Safari pointer focus: both original and migrated movie dialogs return to the body after a pointer-origin opening because Safari does not focus the card. Chromium/Firefox focus the card. The old card attaches its handler to an inner div, so keyboard activation of the outer button is also a pre-existing limitation; this migration leaves that markup unchanged.
+- Mobile back navigation: existing CSS hides the `Go Back` text below 640px. The icon link is present and navigates to settings. This was a test-selector assumption, not an application regression.
 
 ### M4 evidence
 
@@ -181,7 +216,7 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 - Baseline screenshots are local artifacts in `.migration-evidence/baseline/` (guest, login, registration, live authenticated catalog).
 - MySQL is healthy. The API listens on 8485 and returns the expected JSON 401 for unauthenticated protected routes.
 - Created two disposable local migration accounts and authenticated both through the real OAuth endpoint. Test credentials/tokens are stored outside the repository in `/tmp/careflix-v2-fixtures.json`; no secrets are committed. The existing catalog has 203 shows and 480 videos.
-- Frontend Pusher cluster is `ap1`, API cluster is `mt1`; live event delivery remains to be verified. No existing application bug has been repaired.
+- At the initial capture, the frontend Pusher cluster was `ap1` and the API cluster was `mt1`; the later isolated live verification is recorded above. No existing application bug has been repaired.
 - The baseline browser runner is temporarily installed outside the app in `/tmp/careflix-migration-tools`; M1 will add it to project dev dependencies.
 
 ### Preflight evidence
@@ -225,7 +260,7 @@ The dependency audit found these locked and installed versions:
 | Parcel | 1.12.3 |
 | TypeScript | 3.5.2 |
 
-The repository pins Node 11.15.0 in `ui/.nvmrc`. The existing `npm run typecheck` passed during the assessment. A migrated build and live watch-party behavior have not yet been tested.
+At the initial assessment, `ui/.nvmrc` pinned Node 11.15.0 and `npm run typecheck` passed. The execution evidence above records subsequent tooling, build, and live verification results.
 
 ## Agreed dependency replacements
 
@@ -335,21 +370,23 @@ The source-based estimate was approximately 1–2 weeks including integration te
 
 ## Acceptance checklist
 
-- [ ] Dependencies install cleanly without bypassing React peer compatibility checks.
-- [ ] Type checking, the production build, the dev server, and production preview work.
-- [ ] Production output includes assets, configuration, manifest, and SPA redirects.
-- [ ] Required functionality works across the supported modern browsers without experimental features.
-- [ ] Font Awesome assets and icons render correctly; any observed compatibility conflicts are reported.
-- [ ] Registration, login, session restoration, logout, and settings work.
-- [ ] Registration access codes and protected-route redirects are preserved.
-- [ ] Movie pagination loads without duplicate requests and handles errors and the last page.
-- [ ] Dialogs, tooltips, sliders, and animations work with keyboard, pointer, and touch input.
-- [ ] Chat input grows within its bounds where CSS auto-sizing is supported and remains usable with the scrollable fallback elsewhere.
-- [ ] Two users can create/join a party and use invitations and presence updates.
-- [ ] Playback state and seeking remain synchronized across two sessions.
-- [ ] Chat delivery, unread state, scrolling, subtitles, and episode changes work.
-- [ ] Leaving a playing party, switching parties, reconnecting, and remounting do not lose or duplicate subscriptions.
-- [ ] Developer documentation describes the migrated stack and commands.
+Unchecked items marked **verified baseline failure** were reproduced in the original UI and left unchanged under the agreed scope. They are recorded findings, not pending migration repairs. Browser evidence covers the planned engines and mobile emulations; native vendor applications and physical devices were not tested.
+
+- [x] Dependencies install cleanly without bypassing React peer compatibility checks.
+- [x] Type checking, the production build, the dev server, and production preview work.
+- [x] Production output includes assets, configuration, manifest, and SPA redirects.
+- [ ] **Verified baseline failure:** Required functionality across modern browsers still has the existing unsupported-fullscreen cleanup failure on iPhone-sized WebKit. Other planned engine checks pass without experimental feature requirements.
+- [x] Font Awesome assets and icons render correctly; no migration conflicts were observed.
+- [x] Registration, login, session restoration, logout, and settings routes/forms preserve the verified behavior.
+- [x] Registration access codes and protected-route redirects are preserved.
+- [x] Movie pagination is covered for overlapping requests, retry, and the last page.
+- [x] Dialogs, tooltips, sliders, and animations are verified with keyboard, pointer, and touch input, including dialog exit timing and focus restoration against browser-specific baseline behavior.
+- [x] Chat input grows within its bounds where CSS auto-sizing is supported and remains usable with the scrollable fallback.
+- [x] Two users can create/join a party and use invitations and presence updates through the real API/Pusher path.
+- [x] Playback state, advancing playback, and seeking are verified across two live sessions.
+- [ ] **Verified baseline failure:** Remote episode changes remain stale until reload. Chat delivery, unread state, scrolling, subtitles, the host's episode selector, and reload recovery are verified separately.
+- [ ] **Verified baseline failure:** In-place party switching retains the old room until reload, and unsupported fullscreen cleanup can break iPhone WebKit navigation. Other leave-confirmation, remount, reconnect, and duplicate-message checks pass.
+- [x] Developer documentation describes the migrated stack, commands, browser matrix, and live verification inputs.
 
 ## References
 
@@ -364,5 +401,6 @@ The source-based estimate was approximately 1–2 weeks including integration te
 - [Base UI quick start](https://base-ui.com/react/overview/quick-start)
 - [Base UI Slider](https://base-ui.com/react/components/slider)
 - [Base UI Dialog](https://base-ui.com/react/components/dialog)
+- [Base UI Tooltip](https://base-ui.com/react/components/tooltip)
 - [Motion installation](https://motion.dev/docs/react-installation)
 - [CSS field-sizing and browser support](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/field-sizing)

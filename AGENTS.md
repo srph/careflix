@@ -13,7 +13,7 @@ The two are deployed and run independently — the UI talks to the API over HTTP
 
 ```bash
 make install   # composer + npm dependencies, copies .env.example -> .env
-make start     # starts Docker MySQL, then API on :8000 and web on :1234
+make start     # starts Docker MySQL, then API on :8000 and web on :8484
 make start:api # API only
 make start:db  # Docker MySQL 5.7 on 127.0.0.1:3307; root/root, database tv
 make start:web # web only

@@ -10,6 +10,10 @@ React/TypeScript front-end for Care.tv — the watch party experience (synced vi
 - TypeScript `7.0.2`, targeting `ES2022`, bundler module resolution, path alias `~/` → `src/` (see `tsconfig.json`). Preserve the existing non-strict checking policy during the migration.
 - Node `v24.19.0` (pinned in `.nvmrc`, run `nvm use`), npm `>=11` per `package.json` `engines`.
 
+Base UI `1.9.0` supplies Dialog, Tooltip, and Slider; Motion `14.9.0` supplies animations. Chat uses a native textarea with CSS auto-sizing and a scrollable fallback. `InfiniteScroll` and the migrated hook helpers live in this repository.
+
+Legacy date-fns `1.30.1` is retained under the `date-fns-v1` npm alias to preserve existing date behavior without conflicting with Base UI's optional date-fns v4 peer. Keep existing date imports on that alias unless a separate date-library migration is requested.
+
 ### State management
 
 No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.g.:
@@ -61,3 +65,5 @@ npm run test:e2e          # Playwright smoke tests; first run npx playwright ins
 ```
 
 Existing unprefixed local environment variables remain supported through an explicit allowlist in Vite configuration. New configuration uses `VITE_*`; Pusher server secrets belong only in the API.
+
+See [TESTING.md](TESTING.md) for cross-browser projects, production-preview checks, and opt-in live two-account verification.

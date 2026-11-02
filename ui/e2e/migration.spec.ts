@@ -16,7 +16,7 @@ async function authenticatedCatalog(page: Page, restoreSession = true) {
     const path = new URL(route.request().url()).pathname
     let body: unknown = {}
     if (path === '/api/me') body = { id: 90001, name: 'Migration Viewer', email: 'migration@example.test', avatar: image, invitations: [], is_online: true }
-    if (path === '/api/me/recent-party') body = { party: null }
+    if (path === '/api/me/parties') body = { data: [], current_page: 1, last_page: 1, total: 0 }
     if (path === '/api/shows') {
       const pageNumber = Number(new URL(route.request().url()).searchParams.get('page') || 1)
       body = { data: pageNumber === 1 ? [show] : [], current_page: pageNumber, last_page: 1 }
@@ -54,11 +54,11 @@ test('invalid login displays feedback and allows another attempt', async ({ page
   await expect(page.getByRole('button', { name: 'Login', exact: true })).toBeEnabled()
 })
 
-test('authenticated catalog opens and dismisses a movie dialog', async ({ page, browserName }) => {
+test('authenticated catalog opens and dismisses a movie dialog', async ({ page }) => {
   await authenticatedCatalog(page)
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'New Releases' })).toBeVisible()
-  const card = page.getByRole('button', { name: /Migration Test Movie/ })
+  await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
+  const card = page.getByRole('button', { name: `Details for ${show.title}`, exact: true })
   await card.getByRole('heading', { name: show.title, exact: true }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await expect(page.getByRole('dialog').getByText(show.synopsis)).toBeVisible()
@@ -88,9 +88,8 @@ test('authenticated catalog opens and dismisses a movie dialog', async ({ page, 
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).not.toBeVisible()
   expect(await exitDuration).toBeGreaterThanOrEqual(100)
-  // Pointer clicks focus the card in Chromium/Firefox. Safari leaves focus on
-  // the body in the original UI as well, so that is its restoration target.
-  await expect(browserName === 'webkit' ? page.locator('body') : card).toBeFocused()
+  // The listing explicitly focuses its details trigger, including in Safari.
+  await expect(card).toBeFocused()
 })
 
 test('authenticated settings preserve the heading and back navigation', async ({ page }) => {
@@ -112,9 +111,9 @@ test('login restores the session after reload and logout clears it', async ({ pa
   await page.locator('input[name="password"]').fill('fixture-password')
   await page.getByRole('button', { name: 'Login', exact: true }).click()
   await expect(page).toHaveURL(/\/$/)
-  await expect(page.getByRole('heading', { name: 'New Releases' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
   await page.reload()
-  await expect(page.getByRole('heading', { name: 'New Releases' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
   await page.goto('/login')
   await expect(page).toHaveURL(/\/$/)
   await page.goto('/logout')
@@ -154,7 +153,7 @@ test('registration submits its access code and signs the new user in', async ({ 
   await page.getByRole('button', { name: 'Register', exact: true }).click()
   expect((await submitted).postDataJSON()).toMatchObject({ request_access_code: 'MIGRATION-TEST', name: 'Migration Viewer' })
   await expect(page).toHaveURL(/\/$/)
-  await expect(page.getByRole('heading', { name: 'New Releases' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
   await expect(page.getByText('Your account was created successfully!')).toBeVisible()
 })
 

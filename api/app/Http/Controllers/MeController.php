@@ -18,6 +18,38 @@ class MeController extends Controller
         return $request->user()->load('invitations');
     }
 
+    public function parties(Request $request) {
+        $request->validate([
+            'q' => 'nullable|string|max:200',
+            'per_page' => 'nullable|integer|min:1|max:60',
+            'page' => 'nullable|integer|min:1'
+        ]);
+
+        $parties = $request->user()->parties()
+            ->with('video.show.movieVideo')
+            ->whereHas('video.show');
+
+        if ($request->filled('q')) {
+            $parties->whereHas('video.show', function ($shows) use ($request) {
+                $shows->searchTitle($request->get('q'));
+            });
+        }
+
+        // Dismissing the old resume banner does not remove a party from history.
+        $result = $parties->orderBy('parties.last_activity_at', 'desc')
+            ->orderBy('parties.id', 'desc')
+            ->paginate($request->get('per_page') ?: 30);
+
+        $result->getCollection()->transform(function ($party) {
+            $data = $party->toArray();
+            // SQL timestamps are stored in the app timezone, not the viewer's timezone.
+            $data['last_activity_at'] = Carbon::parse($party->last_activity_at, config('app.timezone'))->toIso8601String();
+            return $data;
+        });
+
+        return $result;
+    }
+
     /**
      * Get the most recent party the user might have accidentally left.
      * 

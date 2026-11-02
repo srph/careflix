@@ -16,7 +16,7 @@ const headings: Record<string, { title: string; backUrl: string }> = {
 function AppHeading() {
   const auth = useAuth()
   const location = useLocation()
-  if (location.pathname.includes('watch')) return null
+  if (location.pathname === '/' || location.pathname.includes('watch')) return null
   const heading = headings[location.pathname.replace(/\/$/, '')]
   return (
     <UiNavigation>

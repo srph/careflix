@@ -17,6 +17,18 @@ viewport and touch input; they do not replace physical-device testing. Use
 preview instead. HTTP fixtures and blocked Pusher sockets in `migration.spec.ts`
 make those checks deterministic; they are not live integration evidence.
 
+`listing.spec.ts` checks catalog filters and pagination, grouped search, party
+history, details/episode selection, create/rejoin actions, recovery states, and
+responsive overflow. Its screenshots use controlled catalog artwork. Query unit
+tests cover the 60-second freshness window, failures, mutation invalidation, and
+account cache isolation.
+
+The listing API checks run from `api/` with
+`valet php vendor/bin/phpunit --filter ListingApiTest`. They migrate an isolated
+in-memory SQLite database, including Telescope's storage connection, and check
+search/filter pagination, literal wildcard handling, authentication, and party
+membership scoping.
+
 ## Live API, media, and Pusher
 
 Live tests are opt-in and skip when `E2E_LIVE_FIXTURES` is absent. Use a disposable
@@ -84,7 +96,7 @@ on unexpected exceptions or HTTP errors. These annotated steps verify migration
 parity; they do not report those existing features as fixed. See `../MIGRATION.md`
 for evidence. Unrelated bug fixes remain outside this migration.
 
-Safari pointer clicks do not focus movie-card buttons in the original UI. The
-browser smoke test checks its body focus target after dismissal; Chromium and
-Firefox return to the focused card. Existing mobile back-link text is hidden,
-so that navigation check uses the visible icon link.
+The listing explicitly focuses a movie card before opening its details, so the
+dialog restores focus to that card in Safari as well as Chromium and Firefox.
+Existing mobile back-link text is hidden, so that navigation check uses the
+visible icon link.

@@ -9,6 +9,8 @@ import getFormattedDurationWithoutSeconds from '~/utils/date/getFormattedDuratio
 import axios from '~/lib/axios'
 
 interface Props {
+  groups?: AppShowGroup[]
+  isDisabled?: boolean
   party?: AppParty
   show: AppShow | null
   currentVideo?: AppShowVideo
@@ -92,13 +94,14 @@ function ShowModal(props: Props) {
     selectedGroupId: props.currentVideo ? props.currentVideo.show_group_id : -1
   })
 
+  const groups = props.groups ?? state.groups
   const group = useMemo(() => {
-    return state.groups.find(group => group.id === state.selectedGroupId)
-  }, [state.groups, state.selectedGroupId])
+    return groups.find(group => group.id === state.selectedGroupId) ?? groups[0]
+  }, [groups, state.selectedGroupId])
 
   useAsyncEffect(
     async () => {
-      if (props.show == null || props.show.title_type === 'movie') {
+      if (props.groups != null || props.show == null || props.show.title_type === 'movie') {
         return
       }
 
@@ -122,7 +125,7 @@ function ShowModal(props: Props) {
       props.onFetch && props.onFetch(res.data)
     },
     null,
-    [props.show]
+    [props.show, props.groups]
   )
 
   function handleGroupChange(evt: React.FormEvent<HTMLSelectElement>) {
@@ -142,7 +145,7 @@ function ShowModal(props: Props) {
     props.onEpisodeClick(video)
   }
 
-  if (props.show.title_type === 'movie' || state.isLoading || !state.groups.length) {
+  if (props.show.title_type === 'movie' || state.isLoading || !groups.length) {
     return null
   }
 
@@ -152,8 +155,8 @@ function ShowModal(props: Props) {
         className={cx('c-season-selection-select', {
           'is-light': props.mode === 'light'
         })}>
-        <UiSelect value={state.selectedGroupId} onChange={handleGroupChange} mode={props.mode}>
-          {state.groups.map(group => (
+        <UiSelect value={group.id} onChange={handleGroupChange} mode={props.mode}>
+          {groups.map(group => (
             <option value={group.id} key={group.id}>
               {group.title}
             </option>
@@ -168,6 +171,7 @@ function ShowModal(props: Props) {
           return (
             <button
               type="button"
+              disabled={props.isDisabled}
               className={cx('c-season-selection-episode', {
                 'is-light': props.mode === 'light'
               })}

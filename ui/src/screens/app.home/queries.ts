@@ -1,0 +1,89 @@
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from 'react-router'
+import axiosLibrary from 'axios'
+import axios from '~/lib/axios'
+import { useAuth } from '~/contexts/Auth'
+
+export type ListingTab = 'all' | 'movie' | 'series' | 'parties'
+
+async function get<T>(url: string, params?: object, signal?: AbortSignal): Promise<T> {
+  // The existing Axios version uses CancelToken rather than AbortSignal.
+  const source = axiosLibrary.CancelToken.source()
+  const cancel = () => source.cancel('Query cancelled')
+  signal?.addEventListener('abort', cancel, { once: true })
+  if (signal?.aborted) cancel()
+  try {
+    const [error, response] = await axios.get(url, { params, cancelToken: source.token })
+    if (error) throw error
+    return response.data
+  } finally {
+    signal?.removeEventListener('abort', cancel)
+  }
+}
+
+const nextPage = (page: AppCollection) => page.current_page < page.last_page ? page.current_page + 1 : undefined
+
+export function useShowsQuery(titleType?: 'movie' | 'series', enabled = true) {
+  const { data: user, isAuthenticated } = useAuth()
+  return useInfiniteQuery({
+    queryKey: ['listing', user?.id, 'shows', titleType ?? 'all'],
+    queryFn: ({ pageParam, signal }) => get<AppCollection<AppShow>>('/api/shows', { page: pageParam, title_type: titleType }, signal),
+    initialPageParam: 1,
+    getNextPageParam: nextPage,
+    enabled: isAuthenticated && enabled,
+  })
+}
+
+export function useMyPartiesQuery() {
+  const { data: user, isAuthenticated } = useAuth()
+  return useInfiniteQuery({
+    queryKey: ['listing', user?.id, 'parties'],
+    queryFn: ({ pageParam, signal }) => get<AppCollection<AppParty>>('/api/me/parties', { page: pageParam }, signal),
+    initialPageParam: 1,
+    getNextPageParam: nextPage,
+    enabled: isAuthenticated,
+  })
+}
+
+export function useListingSearchQuery(term: string, enabled: boolean) {
+  const { data: user, isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['listing', user?.id, 'search', term],
+    queryFn: async ({ signal }) => {
+      const [titles, parties] = await Promise.all([
+        get<AppCollection<AppShow>>('/api/shows', { q: term, per_page: 5 }, signal),
+        get<AppCollection<AppParty>>('/api/me/parties', { q: term, per_page: 4 }, signal),
+      ])
+      return { titles: titles.data, parties: parties.data }
+    },
+    enabled: isAuthenticated && enabled && Boolean(term),
+  })
+}
+
+export function useShowGroupsQuery(show: AppShow | null) {
+  const { data: user, isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['listing', user?.id, 'groups', show?.id],
+    queryFn: ({ signal }) => get<AppShowGroup[]>(`/api/shows/${show.id}/groups`, undefined, signal),
+    enabled: isAuthenticated && show?.title_type === 'series',
+  })
+}
+
+export function useCreatePartyMutation() {
+  const { data: user } = useAuth()
+  const client = useQueryClient()
+  const navigate = useNavigate()
+  return useMutation({
+    mutationKey: ['listing', user?.id, 'create-party'],
+    mutationFn: async (video: AppShowVideo): Promise<AppParty> => {
+      const [error, response] = await axios.post('/api/parties', { show_video_id: video.id })
+      if (error) throw error
+      return response.data
+    },
+    onSuccess: party => {
+      void client.invalidateQueries({ queryKey: ['listing', user?.id, 'parties'] })
+      void client.invalidateQueries({ queryKey: ['listing', user?.id, 'search'] })
+      navigate(`/watch/${party.id}`)
+    },
+  })
+}

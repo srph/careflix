@@ -21,6 +21,7 @@ interface AppCollection<T = any> {
   path: string
   first_page_url: string
   per_page: number
+  total?: number
   prev_page_url: string | null
   next_page_url: string | null
 }
@@ -117,6 +118,7 @@ interface AppShow {
   created_at: string
   updated_at: string
   movie: AppShowVideo | null
+  groups_count?: number
 }
 
 type AppPartyMember = AppUser & {

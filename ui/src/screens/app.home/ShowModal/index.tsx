@@ -3,38 +3,23 @@ import * as React from 'react'
 import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import SeasonSelection from '~/components/SeasonSelection'
-import axios from '~/lib/axios'
-import { useNavigate } from 'react-router'
+import { useShowGroupsQuery } from '../queries'
 import getAirDetails from '~/utils/shows/getAirDetails';
 import { useMediaMode } from '~/hooks/useMediaMode'
 
 interface Props {
   show: AppShow | null
   onClose: () => void
+  onPlay: (video: AppShowVideo) => void
+  isCreating?: boolean
+  createError?: boolean
 }
 
-/**
- * @TODO Add group loader
- * @TODO For series with no shows, we'll show an empty placeholder.
- * @TODO Create party loader
- */
 function ShowModal(props: Props) {
-  const navigate = useNavigate()
-  async function handleVideoClick(video: AppShowVideo) {
-    const [err, res] = await axios.post('/api/parties', {
-      show_video_id: video.id
-    })
-
-    if (err) {
-      // Launch toast notification
-      return
-    }
-
-    navigate(`/watch/${res.data.id}`)
-  }
+  const groupsQuery = useShowGroupsQuery(props.show)
 
   function handleMoviePlayClick() {
-    handleVideoClick(props.show.movie)
+    if (props.show?.movie) props.onPlay(props.show.movie)
   }
 
   const media = useMediaMode()
@@ -54,7 +39,7 @@ function ShowModal(props: Props) {
 
               <div className="overlay">
                 {props.show.title_type === 'movie' && (
-                  <UiPlainButton onClick={handleMoviePlayClick}>
+                  <UiPlainButton onClick={handleMoviePlayClick} disabled={props.isCreating || !props.show.movie} aria-label={`Start a party for ${props.show.title}`}>
                     <div className="show-modal-play-button">
                       <i className='fa fa-play' />
                     </div>
@@ -63,7 +48,7 @@ function ShowModal(props: Props) {
               </div>
 
               <div className="show-modal-close">
-                <UiPlainButton onClick={props.onClose}>
+                <UiPlainButton onClick={props.onClose} aria-label="Close details">
                   <div className="show-modal-close-button">
                     <i className='fa fa-close' />
                   </div>
@@ -85,7 +70,12 @@ function ShowModal(props: Props) {
                 <p className="synopsis">{props.show.synopsis}</p>
               </header>
 
-              <SeasonSelection show={props.show} onEpisodeClick={handleVideoClick} mode={media === 'desktop' ? 'light' : 'dark'} />
+              {props.createError && <p role="alert">Unable to start the party. Please try again.</p>}
+              {props.show.title_type === 'movie' && !props.show.movie && <p>This title is not available to play yet.</p>}
+              {props.show.title_type === 'series' && (groupsQuery.isPending ? <p role="status">Loading episodes…</p>
+                : groupsQuery.isError ? <p role="alert">Unable to load episodes. <button type="button" onClick={() => { void groupsQuery.refetch() }}>Retry</button></p>
+                : !groupsQuery.data?.some(group => group.videos.length) && <p>No episodes available yet.</p>)}
+              <SeasonSelection show={props.show} groups={groupsQuery.data ?? []} isDisabled={props.isCreating} onEpisodeClick={props.onPlay} mode={media === 'desktop' ? 'light' : 'dark'} />
             </div>
           </React.Fragment>
         )}

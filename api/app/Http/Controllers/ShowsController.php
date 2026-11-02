@@ -13,9 +13,27 @@ class ShowsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Show::orderBy('id', 'desc')->paginate(30);
+        $request->validate([
+            'q' => 'nullable|string|max:200',
+            'title_type' => 'nullable|in:movie,series',
+            'per_page' => 'nullable|integer|min:1|max:60',
+            'page' => 'nullable|integer|min:1'
+        ]);
+
+        $shows = Show::with('movieVideo')->withCount('groups');
+
+        if ($request->filled('title_type')) {
+            $shows->where('title_type', $request->get('title_type'));
+        }
+
+        if ($request->filled('q')) {
+            $shows->searchTitle($request->get('q'));
+        }
+
+        return $shows->orderBy('id', 'desc')
+            ->paginate($request->get('per_page') ?: 30);
     }
 
     public function groups(Show $show) {

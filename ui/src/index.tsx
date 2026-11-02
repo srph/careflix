@@ -8,6 +8,7 @@ import { RouterProvider } from 'react-router/dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import { Toast } from '~/components/Toast'
 import { AuthProvider } from '~/contexts/Auth'
+import { QueryProvider } from '~/lib/query/QueryProvider'
 import { AxiosManager } from '~/lib/axios/AxiosManager'
 import { PusherManager } from '~/lib/pusher/PusherManager'
 import WindowVhSetter from '~/components/WindowVhSetter'
@@ -29,9 +30,11 @@ function RootLayout() {
     <>
       <WindowVhSetter />
       <AuthProvider>
-        <PusherManager>
-          <AxiosManager><Outlet /></AxiosManager>
-        </PusherManager>
+        <QueryProvider>
+          <PusherManager>
+            <AxiosManager><Outlet /></AxiosManager>
+          </PusherManager>
+        </QueryProvider>
       </AuthProvider>
       <Toast />
     </>

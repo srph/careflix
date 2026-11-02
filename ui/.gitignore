@@ -4,3 +4,6 @@ Thumbs.db
 dist
 .cache
 .env
+playwright-report
+test-results
+.vitest

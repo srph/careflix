@@ -4,7 +4,10 @@
     "moduleResolution": "node",
     "target": "es5",
     "jsx": "react",
-    "lib": ["es2018", "dom"],
+    "lib": [
+      "es2018",
+      "dom"
+    ],
     "rootDir": "src",
     "baseUrl": ".",
     "typeRoots": [
@@ -12,7 +15,9 @@
       "node_modules/@types"
     ],
     "paths": {
-      "~*": ["./src/*"]
+      "~*": [
+        "./src/*"
+      ]
     },
     "esModuleInterop": true,
     "skipLibCheck": true
@@ -24,6 +29,8 @@
     "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
+    "src/setupTests.ts",
+    "e2e",
+    "playwright.config.ts"
   ]
 }

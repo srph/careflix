@@ -6,4 +6,5 @@ dist
 .env
 playwright-report
 test-results
+test-results-*
 .vitest

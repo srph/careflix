@@ -32,7 +32,6 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-simple-infinite-scroll": "0.0.1",
-    "react-textarea-autosize": "^7.1.0",
     "sanitize.css": "^8.0.0",
     "screenfull": "^4.2.0",
     "use-query-params": "^0.3.3",

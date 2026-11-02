@@ -258,3 +258,18 @@
 .chat-notification-audio {
   display: none;
 }
+
+/* Auto-size where supported; the native one-row field remains usable elsewhere. */
+.watch-screen-chatbar-input > .textarea {
+  min-height: 50px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+@supports (field-sizing: content) {
+  .watch-screen-chatbar-input > .textarea { field-sizing: content; }
+}
+
+@supports not (field-sizing: content) {
+  .watch-screen-chatbar-input > .textarea { height: 50px; }
+}

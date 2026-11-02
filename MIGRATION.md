@@ -117,6 +117,10 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 
 ### M3 evidence
 
+- Motion checkpoint: `253e1f7`. Chat now uses a native one-row textarea with CSS auto-sizing, a 200px height bound, and a scrollable 50px fallback. Ref/event declarations now use the actual textarea element.
+- Build/type checking and 10 focused tests pass. A production browser check measured 200px height with 515px scroll content under auto-sizing, and 50px height with the same scroll content when the fallback was forced.
+- Disposable test tokens exposed by a temporary probe's teardown error were revoked and replaced. Subsequent live checks use the isolated API directly, avoiding that forwarding callback; no credentials enter committed source.
+
 - Base UI control checkpoint: `cb5ae50`. Replaced the deprecated transition addon with Motion for toast/key indicators and the player overlay, preserving their opacity/translation transitions and durations.
 - Build/type checking, 10 focused tests, and all 6 production browser smoke cases pass after the animation replacement.
 

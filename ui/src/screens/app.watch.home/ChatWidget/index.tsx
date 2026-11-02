@@ -5,7 +5,6 @@ import cx from 'classnames'
 import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
-import TextareaAutosize from 'react-textarea-autosize'
 import ChatWidgetTip from '../ChatWidgetTip'
 
 import { usePropRef } from '~/hooks/usePropRef'
@@ -265,7 +264,7 @@ function ChatWidget(props: Props) {
     scrollFromBottom(chatbarRef.current, lastScrollDistanceFromBottom.current)
   }, [height])
 
-  function handleInput(evt: React.FormEvent<HTMLInputElement>) {
+  function handleInput(evt: React.FormEvent<HTMLTextAreaElement>) {
     dispatch({
       type: 'chat:input',
       payload: { input: evt.currentTarget.value }
@@ -332,9 +331,9 @@ function ChatWidget(props: Props) {
     return groupPartyLogs(state.logs)
   }, [state.logs])
 
-  const inputRef = useRef<HTMLInputElement>(null)
+  const inputRef = useRef<HTMLTextAreaElement>(null)
 
-  function handleInputKeyDown(evt: React.KeyboardEvent<HTMLInputElement>) {
+  function handleInputKeyDown(evt: React.KeyboardEvent<HTMLTextAreaElement>) {
     if (evt.keyCode === 27) {
       // We want to blur the input if the user presses escape to make it
       // convenient to access video player hotkeys without having to press anywhere
@@ -446,10 +445,11 @@ function ChatWidget(props: Props) {
 
       <div className="watch-screen-chatbar">
         <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <TextareaAutosize
+          <textarea
+            rows={1}
             placeholder={`Press / to focus`}
             value={state.message.text}
-            inputRef={inputRef}
+            ref={inputRef}
             onChange={handleInput}
             onKeyDown={handleInputKeyDown}
             className="textarea"

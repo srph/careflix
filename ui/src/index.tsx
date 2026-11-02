@@ -5,7 +5,7 @@ import './global.css'
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import { Router, Route, Switch } from 'react-router-dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import { QueryParamProvider } from 'use-query-params';

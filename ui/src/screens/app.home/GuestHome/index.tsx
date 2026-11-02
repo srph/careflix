@@ -1,4 +1,5 @@
-import './style'
+import asset_0 from '~/assets/login-img.svg'
+import './style.css'
 
 import * as React from 'react'
 import UiContainer from '~/components/UiContainer'
@@ -16,7 +17,7 @@ function GuestHome() {
           </div>
 
           <div className="guest-home-image">
-            <img src={require('~/assets/login-img.svg')} />
+            <img src={asset_0} />
           </div>
 
           <h1 className="guest-home-title">Build the hype!</h1>

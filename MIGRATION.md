@@ -19,7 +19,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 | ID | Milestone | Status | Complete when |
 | --- | --- | --- | --- |
 | M0 | Verification plan and working baseline | In progress: build and six browser baseline tests passed; live party baseline pending | Verification cases and expected outcomes are defined; branch and baseline commit are recorded; baseline behavior and existing issues are documented. |
-| M1 | Vite and TypeScript | Pending | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
+| M1 | Vite and TypeScript | Complete | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
 | M2 | React 18.3 checkpoint and focused tests | Pending | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
 | M3 | Component and hook replacements | Pending | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
 | M4 | React 19 and current router | Pending | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
@@ -45,7 +45,7 @@ Request input only for a concrete missing item or unresolved product decision. C
 
 - [x] Review and finalize the verification matrix below before application changes: cases, expected outcomes, test method, fixtures, and the milestone responsible.
 - [x] Create `v2` from `8977ac1b6929fad4b3378728d98e0dd70abb305d`; include this plan in the first checkpoint.
-- [ ] Confirm the MySQL, API, and existing Parcel UI startup paths using the repository's Makefile.
+- [x] Confirm the MySQL, API, and existing Parcel UI startup paths using the repository's Makefile.
 - [ ] Confirm frontend/API URLs, OAuth configuration, and Pusher configuration work together. Inspect the existing setup before requesting missing inputs.
 - [ ] Confirm two usable test accounts, a playable title, subtitles, and a series with more than one episode. Use disposable local fixtures if the existing data is insufficient.
 - [x] Record the current typecheck/build and key screen captures (see execution evidence).
@@ -57,9 +57,9 @@ Record the observed behavior before changing it. Working live services are requi
 
 ### M1: Vite and TypeScript
 
-- [ ] Resolve and record exact compatible stable tool versions; update the Node pin, scripts, compiler settings, and lockfile.
-- [ ] Complete the Vite checklist below, including environment variables, aliases, asset imports, stylesheet extensions, and HTML entry point.
-- [ ] Verify `npm run typecheck`, `npm run build`, the dev server, production preview, assets, and direct route entry.
+- [x] Resolve and record exact compatible stable tool versions; update the Node pin, scripts, compiler settings, and lockfile.
+- [x] Complete the Vite checklist below, including environment variables, aliases, asset imports, stylesheet extensions, and HTML entry point.
+- [x] Verify `npm run typecheck`, `npm run build`, the dev server, production preview, assets, and direct route entry.
 
 Keep the existing runtime during this step where compatible. Record any compiler fixes required by the tooling change.
 
@@ -115,8 +115,19 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 | Chat textarea | Input remains usable within height bounds, with and without CSS auto-sizing support. | Browser checks of progressive enhancement and the scrollable fallback. | M3 and M5. |
 | Watch-party integration | Two distinct users receive invitations, presence, and chat; playback/seek and episode changes synchronize; reconnecting works. | Two browser sessions, real API/Pusher, two test accounts, playable media, subtitles, and a multi-episode series. | Live baseline in M0 if available; final verification in M5. |
 
+### M1 evidence
+
+- Selected stable registry versions: Node 24.19.0, TypeScript 7.0.2, Vite 8.3.5, React plugin 6.2.0, Playwright 1.64.1. React remains 16.11.0 for this checkpoint.
+- Migrated HTML/public assets, imports, aliases, stylesheets, and environment handling. Existing `.env` files work via an explicit public-variable allowlist; the Pusher server secret is not exposed.
+- TypeScript's former non-strict policy is explicit in the new configuration; this migration does not introduce a strictness refactor. One shared button prop declaration required adaptation to the current compiler.
+- Vite revealed older CommonJS default-export interop differences. Published ESM hook builds, named Helmet exports, and a temporary router-module unwrap preserve this checkpoint; those packages are scheduled for replacement.
+- `npm run build` passes. Six browser smoke cases pass against both the Vite development server on 8486 and the production preview on 8489. Production output includes the manifest, SPA redirects, and Font Awesome font assets; an inspection confirmed the Pusher server secret is absent from compiled JavaScript.
+- The intermediate dependency tree requires `--legacy-peer-deps` because of the baseline's incompatible React declarations. This is temporary; the final M4/M5 installation must succeed without that option.
+- Confirmed existing Pusher configuration mismatch using read-only service calls: the supplied credentials validate on `ap1` (HTTP 200), while `mt1` returns HTTP 400. Plan live verification with an isolated API process using a cluster override; leave the existing `.env` and backend source untouched.
+
 ### Execution evidence — 2026-11-02
 
+- Baseline checkpoint: `e0845ec` (`test: capture frontend migration baseline`).
 - Branch: `v2`; starting commit: `8977ac1b6929fad4b3378728d98e0dd70abb305d`.
 - Baseline: `PATH=/Users/kier/.nvm/versions/node/v11.15.0/bin:$PATH npm run build` passed, including type checking. Parcel reported outdated browser data and missing popover source-map sources; these are baseline warnings.
 - Six Playwright Chromium smoke cases passed against the unchanged app on port 8484: guest/login navigation, private-route redirect, registration access code, invalid-login feedback, mocked authenticated catalog/dialog, and authenticated settings. HTTP fixtures and blocked Pusher sockets in controlled tests do not constitute live synchronization evidence.

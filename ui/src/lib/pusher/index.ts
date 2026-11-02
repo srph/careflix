@@ -1,4 +1,4 @@
-import Pusher = require('pusher-js')
+import Pusher from 'pusher-js'
 import config from '~/config'
 import { AuthContext } from '~/contexts/Auth'
 

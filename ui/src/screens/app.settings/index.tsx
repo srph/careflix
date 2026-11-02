@@ -1,4 +1,4 @@
-import './style'
+import './style.css'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
@@ -9,7 +9,7 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useAuth } from '~/contexts/Auth'
 import { useIsPWA } from '~/hooks/useIsPWA'
-import useWindowSize from 'react-use/lib/useWindowSize'
+import useWindowSize from 'react-use/esm/useWindowSize'
 
 import config from '~/config'
 import asset_author from '~/assets/author.jpg'

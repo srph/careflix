@@ -1,4 +1,4 @@
-import './style'
+import './style.css'
 
 import * as React from 'react'
 import cx from 'classnames'
@@ -12,13 +12,13 @@ import MobileTitleBar from './MobileTitleBar'
 import PlayerStateBufferedIndicator from './PlayerStateBufferedIndicator'
 import KeyboardInfoModal from './KeyboardInfoModal'
 
-import useUpdateEffect from 'react-use/lib/useUpdateEffect'
+import useUpdateEffect from 'react-use/esm/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { useBufferState } from '~/hooks/useBufferState'
 import { useMediaMode } from '~/hooks/useMediaMode'
 import { useRouterBlock } from '~/hooks/useRouterBlock'
-import axios from '~lib/axios'
+import axios from '~/lib/axios'
 
 import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
 

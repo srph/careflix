@@ -4,11 +4,11 @@ React/TypeScript front-end for Care.tv — the watch party experience (synced vi
 
 ## Versions
 
-- Parcel `^1.12.3` (Parcel 1, not the newer Parcel 2/3 config format — no `parcel.config.js`, just `npm start` / `npm run build` against `src/index.html`)
+- Vite `8.3.5` with `@vitejs/plugin-react` `6.2.0`; entry point `index.html`, configuration in `vite.config.ts`.
 - React `^16.11.0` (class-free, hooks-based)
 - React Router `^5.0.0` (`react-router-dom`, `<Switch>`/`<Route>` API, not the v6 data router)
-- TypeScript `^3.4.5`, targeting `es5`, path alias `~` → `src/*` (see `tsconfig.json`)
-- Node `v11.15.0` (pinned in `.nvmrc`, run `nvm use`), npm `>=6.7.0` per `package.json` `engines`
+- TypeScript `7.0.2`, targeting `ES2022`, bundler module resolution, path alias `~/` → `src/` (see `tsconfig.json`). Preserve the existing non-strict checking policy during the migration.
+- Node `v24.19.0` (pinned in `.nvmrc`, run `nvm use`), npm `>=11` per `package.json` `engines`.
 
 ### State management
 
@@ -51,8 +51,12 @@ Playback is kept in sync across party members by dispatching local player action
 
 ```bash
 npm install
-cp .env.example .env   # set API_BASE_URL, API_CLIENT_*, PUSHER_*
-npm start               # Parcel dev server, http://localhost:3000
+cp .env.example .env   # set VITE_API_BASE_URL, VITE_API_CLIENT_*, VITE_PUSHER_*
+npm start               # Vite dev server, http://localhost:8484
 npm run typecheck       # tsc --noEmit
-npm run build            # typecheck + parcel build + copy netlify/_redirects into dist
+npm run build            # typecheck + Vite production build (public/ files copied into dist)
+npm run preview          # serve the production build on :8484
+npm run test:e2e          # Playwright smoke tests; first run npx playwright install
 ```
+
+Existing unprefixed local environment variables remain supported through an explicit allowlist in Vite configuration. New configuration uses `VITE_*`; Pusher server secrets belong only in the API.

@@ -1,4 +1,4 @@
-import './style'
+import './style.css'
 
 import * as React from 'react'
 import UiButton from '~/components/UiButton'
@@ -19,7 +19,7 @@ import toSearchIndexObject from '~/utils/toSearchIndexObject'
 
 import { useNow } from '~/hooks/useNow'
 import { isBefore, parse } from 'date-fns'
-import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
+import getFormattedRemainingTime from '~/utils/date/getFormattedRemainingTime'
 
 interface State {
   data: AppUser[]

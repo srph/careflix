@@ -1,6 +1,6 @@
 import './style.css'
 import * as React from 'react'
-import useUpdateEffect from 'react-use/lib/useUpdateEffect'
+import useUpdateEffect from 'react-use/esm/useUpdateEffect'
 import { useBufferState } from '~/hooks/useBufferState'
 
 interface Props {

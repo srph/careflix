@@ -1,5 +1,5 @@
 import * as React from 'react'
-import './style'
+import './style.css'
 
 /**
  * Use this to create a route instead of typing everything down

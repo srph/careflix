@@ -1,36 +1,29 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "es5",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "jsx": "react",
     "lib": [
-      "es2018",
-      "dom"
-    ],
-    "rootDir": "src",
-    "baseUrl": ".",
-    "typeRoots": [
-      "./src/types",
-      "node_modules/@types"
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
     ],
     "paths": {
-      "~*": [
+      "~/*": [
         "./src/*"
       ]
     },
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "strict": false
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts",
-    "e2e",
-    "playwright.config.ts"
+  "include": [
+    "src"
   ]
 }

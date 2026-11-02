@@ -1,4 +1,5 @@
-import './style'
+import asset_0 from '~/assets/login-img.svg'
+import './style.css'
 
 import * as React from 'react'
 import UiNavigation from '~/components/UiNavigation'
@@ -8,7 +9,7 @@ import UiFormSpacer from '~/components/UiFormSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButtonLoader from '~/components/UiButtonLoader'
 import { Link } from 'react-router-dom'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 
 import history from '~/lib/history'
 import { useAuth } from '~/contexts/Auth'
@@ -90,7 +91,7 @@ function Login(props: ReactComponentWrapper) {
       <UiContainer size="sm">
         <div className="login-container">
           <div className="login-image">
-            <img src={require('~/assets/login-img.svg')} />
+            <img src={asset_0} />
           </div>
 
           <h1 className="login-title">Watch. Together.</h1>

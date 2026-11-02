@@ -1,11 +1,11 @@
-import './style'
+import './style.css'
 import * as React from 'react'
 import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import SeasonSelection from '~/components/SeasonSelection'
 import axios from '~/lib/axios'
 import history from '~/lib/history'
-import getAirDetails from '~utils/shows/getAirDetails';
+import getAirDetails from '~/utils/shows/getAirDetails';
 import { useMediaMode } from '~/hooks/useMediaMode'
 
 interface Props {

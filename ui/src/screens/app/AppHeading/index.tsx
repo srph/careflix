@@ -1,10 +1,11 @@
-import './style'
+import './style.css'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import UiNavigation from '~/components/UiNavigation'
 
-import useReactRouter from 'use-react-router'
+import routerModule from 'use-react-router'
+const useReactRouter = (routerModule as typeof routerModule & { default?: typeof routerModule }).default || routerModule
 import { useAuth } from '~/contexts/Auth'
 import GatewayDestWithFallback from '~/components/GatewayDestWithFallback'
 import constants from '../constants'

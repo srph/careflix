@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import useUpdateEffect from 'react-use/lib/useUpdateEffect'
+import useUpdateEffect from 'react-use/esm/useUpdateEffect'
 
 interface Props {
   timeout: number

@@ -1,4 +1,5 @@
-import './style'
+import asset_0 from '~/assets/register-img.svg'
+import './style.css'
 
 import * as React from 'react'
 import UiNavigation from '~/components/UiNavigation'
@@ -9,7 +10,7 @@ import UiSpacer from '~/components/UiSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButtonLoader from '~/components/UiButtonLoader'
 import { Link } from 'react-router-dom'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 
 import axios from '~/lib/axios'
 import history from '~/lib/history'
@@ -124,7 +125,7 @@ function Register(props: ReactComponentWrapper) {
       <UiContainer size="sm">
         <div className="registration-container">
           <div className="registration-image">
-            <img src={require('~/assets/register-img.svg')} />
+            <img src={asset_0} />
           </div>
 
           <h1 className="registration-title">Join in the fun!</h1>

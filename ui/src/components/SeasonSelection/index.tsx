@@ -1,4 +1,4 @@
-import './style'
+import './style.css'
 import * as React from 'react'
 import cx from 'classnames'
 import { useReducer, useMemo } from 'react'

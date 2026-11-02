@@ -1,11 +1,12 @@
-import './style'
+import './style.css'
 import * as React from 'react'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
 import { useAsyncEffect } from 'use-async-effect'
-import useReactRouter from 'use-react-router'
+import routerModule from 'use-react-router'
+const useReactRouter = (routerModule as typeof routerModule & { default?: typeof routerModule }).default || routerModule
 import axios from '~/lib/axios'
 import immer from 'immer'
 

@@ -8,7 +8,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    baseURL: externalServer || 'http://localhost:8484',
+    baseURL: externalServer || 'http://localhost:8486',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
@@ -19,8 +19,8 @@ export default defineConfig({
     },
   ],
   webServer: externalServer ? undefined : {
-    command: 'npm run start -- --host 127.0.0.1',
-    url: 'http://localhost:8484',
+    command: 'npm run start -- --host 127.0.0.1 --port 8486',
+    url: 'http://localhost:8486',
     reuseExistingServer: !process.env.CI,
   },
 })

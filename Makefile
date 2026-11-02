@@ -43,7 +43,7 @@ help:
 	@echo "make start     — start MySQL, then run the API and web dev servers together"
 	@echo "make start:api — run the API on http://localhost:8000"
 	@echo "make start:db  — start Docker MySQL on 127.0.0.1:3307 (root/root, database: tv)"
-	@echo "make start:web — run the web dev server on http://localhost:1234"
+	@echo "make start:web — run the web dev server on http://localhost:8484"
 	@echo ""
 	@echo "Also available: install-api, install-ui, start-api, start-ui"
 

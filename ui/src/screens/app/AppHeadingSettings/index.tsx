@@ -1,7 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import { Gateway } from 'react-gateway'
-import Helmet from 'react-helmet'
+import { Helmet } from 'react-helmet'
 import UiNavigation from '~/components/UiNavigation'
 import constants from '../constants'
 

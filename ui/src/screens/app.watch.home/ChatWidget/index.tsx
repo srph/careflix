@@ -1,4 +1,4 @@
-import './style'
+import './style.css'
 
 import * as React from 'react'
 import cx from 'classnames'
@@ -19,12 +19,12 @@ import { useReducer, useState, useEffect, useMemo, useRef } from 'react'
 import { useAsyncEffect } from 'use-async-effect'
 import { usePusher } from '~/hooks/usePusher'
 import { useWindowVisibility } from '~/hooks/useWindowVisibility'
-import useWindowSize from 'react-use/lib/useWindowSize'
+import useWindowSize from 'react-use/esm/useWindowSize'
 import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateTime'
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
-import UiAvatarGroup from '~components/UiAvatarGroup'
+import UiAvatarGroup from '~/components/UiAvatarGroup'
 import isFocusedToInput from '~/utils/dom/isFocusedToInput'
 
 interface State {

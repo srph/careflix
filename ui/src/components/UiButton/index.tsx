@@ -4,6 +4,7 @@ import cx from 'classnames'
 import { Link, LinkProps } from 'react-router-dom'
 
 interface OwnProps {
+  disabled?: boolean
   variant?: 'default' | 'primary'
   size?: 's' | 'l'
   link?: boolean

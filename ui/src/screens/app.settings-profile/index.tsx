@@ -1,4 +1,5 @@
-import './style'
+import asset_0 from '~/assets/dummy-avatar.png'
+import './style.css'
 
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
@@ -16,7 +17,7 @@ function AppSettingsProfile(props: ReactComponentWrapper) {
 
       <div className="settings-profile-avatar">
         <div className="avatar">
-          <UiAvatar size="l" img={require('~/assets/dummy-avatar.png')} />
+          <UiAvatar size="l" img={asset_0} />
 
           <div className="action">
             <i className="fa fa-pencil" />

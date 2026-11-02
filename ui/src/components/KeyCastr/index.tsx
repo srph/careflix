@@ -2,7 +2,7 @@ import './style.css'
 import * as React from 'react'
 import { useEffect, useRef } from 'react'
 import Transition from 'react-addons-css-transition-group'
-import useSetState from 'react-use/lib/useSetState'
+import useSetState from 'react-use/esm/useSetState'
 
 interface Message {
   id: number,

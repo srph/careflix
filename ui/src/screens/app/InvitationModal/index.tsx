@@ -15,7 +15,7 @@ import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 import { useNow } from '~/hooks/useNow';
 import { parse, isBefore } from 'date-fns'
-import getFormattedRemainingTime from '~utils/date/getFormattedRemainingTime'
+import getFormattedRemainingTime from '~/utils/date/getFormattedRemainingTime'
 
 import asset_invitation from '~/assets/audio/invitation.ogg'
 

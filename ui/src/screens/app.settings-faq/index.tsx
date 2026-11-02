@@ -1,4 +1,4 @@
-import './style'
+import './style.css'
 import * as React from 'react'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import UiContainer from '~/components/UiContainer'

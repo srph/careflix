@@ -2,7 +2,7 @@
   "name": "care.tv",
   "main": "src/index.ts",
   "engines": {
-    "node": ">=24.15.0 <25",
+    "node": ">=26.13.0 <27",
     "npm": ">=11"
   },
   "scripts": {
@@ -39,7 +39,7 @@
     "@playwright/test": "1.64.1",
     "@testing-library/dom": "^10.0.0",
     "@testing-library/react": "16.3.3",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.6.6",
     "@types/pusher-js": "^4.2.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",

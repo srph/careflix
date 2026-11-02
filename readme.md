@@ -112,7 +112,7 @@ ngrok http 8000
 - Select _Presence_ for the _Event Type_, then press _Add_.
 
 ## Front-end setup
-Use Node.js `24.19.0` (pinned in `ui/.nvmrc`) and npm `>=11`. The UI uses React 19, TypeScript, and Vite.
+Use Node.js `26.13.0` LTS (pinned in `ui/.nvmrc`; run `nvm install && nvm use` from `ui/`) and npm `>=11`. The UI uses React 19, TypeScript, and Vite.
 
 - Move to the `ui` folder
 ```bash

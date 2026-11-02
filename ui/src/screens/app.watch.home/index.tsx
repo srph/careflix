@@ -212,7 +212,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isSubtitleEnabled: Boolean(context.party.video.subtitle_url)
   })
 
-  const $video = useRef<HTMLVideoElement>()
+  const $video = useRef<HTMLVideoElement>(null)
 
   const media = useMediaMode()
 

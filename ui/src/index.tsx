@@ -1,22 +1,16 @@
-
 import 'sanitize.css'
 import 'font-awesome/css/font-awesome.css'
 import './global.css'
 
-import * as React from 'react'
 import { createRoot } from 'react-dom/client'
-import { Helmet } from 'react-helmet'
-import { Router, Route, Switch } from 'react-router-dom'
+import { createBrowserRouter, Outlet } from 'react-router'
+import { RouterProvider } from 'react-router/dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
-import { QueryParamProvider } from 'use-query-params';
-import history from '~/lib/history'
-
 import { Toast } from '~/components/Toast'
 import { AuthProvider } from '~/contexts/Auth'
 import { AxiosManager } from '~/lib/axios/AxiosManager'
 import { PusherManager } from '~/lib/pusher/PusherManager'
 import WindowVhSetter from '~/components/WindowVhSetter'
-
 import App from '~/screens/app'
 import AppHome from '~/screens/app.home'
 import AppWatch from '~/screens/app.watch'
@@ -30,56 +24,40 @@ import Login from '~/screens/login'
 import Logout from '~/screens/logout'
 import Register from '~/screens/register'
 
-function Mount() {
+function RootLayout() {
   return (
-    <React.Fragment>
-      <Helmet titleTemplate="%s - Care.tv" />
-
+    <>
       <WindowVhSetter />
-
-          <Router history={history}>
-            <QueryParamProvider ReactRouterRoute={Route}>
-              <AuthProvider>
-                <PusherManager>
-                  <AxiosManager>
-                    <Switch>
-                      <GuestRoute path="/login" exact component={Login} />
-                      <GuestRoute path="/register" exact component={Register} />
-                      <Route path="/logout" exact component={Logout} />
-
-                      <Route
-                        path="/"
-                        render={() => (
-                          <App>
-                            <Switch>
-                              <Route path="/" exact component={AppHome} />
-                              <Route path="/download" exact component={AppDownload} />
-                              <PrivateRoute path="/settings" exact component={AppSettings} />
-                              <PrivateRoute path="/settings/profile" exact component={AppSettingsProfile} />
-                              <PrivateRoute path="/settings/password" exact component={AppSettingsPassword} />
-                              <PrivateRoute path="/settings/faq" exact component={AppSettingsFaq} />
-                              <PrivateRoute
-                                path="/watch/:partyId"
-                                render={matchProps => (
-                                  <AppWatch {...matchProps}>
-                                    <Route path="/watch/:partyId" exact component={AppWatchHome} />
-                                  </AppWatch>
-                                )}
-                              />
-                            </Switch>
-                          </App>
-                        )}
-                      />
-                    </Switch>
-                  </AxiosManager>
-                </PusherManager>
-              </AuthProvider>
-            </QueryParamProvider>
-          </Router>
-
+      <AuthProvider>
+        <PusherManager>
+          <AxiosManager><Outlet /></AxiosManager>
+        </PusherManager>
+      </AuthProvider>
       <Toast />
-    </React.Fragment>
+    </>
   )
 }
 
-createRoot(document.getElementById('mount')!).render(<Mount />)
+const router = createBrowserRouter([{
+  element: <RootLayout />,
+  children: [
+    { element: <GuestRoute />, children: [
+      { path: '/login', element: <Login /> },
+      { path: '/register', element: <Register /> },
+    ] },
+    { path: '/logout', element: <Logout /> },
+    { element: <App><Outlet /></App>, children: [
+      { path: '/', element: <AppHome /> },
+      { path: '/download', element: <AppDownload /> },
+      { element: <PrivateRoute />, children: [
+        { path: '/settings', element: <AppSettings /> },
+        { path: '/settings/profile', element: <AppSettingsProfile /> },
+        { path: '/settings/password', element: <AppSettingsPassword /> },
+        { path: '/settings/faq', element: <AppSettingsFaq /> },
+        { path: '/watch/:partyId', element: <AppWatch><AppWatchHome /></AppWatch> },
+      ] },
+    ] },
+  ],
+}])
+
+createRoot(document.getElementById('mount')!).render(<RouterProvider router={router} />)

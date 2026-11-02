@@ -4,7 +4,7 @@ import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import SeasonSelection from '~/components/SeasonSelection'
 import axios from '~/lib/axios'
-import history from '~/lib/history'
+import { useNavigate } from 'react-router'
 import getAirDetails from '~/utils/shows/getAirDetails';
 import { useMediaMode } from '~/hooks/useMediaMode'
 
@@ -19,6 +19,7 @@ interface Props {
  * @TODO Create party loader
  */
 function ShowModal(props: Props) {
+  const navigate = useNavigate()
   async function handleVideoClick(video: AppShowVideo) {
     const [err, res] = await axios.post('/api/parties', {
       show_video_id: video.id
@@ -29,7 +30,7 @@ function ShowModal(props: Props) {
       return
     }
 
-    history.push(`/watch/${res.data.id}`)
+    navigate(`/watch/${res.data.id}`)
   }
 
   function handleMoviePlayClick() {

@@ -3,7 +3,7 @@ import { createContext, useEffect, useState, useContext } from 'react'
 import * as cookie from 'cookie-machine'
 import immer from 'immer'
 import axios from '~/lib/axios'
-import history from '~/lib/history'
+import { useNavigate } from 'react-router'
 import config from '~/config'
 import { addYears } from 'date-fns-v1'
 import { toast } from '~/components/Toast'
@@ -35,6 +35,7 @@ const Context = createContext<AuthContext>({
 })
 
 function AuthProvider({ children }: ReactComponentWrapper) {
+  const navigate = useNavigate()
   const [data, setData] = useState<AppUser | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -108,7 +109,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     cookie.remove('app_token', { path: '/' })
     setData(null)
     setToken(null)
-    history.push('/login')
+    navigate('/login')
   }
 
   const updateUserData = (payload: Partial<AppUser>) => {

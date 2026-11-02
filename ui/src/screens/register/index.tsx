@@ -9,15 +9,15 @@ import UiFormSpacer from '~/components/UiFormSpacer'
 import UiSpacer from '~/components/UiSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButtonLoader from '~/components/UiButtonLoader'
-import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import { Link } from 'react-router'
+import PageTitle from '~/components/PageTitle'
 
 import axios from '~/lib/axios'
-import history from '~/lib/history'
+import { useNavigate } from 'react-router'
 import { useAuth } from '~/contexts/Auth'
 import { useFormState } from '~/hooks/useFormState'
 import { toast } from '~/components/Toast'
-import { useQueryParam, StringParam } from 'use-query-params'
+import { useSearchParams } from 'react-router'
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -60,6 +60,7 @@ interface FormState {
  * Use this to create a route instead of typing everything down
  */
 function Register(props: ReactComponentWrapper) {
+  const navigate = useNavigate()
   const auth = useAuth()
 
   const [state, dispatch] = React.useReducer(reducer, {
@@ -67,7 +68,8 @@ function Register(props: ReactComponentWrapper) {
     isError: false
   })
 
-  const [initialRequestAccessCode] = useQueryParam('request_access_code', StringParam)
+  const [searchParams] = useSearchParams()
+  const initialRequestAccessCode = searchParams.get('request_access_code')
 
   const form = useFormState<FormState>(() => ({
     email: '',
@@ -105,12 +107,12 @@ function Register(props: ReactComponentWrapper) {
     
     dispatch({ type: 'success' })
 
-    history.push('/')
+    navigate('/')
   }
 
   return (
     <React.Fragment>
-      <Helmet title="Create a new account" />
+      <PageTitle title="Create a new account" />
 
       <UiNavigation>
         <UiNavigation.BackAction to="/" />

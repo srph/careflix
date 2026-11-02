@@ -8,10 +8,10 @@ import UiInput from '~/components/UiInput'
 import UiFormSpacer from '~/components/UiFormSpacer'
 import UiContainer from '~/components/UiContainer'
 import UiButtonLoader from '~/components/UiButtonLoader'
-import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
+import { Link } from 'react-router'
+import PageTitle from '~/components/PageTitle'
 
-import history from '~/lib/history'
+import { useNavigate } from 'react-router'
 import { useAuth } from '~/contexts/Auth'
 import { useFormState } from '~/hooks/useFormState'
 import { toast } from '~/components/Toast'
@@ -39,6 +39,7 @@ const reducer = (state, action) => {
 }
 
 function Login(props: ReactComponentWrapper) {
+  const navigate = useNavigate()
   const auth = useAuth()
 
   const [state, dispatch] = React.useReducer(reducer, {
@@ -71,12 +72,12 @@ function Login(props: ReactComponentWrapper) {
     }
 
     toast('Login was successful.')
-    history.push('/')
+    navigate('/')
   }
 
   return (
     <React.Fragment>
-      <Helmet title="Welcome back" />
+      <PageTitle title="Welcome back" />
       
       <UiNavigation>
         <UiNavigation.BackAction to="/" />

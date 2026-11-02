@@ -22,7 +22,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 | M1 | Vite and TypeScript | Complete | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
 | M2 | React 18.3 checkpoint and focused tests | Complete | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
 | M3 | Component and hook replacements | Complete | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
-| M4 | React 19 and current router | Pending | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
+| M4 | React 19 and current router | Complete | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
 | M5 | Final integration verification | Pending | The acceptance checklist is verified across the browser targets and two live sessions; remaining limitations and developer instructions are documented. |
 
 ### Ownership and user input
@@ -83,10 +83,10 @@ React 19-native metadata and the current router are completed in M4. Add tests t
 
 ### M4: React 19 and routing
 
-- [ ] Install React 19, matching React DOM/types, and the target router together; enable the modern JSX transform.
-- [ ] Complete route definitions, authentication guards, navigation, search parameters, and leave-party blocking.
-- [ ] Replace Helmet with native metadata and remove remaining obsolete dependencies and declarations.
-- [ ] Run type checking, the production build, and focused tests; verify that removed React APIs are no longer required.
+- [x] Install React 19, matching React DOM/types, and the target router together; enable the modern JSX transform.
+- [x] Complete route definitions, authentication guards, navigation, search parameters, and leave-party blocking.
+- [x] Replace Helmet with native metadata and remove remaining obsolete dependencies and declarations.
+- [x] Run type checking, the production build, and focused tests; verify that removed React APIs are no longer required.
 
 ### M5: final verification
 
@@ -114,6 +114,13 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 | Dialogs and tooltips | Dismissal, Escape handling, focus restoration, hints, and animations preserve usable interactions. | Browser interaction checks against migrated components. | M3; cross-browser confirmation in M5. |
 | Chat textarea | Input remains usable within height bounds, with and without CSS auto-sizing support. | Browser checks of progressive enhancement and the scrollable fallback. | M3 and M5. |
 | Watch-party integration | Two distinct users receive invitations, presence, and chat; playback/seek and episode changes synchronize; reconnecting works. | Two browser sessions, real API/Pusher, two test accounts, playable media, subtitles, and a multi-episode series. | Live baseline in M0 if available; final verification in M5. |
+
+### M4 evidence
+
+- React / React DOM 19.3.1, matching 19.3 types, and React Router 8.5.1 now use a data router with layout outlets and existing guest/private guards. Navigation and registration query parameters use router hooks; leave-party confirmation uses `useBlocker`.
+- Replaced Helmet with React native document titles. Removed the shared history instance, legacy router wrappers, and obsolete router/query/Helmet packages.
+- Clean `npm ci --strict-peer-deps --legacy-peer-deps=false --force=false` passed without compatibility overrides. `npm ls` confirms a single React 19.3.1 tree with no invalid React peers.
+- Type checking, production build, and all 17 focused tests pass. Three new navigation tests cover accepting/declining confirmation and paused playback. The production bundle still emits a size advisory; code splitting is outside this behavior-preserving migration.
 
 ### M3 evidence
 

@@ -7,7 +7,7 @@ import cx from 'classnames'
 
 // import useCountdownTimer from '~/components/CountdownTimer'
 import axios from '~/lib/axios'
-import history from '~/lib/history'
+import { useNavigate } from 'react-router'
 import { usePusher } from '~/hooks/usePusher'
 import { useRef, useEffect, useReducer, useMemo } from 'react'
 import { useAuth } from '~/contexts/Auth'
@@ -71,6 +71,7 @@ const reducer = (state: State, action: Action): State => {
 }
 
 function InvitationModal() {
+  const navigate = useNavigate()
   const auth = useAuth()
   const invitation = auth.data.invitations[0]
   const [state, dispatch] = useReducer(reducer, init())
@@ -91,7 +92,7 @@ function InvitationModal() {
     }
   )
 
-  const notificationRef = useRef<HTMLAudioElement>()
+  const notificationRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
     if (invitation != null) {
@@ -127,7 +128,7 @@ function InvitationModal() {
 
     auth.shiftInvitations()
 
-    history.push(`/watch/${res.data.id}`)
+    navigate(`/watch/${res.data.id}`)
   }
 
   async function handleDecline() {

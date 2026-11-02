@@ -5,8 +5,8 @@ React/TypeScript front-end for Care.tv — the watch party experience (synced vi
 ## Versions
 
 - Vite `8.3.5` with `@vitejs/plugin-react` `6.2.0`; entry point `index.html`, configuration in `vite.config.ts`.
-- React `18.3.1` checkpoint with `createRoot` and the automatic JSX transform (primarily hooks-based)
-- React Router `^5.0.0` (`react-router-dom`, `<Switch>`/`<Route>` API, not the v6 data router)
+- React / React DOM `19.3.1` with `createRoot`, native document titles, and the automatic JSX transform (primarily hooks-based)
+- React Router `8.5.1` with `createBrowserRouter`, layout outlets, and `useBlocker` for leave-party confirmation
 - TypeScript `7.0.2`, targeting `ES2022`, bundler module resolution, path alias `~/` → `src/` (see `tsconfig.json`). Preserve the existing non-strict checking policy during the migration.
 - Node `v24.19.0` (pinned in `.nvmrc`, run `nvm use`), npm `>=11` per `package.json` `engines`.
 
@@ -28,7 +28,7 @@ src/
 ├── components/   shared, reusable UI (Ui* prefix for design-system primitives)
 ├── contexts/     app-wide React Context providers (e.g. Auth)
 ├── hooks/        shared hooks (useMediaMode, useFullscreen, etc.)
-├── lib/          thin wrappers around third-party integrations (axios, pusher, history, uuid, srt2obj)
+├── lib/          thin wrappers around third-party integrations (axios, pusher, uuid, srt2obj)
 ├── screens/      route-level screens, named by route path with `.` as a nesting separator
 │                 (e.g. `app.watch.home` = child of `app.watch` = child of `app`);
 │                 each screen folder holds its own subcomponents, styles, and local hooks

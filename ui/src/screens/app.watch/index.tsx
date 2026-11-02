@@ -5,8 +5,7 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
 import { useAsyncEffect } from '~/hooks/useAsyncEffect'
-import routerModule from 'use-react-router'
-const useReactRouter = (routerModule as typeof routerModule & { default?: typeof routerModule }).default || routerModule
+import { useParams } from 'react-router'
 import axios from '~/lib/axios'
 import immer from 'immer'
 
@@ -107,7 +106,7 @@ const reducer = (state: State, action: Action): State => {
  * Use this to create a route instead of typing everything down
  */
 function AppWatch(props: ReactComponentWrapper) {
-  const { match } = useReactRouter<RouteParams>()
+  const params = useParams<'partyId'>()
 
   const [state, dispatch] = useReducer(reducer, {
     party: null,
@@ -120,7 +119,7 @@ function AppWatch(props: ReactComponentWrapper) {
         type: 'data:init'
       })
 
-      const [err, res] = await axios.get(`/api/parties/${match.params.partyId}`)
+      const [err, res] = await axios.get(`/api/parties/${params.partyId}`)
 
       if (err) {
         return dispatch({

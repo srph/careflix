@@ -5,7 +5,7 @@ declare module 'color-hash'
 type AsyncGoReturn<T = any> = [Error] | [null, T] | []
 
 interface ReactComponentWrapper {
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 type AppValidationBag = {

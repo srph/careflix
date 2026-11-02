@@ -1,7 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import cx from 'classnames'
-import { Link, LinkProps } from 'react-router-dom'
+import { Link, LinkProps } from 'react-router'
 
 interface OwnProps {
   disabled?: boolean

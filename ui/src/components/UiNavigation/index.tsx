@@ -2,7 +2,7 @@ import './style.css'
 import * as React from 'react'
 import UiLogo from '~/components/UiLogo'
 import UiContainer from '~/components/UiContainer'
-import { Link, LinkProps } from 'react-router-dom'
+import { Link, LinkProps } from 'react-router'
 
 interface Props {
   children?: React.ReactNode

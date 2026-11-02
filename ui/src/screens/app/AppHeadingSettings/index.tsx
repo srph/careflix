@@ -1,5 +1,5 @@
 import './style.css'
-import { Helmet } from 'react-helmet'
+import PageTitle from '~/components/PageTitle'
 
 interface Props {
   title: string
@@ -7,5 +7,5 @@ interface Props {
 }
 
 export default function AppHeadingSettings({ title }: Props) {
-  return <Helmet title={title} />
+  return <PageTitle title={title} />
 }

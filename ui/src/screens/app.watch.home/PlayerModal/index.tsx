@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import UiPlainButton from '~/components/UiPlainButton'
 import toReadableTime from '~/utils/date/toReadableTime'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { useMediaMode } from '~/hooks/useMediaMode'
 import { useFullscreen } from '~/hooks/useFullscreen'
 import { usePlayerHotkeys } from '../usePlayerHotkeys'
@@ -43,7 +43,7 @@ interface Props {
  * @TODO We might not need to use a modal here since it's only an overlay on desktop screens.
  */
 function PlayerModal({ party, ...props }: Props) {
-  const overlayRef = useRef<HTMLDivElement>()
+  const overlayRef = useRef<HTMLDivElement>(null)
   const media = useMediaMode()
   const [isFullscreen, toggleIsFullsceen] = useFullscreen()
   const [isVolumeControlOpen, setIsVolumeControlOpen] = useState(false)

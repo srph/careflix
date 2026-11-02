@@ -5,7 +5,7 @@ import * as React from 'react'
 import UiContainer from '~/components/UiContainer'
 import UiButton from '~/components/UiButton'
 import UiLogo from '~/components/UiLogo'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 
 function GuestHome() {
   return (

@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useEffect } from 'react'
 import { useIsPWA } from '~/hooks/useIsPWA'
 import useWindowSize from '~/hooks/useWindowSize'
-import history from '~/lib/history'
+import { useNavigate } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import UiContainer from '~/components/UiContainer'
@@ -17,11 +17,12 @@ import asset_downloadStep3 from '~/assets/download-step-3.png'
 import asset_downloadStep4 from '~/assets/download-step-4.png'
 
 function AppDownload(props: ReactComponentWrapper) {
+  const navigate = useNavigate()
   const isPWA = useIsPWA()
 
   useEffect(() => {
     if (isPWA) {
-      history.push('/')
+      navigate('/')
     }
   }, [isPWA])
 

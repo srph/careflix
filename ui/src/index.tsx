@@ -56,6 +56,8 @@ const router = createBrowserRouter([{
         { path: '/settings/faq', element: <AppSettingsFaq /> },
         { path: '/watch/:partyId', element: <AppWatch><AppWatchHome /></AppWatch> },
       ] },
+      // The previous router kept the app shell for unmatched URLs.
+      { path: '*', element: null },
     ] },
   ],
 }])

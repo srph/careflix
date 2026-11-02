@@ -5,6 +5,8 @@
 #   make start:api run just the API
 #   make start:db  start Docker MySQL in the background and wait until ready
 #   make start:web run just the web dev server
+#   make serve     share the running web + API over Tailscale HTTPS
+#   make unserve   remove the Tailscale route
 #
 # The API is driven through Valet's PHP/Composer so it resolves the older PHP
 # that api/composer.json expects; the UI is driven through nvm so it picks up
@@ -36,7 +38,7 @@ else \
 fi
 endef
 
-.PHONY: help install install-api install-ui start start-api start-db start-ui
+.PHONY: help install install-api install-ui start start-api start-db start-ui serve unserve
 
 help:
 	@echo "make install   — install API + web dependencies and create missing .env files"
@@ -44,6 +46,8 @@ help:
 	@echo "make start:api — run the API on http://localhost:8000"
 	@echo "make start:db  — start Docker MySQL on 127.0.0.1:3307 (root/root, database: tv)"
 	@echo "make start:web — run the web dev server on http://localhost:8484"
+	@echo "make serve     — share the running app over Tailscale HTTPS (see readme.md)"
+	@echo "make unserve   — stop sharing the app over Tailscale"
 	@echo ""
 	@echo "Also available: install-api, install-ui, start-api, start-ui"
 
@@ -96,6 +100,14 @@ start-ui:
 	if [ ! -f .env ]; then echo "ui/.env is missing — run 'make install' first."; exit 1; fi; \
 	$(use_nvm); \
 	npm start
+
+# Vite forwards API/OAuth/broadcasting requests to the local API. Only one
+# loopback port needs sharing; --bg keeps the private route across restarts.
+serve:
+	@tailscale serve --bg --https=443 http://127.0.0.1:8484
+
+unserve:
+	@tailscale serve --https=443 --set-path=/ off
 
 # Escape colons only in target names: Make 3.81 keeps the backslash literally
 # in prerequisite names (including .PHONY). These aliases inherit phony recipes.

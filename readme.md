@@ -20,6 +20,25 @@ Run each service separately with `make start:api`, `make start:db`, or `make sta
 
 `make start` waits for MySQL to be healthy before launching both dev servers. Ctrl-C stops both dev servers. MySQL runs in the background; stop it with `docker compose stop db`. Its data persists in the `mysql-data` Docker volume.
 
+### Access from another Tailscale device
+
+Start the app with `make start` (or keep your existing web and API servers running). In `ui/.env`, set `TAILSCALE_HOST` to this Mac's full Tailscale DNS name, without a trailing dot. Find it under `Self.DNSName` in `tailscale status --json`, for example:
+
+```dotenv
+TAILSCALE_HOST=mbp.example-tailnet.ts.net
+```
+
+Then run:
+
+```bash
+make serve     # prints the private HTTPS URL to open on the PC
+make unserve   # remove this app's Tailscale route when finished
+```
+
+Both devices must be connected to the same tailnet. [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve) provides HTTPS and proxies to Vite on `127.0.0.1:8484`. Vite forwards `/api`, `/oauth`, and `/broadcasting` to `VITE_API_BASE_URL` (or the legacy `API_BASE_URL`), defaulting to `http://127.0.0.1:8000`. The browser uses the same origin for those requests in development, so no PC-specific API URL or CORS change is needed. Production builds still use the configured API URL.
+
+The Serve route persists across restarts; the app servers must also be running. This uses HTTPS port 443 on this device's Tailscale address, so reserve it for this app. The development servers and MySQL stay on loopback.
+
 ### Local MySQL
 
 Docker Compose runs MySQL 5.7, matching the API's existing database version. The image runs with `linux/amd64` emulation on Apple Silicon. Connect using:

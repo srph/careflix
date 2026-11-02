@@ -1,6 +1,6 @@
 export default {
   api: {
-    baseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+    baseUrl: import.meta.env.DEV ? '' : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'),
     clientId: import.meta.env.VITE_API_CLIENT_ID || '',
     clientSecret: import.meta.env.VITE_API_CLIENT_SECRET || '',
     pusherAppId: import.meta.env.VITE_PUSHER_APP_ID,

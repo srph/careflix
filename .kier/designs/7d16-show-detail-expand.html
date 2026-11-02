@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Care.tv Title Details</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.cards a{color:inherit}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.state{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--mut)}
+.state .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.state .seg button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;padding:8px 14px;cursor:pointer}
+.state .seg button+button{border-left:1px solid var(--line)}
+.state .seg button[aria-pressed="true"]{color:var(--ink);background:var(--code);font-weight:600}
+.frame{position:relative;height:clamp(600px,calc(100vh - 110px),820px);margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#090c11;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.frame>.scroll{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.frame.tall{height:clamp(640px,calc(100vh - 90px),880px)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+/* minimap */
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:200px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup base (Care.tv look) ───────────── */
+.mk{--pk:#E8368F;--y:#F7C948;--g:#65D6AD;--n1:#090c11;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);min-height:100%;position:relative;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h1,.mk h2,.mk h3,.mk h4,.mk h5,.mk p{margin:0}
+.mk a{color:inherit;text-decoration:none;cursor:pointer}
+.mk input{font:inherit;color:#fff;background:none;border:0;outline:0;min-width:0}
+.mk svg{flex:none}
+.art{position:absolute;inset:0;overflow:hidden;background-color:#0b0f14}
+.art::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c);color:#10171E;font:700 11px/1 'Work Sans',sans-serif;border:2px solid var(--n1);font-style:normal;flex:none}
+.av.me{width:32px;height:32px;color:#fff;border:0}
+.av.sm{width:24px;height:24px;font-size:10px}
+.avs{display:inline-flex}.avs .av+.av{margin-left:-9px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px !important;border-radius:999px;font:700 12.5px/1 'Work Sans',sans-serif !important;letter-spacing:.08em;text-transform:uppercase;transition:transform .2s,box-shadow .25s,background .2s}
+.btn.pk{background:var(--pk) !important;box-shadow:0 10px 30px -8px rgba(232,54,143,.55)}
+.btn.pk:hover{transform:translateY(-2px);box-shadow:0 16px 40px -8px rgba(232,54,143,.8)}
+.btn.gh{background:rgba(255,255,255,.1) !important}
+.btn.gh:hover{background:rgba(255,255,255,.18) !important}
+.btn.ln{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.28)}
+.btn.ln:hover{background:rgba(255,255,255,.08) !important}
+.btn.sm{height:34px;padding:0 14px !important;font-size:11px !important}
+.btn.xs{height:28px;padding:0 11px !important;font-size:10px !important;letter-spacing:.06em}
+.lb{font:600 11px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.ic{display:grid !important;place-items:center;width:40px;height:40px;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.3);transition:background .2s}
+.ic:hover{background:rgba(255,255,255,.12)}
+.ic.sm{width:32px;height:32px}
+.ix-rise{animation:vaRise .55s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:var(--d)}
+@keyframes vaRise{from{opacity:0;transform:translateY(18px) scale(.97);filter:blur(6px)}}
+
+/* ── shared listing shell ── */
+.lx-w{max-width:1120px;margin:0 auto;padding:0 20px}
+.lx-nav{position:sticky;top:0;z-index:20;background:rgba(9,12,17,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.07)}
+.lx-nav .lx-w{display:flex;align-items:center;gap:26px;height:62px}
+.lx-logo{font:500 17px 'Work Sans',sans-serif;color:var(--pk);letter-spacing:-.01em}
+.lx-tabs{display:flex;gap:22px}
+.lx-tabs button{position:relative;padding:20px 0;font-size:14px;font-weight:500;color:rgba(255,255,255,.52);transition:color .2s}
+.lx-tabs button:hover{color:#fff}
+.lx-tabs button.on{color:#fff}
+.lx-tabs button.on::after{content:"";position:absolute;left:0;right:0;bottom:16px;height:2px;border-radius:2px;background:var(--pk)}
+.lx-search{margin-left:auto;display:flex;align-items:center;gap:9px;height:36px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);width:226px}
+.lx-search input{flex:1;font-size:13.5px}
+.lx-search input::placeholder{color:rgba(255,255,255,.4)}
+.lx-head{display:flex;align-items:baseline;gap:10px;margin:30px 0 14px}
+.lx-head h2{font-size:17px;font-weight:600}
+.lx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:24px 16px;padding-bottom:40px}
+.lx-c{display:block;width:100%}
+.lx-th{position:relative;display:block;aspect-ratio:16/9;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.07);transition:box-shadow .25s}
+.lx-c:hover .lx-th{box-shadow:0 0 0 1px rgba(255,255,255,.3)}
+.lx-c b{display:block;margin-top:10px;font-size:15px;font-weight:600;letter-spacing:-.005em}
+.lx-c>span{display:block;font-size:12.5px;color:var(--n5)}
+.lx-c.on .lx-th{box-shadow:0 0 0 2px var(--pk)}
+.lx-dot{position:absolute;left:8px;top:8px;z-index:2;display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:99px;background:rgba(9,12,17,.72);backdrop-filter:blur(6px);font:700 9.5px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase}
+.lx-dot i{width:6px;height:6px;border-radius:50%;background:#ff3d6e}
+.lx-live{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:12px;background:rgba(255,255,255,.055)}
+.lx-live>span:last-of-type{font-size:13px;color:rgba(255,255,255,.72)}
+.lx-live b{color:#fff;font-weight:600}
+.lx-live .btn{margin-left:auto}
+.lx-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px}
+.lx-meta div{font-size:13px}
+.lx-meta dt,.lx-meta .k{display:block;margin-bottom:3px;font:600 10.5px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.ep-strip{display:flex;gap:12px;overflow:auto;padding-bottom:6px;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.ep-s{flex:none;width:184px}
+.ep-s .th{position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.07)}
+.ep-s .th .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(9,12,17,.4);opacity:0;transition:opacity .2s}
+.ep-s:hover .th .pl{opacity:1}
+.ep-s b{display:block;margin-top:8px;font-size:13.5px;font-weight:600}
+.ep-s span{font-size:11.5px;color:var(--n5)}
+.ep-row{display:flex;align-items:flex-start;gap:14px;width:100%;padding:12px;border-radius:12px;transition:background .2s}
+.ep-row:hover{background:rgba(255,255,255,.055)}
+.ep-row .n{width:18px;flex:none;font:600 14px/1.4 'Work Sans',sans-serif;color:rgba(255,255,255,.4);padding-top:2px}
+.ep-row .th{position:relative;flex:none;width:136px;aspect-ratio:16/9;border-radius:7px;overflow:hidden}
+.ep-row .tx{min-width:0;flex:1}
+.ep-row .tx b{display:block;font-size:14px;font-weight:600}
+.ep-row .tx p{margin-top:5px !important;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.6);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ep-row .d{flex:none;font:500 12px 'Work Sans',sans-serif;color:var(--n5);padding-top:2px}
+.seg{display:inline-flex;gap:6px}
+.seg button{height:30px;padding:0 13px;border-radius:99px;font:600 12px 'Work Sans',sans-serif;color:rgba(255,255,255,.6);background:rgba(255,255,255,.07);transition:background .2s,color .2s}
+.seg button:hover{color:#fff}
+.seg button.on{background:#fff;color:#0b0f14}
+.sel{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 13px;border-radius:8px;font:600 12.5px 'Work Sans',sans-serif;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);color:#fff}
+.sel:hover{background:rgba(255,255,255,.07)}
+.xbtn{display:grid !important;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(9,12,17,.66);backdrop-filter:blur(8px);color:#fff;transition:background .2s}
+.xbtn:hover{background:rgba(9,12,17,.9)}
+
+/* ── Now: today's 360px modal ── */
+.nw-ov{position:absolute;inset:0;background:rgba(0,0,0,.75);overflow:auto;z-index:30}
+.nw{width:360px;margin:64px auto;color:#18181b;background:#fff;border-radius:4px;overflow:hidden;font-family:'halyard-display','Outfit',sans-serif}
+.nw-cv{position:relative;padding-bottom:56.25%}
+.nw-cv .ov{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,transparent 70%,#10171E 100%)}
+.nw-play{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;color:#fff;background:#E8368F;box-shadow:0 0 16px #E8368F}
+.nw-x{position:absolute;top:16px;right:16px;display:grid !important;place-items:center;width:32px;height:32px;border-radius:50%;color:#fff;background:#8899A6}
+.nw-b{padding:16px}
+.nw-b .tags{font:500 12px 'Work Sans',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#8899A6}
+.nw-b h3{margin:4px 0 8px !important;font-size:21px;font-weight:600}
+.nw-b .syn{font-size:14px;line-height:1.5;color:#18181b}
+.nw-sel{margin:24px 0 8px;width:100%;height:38px;padding:0 10px;border:1px solid #d7d7d2;border-radius:4px;font:500 13px 'Work Sans',sans-serif;color:#18181b;background:#fff}
+.nw-ep{display:flex;align-items:center;gap:12px;width:100%;padding:10px 0;border-bottom:1px solid #ececea;color:#18181b}
+.nw-ep .th{position:relative;flex:none;width:92px;aspect-ratio:16/9;border-radius:3px;overflow:hidden}
+.nw-ep .tx{flex:1;min-width:0}
+.nw-ep .tx h5{font:500 11px 'Work Sans',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#8899A6}
+.nw-ep .tx h3{font-size:14px;font-weight:600;margin-top:2px !important}
+.nw-ep .pl{flex:none;color:#E8368F}
+
+/* ── A: inline expansion inside the grid ── */
+.ax-panel{grid-column:1/-1;display:grid;grid-template-rows:0fr;transition:grid-template-rows .44s cubic-bezier(.2,.8,.2,1);margin:-4px 0 0}
+.ax-panel.open{grid-template-rows:1fr}
+.ax-panel>.in{overflow:hidden;min-height:0}
+.ax-wrap{position:relative;padding:14px 0 6px}
+.ax-card{position:relative;border-radius:16px;background:#111823;box-shadow:0 0 0 1px rgba(255,255,255,.08);overflow:hidden}
+.ax-caret{position:absolute;top:7px;z-index:2;width:14px;height:14px;background:#111823;transform:rotate(45deg);box-shadow:-1px -1px 0 rgba(255,255,255,.08);transition:left .35s cubic-bezier(.2,.8,.2,1)}
+.ax-top{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:26px;padding:22px}
+.ax-still{position:relative;aspect-ratio:16/9;border-radius:11px;overflow:hidden}
+.ax-still .pl{position:absolute;left:14px;bottom:14px;z-index:2}
+.ax-tx h3{font-size:27px;font-weight:700;letter-spacing:-.018em;line-height:1.1}
+.ax-tx .lb{margin:9px 0 11px}
+.ax-tx p{font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.74);max-width:62ch}
+.ax-act{display:flex;align-items:center;gap:10px;margin-top:18px}
+.ax-eps{padding:0 22px 22px}
+.ax-eph{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.ax-x{position:absolute;top:14px;right:14px;z-index:3}
+.ax-hint{font-size:12px;color:var(--n5);margin-top:10px}
+
+/* ── B: centre sheet ── */
+.bx-ov{position:absolute;inset:0;z-index:30;background:rgba(5,7,10,.8);overflow:auto;scrollbar-width:thin;scrollbar-color:#38444D transparent;opacity:0;transition:opacity .3s}
+.bx-ov.on{opacity:1}
+.bx{width:844px;max-width:calc(100% - 48px);margin:44px auto;border-radius:16px;overflow:hidden;background:#111823;box-shadow:0 60px 120px -30px rgba(0,0,0,.95);transform:translateY(22px) scale(.97);opacity:0;transition:transform .42s cubic-bezier(.2,.8,.2,1),opacity .3s}
+.bx-ov.on .bx{transform:none;opacity:1}
+.bx-cv{position:relative;aspect-ratio:16/7.4}
+.bx-cv::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#111823 2%,rgba(17,24,35,.1) 58%),linear-gradient(90deg,rgba(17,24,35,.82),transparent 62%)}
+.bx-cvc{position:absolute;left:32px;right:32px;bottom:26px;z-index:2}
+.bx-cvc h3{font-size:38px;font-weight:700;letter-spacing:-.028em;line-height:1.02}
+.bx-cvc .lb{margin-top:10px}
+.bx-act{display:flex;align-items:center;gap:10px;margin-top:18px}
+.bx-x{position:absolute;top:18px;right:18px;z-index:3}
+.bx-b{padding:24px 32px 30px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:34px}
+.bx-b p{font-size:14px;line-height:1.62;color:rgba(255,255,255,.78)}
+.bx-sec{padding:0 32px 30px}
+.bx-sec>.hd{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.bx-sec>.hd h4{font-size:17px;font-weight:600}
+.bx-sec>.hd .sel{margin-left:auto}
+.bx-list{display:flex;flex-direction:column}
+.bx-list .ep-row+.ep-row{box-shadow:0 -1px 0 rgba(255,255,255,.07)}
+.bx-sheet-hint{padding:0 32px 26px;font-size:12px;color:var(--n5)}
+
+/* ── C: side drawer ── */
+.cx-shift{transition:padding-right .44s cubic-bezier(.2,.8,.2,1)}
+.cx-shift.on{padding-right:468px}
+.cx-dr{position:absolute;top:0;right:0;bottom:0;width:468px;z-index:40;background:#0d131c;box-shadow:-1px 0 0 rgba(255,255,255,.09),-40px 0 90px -40px rgba(0,0,0,.9);transform:translateX(100%);transition:transform .44s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.cx-dr.on{transform:none}
+.cx-sc{flex:1;overflow:auto;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.cx-cv{position:relative;aspect-ratio:16/9}
+.cx-cv::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#0d131c,transparent 62%)}
+.cx-x{position:absolute;top:14px;right:14px;z-index:3}
+.cx-b{padding:4px 22px 26px;margin-top:-34px;position:relative;z-index:2}
+.cx-b h3{font-size:25px;font-weight:700;letter-spacing:-.02em;line-height:1.12}
+.cx-b .lb{margin:9px 0 16px}
+.cx-act{display:grid;gap:9px;grid-template-columns:1fr auto}
+.cx-act .btn:first-child{justify-content:center}
+.cx-b p.syn{margin-top:18px !important;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.74)}
+.cx-div{height:1px;background:rgba(255,255,255,.08);margin:22px 0}
+.cx-eph{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.cx-eph h4{font-size:15px;font-weight:600}
+.cx-eph .seg{margin-left:auto}
+.cx-ep{display:flex;align-items:center;gap:12px;width:100%;padding:9px 8px;border-radius:10px;transition:background .2s}
+.cx-ep:hover{background:rgba(255,255,255,.055)}
+.cx-ep .th{position:relative;flex:none;width:84px;aspect-ratio:16/9;border-radius:6px;overflow:hidden}
+.cx-ep .tx{flex:1;min-width:0}
+.cx-ep .tx b{display:block;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cx-ep .tx span{font-size:11.5px;color:var(--n5)}
+.cx-ep .ar{flex:none;color:rgba(255,255,255,.35)}
+
+/* ── D: hero takeover ── */
+.dx-hero{position:relative;height:452px;overflow:hidden;transition:height .4s}
+.dx-bg{position:absolute;inset:0}
+.dx-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#090c11 3%,rgba(9,12,17,.25) 62%),linear-gradient(90deg,rgba(9,12,17,.9) 12%,rgba(9,12,17,.1) 68%)}
+.dx-c{position:absolute;inset:0;display:flex;align-items:center;z-index:2}
+.dx-c .lx-w{width:100%}
+.dx-c .in{max-width:560px}
+.dx-c h1{font-size:46px;font-weight:700;letter-spacing:-.032em;line-height:1.02}
+.dx-c .lb{margin:12px 0 14px}
+.dx-c p{font-size:15px;line-height:1.62;color:rgba(255,255,255,.8)}
+.dx-act{display:flex;align-items:center;gap:11px;margin-top:22px}
+.dx-back{position:absolute;left:20px;top:20px;z-index:3;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:99px;background:rgba(9,12,17,.6);backdrop-filter:blur(8px);font:600 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.dx-back:hover{background:rgba(9,12,17,.88)}
+.dx-eps{padding:4px 0 10px}
+.dx-eph{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.dx-eph h4{font-size:16px;font-weight:600}
+.dx-eph .seg{margin-left:auto}
+.dx-swap{animation:dxIn .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes dxIn{from{opacity:0;transform:translateY(14px)}}
+.dx-tag{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:99px;background:rgba(232,54,143,.16);color:#F7A5CC;font:700 9.5px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<nav class="mm" id="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+  <section class="brief">
+    <p class="eyebrow">Care.tv · title details · follows c41d-movie-listing-nav-search.html</p>
+    <h1>Clicking a title should open its details without losing your place.</h1>
+    <div class="cards">
+      <div>One panel has to carry both a movie and a multi-season series.</div>
+      <div>Episodes need a season switch, a still, a duration and a synopsis.</div>
+      <div>The action is starting a party, not pressing play.</div>
+      <div>A live party on the title belongs in the panel, not just on the card.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-now" data-id="Now" data-name="Today's 360px modal">
+    <div class="var-h"><span class="id">Now</span><h2>Today's 360px modal</h2></div>
+    <div class="frame"><div class="scroll mk" data-mount="now"></div></div>
+    <div class="notes">
+      <div class="note bad">360px on a 1440px screen: the still is a thumbnail and the synopsis is four lines of nothing.</div>
+      <div class="note bad">Episodes hide behind a native select, so season two is a guess.</div>
+      <div class="note bad">White sheet over a dark listing — the only light surface in the app.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-a" data-id="A" data-name="Inline row expansion">
+    <div class="var-h"><span class="id">A</span><h2>Inline row expansion</h2></div>
+    <div class="frame"><div class="scroll mk" data-mount="a"></div></div>
+    <div class="notes">
+      <div class="note good">The grid keeps its place; the caret shows which card you opened.</div>
+      <div class="note good">Episodes read as a strip, so one season fits without scrolling the page.</div>
+      <div class="note bad">Panel height shifts the rows below on every open and close.</div>
+      <div class="note bad">Narrow widths squeeze the two columns into a stack.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-b" data-id="B" data-name="Centre sheet">
+    <div class="var-h"><span class="id">B</span><h2>Centre sheet</h2></div>
+    <div class="frame"><div class="scroll mk" data-mount="b"></div></div>
+    <div class="notes">
+      <div class="note good">Widest still and the longest episode list — a full season reads at once.</div>
+      <div class="note good">Closest to what the modal already does, so the least to rebuild.</div>
+      <div class="note bad">Covers the listing, so comparing two titles means closing one first.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-c" data-id="C" data-name="Side drawer">
+    <div class="var-h"><span class="id">C</span><h2>Side drawer</h2></div>
+    <div class="frame"><div class="scroll mk" data-mount="c"></div></div>
+    <div class="notes">
+      <div class="note good">The listing stays live, so you can open one title after another.</div>
+      <div class="note good">One column fits phones unchanged.</div>
+      <div class="note bad">Episode stills shrink to 84px and the synopsis drops out.</div>
+      <div class="note bad">The grid reflows to two columns while it is open.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-d" data-id="D" data-name="Hero takeover">
+    <div class="var-h"><span class="id">D</span><h2>Hero takeover</h2></div>
+    <div class="frame"><div class="scroll mk" data-mount="d"></div></div>
+    <div class="notes">
+      <div class="note good">Reuses the hero that already sits at the top of the listing — no new surface.</div>
+      <div class="note good">Biggest type and art of the five, and it is linkable as a page.</div>
+      <div class="note bad">It scrolls you away from the card you clicked.</div>
+      <div class="note bad">Closing has to restore the carousel you interrupted.</div>
+    </div>
+  </section>
+
+  <section class="further">
+    <h2>Further Actions</h2>
+    <div class="cards">
+      <div><b>Explore</b> From B, try the sheet opening from the card's own rectangle instead of the centre.</div>
+      <div><b>Remix</b> Give C's drawer B's full-width episode rows and let it widen to 560px.</div>
+      <div><b>Settle</b> Take A if the listing is the thing to protect; take B if the episode list is.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const FILE = '.kier/designs/7d16-show-detail-expand.html';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8'};
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', type:'movie', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings', s:'A late-night radio host starts hearing tomorrow’s callers tonight.', live:['Joyce','Leo'], at:'42 minutes in'},
+  {id:'hollow', t:'Hollow County', type:'series', y:'2023–2025', len:'3 seasons', c:['#a3e635','#14240a'], p:'stripes', s:'A small-town clerk keeps finding the same name in every cold case, and the town keeps telling her she is mistaken.', live:['Joyce','Nico','Mira'], ep:'S2 · E4'},
+  {id:'paper', t:'Paper Moons', type:'movie', y:2024, len:'1h 52m', c:['#ff7a59','#3b0d4c'], p:'sun', s:'Two sisters keep their late father’s lantern shop open for one last festival.'},
+  {id:'orbit', t:'Orbit Diner', type:'series', y:'2024–', len:'2 seasons', c:['#f7c948','#7a1f4d'], p:'dots', s:'The only all-night diner on a space station, and its very tired staff.', live:['Mira'], ep:'S1 · E7'},
+  {id:'ferry', t:'Night Ferry', type:'movie', y:2023, len:'1h 41m', c:['#1fd1f9','#0b1b3f'], p:'stripes', s:'Eleven passengers, one crossing, and a captain who won’t turn back.'},
+  {id:'under', t:'The Understudies', type:'series', y:'2025–', len:'1 season', c:['#c084fc','#2a0e5c'], p:'split', s:'Five backups wait in the wings of a Broadway show that refuses to close.'},
+  {id:'lunch', t:'The Long Lunch', type:'movie', y:2022, len:'1h 38m', c:['#f7c948','#b4380c'], p:'sun', s:'A retirement lunch runs three days and nobody wants to leave.'},
+  {id:'signal', t:'Signal & Noise', type:'series', y:'2022–2024', len:'2 seasons', c:['#22d3ee','#082f49'], p:'rings', s:'An observatory crew decodes a message that seems to be about them.'},
+  {id:'glass', t:'Glasshouse', type:'movie', y:2024, len:'1h 57m', c:['#65d6ad','#0d2b2a'], p:'split', s:'A botanist’s greenhouse holds one plant too many.'},
+  {id:'lantern', t:'Lantern Street', type:'series', y:'2021–2024', len:'4 seasons', c:['#fbbf24','#3a1503'], p:'aurora', s:'Four generations, one row of shops, and a street that never sleeps.'},
+  {id:'kite', t:'Kite Season', type:'movie', y:2021, len:'1h 46m', c:['#7dd3fc','#9d174d'], p:'aurora', s:'A boy and his grandmother build a kite big enough to carry a letter.'},
+  {id:'neon', t:'Neon Gardeners', type:'series', y:'2025–', len:'1 season', c:['#4ade80','#3b0764'], p:'dots', s:'Rooftop farmers take on a developer one tomato at a time.'}
+];
+const PATS = ['rings','stripes','sun','dots','split','aurora'];
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const typeL = s => s.type === 'movie' ? 'Movie' : 'Series';
+const metaL = s => `${typeL(s)} · ${s.y} · ${s.len}`;
+const SEARCH = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>';
+const PLAY = (n=13) => `<svg viewBox="0 0 24 24" width="${n}" height="${n}" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>`;
+const X = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
+const CHEV = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 5 7 7-7 7"/></svg>`;
+const DOWN = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 9 7 7 7-7"/></svg>`;
+const PLUS = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`;
+const LINK = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l2.8-2.8A4 4 0 0 0 12.9 5.5L11.5 7"/><path d="M14 10a4 4 0 0 0-5.7 0L5.5 12.8A4 4 0 0 0 11.1 18.5L12.5 17"/></svg>`;
+const BACK = `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>`;
+
+function art(s, pat){
+  const [a,b] = s.c, p = pat || s.p;
+  switch(p){
+    case 'sun': return `radial-gradient(circle at 68% 36%, ${a} 0 17%, ${a}00 17.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), linear-gradient(118deg, ${a}38 0 52%, ${a}00 52.1%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+    default: return `radial-gradient(55% 45% at 22% 28%, ${a}dd, ${a}00 70%), radial-gradient(60% 50% at 85% 75%, ${a}66, ${a}00 70%), linear-gradient(160deg, ${b}, #06060b 80%)`;
+  }
+}
+const still = (s, pat) => `<div class="art" style="background:${art(s, pat)}"></div>`;
+const av = (n, cls='') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const me = (cls='') => `<i class="av me ${cls}" style="--c:#E8368F">K</i>`;
+const names = l => l.length === 1 ? l[0] : l.slice(0,-1).join(', ') + ' & ' + l[l.length-1];
+const mins = sec => Math.round(sec/60) + 'm';
+
+/* ───── episodes ───── */
+const EPN = ['Cold Open','Second Shift','The Clerk','Letters Home','Nightfall','The Long Way','Last Call','Dry Season','Paper Walls','Low Beam','House Lights','The Quiet Part'];
+const EPS = ['Joyce finds a name she has seen before, and nobody in the records office wants to talk about it.','The night shift runs long, the lights stay on, and a stranger signs the visitor book twice.','A letter arrives three years late and answers a question nobody asked out loud.','Everyone agrees on what happened. The tape does not.','One phone call turns a quiet week into a very loud one.','A favour is called in, and it costs more than it should.','The last ferry leaves without two of its passengers.'];
+const EPCACHE = {};
+function seasons(s){
+  if(EPCACHE[s.id]) return EPCACHE[s.id];
+  const n = parseInt(s.len) || 1, out = [];
+  for(let k = 1; k <= n; k++){
+    const eps = [], cnt = 6 + (k % 2 ? 1 : 0);
+    for(let e = 1; e <= cnt; e++){
+      eps.push({n:e, t:EPN[(k*3 + e) % EPN.length], d:(38 + ((k + e) * 5) % 16) * 60, s:EPS[(k + e) % EPS.length], pat:PATS[(k + e) % PATS.length]});
+    }
+    out.push({t:'Season ' + k, eps});
+  }
+  return EPCACHE[s.id] = out;
+}
+
+/* ───── shared listing shell ───── */
+function nav(active = 'all'){
+  const tabs = [['all','All'],['movie','Movies'],['series','Series'],['parties','Parties']];
+  return `<nav class="lx-nav"><div class="lx-w">
+    <span class="lx-logo">care.tv</span>
+    <div class="lx-tabs">${tabs.map(([k,l]) => `<button class="${k === active ? 'on' : ''}">${l}</button>`).join('')}</div>
+    <label class="lx-search">${SEARCH}<input placeholder="Search titles"></label>
+    ${me()}
+  </div></nav>`;
+}
+function card(s, i){
+  return `<button class="lx-c ix-rise" data-id="${s.id}" style="--d:${i*24}ms">
+    <span class="lx-th">${still(s)}${s.live ? `<span class="lx-dot"><i></i>${s.live.length} watching</span>` : ''}</span>
+    <b>${esc(s.t)}</b><span>${metaL(s)}</span>
+  </button>`;
+}
+const grid = (list = SHOWS) => `<div class="lx-grid">${list.map(card).join('')}</div>`;
+const headRow = (t, n) => `<div class="lx-head"><h2>${t}</h2><span class="lb">${n} titles</span></div>`;
+
+function liveRow(s, join = 'Join'){
+  if(!s.live) return '';
+  const where = s.ep ? ` · ${s.ep}` : (s.at ? ` · ${s.at}` : '');
+  return `<div class="lx-live"><span class="avs">${s.live.map(n => av(n,'sm')).join('')}</span>
+    <span><b>${names(s.live)}</b> ${s.live.length > 1 ? 'are' : 'is'} watching now${where}</span>
+    <button class="btn xs gh">${join}</button></div>`;
+}
+function metaGrid(s){
+  const rows = [['Released', s.y], ['Length', s.len], ['Language', 'English'], ['Subtitles', 'English, Filipino']];
+  if(s.type === 'series') rows[1] = ['Seasons', s.len.replace(' seasons','').replace(' season','')];
+  if(s.type === 'series') rows.push(['Episodes', seasons(s).reduce((a,g) => a + g.eps.length, 0)]);
+  return `<div class="lx-meta">${rows.map(([k,v]) => `<div><span class="k">${k}</span>${v}</div>`).join('')}</div>`;
+}
+function actions(s, size = ''){
+  const primary = s.live ? `Join ${s.live[0]}’s party` : 'Start a party';
+  return `<button class="btn pk ${size}">${PLAY()} ${primary}</button>
+    ${s.live ? `<button class="btn ln ${size}">Start your own</button>` : `<button class="btn gh ${size}">${PLUS} Invite</button>`}
+    <button class="ic ${size === 'sm' ? 'sm' : ''}" title="Copy link">${LINK}</button>`;
+}
+
+/* ───── Now ───── */
+function mountNow(sc){
+  const render = id => {
+    const s = byId(id), ss = s.type === 'series' ? seasons(s) : null;
+    sc.innerHTML = nav() + `<div class="lx-w">${headRow('All titles', SHOWS.length)}${grid()}</div>` + `
+    <div class="nw-ov"><div class="nw">
+      <div class="nw-cv">${still(s)}
+        <div class="ov">${s.type === 'movie' ? `<button class="nw-play">${PLAY(14)}</button>` : ''}</div>
+        <button class="nw-x">${X}</button>
+      </div>
+      <div class="nw-b">
+        <div class="tags">${s.y}</div>
+        <h3>${esc(s.t)}</h3>
+        <p class="syn">${esc(s.s)}</p>
+        ${ss ? `<select class="nw-sel">${ss.map(g => `<option>${g.t}</option>`).join('')}</select>
+          ${ss[0].eps.map(e => `<button class="nw-ep">
+            <span class="th">${still(s, e.pat)}</span>
+            <span class="tx"><h5>${mins(e.d)}</h5><h3>${esc(e.t)}</h3></span>
+            <span class="pl">${PLAY(12)}</span></button>`).join('')}` : ''}
+      </div>
+    </div></div>`;
+  };
+  return {open: render};
+}
+
+/* ───── A: inline row expansion ───── */
+function mountA(sc){
+  sc.innerHTML = nav() + `<div class="lx-w">${headRow('All titles', SHOWS.length)}${grid()}</div>`;
+  const g = sc.querySelector('.lx-grid');
+  const panel = document.createElement('div');
+  panel.className = 'ax-panel';
+  panel.innerHTML = '<div class="in"></div>';
+  let open = null;
+
+  function body(s){
+    const ss = s.type === 'series' ? seasons(s) : null;
+    return `<div class="ax-wrap"><i class="ax-caret" style="left:60px"></i><div class="ax-card">
+      <button class="ax-x xbtn">${X}</button>
+      <div class="ax-top">
+        <div>
+          <div class="ax-still">${still(s)}</div>
+          ${s.live ? `<div style="margin-top:12px">${liveRow(s)}</div>` : ''}
+        </div>
+        <div class="ax-tx">
+          <h3>${esc(s.t)}</h3>
+          <div class="lb">${metaL(s)}</div>
+          <p>${esc(s.s)}</p>
+          <div class="ax-act">${actions(s, 'sm')}</div>
+          <p class="ax-hint">${s.type === 'movie' ? 'Everyone you invite joins at your playhead.' : 'Pick an episode to start the party there.'}</p>
+        </div>
+      </div>
+      ${ss ? `<div class="ax-eps">
+        <div class="ax-eph"><h4 style="font-size:15px;font-weight:600">Episodes</h4>
+          <div class="seg">${ss.map((x,i) => `<button class="${i ? '' : 'on'}" data-s="${i}">S${i+1}</button>`).join('')}</div>
+          <span class="lb" style="margin-left:auto">${ss[0].eps.length} episodes</span></div>
+        <div class="ep-strip"></div>
+      </div>` : ''}
+    </div></div>`;
+  }
+  function strip(s, i){
+    const el = panel.querySelector('.ep-strip');
+    if(!el) return;
+    el.innerHTML = seasons(s)[i].eps.map((e,k) => `<div class="ep-s ix-rise" style="--d:${k*30}ms">
+      <div class="th">${still(s, e.pat)}<span class="pl">${PLAY(18)}</span></div>
+      <b>${e.n}. ${esc(e.t)}</b><span>${mins(e.d)}</span></div>`).join('');
+  }
+  function place(cardEl){
+    if(panel.parentNode) panel.remove();
+    const cards = [...g.querySelectorAll('.lx-c')];
+    const top0 = cards[0].offsetTop;
+    const cols = Math.max(1, cards.filter(c => c.offsetTop === top0).length);
+    const i = cards.indexOf(cardEl);
+    const end = Math.min(cards.length - 1, (Math.floor(i / cols) + 1) * cols - 1);
+    g.insertBefore(panel, cards[end].nextSibling);
+    const caret = panel.querySelector('.ax-caret');
+    if(caret) caret.style.left = (cardEl.offsetLeft - g.offsetLeft + cardEl.offsetWidth / 2 - 7) + 'px';
+  }
+  function show(id){
+    const s = byId(id), cardEl = g.querySelector(`.lx-c[data-id="${id}"]`);
+    if(!cardEl) return;
+    g.querySelectorAll('.lx-c').forEach(c => c.classList.toggle('on', c === cardEl));
+    panel.querySelector('.in').innerHTML = body(s);
+    place(cardEl);
+    requestAnimationFrame(() => panel.classList.add('open'));
+    if(s.type === 'series') strip(s, 0);
+    open = id;
+  }
+  function hide(){
+    panel.classList.remove('open');
+    g.querySelectorAll('.lx-c').forEach(c => c.classList.remove('on'));
+    open = null;
+  }
+  g.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) return c.dataset.id === open ? hide() : show(c.dataset.id);
+    if(e.target.closest('.ax-x')) return hide();
+    const sb = e.target.closest('.seg button');
+    if(sb && open){
+      sb.parentNode.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === sb));
+      strip(byId(open), Number(sb.dataset.s));
+      const n = seasons(byId(open))[Number(sb.dataset.s)].eps.length;
+      panel.querySelector('.ax-eph .lb').textContent = n + ' episodes';
+    }
+  });
+  return {open: show};
+}
+
+/* ───── B: centre sheet ───── */
+function mountB(sc){
+  sc.innerHTML = nav() + `<div class="lx-w">${headRow('All titles', SHOWS.length)}${grid()}</div><div class="bx-host"></div>`;
+  const host = sc.querySelector('.bx-host');
+
+  function body(s){
+    const ss = s.type === 'series' ? seasons(s) : null;
+    return `<div class="bx-ov"><div class="bx">
+      <div class="bx-cv">${still(s)}
+        <button class="bx-x xbtn">${X}</button>
+        <div class="bx-cvc">
+          <h3>${esc(s.t)}</h3>
+          <div class="lb">${metaL(s)}</div>
+          <div class="bx-act">${actions(s)}</div>
+        </div>
+      </div>
+      <div class="bx-b">
+        <div><p>${esc(s.s)}</p></div>
+        <div>${metaGrid(s)}</div>
+      </div>
+      ${s.live ? `<div class="bx-sec"><div class="hd"><h4>Live now</h4></div>${liveRow(s, 'Join')}</div>` : ''}
+      ${ss ? `<div class="bx-sec">
+        <div class="hd"><h4>Episodes</h4><button class="sel" data-sel>${ss[0].t} ${DOWN}</button></div>
+        <div class="bx-list"></div>
+      </div>` : ''}
+    </div></div>`;
+  }
+  function list(s, i){
+    const el = host.querySelector('.bx-list');
+    if(!el) return;
+    el.innerHTML = seasons(s)[i].eps.map((e,k) => `<button class="ep-row ix-rise" style="--d:${k*26}ms">
+      <span class="n">${e.n}</span>
+      <span class="th">${still(s, e.pat)}</span>
+      <span class="tx"><b>${esc(e.t)}</b><p>${esc(e.s)}</p></span>
+      <span class="d">${mins(e.d)}</span></button>`).join('');
+  }
+  let cur = null, si = 0;
+  function show(id){
+    const s = byId(id);
+    host.innerHTML = body(s);
+    cur = id; si = 0;
+    if(s.type === 'series') list(s, 0);
+    requestAnimationFrame(() => host.querySelector('.bx-ov').classList.add('on'));
+  }
+  function hide(){
+    const ov = host.querySelector('.bx-ov');
+    if(!ov) return;
+    ov.classList.remove('on');
+    setTimeout(() => { if(host.querySelector('.bx-ov') === ov) host.innerHTML = ''; }, 320);
+    cur = null;
+  }
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) return show(c.dataset.id);
+    if(e.target.closest('.bx-x')) return hide();
+    if(e.target.closest('[data-sel]') && cur){
+      const ss = seasons(byId(cur));
+      si = (si + 1) % ss.length;
+      e.target.closest('[data-sel]').innerHTML = `${ss[si].t} ${DOWN}`;
+      return list(byId(cur), si);
+    }
+    if(e.target.classList.contains('bx-ov')) hide();
+  });
+  return {open: show};
+}
+
+/* ───── C: side drawer ───── */
+function mountC(sc){
+  sc.innerHTML = `<div class="cx-shift">${nav()}<div class="lx-w">${headRow('All titles', SHOWS.length)}${grid()}</div></div>
+    <aside class="cx-dr"><div class="cx-sc"></div></aside>`;
+  const shift = sc.querySelector('.cx-shift'), dr = sc.querySelector('.cx-dr'), sc2 = dr.querySelector('.cx-sc');
+
+  function body(s){
+    const ss = s.type === 'series' ? seasons(s) : null;
+    return `<div class="cx-cv">${still(s)}<button class="cx-x xbtn">${X}</button></div>
+    <div class="cx-b">
+      <h3>${esc(s.t)}</h3>
+      <div class="lb">${metaL(s)}</div>
+      <div class="cx-act">
+        <button class="btn pk">${PLAY()} ${s.live ? 'Join party' : 'Start a party'}</button>
+        <button class="ic" title="Copy link">${LINK}</button>
+      </div>
+      <p class="syn">${esc(s.s)}</p>
+      ${s.live ? `<div style="margin-top:16px">${liveRow(s)}</div>` : ''}
+      <div class="cx-div"></div>
+      ${ss ? `<div class="cx-eph"><h4>Episodes</h4>
+          <div class="seg">${ss.map((x,i) => `<button class="${i ? '' : 'on'}" data-s="${i}">S${i+1}</button>`).join('')}</div></div>
+        <div class="cx-list"></div>` : metaGrid(s)}
+    </div>`;
+  }
+  function list(s, i){
+    const el = sc2.querySelector('.cx-list');
+    if(!el) return;
+    el.innerHTML = seasons(s)[i].eps.map((e,k) => `<button class="cx-ep ix-rise" style="--d:${k*24}ms">
+      <span class="th">${still(s, e.pat)}</span>
+      <span class="tx"><b>${e.n}. ${esc(e.t)}</b><span>${mins(e.d)}</span></span>
+      <span class="ar">${CHEV}</span></button>`).join('');
+  }
+  let cur = null;
+  function show(id){
+    const s = byId(id);
+    sc2.innerHTML = body(s);
+    sc2.scrollTop = 0;
+    if(s.type === 'series') list(s, 0);
+    shift.classList.add('on'); dr.classList.add('on');
+    sc.querySelectorAll('.lx-c').forEach(c => c.classList.toggle('on', c.dataset.id === id));
+    cur = id;
+  }
+  function hide(){
+    shift.classList.remove('on'); dr.classList.remove('on');
+    sc.querySelectorAll('.lx-c').forEach(c => c.classList.remove('on'));
+    cur = null;
+  }
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) return c.dataset.id === cur ? hide() : show(c.dataset.id);
+    if(e.target.closest('.cx-x')) return hide();
+    const sb = e.target.closest('.seg button');
+    if(sb && cur){
+      sb.parentNode.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === sb));
+      list(byId(cur), Number(sb.dataset.s));
+    }
+  });
+  return {open: show};
+}
+
+/* ───── D: hero takeover ───── */
+function mountD(sc){
+  sc.innerHTML = nav() + `<div class="dx-host"></div><div class="lx-w dx-rest"></div>`;
+  const host = sc.querySelector('.dx-host'), rest = sc.querySelector('.dx-rest');
+
+  function browse(){
+    const s = byId('paper');
+    host.innerHTML = `<div class="dx-hero dx-swap">
+      <div class="dx-bg">${still(s)}</div>
+      <div class="dx-c"><div class="lx-w"><div class="in">
+        <span class="dx-tag">Featured</span>
+        <h1 style="margin-top:12px">${esc(s.t)}</h1>
+        <div class="lb">${metaL(s)}</div>
+        <p>${esc(s.s)}</p>
+        <div class="dx-act"><button class="btn pk">${PLAY()} Start a party</button><button class="btn gh">Details</button></div>
+      </div></div></div>
+    </div>`;
+    rest.innerHTML = headRow('All titles', SHOWS.length) + grid();
+  }
+  function detail(id){
+    const s = byId(id), ss = s.type === 'series' ? seasons(s) : null;
+    host.innerHTML = `<div class="dx-hero dx-swap">
+      <div class="dx-bg">${still(s)}</div>
+      <button class="dx-back">${BACK} Back to listing</button>
+      <div class="dx-c"><div class="lx-w"><div class="in">
+        <h1>${esc(s.t)}</h1>
+        <div class="lb">${metaL(s)}</div>
+        <p>${esc(s.s)}</p>
+        <div class="dx-act">${actions(s)}</div>
+        ${s.live ? `<div style="margin-top:18px;max-width:420px">${liveRow(s)}</div>` : ''}
+      </div></div></div>
+    </div>`;
+    rest.innerHTML = `<div class="dx-eps dx-swap">
+      ${ss ? `<div class="dx-eph" style="margin-top:26px"><h4>Episodes</h4>
+          <div class="seg">${ss.map((x,i) => `<button class="${i ? '' : 'on'}" data-s="${i}">${x.t}</button>`).join('')}</div></div>
+        <div class="ep-strip"></div>` : `<div class="dx-eph" style="margin-top:26px"><h4>More from the listing</h4></div>
+        <div class="ep-strip">${SHOWS.filter(x => x.id !== s.id).slice(0,7).map((x,k) => `<div class="ep-s ix-rise" style="--d:${k*30}ms"><div class="th">${still(x)}</div><b>${esc(x.t)}</b><span>${metaL(x)}</span></div>`).join('')}</div>`}
+    </div>` + headRow('All titles', SHOWS.length) + grid();
+    sc.querySelectorAll('.lx-c').forEach(c => c.classList.toggle('on', c.dataset.id === id));
+    if(ss) strip(s, 0);
+    sc.scrollTo({top:0, behavior: REDUCED ? 'auto' : 'smooth'});
+    cur = id;
+  }
+  function strip(s, i){
+    const el = rest.querySelector('.ep-strip');
+    if(!el) return;
+    el.innerHTML = seasons(s)[i].eps.map((e,k) => `<div class="ep-s ix-rise" style="--d:${k*30}ms">
+      <div class="th">${still(s, e.pat)}<span class="pl">${PLAY(18)}</span></div>
+      <b>${e.n}. ${esc(e.t)}</b><span>${mins(e.d)}</span></div>`).join('');
+  }
+  let cur = null;
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) return detail(c.dataset.id);
+    if(e.target.closest('.dx-back')){ cur = null; return browse(); }
+    const sb = e.target.closest('.seg button');
+    if(sb && cur){
+      sb.parentNode.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === sb));
+      strip(byId(cur), Number(sb.dataset.s));
+    }
+  });
+  browse();
+  return {open: detail, close: browse};
+}
+
+/* ───── mount ───── */
+const MOUNTS = {now: mountNow, a: mountA, b: mountB, c: mountC, d: mountD};
+const API = {};
+document.querySelectorAll('[data-mount]').forEach(sc => {
+  API[sc.dataset.mount] = MOUNTS[sc.dataset.mount](sc, sc.closest('.frame'));
+});
+
+/* state toggles: movie / series */
+document.querySelectorAll('.var').forEach(v => {
+  const sc = v.querySelector('[data-mount]');
+  if(!sc) return;
+  const key = sc.dataset.mount;
+  const row = document.createElement('div');
+  row.className = 'state';
+  row.innerHTML = `<span>Showing</span><span class="seg"><button aria-pressed="true" data-t="velvet">Movie</button><button aria-pressed="false" data-t="hollow">Series</button></span><span>· or click any card in the listing</span>`;
+  v.querySelector('.frame').before(row);
+  row.addEventListener('click', e => {
+    const b = e.target.closest('button[data-t]');
+    if(!b) return;
+    row.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    API[key].open(b.dataset.t);
+  });
+  API[key].open('velvet');
+});
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  ['Explore from this', 'More variations in this direction.', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and change something.', id => `Remix ${id} in ${FILE}: `],
+  ['Settle on this', 'Make it the direction.', id => `Settle on ${id} in ${FILE}`]
+];
+document.querySelectorAll('.var').forEach(v => {
+  const id = v.dataset.id, h = v.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick';
+  btn.setAttribute('aria-expanded','false'); btn.setAttribute('aria-haspopup','menu');
+  h.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role','menu');
+  menu.innerHTML = VERBS.map((x,i) => `<button role="menuitem" data-i="${i}"><b>${x[0]}</b><span>${x[1]}</span></button>`).join('');
+  h.after(menu);
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  menu.after(out);
+
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded','false'); };
+  btn.addEventListener('click', () => {
+    const open = menu.hidden;
+    document.querySelectorAll('.pick-menu').forEach(m => { m.hidden = true; });
+    document.querySelectorAll('.pick-btn').forEach(b => b.setAttribute('aria-expanded','false'));
+    menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+  });
+  menu.addEventListener('click', async e => {
+    const b = e.target.closest('button[data-i]');
+    if(!b) return;
+    const text = VERBS[Number(b.dataset.i)][2](id);
+    close();
+    out.hidden = false;
+    try{
+      await navigator.clipboard.writeText(text);
+      out.innerHTML = `<code>${esc(text)}</code><span class="ok">Copied</span>`;
+    }catch(err){
+      out.innerHTML = `<input readonly value="${esc(text)}">`;
+      out.querySelector('input').select();
+    }
+  });
+  document.addEventListener('click', e => { if(!h.contains(e.target) && !menu.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+});
+
+/* ───── minimap ───── */
+const vars = [...document.querySelectorAll('.var')];
+document.getElementById('mm').innerHTML = vars.map(v => `<a href="#${v.id}"><i></i><span><b>${v.dataset.id}</b>${v.dataset.name}</span></a>`).join('');
+const links = [...document.querySelectorAll('.mm a')];
+function syncMM(){
+  let best = 0, bd = Infinity;
+  vars.forEach((v,i) => { const d = Math.abs(v.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((a,i) => a.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMM, {passive:true});
+syncMM();
+</script>
+</body>
+</html>

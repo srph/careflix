@@ -447,6 +447,76 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .a3-mu.on{color:var(--g);opacity:1}
 .a3-seek{position:absolute;left:9px;right:9px;bottom:8px;height:2px;border-radius:2px;background:rgba(255,255,255,.26)}
 .a3-seek i{position:absolute;inset:0 32% 0 0;background:rgba(255,255,255,.82);border-radius:2px}
+
+/* ───────────── A4 / A5 / A6 — one slim line, Respond opens it ───────────── */
+.tcard{position:absolute;left:50%;bottom:20px;z-index:6;background:rgba(21,32,43,.97);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 26px 54px -16px rgba(0,0,0,.85);overflow:hidden;transform:translateX(-50%) translateY(170%);opacity:0;
+  transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),
+  border-radius .45s,bottom .45s,filter .4s}
+.stage[data-keys~="arrive"] .tcard,.stage[data-keys~="focus"] .tcard,.stage[data-keys~="answer"] .tcard{transform:translateX(-50%);opacity:1}
+.stage[data-keys~="answer-acc"] .tcard{filter:none}
+.stage[data-keys~="answer-dec"] .tcard,.stage[data-keys~="answer-exp"] .tcard,.stage[data-keys~="answer-can"] .tcard{filter:grayscale(.85) brightness(.85)}
+.tline{display:flex;align-items:center;gap:11px;height:56px;padding:0 10px 0 8px}
+.tline p{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tline p b{font-weight:600}
+.tline .sp{margin-left:auto}
+.tline .x{color:var(--n5);font-size:12px;padding:0 3px}
+.tline .a-spin{flex:none}
+.ring{position:relative;display:grid;place-items:center;width:40px;height:40px;flex:none}
+.ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--pk) calc(var(--p)*1%),rgba(255,255,255,.16) 0);
+  -webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 2.5px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 2.5px),#000 calc(100% - 2.5px))}
+.stage[data-keys~="arrive"] .ring::before,.stage[data-keys~="focus"] .ring::before{animation:drain 16s linear forwards}
+.stage[data-keys~="answer-exp"] .ring::before{--p:0}
+.troom{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--n5)}
+.troom .av{margin-left:-5px}
+.troom .av:first-child{margin-left:0}
+.troom em{font-style:normal;margin-left:auto;color:var(--g)}
+.tnote{font-size:11.5px;color:var(--n5);margin-top:10px}
+/* A4 — the line grows up into a card */
+.t4{width:432px;height:56px;border-radius:28px}
+.stage[data-v="a4"][data-keys~="focus"] .t4{height:var(--t4h,440px);border-radius:14px}
+.stage[data-v="a4"][data-keys~="watch"] .t4,.stage[data-v="a5"][data-keys~="watch"] .t5,
+.stage[data-v="a6"][data-keys~="watch"] .t6{bottom:64px}
+.t4-body{opacity:0;transition:opacity .3s}
+.stage[data-v="a4"][data-keys~="focus"] .t4-body{opacity:1;transition-delay:.2s}
+.t4-th{position:relative;margin:0 10px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;container-type:inline-size}
+.t4-th .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.85),transparent 56%)}
+.t4-th .d{position:absolute;left:12px;right:12px;bottom:10px}
+.t4-th .d .sub{color:#cbd5e1;opacity:.82}
+.t4-th .d h3{font-size:17px;font-weight:600;margin-top:2px}
+.t4-room{padding:14px 14px 0}
+.t4-room .b-prog{margin-top:10px;max-width:none}
+.t4-acts{display:flex;gap:9px;padding:14px}
+.t4-acts .btn{flex:1}
+/* A5 — the line grows sideways into a bar */
+.t5{display:flex;align-items:center;gap:12px;width:432px;height:56px;border-radius:28px;padding:0 10px 0 8px}
+.stage[data-v="a5"][data-keys~="focus"] .t5{width:748px;height:116px;border-radius:14px}
+.t5-th{width:0;height:78px;border-radius:8px;overflow:hidden;flex:none;container-type:inline-size;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="a5"][data-keys~="focus"] .t5-th{width:139px}
+.t5-txt{min-width:0}
+.t5-txt p{font-size:13px;white-space:nowrap}
+.t5-txt p b{font-weight:600}
+.t5-txt .ttl b{display:block;font-size:15px;font-weight:600}
+.t5-txt .ttl em{display:block;margin-top:3px;font-style:normal;font-family:'Work Sans',sans-serif;font-size:9.5px;letter-spacing:.9px;text-transform:uppercase;color:var(--n5);white-space:nowrap}
+.t5-room{padding-left:18px;margin-left:18px;border-left:1px solid rgba(255,255,255,.1)}
+.t5-room{flex:none}
+.t5-room b{display:block;font-size:12px;font-weight:600;white-space:nowrap}
+.t5-room em{font-style:normal;font-size:11px;color:var(--g);white-space:nowrap}
+.t5-acts{gap:9px}
+/* A6 — the line grows into a bottom sheet */
+.t6{width:432px;height:56px;border-radius:28px}
+.stage[data-v="a6"][data-keys~="focus"] .t6{width:100%;height:292px;border-radius:14px 14px 0 0;bottom:0}
+.t6-dim{position:absolute;inset:0;z-index:5;background:rgba(6,9,13,.42);opacity:0;pointer-events:none;transition:opacity .4s}
+.stage[data-v="a6"][data-keys~="focus"] .t6-dim{opacity:1}
+.t6-body{display:flex;gap:20px;padding:4px 20px 0;opacity:0;transition:opacity .3s}
+.stage[data-v="a6"][data-keys~="focus"] .t6-body{opacity:1;transition-delay:.2s}
+.t6-still{width:340px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;flex:none;container-type:inline-size}
+.t6-info{flex:1;min-width:0;max-width:420px}
+.t6-info h3{font-size:22px;font-weight:600;letter-spacing:-.01em}
+.t6-info .mt{font-family:'Work Sans',sans-serif;font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--n5);margin:5px 0 14px}
+.t6-info .troom{padding-bottom:10px}
+.t6-acts{display:flex;gap:10px;margin-top:16px}
+.t6-acts .btn{min-width:124px}
 </style>
 </head>
 <body>
@@ -454,27 +524,26 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 <main class="doc">
 
 <header class="brief">
-  <div class="eyebrow">Care.tv · receiving a party invitation</div>
+  <div class="eyebrow">Care.tv · receiving an invitation</div>
   <h1>An invitation should arrive without taking her screen hostage.</h1>
   <div class="cards">
-    <div>A modal gets dismissed on reflex.</div>
     <div>She may be mid-episode; nothing can stop playback.</div>
     <div>One object carries joined, declined, expired, withdrawn.</div>
   </div>
 </header>
 
-<section class="var" id="v-now" data-id="Now" data-name="Blocking modal, buttons above the card">
-  <div class="var-h"><span class="id">Now</span><h2>Blocking modal, buttons above the card</h2></div>
+<section class="var" id="v-now" data-id="Now" data-name="Blocking modal">
+  <div class="var-h"><span class="id">Now</span><h2>Blocking modal</h2></div>
   <div class="frame"><div class="mk" data-mount="now"></div></div>
   <div class="rail" data-rail="v-now"></div>
   <div class="notes">
-    <div class="note good">The card sells it: sender, show, artwork.</div>
+    <div class="note good">Sells it: sender, show, artwork.</div>
     <div class="note bad">Blacks out what she was watching.</div>
   </div>
 </section>
 
-<section class="var" id="v-a" data-id="A" data-name="Doorbell — rings in the corner">
-  <div class="var-h"><span class="id">A</span><h2>Doorbell — rings in the corner</h2></div>
+<section class="var" id="v-a" data-id="A" data-name="Doorbell in the corner">
+  <div class="var-h"><span class="id">A</span><h2>Doorbell in the corner</h2></div>
   <div class="frame"><div class="mk" data-mount="a"></div></div>
   <div class="rail" data-rail="v-a"></div>
   <div class="notes">
@@ -483,13 +552,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   </div>
 </section>
 
-<section class="var" id="v-a2" data-id="A2" data-name="Toast first, the card on tap">
-  <div class="var-h"><span class="id">A2</span><h2>Toast first, the card on tap</h2></div>
+<section class="var" id="v-a2" data-id="A2" data-name="Toast, then the card">
+  <div class="var-h"><span class="id">A2</span><h2>Toast, then the card</h2></div>
   <div class="frame"><div class="mk" data-mount="a2"></div></div>
   <div class="rail" data-rail="v-a2"></div>
   <div class="notes">
     <div class="note good">One line, with a strip of the movie.</div>
-    <div class="note good">It grows in place; no second surface.</div>
     <div class="note bad">A 42px strip is a thin promise.</div>
   </div>
 </section>
@@ -499,14 +567,43 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk" data-mount="a3"></div></div>
   <div class="rail" data-rail="v-a3"></div>
   <div class="notes">
-    <div class="note good">The peek is the toast: a muted live frame.</div>
-    <div class="note good">The frame grows into her player.</div>
+    <div class="note good">The peek is the toast itself.</div>
     <div class="note bad">A live corner tile is a privacy call.</div>
   </div>
 </section>
 
-<section class="var" id="v-b" data-id="B" data-name="Marquee — the artwork makes the ask">
-  <div class="var-h"><span class="id">B</span><h2>Marquee — the artwork makes the ask</h2></div>
+<section class="var" id="v-a4" data-id="A4" data-name="Respond opens a card">
+  <div class="var-h"><span class="id">A4</span><h2>Respond opens a card</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4"></div></div>
+  <div class="rail" data-rail="v-a4"></div>
+  <div class="notes">
+    <div class="note good">One line, one ring, one button.</div>
+    <div class="note bad">Open, it covers her screen's middle.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a5" data-id="A5" data-name="Respond opens a bar">
+  <div class="var-h"><span class="id">A5</span><h2>Respond opens a bar</h2></div>
+  <div class="frame"><div class="mk" data-mount="a5"></div></div>
+  <div class="rail" data-rail="v-a5"></div>
+  <div class="notes">
+    <div class="note good">Never taller than a now-playing bar.</div>
+    <div class="note bad">Wide and shallow fits the least detail.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6" data-id="A6" data-name="Respond opens a sheet">
+  <div class="var-h"><span class="id">A6</span><h2>Respond opens a sheet</h2></div>
+  <div class="frame"><div class="mk" data-mount="a6"></div></div>
+  <div class="rail" data-rail="v-a6"></div>
+  <div class="notes">
+    <div class="note good">The dim demands an answer.</div>
+    <div class="note bad">Closest of the three to today's modal.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Marquee: the artwork asks">
+  <div class="var-h"><span class="id">B</span><h2>Marquee: the artwork asks</h2></div>
   <div class="frame"><div class="mk" data-mount="b"></div></div>
   <div class="rail" data-rail="v-b"></div>
   <div class="notes">
@@ -515,42 +612,42 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   </div>
 </section>
 
-<section class="var" id="v-c" data-id="C" data-name="Live row — the invite is content">
-  <div class="var-h"><span class="id">C</span><h2>Live row — the invite is content</h2></div>
+<section class="var" id="v-c" data-id="C" data-name="Live row in her library">
+  <div class="var-h"><span class="id">C</span><h2>Live row in her library</h2></div>
   <div class="frame"><div class="mk" data-mount="c"></div></div>
   <div class="rail" data-rail="v-c"></div>
   <div class="notes">
     <div class="note good">Joining grows the card into the player.</div>
-    <div class="note bad">Mid-episode it's a pill that pulls her out.</div>
+    <div class="note bad">Mid-episode it pulls her out.</div>
   </div>
 </section>
 
-<section class="var" id="v-d" data-id="D" data-name="Peek — the party before answering">
-  <div class="var-h"><span class="id">D</span><h2>Peek — the party before answering</h2></div>
+<section class="var" id="v-d" data-id="D" data-name="Peek into the room">
+  <div class="var-h"><span class="id">D</span><h2>Peek into the room</h2></div>
   <div class="frame"><div class="mk" data-mount="d"></div></div>
   <div class="rail" data-rail="v-d"></div>
   <div class="notes">
-    <div class="note good">She answers on what it is, not a poster.</div>
+    <div class="note good">She answers on the room, not a poster.</div>
     <div class="note bad">Peeking in muted is a privacy call.</div>
   </div>
 </section>
 
-<section class="var" id="v-e" data-id="E" data-name="Reply — answer it in words">
-  <div class="var-h"><span class="id">E</span><h2>Reply — answer it in words</h2></div>
+<section class="var" id="v-e" data-id="E" data-name="Reply in words">
+  <div class="var-h"><span class="id">E</span><h2>Reply in words</h2></div>
   <div class="frame"><div class="mk" data-mount="e"></div></div>
   <div class="rail" data-rail="v-e"></div>
   <div class="notes">
     <div class="note good">"Give me 10" is an answer here.</div>
-    <div class="note bad">Care.tv has no inbox to put this in.</div>
+    <div class="note bad">No inbox exists to hold it.</div>
   </div>
 </section>
 
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from A2 as an OS notification.</div>
-    <div><b>Remix</b>Remix A3 so two invites stack.</div>
-    <div><b>Settle</b>Settle on A2 if the strip earns the tap.</div>
+    <div><b>Explore</b>Explore from A4 on mobile.</div>
+    <div><b>Remix</b>Remix A5 with two invitations stacked.</div>
+    <div><b>Settle</b>Settle on A4 if one line suffices.</div>
   </div>
 </section>
 </main>
@@ -598,7 +695,7 @@ const library = (o = {}) => `<div class="gl">
   <div class="gl-grid">${SHOWS.slice(0,4).map(tile).join('')}</div>
   <h6 class="sub gl-h">Because you watched Hollow County</h6>
   <div class="gl-grid">${[...SHOWS].reverse().slice(0,4).map(tile).join('')}</div>
-  <h6 class="sub gl-h">Parties you missed</h6>
+  <h6 class="sub gl-h">New this week</h6>
   <div class="gl-grid">${[SHOWS[3],SHOWS[0],SHOWS[5],SHOWS[1]].map(tile).join('')}</div>
 </div>`;
 const herShow = () => `<div class="pl">
@@ -608,11 +705,11 @@ const herShow = () => `<div class="pl">
 const party = () => `<div class="party"><div class="hp">
   <div class="pl"><div class="pl-vid">${poster(FEAT)}<div class="pl-ov"></div>${ctl('41:12','2:04:00','68%')}</div></div>
   <div class="hp-chat">
-    <div class="hp-ch"><h5 class="sub">Party</h5><span class="mem">${av('Kier','s')}${av('Leo','s')}${av('Joyce','s')}</span></div>
+    <div class="hp-ch"><h5 class="sub">Room</h5><span class="mem">${av('Kier','s')}${av('Leo','s')}${av('Joyce','s')}</span></div>
     <div class="hp-msgs">
       <div class="msg">${av('Leo','s')}<div><b>Leo</b><p>wait go back, that was the radio guy</p></div></div>
       <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>told you. ok pausing</p></div></div>
-      <div class="msg sys">${av('Joyce','s')} You joined the party</div>
+      <div class="msg sys">${av('Joyce','s')} You joined the room</div>
       <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>JOYCE. we waited 41 minutes</p></div></div>
     </div>
     <div class="hp-inp">Say something…</div>
@@ -662,7 +759,7 @@ function mountA(sc){
     <div class="a-acts wf" data-w="arrive focus"><span class="btn gh">Later</span><span class="btn pk">Join them</span></div>
     <div class="a-sum wf" data-w="answer-exp answer-can"><span class="btn gh sm">Dismiss</span><span>Ask Kier to invite you again</span></div>
   </div>
-  <div class="a-join">${av('Kier','s')}<span><b>Joining Kier's party</b></span><span class="a-spin"></span></div>
+  <div class="a-join">${av('Kier','s')}<span><b>Joining Kier's room</b></span><span class="a-spin"></span></div>
   <div class="a-chip">${av('Kier','s')}<span><b>Kier is watching</b></span><em>Join anytime</em></div>`;
   sc.innerHTML = shell('a', card);
 }
@@ -694,7 +791,7 @@ function mountA2(sc){
     <div class="a2-acts wf" data-w="focus"><span class="btn gh">Not now</span><span class="btn pk">Join them</span></div>
     <div class="a2-acts wf" data-w="answer-exp answer-can"><span class="btn gh">Ask Kier again</span></div>
   </div>
-  <div class="a-join">${av('Kier','s')}<span><b>Joining Kier's party</b></span><span class="a-spin"></span></div>
+  <div class="a-join">${av('Kier','s')}<span><b>Joining Kier's room</b></span><span class="a-spin"></span></div>
   <div class="a-chip">${av('Kier','s')}<span><b>Kier is watching</b></span><em>Join anytime</em></div>`;
   sc.innerHTML = shell('a2', card);
 }
@@ -742,6 +839,108 @@ function mountA3(sc){
   anchor(st, '.a3-ph', 'a6', 'focus acc focus-acc watch');
 }
 
+/* ───── A4 — Respond opens a card ───── */
+function mountA4(sc){
+  const card = `<div class="tcard t4"><div class="t4-in">
+    <div class="tline">
+      <span class="ring">${av('Kier')}</span>
+      <p data-w="arrive focus"><b>Kier</b> invited you to watch <b>${esc(FEAT.t)}</b></p>
+      <p data-w="answer-acc" style="color:var(--g)">Joining Kier's room…</p>
+      <p data-w="answer-dec">Maybe next time</p>
+      <p data-w="answer-exp">This invitation expired</p>
+      <p data-w="answer-can">Kier closed the room</p>
+      <span class="sp"></span>
+      <span class="btn pk sm" data-w="arrive">Respond</span>
+      <span class="a-spin" data-w="answer-acc"></span>
+      <span class="btn gh sm" data-w="answer-exp answer-can">Dismiss</span>
+      <span class="x" data-w="arrive focus">✕</span>
+    </div>
+    <div class="t4-body">
+      <div class="t4-th">${poster(FEAT)}<div class="shade"></div>
+        <div class="d"><h6 class="sub">Movie · ${FEAT.y} · ${FEAT.len}</h6><h3>${esc(FEAT.t)}</h3></div></div>
+      <div class="t4-room">
+        <div class="troom">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo are in the room</span><em>41m in</em></div>
+        <div class="b-prog"><i></i><b></b></div>
+        <p class="tnote">Accept and you come in at 41:12, where they are.</p>
+      </div>
+      <div class="t4-acts"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+    </div>
+  </div></div>`;
+  sc.innerHTML = shell('a4', card);
+  autoHeight(sc.querySelector('.stage'), '.t4-in', 't4h');
+}
+
+/* ───── A5 — Respond opens a bar ───── */
+function mountA5(sc){
+  const bar = `<div class="tcard t5">
+    <span class="ring">${av('Kier')}</span>
+    <div class="t5-th">${poster(FEAT)}</div>
+    <div class="t5-txt">
+      <p data-w="arrive"><b>Kier</b> invited you to watch <b>${esc(FEAT.t)}</b></p>
+      <div class="ttl" data-w="focus"><b>${esc(FEAT.t)}</b><em>Movie · ${FEAT.y} · ${FEAT.len}</em></div>
+      <p data-w="answer-acc" style="color:var(--g)">Joining Kier's room…</p>
+      <p data-w="answer-dec">Maybe next time</p>
+      <p data-w="answer-exp">This invitation expired</p>
+      <p data-w="answer-can">Kier closed the room</p>
+    </div>
+    <div class="t5-room wf" data-w="focus">${av('Kier','s')}${av('Leo','s')}
+      <div style="margin-left:7px"><b>Kier and Leo</b><em>41m in · they'll rewind</em></div></div>
+    <span class="sp"></span>
+    <span class="btn pk sm" data-w="arrive">Respond</span>
+    <span class="t5-acts wf" data-w="focus"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></span>
+    <span class="a-spin" data-w="answer-acc"></span>
+    <span class="btn gh sm" data-w="answer-exp answer-can">Dismiss</span>
+    <span class="x" data-w="arrive focus">✕</span>
+  </div>`;
+  sc.innerHTML = shell('a5', bar);
+}
+
+/* ───── A6 — Respond opens a sheet ───── */
+function mountA6(sc){
+  const sheet = `<div class="t6-dim"></div>
+  <div class="tcard t6"><div class="t6-in">
+    <div class="tline">
+      <span class="ring">${av('Kier')}</span>
+      <p data-w="arrive focus"><b>Kier</b> invited you to watch <b>${esc(FEAT.t)}</b></p>
+      <p data-w="answer-acc" style="color:var(--g)">Joining Kier's room…</p>
+      <p data-w="answer-dec">Maybe next time</p>
+      <p data-w="answer-exp">This invitation expired</p>
+      <p data-w="answer-can">Kier closed the room</p>
+      <span class="sp"></span>
+      <span class="btn pk sm" data-w="arrive">Respond</span>
+      <span class="a-spin" data-w="answer-acc"></span>
+      <span class="btn gh sm" data-w="answer-exp answer-can">Dismiss</span>
+      <span class="x" data-w="arrive focus">✕</span>
+    </div>
+    <div class="t6-body">
+      <div class="t6-still">${poster(FEAT,{title:1})}</div>
+      <div class="t6-info">
+        <h3>${esc(FEAT.t)}</h3>
+        <div class="mt">Movie · ${FEAT.y} · ${FEAT.len}</div>
+        <div class="troom">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo are in the room</span><em>41m in</em></div>
+        <div class="b-prog"><i></i><b></b></div>
+        <p class="tnote">Accept and you come in at 41:12, where they are.</p>
+        <div class="t6-acts"><span class="btn gh lg">Decline</span><span class="btn pk lg">Accept</span></div>
+      </div>
+    </div>
+  </div></div>`;
+  sc.innerHTML = shell('a6', sheet);
+}
+
+/* a card that grows to fit its own content is measured once, with motion off */
+function autoHeight(st, sel, name, keys){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '';
+    st.classList.add('measuring');
+    st.dataset.keys = keys || 'focus acc focus-acc browse';
+    void st.offsetWidth;
+    st.style.setProperty('--' + name, st.querySelector(sel).scrollHeight + 'px');
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+
 /* ───── B — Marquee ───── */
 function mountB(sc){
   const take = `<div class="b-take">
@@ -756,7 +955,7 @@ function mountB(sc){
         <div class="b-into">${av('Kier','s')}${av('Leo','s')}<span>You'll come in at 41:12, right where they are</span></div>
         <div class="b-prog"><i></i><b></b></div>
       </div></div>
-      <div class="b-row wf" data-w="arrive focus"><span class="btn pk lg">Join the party</span><span class="b-no">Not tonight</span>
+      <div class="b-row wf" data-w="arrive focus"><span class="btn pk lg">Join the room</span><span class="b-no">Not tonight</span>
         <span class="b-dial" style="margin-left:auto"><em>4:52</em></span></div>
       <div class="b-row wf" data-w="answer-exp answer-can"><span class="btn gh lg">Back to browsing</span><span class="b-no">Ask Kier to re-invite me</span></div>
     </div>
@@ -812,7 +1011,7 @@ function anchor(st, phSel, pre, keys){
 /* ───── D — Peek ───── */
 function mountD(sc){
   const side = `<div class="d-side">
-    <div class="d-hd">${av('Kier','s')}<div><b>Kier's party</b><em>live now</em></div><span class="x">✕</span></div>
+    <div class="d-hd">${av('Kier','s')}<div><b>Kier's room</b><em>live now</em></div><span class="x">✕</span></div>
     <div class="d-ph"></div>
     <div class="d-info">
       <h3>${esc(FEAT.t)}</h3>
@@ -821,7 +1020,7 @@ function mountD(sc){
         <span class="d-lvl wi" data-w="focus"><i></i><i></i><i></i></span></div>
       <p class="d-note" data-w="arrive">Peeking muted. They can't see you yet.</p>
       <p class="d-note" data-w="focus">Sound on — that's Leo talking.</p>
-      <p class="d-note" data-w="answer-exp">The invite ran out, but the party's still going.</p>
+      <p class="d-note" data-w="answer-exp">The invite ran out, but the room's still open.</p>
       <p class="d-note" data-w="answer-can">Kier called it off.</p>
       <div class="d-chat" data-w="arrive focus">
         <div class="msg">${av('Leo','s')}<div><b>Leo</b><p>wait go back, that was the radio guy</p></div></div>
@@ -878,7 +1077,8 @@ kst.textContent = KEYS.map(k => `.stage[data-keys~="${k}"] [data-w~="${k}"]{disp
 .stage[data-keys~="${k}"] .wi[data-w~="${k}"]{display:inline-flex}`).join('');
 document.head.append(kst);
 
-const MOUNTS = {now: mountNow, a: mountA, a2: mountA2, a3: mountA3, b: mountB, c: mountC, d: mountD, e: mountE};
+const MOUNTS = {now: mountNow, a: mountA, a2: mountA2, a3: mountA3, a4: mountA4, a5: mountA5, a6: mountA6,
+  b: mountB, c: mountC, d: mountD, e: mountE};
 document.querySelectorAll('[data-mount]').forEach(sc => MOUNTS[sc.dataset.mount](sc));
 
 function setKeys(st){

@@ -363,7 +363,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .mk[data-step="2"] .sb.icons .it.on{background:rgba(255,255,255,.06);box-shadow:none;color:#cbd6e0}
 .mk[data-step="2"] .sb.icons .it.on::before{display:none}
 .mk[data-step="2"] .sb.icons .jrm::before{content:"";position:absolute;left:-12px;top:5px;bottom:5px;width:3px;border-radius:0 3px 3px 0;background:var(--pk)}
-.pop{position:absolute;left:22px;top:196px;width:330px;padding:17px;border-radius:8px;background:#17222E;border:1px solid rgba(255,255,255,.12);box-shadow:0 36px 70px -26px rgba(0,0,0,.85);animation:rise2 .3s both;z-index:8}
+.pop{position:absolute;left:22px;top:204px;width:330px;padding:17px;border-radius:8px;background:#17222E;border:1px solid rgba(255,255,255,.12);box-shadow:0 36px 70px -26px rgba(0,0,0,.85);animation:rise2 .3s both;z-index:8}
 .pop::after{content:"";position:absolute;left:-7px;top:26px;width:12px;height:12px;background:#17222E;border-left:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);transform:rotate(45deg)}
 .pop .sub{color:var(--n5)}
 .pop h3{font-size:15px;font-weight:600;margin-top:5px}
@@ -425,6 +425,65 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .mk[data-step="2"] .squad .slots,.mk[data-step="2"] .squad>.btn{display:none}
 .chatblock .chat-i{margin:4px 0 0}
 
+/* ── K: peek from the rail ── */
+.peek{position:absolute;left:78px;width:252px;padding:12px;border-radius:8px;background:#17222E;border:1px solid rgba(255,255,255,.13);box-shadow:0 36px 70px -26px rgba(0,0,0,.85);animation:rise2 .26s both;z-index:9}
+.peek::after{content:"";position:absolute;left:-7px;top:24px;width:12px;height:12px;background:#17222E;border-left:1px solid rgba(255,255,255,.13);border-bottom:1px solid rgba(255,255,255,.13);transform:rotate(45deg)}
+.peek.pj{top:104px}
+.peek.pm{top:155px}
+.pk-top{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:700}
+.pk-top .pill{margin-left:auto;height:20px;font-size:10px;padding:0 8px}
+.pk-th{position:relative;margin-top:11px;aspect-ratio:16/9;border-radius:4px;overflow:hidden;container-type:inline-size}
+.pk-prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.22)}
+.pk-prog b{position:absolute;left:0;top:0;bottom:0;background:var(--pk)}
+.pk-m{margin-top:9px;font-size:12.5px;font-weight:700}
+.pk-m em{display:block;font-style:normal;font-size:10.5px;font-weight:500;color:var(--n5);margin-top:3px}
+.pk-a{display:flex;gap:7px;margin-top:12px}
+.pk-a .btn{flex:1;height:30px;font-size:12px;padding:0}
+
+/* ── L: ghost doors ── */
+.sb.icons .it.ghostrm{background:none;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.13)}
+.sb.icons .it.ghostrm .av{opacity:.45}
+.sb.icons .it.ghostrm:hover .av{opacity:.9}
+.sb.icons .it.act::before{content:"";position:absolute;left:-12px;top:5px;bottom:5px;width:3px;border-radius:0 3px 3px 0;background:var(--pk)}
+.sb.icons .it.inb .pnd{display:none}
+.mk[data-step="0"] .sb.icons .it.inb{display:none}
+.mk[data-step="1"] .sb.icons .it.inb{background:none;box-shadow:inset 0 0 0 1.5px rgba(232,54,143,.55)}
+.mk[data-step="1"] .sb.icons .it.inb::before{display:none}
+.mk[data-step="1"] .sb.icons .it.inb .av{display:none}
+.mk[data-step="1"] .sb.icons .it.inb .pnd{display:block;font-size:12px;font-weight:700;color:#ff8ec4;letter-spacing:.04em}
+.mk[data-step="1"] .sb.icons .it.inb::after{display:none}
+.pop.lo{top:255px}
+.rtip{position:absolute;left:78px;top:118px;padding:7px 11px;border-radius:5px;background:rgba(10,15,21,.95);border:1px solid rgba(255,255,255,.12);font-size:11.5px;color:#dbe4ec;box-shadow:0 14px 30px -14px #000;animation:rise2 .3s both}
+.rtip::after{content:"";position:absolute;left:-5px;top:11px;width:9px;height:9px;background:rgba(10,15,21,.95);border-left:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);transform:rotate(45deg)}
+
+/* ── M: room page ── */
+.rm{flex:1;min-height:0;display:flex}
+.rm-main{flex:1;min-width:0;display:flex;flex-direction:column;padding:18px 24px 22px}
+.rm-h{flex:none;display:flex;align-items:center;gap:11px}
+.rm-h h3{font-size:18px;font-weight:700;letter-spacing:-.015em}
+.rm-seats{flex:none;display:flex;align-items:center;gap:7px;margin-top:15px}
+.rseat{display:flex;align-items:center;gap:8px;height:32px;padding:0 13px 0 6px;border-radius:999px;background:rgba(255,255,255,.07);font-size:12px;font-weight:600;white-space:nowrap}
+.rseat em{font-style:normal;color:var(--n5);font-size:10px;font-weight:500}
+.rseat.inv{background:none;border:1px dashed var(--n4);color:var(--n5);font-weight:500;padding:0 13px;gap:5px}
+.stage{flex:1;min-height:0;margin-top:15px;border-radius:7px;border:1px dashed var(--n4);background:rgba(255,255,255,.015);display:grid;place-items:center;text-align:center;padding:16px}
+.stage h4{font-size:15px;font-weight:700}
+.stage p{font-size:12px;color:var(--n5);margin-top:6px}
+.stage .btn{margin-top:15px}
+.np{display:none;flex:1;min-height:0;align-items:stretch;margin-top:15px;border-radius:7px;background:var(--n3);border:1px solid rgba(255,255,255,.07);overflow:hidden;animation:rise2 .3s both}
+.np .th{width:54%;flex:none;position:relative;container-type:inline-size}
+.np .tx{flex:1;min-width:0;padding:20px 24px;display:flex;flex-direction:column;justify-content:center}
+.np .sub{color:var(--n5)}
+.np h3{font-size:19px;font-weight:700;letter-spacing:-.015em;margin-top:6px}
+.np p{font-size:12px;color:var(--n5);margin-top:6px}
+.np .btn{margin-top:14px}
+.mk[data-step="1"] .stage,.mk[data-step="2"] .stage{display:none}
+.mk[data-step="1"] .np,.mk[data-step="2"] .np{display:flex}
+.rm-row{flex:none;margin-top:16px}
+.rm-row .rowh{margin-bottom:9px}
+.rm-row .gcard .cap{padding:18px 9px 7px;font-size:11px}
+.m-sys{display:none}
+.mk[data-step="1"] .m-sys,.mk[data-step="2"] .m-sys{display:block}
+
 @media (prefers-reduced-motion:reduce){.mk *,.layer{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -438,7 +497,6 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="cards">
     <div>Open on Join.</div>
     <div>Every party carries a code.</div>
-    <div>Start one, or join Joyce's.</div>
     <div>Invites push, codes pull.</div>
   </div>
 </header>
@@ -449,7 +507,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="rail" data-rail="v-now"></div>
   <div class="notes">
     <div class="note good">One tap from a title.</div>
-    <div class="note bad">A party is /watch/18231 — unsayable.</div>
+    <div class="note bad">/watch/18231 — unsayable.</div>
   </div>
 </section>
 
@@ -458,8 +516,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk" data-mount="a"></div></div>
   <div class="rail" data-rail="v-a"></div>
   <div class="notes">
-    <div class="note good">Join is the loudest thing.</div>
-    <div class="note bad">Browsing lives under a slab.</div>
+    <div class="note good">Join shouts loudest.</div>
+    <div class="note bad">Browsing demoted.</div>
   </div>
 </section>
 
@@ -468,8 +526,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk" data-mount="b"></div></div>
   <div class="rail" data-rail="v-b"></div>
   <div class="notes">
-    <div class="note good">Two halves: keep one, give one.</div>
-    <div class="note bad">A metaphor to maintain.</div>
+    <div class="note good">Two halves to share.</div>
+    <div class="note bad">Skeuomorphic.</div>
   </div>
 </section>
 
@@ -478,7 +536,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk" data-mount="c"></div></div>
   <div class="rail" data-rail="v-c"></div>
   <div class="notes">
-    <div class="note good">You join people, not strings.</div>
+    <div class="note good">You join people.</div>
     <div class="note bad">Empty most nights.</div>
   </div>
 </section>
@@ -488,8 +546,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk" data-mount="d"></div></div>
   <div class="rail" data-rail="v-d"></div>
   <div class="notes">
-    <div class="note good">Codes resolve where you type.</div>
-    <div class="note bad">A door that looks like search.</div>
+    <div class="note good">Codes resolve inline.</div>
+    <div class="note bad">Door disguised as search.</div>
   </div>
 </section>
 
@@ -509,7 +567,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="rail" data-rail="v-f"></div>
   <div class="notes">
     <div class="note good">Nobody arrives fourteen minutes late.</div>
-    <div class="note bad">A room before anything plays.</div>
+    <div class="note bad">Dead air before playback.</div>
   </div>
 </section>
 
@@ -519,7 +577,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="rail" data-rail="v-g"></div>
   <div class="notes">
     <div class="note good">Join first, without shouting.</div>
-    <div class="note bad">A gate before the library.</div>
+    <div class="note bad">A gate before browsing.</div>
   </div>
 </section>
 
@@ -538,8 +596,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk" data-mount="i"></div></div>
   <div class="rail" data-rail="v-i"></div>
   <div class="notes">
-    <div class="note good">Presence makes joining obvious.</div>
-    <div class="note bad">Eats width posters wanted.</div>
+    <div class="note good">Presence persuades.</div>
+    <div class="note bad">Eats poster width.</div>
   </div>
 </section>
 
@@ -549,23 +607,53 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="rail" data-rail="v-j"></div>
   <div class="notes">
     <div class="note good">Seats, code, then chat.</div>
-    <div class="note bad">Rebuilds the nav to ship.</div>
+    <div class="note bad">Rebuilds the nav.</div>
+  </div>
+</section>
+
+<section class="var" id="v-k" data-id="K" data-name="Peek — the room, from the rail">
+  <div class="var-h"><span class="id">K</span><h2>Peek — the room, from the rail</h2></div>
+  <div class="frame"><div class="mk" data-mount="k"></div></div>
+  <div class="rail" data-rail="v-k"></div>
+  <div class="notes">
+    <div class="note good">See inside before joining.</div>
+    <div class="note bad">No touch equivalent.</div>
+  </div>
+</section>
+
+<section class="var" id="v-l" data-id="L" data-name="Ghost doors — friends are already rooms">
+  <div class="var-h"><span class="id">L</span><h2>Ghost doors — friends are already rooms</h2></div>
+  <div class="frame"><div class="mk" data-mount="l"></div></div>
+  <div class="rail" data-rail="v-l"></div>
+  <div class="notes">
+    <div class="note good">Codes are for strangers.</div>
+    <div class="note bad">A rail of rooms you skipped.</div>
+  </div>
+</section>
+
+<section class="var" id="v-m" data-id="M" data-name="Room page — the rail leads somewhere">
+  <div class="var-h"><span class="id">M</span><h2>Room page — the rail leads somewhere</h2></div>
+  <div class="frame"><div class="mk" data-mount="m"></div></div>
+  <div class="rail" data-rail="v-m"></div>
+  <div class="notes">
+    <div class="note good">A room outlives the film.</div>
+    <div class="note bad">Needs parties without a video.</div>
   </div>
 </section>
 
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from J with the guest's side.</div>
-    <div><b>Remix</b>Remix H with a wider rail.</div>
-    <div><b>Settle</b>Settle on J to rebuild the frame.</div>
+    <div><b>Explore</b>Explore from M with an empty room.</div>
+    <div><b>Remix</b>Remix K with press-and-hold peek.</div>
+    <div><b>Settle</b>Settle on M to make rooms durable.</div>
   </div>
 </section>
 </main>
 <script>
 const FILE = '.kier/designs/4f7a-watch-party-join-code.html';
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F'};
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Priya:'#FDBA74', Kier:'#E8368F'};
 const CODE = 'K7M2QD';
 const SHOWS = [
   {id:'velvet', t:'Velvet Static', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings'},
@@ -632,7 +720,7 @@ function player(o = {}){
       </div>
     </div>
     ${o.chat === false ? '' : `<aside class="chat">
-      <div class="chat-h"><span class="sub">Party</span>${avs(o.who || ['Joyce','Kier'], 's')}<span class="plus">+</span></div>
+      <div class="chat-h"><span class="sub">${o.label || 'Party'}</span>${avs(o.who || ['Joyce','Kier'], 's')}<span class="plus">+</span></div>
       <div class="msgs">${(o.msgs || []).join('')}</div>
       <div class="chat-i">Say something…</div>
     </aside>`}
@@ -1130,6 +1218,175 @@ CANVAS.j = {
   </div>`
 };
 
+CANVAS.k = {
+  steps: ['At rest','Peek','Switch'],
+  html: () => {
+    const peek = o => `<div class="peek ${o.cls}">
+      <div class="pk-top">${avs(o.people,'s')}<b>${o.who}</b><span class="pill"><span class="dot"></span>live</span></div>
+      <div class="pk-th">${poster(byId(o.show))}<i class="pk-prog"><b style="width:${o.pct}"></b></i></div>
+      <div class="pk-m">${o.title}<em>${o.at}</em></div>
+      <div class="pk-a"><button class="btn pk">${o.cta}</button><button class="btn gh">${o.alt}</button></div>
+    </div>`;
+    return `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="app">
+      <aside class="sb icons">
+        <div class="mark">c<i>.</i></div>
+        <button class="it on">▦</button>
+        <div class="hr"></div>
+        <button class="it room live jrm">${av('Joyce','l')}<i class="n">3</i></button>
+        <button class="it room live">${av('Mira','l')}</button>
+        <button class="it gh">＋</button>
+        <div class="sp"></div>
+        <div class="hr"></div>
+        ${av('Kier')}
+      </aside>
+      <div class="cv">
+        ${nav2({tab:'All'})}
+        <div class="scroll">
+          <div class="rowh"><h4>Continue watching</h4></div>
+          ${grid(['velvet','hollow','paper','orbit'])}
+          <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+          ${grid(['ferry','under','gloss','kite'])}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="1">
+    ${peek({cls:'pj', people:['Joyce','Leo'], who:"Joyce's room", show:'velvet', pct:'11%', title:'Velvet Static', at:'14:02 in · one seat free', cta:'Join', alt:'Not now'})}
+  </div>
+  <div class="layer p66" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce's room</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[chatMsg('Leo','told you she would come'), sysMsg('Kier joined · synced to 14:02')]})}
+  </div>
+  <div class="layer" data-show="2">
+    ${peek({cls:'pm', people:['Mira','Nico'], who:"Mira's room", show:'hollow', pct:'29%', title:'Hollow County', at:'31:20 in · S2 · E4', cta:'Switch', alt:'Stay'})}
+  </div>`;
+  }
+};
+
+CANVAS.l = {
+  steps: ['Doors, not pages','A code adds a door','Walked in'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="app">
+      <aside class="sb icons">
+        <div class="mark">c<i>.</i></div>
+        <button class="it on">▦</button>
+        <div class="hr"></div>
+        <button class="it room live ghostrm">${av('Joyce','l')}</button>
+        <button class="it room live ghostrm">${av('Mira','l')}</button>
+        <button class="it room live inb act">${av('Priya','l')}<span class="pnd">K7</span></button>
+        <button class="it gh">＋</button>
+        <div class="sp"></div>
+        <div class="hr"></div>
+        ${av('Kier')}
+      </aside>
+      <div class="cv">
+        ${nav2({tab:'All'})}
+        <div class="scroll">
+          <div class="rowh"><h4>Continue watching</h4></div>
+          ${grid(['velvet','hollow','paper','orbit'])}
+          <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+          ${grid(['ferry','under','gloss','kite'])}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="0">
+    <div class="rtip">Joyce is watching — walk in, no code needed</div>
+  </div>
+  <div class="layer p66" data-show="1">
+    <div class="scrim" style="background:rgba(6,9,13,.5)"></div>
+    <div class="pop lo">
+      <span class="sub">Join a room</span>
+      <h3>Someone outside your friends?</h3>
+      ${cells(CODE, 0, {sm:true})}
+      <div class="found"><div class="th">${poster(byId('ferry'))}</div><div><b>Priya's room</b><em>Night Ferry · starts in a minute</em></div></div>
+      <button class="btn pk blk" style="margin-top:13px">Join</button>
+      <div class="hint">Her door sits in your rail until you leave.</div>
+    </div>
+  </div>
+  <div class="layer p66" data-show="2">
+    ${player({show:byId('ferry'), time:'00:48', right:'96%', who:['Priya','Kier'],
+      top:`<span class="sub" style="color:#9fb0bd">Priya's room</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Priya','Kier'])}`,
+      msgs:[chatMsg('Priya','made it! sit anywhere'), sysMsg('Kier joined · synced to 00:48','new')]})}
+  </div>`
+};
+
+CANVAS.m = {
+  steps: ['The room','Joyce picks','Watching'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="app">
+      <aside class="sb icons">
+        <div class="mark">c<i>.</i></div>
+        <button class="it">▦</button>
+        <div class="hr"></div>
+        <button class="it room live act">${av('Joyce','l')}</button>
+        <button class="it room live">${av('Mira','l')}</button>
+        <button class="it gh">＋</button>
+        <div class="sp"></div>
+        <div class="hr"></div>
+        ${av('Kier')}
+      </aside>
+      <div class="cv">
+        <div class="rm">
+          <div class="rm-main">
+            <div class="rm-h">
+              ${avs(['Joyce','Leo','Kier'])}
+              <h3>Joyce's room</h3>
+              <span class="codechip">K7M‑2QD <b>⧉</b></span>
+              <span style="flex:1"></span>
+              <button class="btn ln">Leave room</button>
+            </div>
+            <div class="rm-seats">
+              <div class="rseat">${av('Joyce','s')}Joyce<em>host</em></div>
+              <div class="rseat">${av('Leo','s')}Leo</div>
+              <div class="rseat">${av('Kier','s')}You</div>
+              <div class="rseat inv"><span class="ic">＋</span>Invite</div>
+            </div>
+            <div class="stage">
+              <div>
+                <h4>Nothing playing yet</h4>
+                <p>Three of you are in. Anyone can start something.</p>
+                <button class="btn pk">Pick something to watch</button>
+              </div>
+            </div>
+            <div class="np">
+              <div class="th">${poster(byId('velvet'), {title:true})}</div>
+              <div class="tx">
+                <span class="sub">Joyce queued</span>
+                <h3>Velvet Static</h3>
+                <p>2025 · 2h 04m · waiting for everyone</p>
+                <button class="btn pk">Watch together</button>
+              </div>
+            </div>
+            <div class="rm-row">
+              <div class="rowh"><h4>Everyone's been meaning to watch</h4></div>
+              ${grid(['ferry','under','gloss','kite'])}
+            </div>
+          </div>
+          <aside class="chat">
+            <div class="chat-h"><span class="sub">Room</span>${avs(['Joyce','Leo','Kier'],'s')}<span class="plus">+</span></div>
+            <div class="msgs">
+              ${chatMsg('Joyce','what are we doing tonight')}
+              ${chatMsg('Leo','something short, I am up at six')}
+              <div class="m-sys">${sysMsg('Joyce queued Velvet Static','new')}</div>
+            </div>
+            <div class="chat-i">Say something…</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer p66" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], time:'00:12', right:'99%', label:'Room',
+      top:`<span class="sub" style="color:#9fb0bd">Joyce's room</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[chatMsg('Joyce','lights off everyone'), sysMsg('Started together · 00:12')]})}
+  </div>`
+};
+
 /* ───────────── Wiring ───────────── */
 const timers = new WeakMap();
 function stopTimers(mk){ (timers.get(mk) || []).forEach(clearInterval); timers.set(mk, []); }
@@ -1179,6 +1436,7 @@ function enter(mk, key, i){
     }
   }
   if(key === 'h' && i === 1) typeCells(mk, mk.querySelector('.pop .cells'), CODE, 200);
+  if(key === 'l' && i === 1) typeCells(mk, mk.querySelector('.pop .cells'), CODE, 200);
   if(key === 'i'){
     const w = mk.querySelector('.sb-code .cells');
     if(w && i !== 1){ w.classList.remove('ok'); w.querySelectorAll('.cell').forEach(n => { n.textContent = ''; n.classList.remove('fill','cur'); }); }

@@ -401,7 +401,7 @@ h1.sg,h2.sg{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacin
 .ix-more:hover{color:var(--pk)}
 .ix-sec+.ix-sec{margin-top:44px}
 .ix-empty{padding:60px 0;font-size:18px;color:var(--n5)}
-.ix-rise{animation:vaRise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d)}
+.ix-rise{animation:vaRise .6s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:var(--d)}
 .av.on{box-shadow:0 0 0 2px var(--n1),0 0 0 3.5px var(--g)}
 .ve-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.15);z-index:2}
 .ve-bar i{display:block;height:100%;background:var(--pk)}
@@ -504,11 +504,12 @@ h1.sg,h2.sg{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacin
 .vg-list .tx{min-width:0;display:flex;flex-direction:column;gap:2px}
 .vg-list .tx b{font-size:15px;font-weight:600}
 .vg-list .tx em{font-style:normal;font-size:12px;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vg-lart{display:none}
 .vg-list .fill{position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--pk)}
 .vg-list .on .fill{animation:vaFill 6s linear forwards}
 .vg-list.hold .on .fill{animation:none;width:100%}
 .vg .ix-body{padding:36px 40px 60px}
-.vg-pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.vg-pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .vg-pc{position:relative;aspect-ratio:4/3;border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.07);transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s}
 .vg-pc:hover{transform:translateY(-5px);box-shadow:0 0 0 1px rgba(255,255,255,.22),0 28px 50px -24px var(--a)}
 .vg-pc .art{transition:transform 1.4s cubic-bezier(.2,.8,.2,1)}
@@ -584,6 +585,8 @@ h1.sg,h2.sg{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacin
 .f2-pb .row .btn{flex:1;justify-content:center}
 .f2-ic{width:34px;height:34px;border-radius:50%;display:grid !important;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);font:700 13px 'Work Sans',sans-serif !important}
 .f2-pb span{font-size:12px;color:var(--n5)}
+.f2-ptl2{display:none;margin:0}
+.ix-rate{font-style:normal}
 .f2-pb p{font-size:12.5px;line-height:1.45;color:rgba(255,255,255,.78);margin-top:4px}
 
 /* F3 */
@@ -683,6 +686,77 @@ h1.sg,h2.sg{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacin
 .f2c .f2-pb{padding-top:10px}
 .f2c .vg-list .n{display:none}
 .f2c .vg-list button{padding:0 18px}
+
+/* F2c2: F4's overlay party cards, F2c's hover and focus */
+.f2c2 .vg-pgrid{gap:30px 16px;padding:6px 0}
+.f2c2 .vg-pc{aspect-ratio:16/9;border-radius:14px;cursor:pointer;outline:2px solid transparent;outline-offset:4px;transition:transform .4s cubic-bezier(.2,.8,.2,1),outline-color .25s,box-shadow .4s}
+.f2c2 .vg-pc:hover{transform:none;box-shadow:0 0 0 1px rgba(255,255,255,.07)}
+.f2c2 .vg-pc:hover .art{transform:none}
+.f2c2 .vg-pc.hot{z-index:4;outline-color:#fff;box-shadow:0 30px 50px -24px rgba(0,0,0,.9)}
+.f2c2 .vg-pc.flash{animation:fbFlash 1.4s ease-out}
+.f2c2 .vg-pc .btn{display:none}
+.f2c2 .vg-pshade{background:linear-gradient(0deg,rgba(10,14,20,.96) 18%,rgba(10,14,20,.08) 76%)}
+.f2c2 .vg-ptop{top:10px;left:10px;right:10px}
+.f2c2 .vg-pbot{left:14px;right:14px;bottom:12px}
+.f2c2 .vg-pbot h4{font-size:19px}
+.f2c2 .vg-pbot p{font-size:12.5px;margin:1px 0 9px}
+.f2c2 .vg-pbot .ix-prog{margin-bottom:9px}
+.f2c2 .vg-pbot .row>span:not(.avs){font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+
+/* ───── Round 4: background treatments, forked from F2c2 ───── */
+
+/* Shared: refined spacing inside the title card's hover pop-out. */
+.pop2 .f2-pth::after{background:linear-gradient(0deg,rgba(28,41,56,1) 6%,transparent 64%)}
+.pop2 .f2-ptl{left:16px;right:16px;bottom:13px;font-size:19px;line-height:1.2}
+.pop2 .f2-pb{padding:12px 16px 16px}
+.pop2 .f2-pb span{display:block;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.pop2 .f2-pb p{margin-top:9px;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.74)}
+
+/* F2c2b — no ambience at all. */
+.f2c2b .vd-amb{display:none}
+.f2c2b.vf{background:#090c11}
+
+/* F2c2c — one wash at the top, flat by the first row. */
+.f2c2c .vd-amb i{display:none}
+.f2c2c .vd-amb::before{content:"";position:absolute;left:0;right:0;top:0;height:640px;background:linear-gradient(180deg,var(--a),transparent 70%);opacity:.3}
+.f2c2c .vd-amb::after{content:"";position:absolute;left:0;right:0;top:0;height:640px;background:linear-gradient(180deg,var(--b),transparent 45%);opacity:.45}
+.f2c2c.vf{background:#0a0e14}
+
+/* F2c2d — colour pushed back, film grain on top. */
+.f2c2d .vd-amb i{filter:blur(170px)}
+.f2c2d .vd-amb .b1{opacity:.3}
+.f2c2d .vd-amb .b2{opacity:.5}
+.f2c2d .vd-amb .b3{opacity:.16}
+.f2c2d .vd-amb::after{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.09;mix-blend-mode:screen}
+.f2c2d.vf{background:#0a0d12}
+
+/* F2c2e — flat room, one spotlight behind the hero, vignette at the edges. */
+.f2c2e .vd-amb i{display:none}
+.f2c2e .vd-amb::before{content:"";position:absolute;left:50%;top:-180px;width:1180px;height:760px;margin-left:-590px;background:radial-gradient(50% 50% at 50% 50%,var(--a),transparent 68%);opacity:.26;filter:blur(50px)}
+.f2c2e .vd-amb::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 75% at 50% 18%,transparent 38%,rgba(0,0,0,.82))}
+.f2c2e.vf{background:#080a0e}
+
+/* ───── Round 5: F2c2b2, remixed from F2c2b ───── */
+
+/* No age rating. The column exists, but a third of the catalogue leaves it blank. */
+.norate .ix-rate{display:none}
+
+/* pop3 — the title moves off the still into the body, so one gutter and one
+   rhythm govern the whole text block: title, label, synopsis. */
+.pop3 .f2-pth::after{background:linear-gradient(0deg,rgba(28,41,56,1),rgba(28,41,56,0) 34%)}
+.pop3 .f2-ptl{display:none}
+.pop3 .f2-ptl2{display:block;font-size:19px;font-weight:700;line-height:1.25;letter-spacing:-.012em}
+.pop3 .f2-pb{padding:13px 16px 16px}
+.pop3 .f2-pb span{display:block;margin-top:7px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.pop3 .f2-pb p{margin-top:13px;font-size:12.5px;line-height:1.55;color:rgba(255,255,255,.72)}
+
+/* F2c2b2 — each hero list row carries a faded still of its own film, masked
+   away from the left so the text never sits on top of it. */
+.f2c2b2 .vg-lart{display:block;position:absolute;right:0;top:50%;width:64%;aspect-ratio:16/9;opacity:.26;transform:translateY(-50%) scale(1.06);transform-origin:100% 50%;transition:opacity .5s,transform 1.4s cubic-bezier(.2,.8,.2,1);-webkit-mask-image:linear-gradient(90deg,transparent,rgba(0,0,0,.45) 42%,#000);mask-image:linear-gradient(90deg,transparent,rgba(0,0,0,.45) 42%,#000)}
+.f2c2b2 .vg-list button:hover .vg-lart{opacity:.38}
+.f2c2b2 .vg-list .on .vg-lart{opacity:.52;transform:translateY(-50%)}
+.f2c2b2 .vg-list .tx{position:relative;z-index:2}
+.f2c2b2 .vg-list .fill{z-index:3}
 
 @media (prefers-reduced-motion:reduce){.mk *,.mk *::before,.mk *::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
 </style>
@@ -831,12 +905,83 @@ h1.sg,h2.sg{font-family:'Space Grotesk',sans-serif;font-weight:700;letter-spacin
     </div>
   </section>
 
+  <section class="var" id="v-f2c2" data-id="F2c2" data-name="F4 party cards, F2c hovers">
+    <div class="var-h"><span class="id">F2c2</span><h2>F4 party cards, F2c hovers</h2></div>
+    <div class="frame"><div class="scroll" data-mount="f2c2"></div></div>
+    <div class="notes">
+      <div class="note good">Party rows read as stills, not forms.</div>
+      <div class="note good">Shift and outline carry over unchanged.</div>
+      <div class="note bad">Overlaid text needs a heavy scrim.</div>
+    </div>
+  </section>
+
+  <header class="round">
+    <div class="eyebrow">Round 4 · explored from F2c2</div>
+    <h2>Background treatments, refined hover card</h2>
+  </header>
+
+  <section class="var" id="v-f2c2b" data-id="F2c2b" data-name="No ambience, flat ink">
+    <div class="var-h"><span class="id">F2c2b</span><h2>No ambience, flat ink</h2></div>
+    <div class="frame"><div class="scroll" data-mount="f2c2b"></div></div>
+    <div class="notes">
+      <div class="note good">Posters are the only colour on screen.</div>
+      <div class="note good">Nothing shifts as the hero rotates.</div>
+      <div class="note bad">The page reads flatter, less cinema.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2c2c" data-id="F2c2c" data-name="Top wash, flat below the fold">
+    <div class="var-h"><span class="id">F2c2c</span><h2>Top wash, flat below the fold</h2></div>
+    <div class="frame"><div class="scroll" data-mount="f2c2c"></div></div>
+    <div class="notes">
+      <div class="note good">Ties the hero to the page, then gets out of the way.</div>
+      <div class="note good">Rows below stay on one steady surface.</div>
+      <div class="note bad">The seam where it lands can band.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2c2d" data-id="F2c2d" data-name="Colour pushed back, film grain">
+    <div class="var-h"><span class="id">F2c2d</span><h2>Colour pushed back, film grain</h2></div>
+    <div class="frame"><div class="scroll" data-mount="f2c2d"></div></div>
+    <div class="notes">
+      <div class="note good">Grain gives the dark areas texture.</div>
+      <div class="note good">Reads as film, not as a gradient.</div>
+      <div class="note bad">Grain over a blur is the costliest to paint.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2c2e" data-id="F2c2e" data-name="Spotlight hero, vignette edges">
+    <div class="var-h"><span class="id">F2c2e</span><h2>Spotlight hero, vignette edges</h2></div>
+    <div class="frame"><div class="scroll" data-mount="f2c2e"></div></div>
+    <div class="notes">
+      <div class="note good">Frames the hero like a room.</div>
+      <div class="note good">Vignette pushes attention to the centre.</div>
+      <div class="note bad">Corner cards sit in the darkest area.</div>
+    </div>
+  </section>
+
+  <header class="round">
+    <div class="eyebrow">Round 5 · remixed from F2c2b</div>
+    <h2>No age rating, retuned pop-out, stills in the hero list</h2>
+  </header>
+
+  <section class="var" id="v-f2c2b2" data-id="F2c2b2" data-name="Stills in the hero list">
+    <div class="var-h"><span class="id">F2c2b2</span><h2>Stills in the hero list</h2></div>
+    <div class="frame"><div class="scroll" data-mount="f2c2b2"></div></div>
+    <div class="notes">
+      <div class="note good">Every row in the hero list is identifiable at a glance.</div>
+      <div class="note good">Pop-out reads as one block: title, label, synopsis.</div>
+      <div class="note good">Meta line drops to two facts the API actually has.</div>
+      <div class="note bad">Five stills in a column compete with the hero still.</div>
+    </div>
+  </section>
+
   <section class="further">
     <h2>Further Actions</h2>
     <div class="cards">
-      <div><b>Explore</b>Explore from F2c with F4's list cards.</div>
-      <div><b>Remix</b>Remix F2c: shift title cards too.</div>
-      <div><b>Settle</b>Settle on F2c.</div>
+      <div><b>Explore</b>Explore from F2c2b2 with the stills also behind the party cards.</div>
+      <div><b>Remix</b>Remix F2c2b2: let the active row's still bleed past the list edge.</div>
+      <div><b>Settle</b>Settle on F2c2b2.</div>
     </div>
   </section>
 </main>
@@ -1167,6 +1312,7 @@ function mountD(sc){
 /* ───── Round 2: shared IA engine (E–G) ───── */
 const TABS4 = [...TABS, {k:'parties', l:'Parties'}];
 const RATING = {velvet:'R', hollow:'TV-MA', paper:'PG-13', orbit:'TV-14', ferry:'R', under:'TV-14', lunch:'PG', signal:'TV-14', glass:'PG-13', lantern:'TV-PG', kite:'PG', neon:'TV-14', tide:'PG-13', breakfast:'TV-G', salt:'R', polar:'TV-MA'};
+const rate = id => `<i class="ix-rate"> · ${RATING[id]}</i>`;
 const PARTIES = [
   {id:'p1', show:'hollow', ep:'S2 · E4', epT:'The Ledger', members:['Nico','Joyce','Mira'], active:['Nico','Joyce'], playing:true, t:1520, d:2880, ago:'just now'},
   {id:'p2', show:'orbit', ep:'S1 · E7', epT:'Graveyard Shift', members:['Mira'], active:['Mira'], playing:false, t:610, d:1560, ago:'just now'},
@@ -1193,7 +1339,7 @@ function heroItems(tab){
 function heroSub(it){ return it.kind === 'party' ? pState(it.p).short : `${typeL(it.s)} · ${it.s.y} · ${it.s.len}`; }
 function heroCopy(it){
   const s = it.s;
-  if(it.kind === 'title') return `<div class="ix-kick"><span class="ix-type">${typeL(s)}</span><span>${s.y} · ${RATING[s.id]} · ${s.len}</span></div>
+  if(it.kind === 'title') return `<div class="ix-kick"><span class="ix-type">${typeL(s)}</span><span>${s.y}${rate(s.id)} · ${s.len}</span></div>
     <h1 class="${s.f}">${esc(s.t)}</h1><p>${s.s}</p><div class="ix-cta"><button class="btn pk">▶ Start a party</button><button class="btn gh">Details</button></div>`;
   const p = it.p, st = pState(p);
   return `<div class="ix-kick">${st.live ? `<span class="live"><i></i>${st.long}</span>` : `<span class="ix-type">Party</span><span>${st.short}</span>`}</div>
@@ -1315,7 +1461,7 @@ function mountF(sc, frame){
 /* G */
 function heroG(el, items, root){
       el.innerHTML = `<div class="vg-stage">${items.map(it => `<div class="vg-art">${poster(it.s,{notitle:1})}</div>`).join('')}<div class="vg-shade"></div>${items.map(it => `<div class="vg-copy">${heroCopy(it)}</div>`).join('')}</div>
-        <ol class="vg-list">${items.map((it,i) => `<li><button data-i="${i}"><span class="n">${i+1}</span><span class="tx"><b>${esc(it.s.t)}</b><em>${heroSub(it)}</em></span><i class="fill"></i></button></li>`).join('')}</ol>`;
+        <ol class="vg-list">${items.map((it,i) => `<li><button data-i="${i}"><i class="vg-lart" style="background:${art(it.s)}"></i><span class="n">${i+1}</span><span class="tx"><b>${esc(it.s.t)}</b><em>${heroSub(it)}</em></span><i class="fill"></i></button></li>`).join('')}</ol>`;
       const arts = [...el.querySelectorAll('.vg-art')], copies = [...el.querySelectorAll('.vg-copy')], list = el.querySelector('.vg-list'), btns = [...list.querySelectorAll('button')];
       let cur = 0, t;
       function go(i, hold){ cur = (i + arts.length) % arts.length;
@@ -1329,7 +1475,7 @@ function heroG(el, items, root){
       return {stop: () => clearTimeout(t)};
     }
 const partyCardsG = (list, q) => `<div class="vg-pgrid">${list.map((p,i) => { const s = byId(p.show), st = pState(p);
-      return `<article class="vg-pc ix-rise" style="--d:${i*45}ms;--a:${s.c[0]}">${poster(s,{notitle:1})}<div class="vg-pshade"></div>
+      return `<article class="vg-pc ix-rise" data-id="${p.id}" style="--d:${i*45}ms;--a:${s.c[0]}">${poster(s,{notitle:1})}<div class="vg-pshade"></div>
         <div class="vg-ptop">${st.live ? `<span class="live"><i></i>${st.short}</span>` : `<span class="chip">${st.short}</span>`}<span class="chip">${typeL(s)}</span></div>
         <div class="vg-pbot"><h4>${hl(s.t, q)}</h4><p>${epLine(p, s)}</p><div class="ix-prog"><i style="width:${pct(p)}%"></i></div>
         <div class="row">${memberAvs(p)}<span>${p.members.length ? names(p.members) : 'Just you'}</span><button class="btn pk sm">${rejoinL(p)}</button></div></div></article>`; }).join('')}</div>`;
@@ -1378,10 +1524,10 @@ const slideHTML = (it, i, inner = '') => `<div class="cf-s" data-i="${i}">${post
 
 /* F2 */
 const F2_TITLES = (list, q) => `<div class="f2-grid">${list.map((s,i) => `<div class="f2-c ix-rise" data-id="${s.id}" style="--d:${i*30}ms">
-      <button class="f2-t"><div class="f2-th">${poster(s,{notitle:1})}</div><b>${hl(s.t, q)}</b><span>${typeL(s)} · ${s.y} · ${RATING[s.id]}</span></button>
+      <button class="f2-t"><div class="f2-th">${poster(s,{notitle:1})}</div><b>${hl(s.t, q)}</b><span>${typeL(s)} · ${s.y}${rate(s.id)}</span></button>
       <div class="f2-pop" aria-hidden="true"><div class="f2-pth">${poster(s,{notitle:1})}<b class="f2-ptl">${esc(s.t)}</b></div>
-        <div class="f2-pb"><div class="row"><button class="btn pk sm">▶ Start a party</button><button class="f2-ic" aria-label="Details">i</button></div>
-        <span>${typeL(s)} · ${s.y} · ${RATING[s.id]} · ${s.len}</span><p>${s.s}</p></div></div></div>`).join('')}</div>`;
+        <div class="f2-pb"><b class="f2-ptl2">${esc(s.t)}</b><div class="row"><button class="btn pk sm">▶ Start a party</button><button class="f2-ic" aria-label="Details">i</button></div>
+        <span>${typeL(s)} · ${s.y}${rate(s.id)} · ${s.len}</span><p>${s.s}</p></div></div></div>`).join('')}</div>`;
 function mountF2(sc, frame){
   return mountIA(sc, frame, fBase({
     cls:'vf f2',
@@ -1459,14 +1605,15 @@ function netflixShift(scope, gridSel, cardSel, S){
     const to = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest(cardSel) : null;
     if(!to) reset(card.closest(gridSel)); });
 }
-function mountF2b(sc, frame, extraCls = ''){
+function mountF2b(sc, frame, extraCls = '', P = {}){
+  const PGRID = P.grid || '.fb-pgrid', PCARD = P.card || '.fb-pc';
   return mountIA(sc, frame, fBase({
-    cls:'vf f2 f2b ' + extraCls, typeahead:true, parties: partyCardsFlat, hero: heroG,
+    cls:'vf f2 f2b ' + extraCls, typeahead:true, parties: P.parties || partyCardsFlat, hero: heroG,
     nav: () => `<nav class="ix-nav vd-nav"><a class="vd-logo">Care.tv</a><div class="vd-tabs ix-tabs">${tabBtns()}</div>
       <div class="vd-r"><div class="vd-s">${SEARCH}<input class="ix-q" placeholder="Search titles & parties" aria-label="Search" role="combobox" aria-expanded="false"><kbd>/</kbd><div class="vd-dd" role="listbox"></div></div>${me()}</div></nav>`,
     titles: F2_TITLES,
     init(root, sc){
-      netflixShift(root.querySelector('.ix-body'), '.fb-pgrid', '.fb-pc', 1.1);
+      netflixShift(root.querySelector('.ix-body'), PGRID, PCARD, 1.1);
       const box = root.querySelector('.vd-s'), input = box.querySelector('input'), dd = box.querySelector('.vd-dd');
       let rows = [], sel = 0;
       const row = (r, i, q) => { const s = r.s, st = r.p && pState(r.p);
@@ -1489,7 +1636,7 @@ function mountF2b(sc, frame, extraCls = ''){
       function choose(r){
         if(!r) return; input.value = ''; input.blur();
         if(r.p){ if(root.ixTab() === 'movie' || root.ixTab() === 'series') root.ixSetTab('parties');
-          requestAnimationFrame(() => { const el = root.querySelector(`.fb-pc[data-id="${r.p.id}"]`) || (root.ixSetTab('parties'), root.querySelector(`.fb-pc[data-id="${r.p.id}"]`)); if(el) setTimeout(() => flash(el), 80); }); }
+          requestAnimationFrame(() => { const el = root.querySelector(`${PCARD}[data-id="${r.p.id}"]`) || (root.ixSetTab('parties'), root.querySelector(`${PCARD}[data-id="${r.p.id}"]`)); if(el) setTimeout(() => flash(el), 80); }); }
         else { const t = root.ixTab(); if(t === 'parties' || (t !== 'all' && t !== r.s.type)) root.ixSetTab('all');
           requestAnimationFrame(() => { const el = root.querySelector(`.f2-c[data-id="${r.s.id}"]`); if(el) setTimeout(() => flash(el), 80); }); }
       }
@@ -1510,7 +1657,11 @@ function mountF2b(sc, frame, extraCls = ''){
 
 /* ───── Mount ───── */
 const API = {};
-const MOUNTS = {now: mountNow, a: mountA, b: mountB, c: mountC, d: mountD, e: mountE, f: mountF, g: mountG, f2: mountF2, f3: mountF3, f4: mountF4, f2b: mountF2b, f2c: (sc, frame) => mountF2b(sc, frame, 'f2c')};
+const MOUNTS = {now: mountNow, a: mountA, b: mountB, c: mountC, d: mountD, e: mountE, f: mountF, g: mountG, f2: mountF2, f3: mountF3, f4: mountF4, f2b: mountF2b, f2c: (sc, frame) => mountF2b(sc, frame, 'f2c'),
+  f2c2: (sc, frame) => mountF2b(sc, frame, 'f2c f2c2', {parties: partyCardsG, grid:'.vg-pgrid', card:'.vg-pc'}),
+  ...Object.fromEntries(['f2c2b','f2c2c','f2c2d','f2c2e'].map(k =>
+    [k, (sc, frame) => mountF2b(sc, frame, `f2c f2c2 pop2 ${k}`, {parties: partyCardsG, grid:'.vg-pgrid', card:'.vg-pc'})])),
+  f2c2b2: (sc, frame) => mountF2b(sc, frame, 'f2c f2c2 f2c2b f2c2b2 pop3 norate', {parties: partyCardsG, grid:'.vg-pgrid', card:'.vg-pc'})};
 document.querySelectorAll('[data-mount]').forEach(sc => { API[sc.closest('.var').id] = MOUNTS[sc.dataset.mount](sc, sc.parentElement) || {}; });
 
 /* ───── Pick menus ───── */

@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Care.tv — Receiving an Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Syne:wght@700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.frame{position:relative;height:clamp(560px,calc(100vh - 190px),740px);margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#10171E;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+/* stage rail (neutral) */
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail .grp{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 11px;cursor:pointer;white-space:nowrap}
+.rail .grp button.on{background:var(--ink);color:var(--bg)}
+.rail .grp.br button.on{background:var(--bad);color:#fff}
+.rail .grp.br button[data-b="acc"].on{background:var(--good)}
+.rail .play{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+.rail .hint{font-size:13px;color:var(--mut);margin-left:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+/* minimap */
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:220px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup base (Care.tv look) ───────────── */
+@property --p{syntax:'<number>';initial-value:100;inherits:false}
+.mk{--pk:#E8368F;--y:#F7C948;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);height:100%;position:relative;-webkit-font-smoothing:antialiased;font-size:13px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h1,.mk h2,.mk h3,.mk h4,.mk h5,.mk h6,.mk p{margin:0}
+.sub{font-family:'Work Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.art{position:relative;width:100%;height:100%;overflow:hidden}
+.art::after{content:"";position:absolute;inset:0;opacity:.26;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.art-t{position:absolute;left:7%;right:7%;bottom:8%;color:#fff;line-height:.92;text-shadow:0 2px 16px rgba(0,0,0,.45);font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(9px,9cqi,56px)}
+.av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:12px;font-style:normal;flex:none}
+.av.s{width:22px;height:22px;font-size:10px}
+.av.l{width:46px;height:46px;font-size:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 15px;border-radius:4px;background:var(--n3);color:#fff;font-weight:600;font-size:13px;white-space:nowrap}
+.btn.pk{background:var(--pk)}
+.btn.gh{background:rgba(255,255,255,.08)}
+.btn.lg{height:44px;font-size:15px;border-radius:6px;padding:0 26px}
+.btn.sm{height:28px;font-size:12px;padding:0 12px}
+/* ── her screen (shared across every canvas) ── */
+.stage{position:relative;height:100%}
+.sh{position:absolute;inset:0;overflow:hidden}
+.bgs{position:absolute;inset:0;transition:filter .45s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.bg{position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.stage[data-keys~="browse"] .bg-lib,.stage[data-keys~="watch"] .bg-play{opacity:1}
+/* library */
+.gl{height:100%;display:flex;flex-direction:column;overflow:hidden}
+.gl-nav{flex:none;display:flex;align-items:center;gap:16px;height:46px;padding:0 18px}
+.gl-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em}
+.gl-logo i{color:var(--pk);font-style:normal}
+.gl-nav .sub{color:var(--n5)}
+.gl-nav .sub.on{color:#fff}
+.gl-nav .me{margin-left:auto}
+.gl-grid{padding:0 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gl-c{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size}
+.gl-c .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.85),transparent 55%)}
+.gl-c b{position:absolute;left:9px;right:9px;bottom:7px;font-size:12px;font-weight:600}
+.gl-h{padding:16px 18px 9px;color:var(--n5)}
+/* her own player */
+.pl{height:100%;display:flex;flex-direction:column;background:#06090d}
+.pl-top{flex:none;display:flex;align-items:center;gap:12px;height:46px;padding:0 18px;color:#fff}
+.pl-top .bk{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.1);font-size:13px}
+.pl-top b{font-size:13px;font-weight:600;display:block}
+.pl-top em{font-style:normal;font-size:11px;color:var(--n5)}
+.pl-vid{position:relative;flex:1;min-height:0;container-type:inline-size}
+.pl-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.9),transparent 42%)}
+.ctl{position:absolute;left:0;right:0;bottom:0;padding:0 18px 14px;display:flex;align-items:center;gap:12px}
+.ctl .ic{display:inline-grid;place-items:center;width:22px;height:22px;opacity:.9}
+.ctl .t{font-size:11px;color:#cfd8e0;font-variant-numeric:tabular-nums}
+.seek{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.seek i{position:absolute;inset:0 68% 0 0;background:var(--pk);border-radius:3px}
+.seek i::after{content:"";position:absolute;right:-4px;top:-3px;width:9px;height:9px;border-radius:50%;background:#fff}
+/* the party she lands in */
+.party{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;transition:opacity .5s}
+.stage[data-keys~="after-acc"] .party{opacity:1}
+.hp{display:grid;grid-template-columns:1fr 232px;height:100%}
+.hp-chat{display:flex;flex-direction:column;background:var(--n2);border-left:1px solid #000;min-height:0}
+.hp-ch{flex:none;display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.hp-ch .sub{color:var(--n5)}
+.hp-ch .mem{margin-left:auto;display:flex;gap:-4px}
+.hp-ch .mem .av{margin-left:-6px;box-shadow:0 0 0 2px var(--n2)}
+.hp-msgs{flex:1;min-height:0;padding:12px 14px;display:flex;flex-direction:column;gap:10px;justify-content:flex-end}
+.msg{display:flex;gap:9px;align-items:flex-start}
+.msg b{font-weight:600;font-size:11.5px;display:block}
+.msg p{font-size:12px;color:#c7d2dc}
+.msg.sys{justify-content:center;align-items:center;font-size:11px;color:var(--n5);gap:6px}
+.stage[data-keys~="after-acc"] .msg.sys{animation:popIn .5s cubic-bezier(.2,.9,.3,1.4) .35s both}
+.hp-inp{flex:none;margin:12px 14px;height:34px;border-radius:4px;background:var(--n3);display:flex;align-items:center;padding:0 12px;color:var(--n5);font-size:12px}
+@keyframes popIn{from{opacity:0;transform:translateY(7px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes drain{from{--p:100}to{--p:0}}
+@keyframes bar{to{transform:scaleX(0)}}
+@keyframes ripple{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.2);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes nudge{0%,100%{transform:none}30%{transform:translateX(-5px)}60%{transform:translateX(5px)}}
+.mk [data-w]{display:none}
+.stage.measuring *{transition:none !important;animation:none !important}
+
+/* ───────────── NOW — the blocking modal ───────────── */
+.n-ov{position:absolute;inset:0;z-index:6;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;transition:none}
+.n-card{width:300px}
+.n-acts{display:flex;justify-content:space-between;margin-bottom:14px}
+.n-acts.one{justify-content:center}
+.n-inv{background:#fff;color:#10171E;border-radius:4px;overflow:hidden;margin-bottom:14px}
+.n-inv .who{padding:20px;text-align:center}
+.n-inv .who .av{margin-bottom:11px}
+.n-inv .who h2{font-size:18px;font-weight:600}
+.n-inv .who .sub{color:#64748b;margin-top:3px}
+.n-inv .th{position:relative;aspect-ratio:16/9;container-type:inline-size}
+.n-inv .th .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.85),transparent 60%)}
+.n-inv .th .d{position:absolute;left:10px;right:10px;bottom:8px;color:#fff}
+.n-inv .th .d .sub{opacity:.75}
+.n-inv .th .d h3{font-size:16px;font-weight:600}
+.n-exp{text-align:center}
+.n-exp .warn{color:var(--y)}
+.stage[data-v="now"][data-keys~="answer-exp"] .n-inv .th .art,
+.stage[data-v="now"][data-keys~="answer-can"] .n-inv .th .art,
+.stage[data-v="now"][data-keys~="after-exp"] .n-inv .th .art,
+.stage[data-v="now"][data-keys~="after-can"] .n-inv .th .art{filter:grayscale(1)}
+
+/* ───────────── A — Doorbell ───────────── */
+.a-card{position:absolute;right:20px;bottom:20px;z-index:6;width:304px;background:rgba(21,32,43,.97);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;
+  box-shadow:0 26px 54px -16px rgba(0,0,0,.85);transform:translateY(140%);opacity:0;transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,filter .4s}
+.stage[data-v="a"][data-keys~="arrive"] .a-card,.stage[data-v="a"][data-keys~="focus"] .a-card{transform:none;opacity:1}
+.stage[data-v="a"][data-keys~="answer-acc"] .a-card{transform:translateY(-10px) scale(.96);opacity:0}
+.stage[data-v="a"][data-keys~="answer-exp"] .a-card,.stage[data-v="a"][data-keys~="answer-can"] .a-card,
+.stage[data-v="a"][data-keys~="answer-dec"] .a-card{transform:none;opacity:1;filter:grayscale(.85) brightness(.85)}
+.a-bar{height:2px;background:rgba(255,255,255,.12)}
+.a-bar i{display:block;height:100%;width:100%;background:var(--pk);transform-origin:left}
+.stage[data-v="a"][data-keys~="arrive"] .a-bar i,.stage[data-v="a"][data-keys~="focus"] .a-bar i{animation:bar 16s linear forwards}
+.stage[data-v="a"][data-keys~="answer-exp"] .a-bar i{transform:scaleX(0)}
+.a-top{display:flex;gap:11px;padding:13px 13px 11px;align-items:center}
+.a-pulse{position:relative;flex:none}
+.a-pulse::before,.a-pulse::after{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--pk)}
+.stage[data-v="a"][data-keys~="arrive"] .a-pulse::before{animation:ripple 1.9s ease-out infinite}
+.stage[data-v="a"][data-keys~="arrive"] .a-pulse::after{animation:ripple 1.9s ease-out .95s infinite}
+.a-top b{display:block;font-size:13.5px;font-weight:600}
+.a-top em{font-style:normal;font-size:11.5px;color:var(--n5)}
+.a-top .x{margin-left:auto;color:var(--n5);font-size:12px;align-self:flex-start}
+.a-open{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="a"][data-keys~="focus"] .a-open{max-height:190px}
+.a-open .in{padding:0 13px 12px}
+.a-th{position:relative;width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size;margin-bottom:10px}
+.a-th .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.8),transparent 58%)}
+.a-th .d{position:absolute;left:10px;right:10px;bottom:8px}
+.a-th .d h3{font-size:14px;font-weight:600}
+.a-th .d .sub{color:#cbd5e1;opacity:.8}
+.a-who{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--n5)}
+.a-who .av{margin-left:-5px}
+.a-who .av:first-child{margin-left:0}
+.a-acts{display:flex;gap:9px;padding:0 13px 13px}
+.a-acts .btn{flex:1}
+.a-sum{display:flex;align-items:center;gap:8px;padding:0 13px 13px;font-size:11.5px;color:var(--n5)}
+.a-join,.c-join{position:absolute;left:50%;top:50%;z-index:7;transform:translate(-50%,-50%) scale(.9);opacity:0;display:flex;align-items:center;gap:11px;
+  background:rgba(21,32,43,.96);border:1px solid rgba(255,255,255,.12);border-radius:30px;padding:12px 20px 12px 14px;box-shadow:0 20px 40px -16px rgba(0,0,0,.8);transition:transform .4s cubic-bezier(.2,.9,.3,1.3),opacity .3s}
+.stage[data-v="a"][data-keys~="answer-acc"] .a-join,
+.stage[data-v="c"][data-keys~="answer-acc"] .c-join{transform:translate(-50%,-50%);opacity:1}
+.a-spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:var(--g);animation:spin .8s linear infinite}
+.a-chip{position:absolute;right:56px;top:7px;z-index:6;display:flex;align-items:center;gap:9px;background:var(--n3);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:6px 14px 6px 6px;
+  transform:translateY(-14px) scale(.94);opacity:0;transition:transform .45s cubic-bezier(.2,.9,.3,1.2),opacity .3s}
+.stage[data-v="a"][data-keys~="after-dec"] .a-chip,.stage[data-v="a"][data-keys~="after-exp"] .a-chip{transform:none;opacity:1}
+.a-chip b{font-size:12px;font-weight:600}
+.a-chip em{font-style:normal;font-size:11px;color:var(--n5)}
+.stage[data-v="a"][data-keys~="answer-acc"] .bgs{filter:blur(4px) brightness(.5);transform:scale(1.02)}
+
+/* ───────────── B — Marquee ───────────── */
+.b-take{position:absolute;inset:0;z-index:6;background:#06090d;opacity:0;pointer-events:none;transition:opacity .45s,transform .5s}
+.stage[data-v="b"][data-keys~="arrive"] .b-take,.stage[data-v="b"][data-keys~="focus"] .b-take,
+.stage[data-v="b"][data-keys~="answer-acc"] .b-take,.stage[data-v="b"][data-keys~="answer-exp"] .b-take,.stage[data-v="b"][data-keys~="answer-can"] .b-take{opacity:1;pointer-events:auto}
+.stage[data-v="b"][data-keys~="answer-dec"] .b-take{opacity:0;transform:scale(.97)}
+.b-bg{position:absolute;left:0;right:0;top:0;height:56%;container-type:inline-size;transition:height .65s cubic-bezier(.2,.8,.2,1)}
+.b-bg .art{filter:blur(8px) brightness(.9);transform:scale(1.12);transition:filter .65s cubic-bezier(.2,.8,.2,1),transform .65s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="b"][data-keys~="focus"] .b-bg{height:64%}
+.stage[data-v="b"][data-keys~="focus"] .b-bg .art{filter:blur(3px) brightness(.95);transform:scale(1.06)}
+.stage[data-v="b"][data-keys~="answer-acc"] .b-bg{height:100%}
+.stage[data-v="b"][data-keys~="answer-acc"] .b-bg .art{filter:none;transform:none}
+.stage[data-v="b"][data-keys~="answer-exp"] .b-bg .art,.stage[data-v="b"][data-keys~="answer-can"] .b-bg .art{filter:blur(8px) grayscale(1) brightness(.95)}
+.b-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#06090d 0,rgba(6,9,13,.55) 32%,rgba(6,9,13,.08) 72%)}
+.b-card{position:absolute;left:0;right:0;bottom:0;padding:22px 46px 34px;transform:translateY(18px);opacity:0;transition:transform .55s cubic-bezier(.2,.85,.25,1) .08s,opacity .4s .08s}
+.stage[data-v="b"][data-keys~="arrive"] .b-card,.stage[data-v="b"][data-keys~="focus"] .b-card,
+.stage[data-v="b"][data-keys~="answer-exp"] .b-card,.stage[data-v="b"][data-keys~="answer-can"] .b-card{transform:none;opacity:1}
+.stage[data-v="b"][data-keys~="answer-acc"] .b-card{transform:translateY(108%);opacity:0;transition-delay:0s}
+.b-from{display:inline-flex;align-items:center;gap:9px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:5px 15px 5px 5px;margin-bottom:14px}
+.b-from b{font-size:12.5px;font-weight:600}
+.b-card h1{font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;font-size:44px;line-height:.92;letter-spacing:-.015em;margin-bottom:10px}
+.b-mt{display:flex;align-items:center;gap:10px;color:var(--n5);margin-bottom:18px}
+.b-mt i{width:3px;height:3px;border-radius:50%;background:var(--n4);font-style:normal}
+.b-live{display:inline-flex;align-items:center;gap:7px;color:var(--g)}
+.b-live i{width:6px;height:6px;border-radius:50%;background:var(--g);animation:ripple 2.2s ease-out infinite;font-style:normal}
+.b-row{display:flex;align-items:center;gap:16px}
+.b-no{color:var(--n5);font-size:13px}
+.b-open{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="b"][data-keys~="focus"] .b-open{max-height:90px}
+.b-open .in{padding-bottom:18px}
+.b-into{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--n5);margin-bottom:8px}
+.b-prog{position:relative;height:3px;border-radius:3px;background:rgba(255,255,255,.16);max-width:420px}
+.b-prog i{position:absolute;inset:0 67% 0 0;background:var(--y);border-radius:3px}
+.b-prog b{position:absolute;left:33%;top:-5px;width:2px;height:13px;background:#fff}
+.b-dial{position:relative;width:34px;height:34px;display:grid;place-items:center;flex:none}
+.b-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--y) calc(var(--p)*1%),rgba(255,255,255,.16) 0);
+  -webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 2.5px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 2.5px),#000 calc(100% - 2.5px))}
+.stage[data-v="b"][data-keys~="arrive"] .b-dial::before,.stage[data-v="b"][data-keys~="focus"] .b-dial::before{animation:drain 16s linear forwards}
+.b-dial em{font-style:normal;font-size:10px;color:var(--n5);font-family:'Work Sans',sans-serif}
+
+/* ───────────── C — Live row ───────────── */
+.c-row{max-height:0;opacity:0;overflow:hidden;transition:max-height .55s cubic-bezier(.2,.8,.2,1),opacity .35s}
+.stage[data-v="c"][data-keys~="arrive"] .c-row,.stage[data-v="c"][data-keys~="answer-dec"] .c-row,
+.stage[data-v="c"][data-keys~="answer-exp"] .c-row,.stage[data-v="c"][data-keys~="after-dec"] .c-row,.stage[data-v="c"][data-keys~="after-exp"] .c-row{max-height:210px;opacity:1}
+.stage[data-v="c"][data-keys~="focus"] .c-row,.stage[data-v="c"][data-keys~="answer-acc"] .c-row{max-height:300px;opacity:1}
+.stage[data-v="c"][data-keys~="answer-can"] .c-row{max-height:210px;opacity:1}
+.c-row .hd{display:flex;align-items:center;gap:9px;padding:14px 18px 9px;color:var(--n5)}
+.c-row .hd .dot{width:6px;height:6px;border-radius:50%;background:var(--pk);animation:ripple 2.2s ease-out infinite}
+.c-live{display:flex;gap:18px;padding:0 18px;align-items:flex-start}
+.c-ph{width:292px;height:164px;border-radius:6px;flex:none;background:rgba(255,255,255,.04)}
+.c-info{flex:1;min-width:0;padding-top:4px}
+.c-info h3{font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;font-size:23px;letter-spacing:-.01em;margin-bottom:7px}
+.c-info .mt{display:flex;align-items:center;gap:9px;color:var(--n5);margin-bottom:12px}
+.c-info .mt i{width:3px;height:3px;border-radius:50%;background:var(--n4);font-style:normal}
+.c-acts{display:flex;align-items:center;gap:12px}
+.c-dial{position:relative;width:32px;height:32px;display:grid;place-items:center;flex:none}
+.c-dial::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--pk) calc(var(--p)*1%),rgba(255,255,255,.16) 0);
+  -webkit-mask:radial-gradient(farthest-side,#0000 calc(100% - 2.5px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,#0000 calc(100% - 2.5px),#000 calc(100% - 2.5px))}
+.stage[data-v="c"][data-keys~="arrive"] .c-dial::before,.stage[data-v="c"][data-keys~="focus"] .c-dial::before{animation:drain 16s linear forwards}
+.c-dial em{font-style:normal;font-size:9.5px;color:var(--n5);font-family:'Work Sans',sans-serif}
+.c-open{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="c"][data-keys~="focus"] .c-open{max-height:80px}
+.c-open .in{display:flex;align-items:center;gap:10px;padding-top:14px;font-size:12px;color:var(--n5)}
+.c-open .av{margin-left:-5px}
+.c-open .av:first-of-type{margin-left:0}
+.c-art{position:absolute;left:var(--cl,18px);top:var(--ct,78px);width:var(--cw,292px);height:var(--ch,164px);border-radius:6px;overflow:hidden;z-index:4;opacity:0;container-type:inline-size;
+  transition:left .6s cubic-bezier(.2,.8,.2,1),top .6s cubic-bezier(.2,.8,.2,1),width .6s cubic-bezier(.2,.8,.2,1),height .6s cubic-bezier(.2,.8,.2,1),border-radius .5s,opacity .35s,filter .45s}
+.stage[data-v="c"][data-keys~="arrive"] .c-art,.stage[data-v="c"][data-keys~="focus"] .c-art,
+.stage[data-v="c"][data-keys~="answer-dec"] .c-art,.stage[data-v="c"][data-keys~="answer-exp"] .c-art,.stage[data-v="c"][data-keys~="answer-can"] .c-art,
+.stage[data-v="c"][data-keys~="after-dec"] .c-art,.stage[data-v="c"][data-keys~="after-exp"] .c-art{opacity:1}
+.stage[data-v="c"][data-keys~="answer-acc"] .c-art{opacity:1;left:0;top:0;width:100%;height:100%;border-radius:0}
+.stage[data-v="c"][data-keys~="answer-dec"] .c-art,.stage[data-v="c"][data-keys~="after-dec"] .c-art,
+.stage[data-v="c"][data-keys~="answer-exp"] .c-art,.stage[data-v="c"][data-keys~="after-exp"] .c-art{filter:grayscale(1) brightness(.55)}
+.stage[data-v="c"][data-keys~="watch"][data-keys~="arrive"] .c-art{opacity:0}
+.c-art .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.55),transparent 60%);opacity:0;transition:opacity .4s}
+.stage[data-v="c"][data-keys~="answer-dec"] .c-art .shade,.stage[data-v="c"][data-keys~="after-dec"] .c-art .shade{opacity:1}
+/* while she's watching, the row is behind the player: a pill is all she gets */
+.c-pill{position:absolute;left:50%;top:14px;z-index:7;transform:translate(-50%,-150%);opacity:0;display:flex;align-items:center;gap:10px;
+  background:rgba(21,32,43,.96);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:7px 15px 7px 7px;box-shadow:0 18px 36px -16px rgba(0,0,0,.8);
+  transition:transform .5s cubic-bezier(.2,.9,.3,1.15),opacity .3s}
+.stage[data-v="c"][data-keys~="watch"][data-keys~="arrive"] .c-pill{transform:translate(-50%,0);opacity:1}
+.c-pill b{font-size:12.5px;font-weight:600}
+.c-pill em{font-style:normal;font-size:11px;color:var(--n5)}
+.stage[data-v="c"][data-keys~="watch"][data-keys~="focus"] .bg-play,
+.stage[data-v="c"][data-keys~="watch"][data-keys~="answer"] .bg-play,
+.stage[data-v="c"][data-keys~="watch"][data-keys~="after"] .bg-play{opacity:0}
+.stage[data-v="c"][data-keys~="watch"][data-keys~="focus"] .bg-lib,
+.stage[data-v="c"][data-keys~="watch"][data-keys~="answer"] .bg-lib,
+.stage[data-v="c"][data-keys~="watch"][data-keys~="after"] .bg-lib{opacity:1}
+/* ───────────── D — Peek ───────────── */
+.stage[data-v="d"] .bgs{transition:right .55s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.stage[data-v="d"][data-keys~="arrive"] .bgs,.stage[data-v="d"][data-keys~="focus"] .bgs,
+.stage[data-v="d"][data-keys~="answer-exp"] .bgs,.stage[data-v="d"][data-keys~="answer-can"] .bgs{right:276px}
+.d-side{position:absolute;right:0;top:0;bottom:0;width:276px;z-index:6;display:flex;flex-direction:column;background:var(--n2);border-left:1px solid rgba(255,255,255,.08);
+  transform:translateX(100%);transition:transform .55s cubic-bezier(.2,.85,.25,1)}
+.stage[data-v="d"][data-keys~="arrive"] .d-side,.stage[data-v="d"][data-keys~="focus"] .d-side,
+.stage[data-v="d"][data-keys~="answer-exp"] .d-side,.stage[data-v="d"][data-keys~="answer-can"] .d-side{transform:none}
+.d-hd{flex:none;display:flex;align-items:center;gap:9px;padding:13px 14px}
+.d-hd b{display:block;font-size:13px;font-weight:600}
+.d-hd em{font-style:normal;font-size:11px;color:var(--g)}
+.d-hd .x{margin-left:auto;color:var(--n5);font-size:12px}
+.d-ph{flex:none;margin:0 14px;height:139.5px;border-radius:6px;background:rgba(255,255,255,.04)}
+.d-info{flex:none;padding:12px 14px 0}
+.d-info h3{font-size:15px;font-weight:600}
+.d-info .mt{display:flex;align-items:center;gap:8px;color:var(--n5);margin-top:4px}
+.d-info .mt i{width:3px;height:3px;border-radius:50%;background:var(--n4);font-style:normal}
+.d-who{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--n5);margin-top:11px}
+.d-who .av{margin-left:-5px}
+.d-who .av:first-child{margin-left:0}
+.d-lvl{display:flex;align-items:flex-end;gap:2px;height:12px;margin-left:auto}
+.d-lvl i{width:2.5px;height:4px;border-radius:2px;background:var(--g);animation:lvl .9s ease-in-out infinite}
+.d-lvl i:nth-child(2){animation-delay:.18s}.d-lvl i:nth-child(3){animation-delay:.36s}
+@keyframes lvl{0%,100%{height:3px}50%{height:12px}}
+.d-note{font-size:11.5px;color:var(--n5);margin-top:12px;line-height:1.45}
+.d-chat{margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:9px;opacity:.75}
+.d-chat .msg p{font-size:11.5px}
+.d-acts{gap:9px;padding:14px;margin-top:auto}
+.d-acts .btn{flex:1}
+.d-prev{position:absolute;left:var(--dl,0);top:var(--dt,0);width:var(--dw,248px);height:var(--dh,140px);z-index:7;border-radius:6px;overflow:hidden;opacity:0;
+  transition:left .6s cubic-bezier(.2,.8,.2,1),top .6s cubic-bezier(.2,.8,.2,1),width .6s cubic-bezier(.2,.8,.2,1),height .6s cubic-bezier(.2,.8,.2,1),border-radius .5s,opacity .4s,filter .45s}
+.stage[data-v="d"][data-keys~="arrive"] .d-prev,.stage[data-v="d"][data-keys~="focus"] .d-prev,
+.stage[data-v="d"][data-keys~="answer-exp"] .d-prev,.stage[data-v="d"][data-keys~="answer-can"] .d-prev{opacity:1}
+.stage[data-v="d"][data-keys~="answer-exp"] .d-prev,.stage[data-v="d"][data-keys~="answer-can"] .d-prev{filter:grayscale(1) brightness(.6)}
+.stage[data-v="d"][data-keys~="answer-acc"] .d-prev{opacity:1;left:0;top:0;width:100%;height:100%;border-radius:0}
+.d-badge{position:absolute;left:8px;top:8px;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.55);border-radius:4px;padding:3px 7px;
+  font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:1px;font-weight:600}
+.d-badge i{width:5px;height:5px;border-radius:50%;background:var(--pk);font-style:normal;animation:ripple 2s ease-out infinite}
+
+/* ───────────── E — Reply ───────────── */
+.e-toast{position:absolute;right:18px;top:12px;z-index:6;display:flex;align-items:center;gap:10px;background:rgba(21,32,43,.97);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 12px;box-shadow:0 20px 44px -18px rgba(0,0,0,.85);
+  transform:translateY(-150%);opacity:0;transition:transform .5s cubic-bezier(.2,.9,.3,1.12),opacity .3s}
+.stage[data-v="e"][data-keys~="arrive"] .e-toast{transform:none;opacity:1}
+.e-toast b{display:block;font-size:12.5px;font-weight:600}
+.e-toast em{font-style:normal;font-size:11px;color:var(--n5)}
+.e-dim{position:absolute;inset:0;z-index:5;background:rgba(6,9,13,.5);opacity:0;pointer-events:none;transition:opacity .4s}
+.stage[data-v="e"][data-keys~="focus"] .e-dim,.stage[data-v="e"][data-keys~="answer"] .e-dim,
+.stage[data-v="e"][data-keys~="after-dec"] .e-dim,.stage[data-v="e"][data-keys~="after-exp"] .e-dim,.stage[data-v="e"][data-keys~="after-can"] .e-dim{opacity:1}
+.e-panel{position:absolute;right:0;top:0;bottom:0;width:364px;z-index:6;display:flex;flex-direction:column;background:var(--n2);border-left:1px solid rgba(255,255,255,.08);
+  box-shadow:-30px 0 60px -30px rgba(0,0,0,.9);transform:translateX(100%);transition:transform .5s cubic-bezier(.2,.85,.25,1)}
+.stage[data-v="e"][data-keys~="focus"] .e-panel,.stage[data-v="e"][data-keys~="answer"] .e-panel,
+.stage[data-v="e"][data-keys~="after-dec"] .e-panel,.stage[data-v="e"][data-keys~="after-exp"] .e-panel,.stage[data-v="e"][data-keys~="after-can"] .e-panel{transform:none}
+.stage[data-v="e"][data-keys~="answer-acc"] .e-panel{transform:translateX(100%)}
+.e-hd{flex:none;display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.e-hd b{display:block;font-size:13.5px;font-weight:600}
+.e-hd em{font-style:normal;font-size:11px;color:var(--g)}
+.e-hd .x{margin-left:auto;color:var(--n5);font-size:12px}
+.e-msgs{flex:1;min-height:0;display:flex;flex-direction:column;gap:9px;justify-content:flex-end;padding:16px}
+.e-b{max-width:84%;padding:9px 13px;border-radius:14px;font-size:12.5px;line-height:1.4}
+.e-b.them{background:var(--n3);border-bottom-left-radius:4px;align-self:flex-start}
+.e-b.me{background:var(--pk);border-bottom-right-radius:4px;align-self:flex-end;animation:popIn .4s cubic-bezier(.2,.9,.3,1.4) both}
+.e-sys{align-self:center;font-family:'Work Sans',sans-serif;font-size:9.5px;letter-spacing:.9px;text-transform:uppercase;color:var(--y)}
+.e-card{align-self:flex-start;display:flex;gap:11px;background:var(--n3);border-radius:10px;padding:9px;max-width:94%}
+.e-card .th{width:116px;aspect-ratio:16/9;border-radius:5px;overflow:hidden;flex:none;container-type:inline-size}
+.e-card h3{font-size:13px;font-weight:600}
+.e-card .mt{font-family:'Work Sans',sans-serif;font-size:9.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--n5);margin:3px 0 7px}
+.e-live{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--g)}
+.e-live i{width:6px;height:6px;border-radius:50%;background:var(--g);font-style:normal;animation:ripple 2.2s ease-out infinite}
+.e-quick{flex:none;gap:7px;padding:0 16px 12px;flex-wrap:wrap}
+.e-inp{flex:none;margin:0 16px 16px;height:36px;border-radius:18px;background:var(--n3);display:flex;align-items:center;padding:0 14px;color:var(--n5);font-size:12px}
+
+/* ───────────── A2 — Toast first, the card on tap ───────────── */
+.a2-card{position:absolute;right:20px;bottom:20px;z-index:6;width:268px;background:rgba(21,32,43,.97);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;overflow:hidden;box-shadow:0 26px 54px -16px rgba(0,0,0,.85);transform:translateY(150%);opacity:0;
+  transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,width .5s cubic-bezier(.2,.8,.2,1),bottom .45s,filter .4s}
+.stage[data-v="a2"][data-keys~="arrive"] .a2-card,.stage[data-v="a2"][data-keys~="focus"] .a2-card,
+.stage[data-v="a2"][data-keys~="answer-dec"] .a2-card,.stage[data-v="a2"][data-keys~="answer-exp"] .a2-card,
+.stage[data-v="a2"][data-keys~="answer-can"] .a2-card{transform:none;opacity:1}
+.stage[data-v="a2"][data-keys~="focus"] .a2-card{width:324px}
+.stage[data-v="a2"][data-keys~="watch"] .a2-card,.stage[data-v="a3"][data-keys~="watch"] .a3-card{bottom:64px}
+.stage[data-v="a2"][data-keys~="answer-acc"] .a2-card{transform:translateY(-12px) scale(.96);opacity:0}
+.stage[data-v="a2"][data-keys~="answer-dec"] .a2-card,.stage[data-v="a2"][data-keys~="answer-exp"] .a2-card,
+.stage[data-v="a2"][data-keys~="answer-can"] .a2-card{filter:grayscale(.85) brightness(.85)}
+.a2-strip{position:relative;height:42px;overflow:hidden;transition:height .5s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="a2"][data-keys~="focus"] .a2-strip{height:182px}
+.a2-strip .art{position:absolute;left:0;right:0;bottom:0;top:auto;height:182px;width:auto}
+.a2-sh{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.92),rgba(6,9,13,.08))}
+.a2-ttl{position:absolute;left:12px;right:12px;bottom:9px;opacity:0;transition:opacity .3s}
+.a2-ttl .sub{color:#cbd5e1;opacity:.8}
+.a2-ttl h3{font-size:15px;font-weight:600;margin-top:2px}
+.stage[data-v="a2"][data-keys~="focus"] .a2-ttl{opacity:1;transition-delay:.18s}
+.a2-line{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.a2-line>div,.a3-line>div{min-width:0}
+.a2-line b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap}
+.a2-line em{font-style:normal;font-size:11px;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a2-chev{color:var(--n5);font-size:11px;transition:transform .4s}
+.stage[data-v="a2"][data-keys~="focus"] .a2-chev{transform:rotate(180deg)}
+.a2-open{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="a2"][data-keys~="focus"] .a2-open{max-height:120px}
+.a2-open .in{padding:0 12px}
+.a2-acts,.a3-acts{gap:9px;padding:12px}
+.a2-acts .btn,.a3-acts .btn{flex:1}
+.stage[data-v="a2"][data-keys~="answer-acc"] .bgs{filter:blur(4px) brightness(.5)}
+.stage[data-v="a2"][data-keys~="answer-acc"] .a-join{transform:translate(-50%,-50%);opacity:1}
+.stage[data-v="a2"][data-keys~="after-dec"] .a-chip,.stage[data-v="a2"][data-keys~="after-exp"] .a-chip,
+.stage[data-v="a3"][data-keys~="after-dec"] .a-chip,.stage[data-v="a3"][data-keys~="after-exp"] .a-chip{transform:none;opacity:1}
+.stage[data-v="a2"][data-keys~="arrive"] .a-bar i,.stage[data-v="a2"][data-keys~="focus"] .a-bar i,
+.stage[data-v="a3"][data-keys~="arrive"] .a-bar i,.stage[data-v="a3"][data-keys~="focus"] .a-bar i{animation:bar 16s linear forwards}
+.stage[data-v="a2"][data-keys~="answer-exp"] .a-bar i,.stage[data-v="a3"][data-keys~="answer-exp"] .a-bar i{transform:scaleX(0)}
+
+/* ───────────── A3 — Toast is a live tile ───────────── */
+.a3-card{position:absolute;right:20px;bottom:20px;z-index:6;width:252px;background:rgba(21,32,43,.97);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;overflow:hidden;box-shadow:0 26px 54px -16px rgba(0,0,0,.85);transform:translateY(150%);opacity:0;
+  transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .35s,width .55s cubic-bezier(.2,.8,.2,1),bottom .45s,filter .4s}
+.stage[data-v="a3"][data-keys~="arrive"] .a3-card,.stage[data-v="a3"][data-keys~="focus"] .a3-card,
+.stage[data-v="a3"][data-keys~="answer-dec"] .a3-card,.stage[data-v="a3"][data-keys~="answer-exp"] .a3-card,
+.stage[data-v="a3"][data-keys~="answer-can"] .a3-card{transform:none;opacity:1}
+.stage[data-v="a3"][data-keys~="focus"] .a3-card{width:336px}
+.stage[data-v="a3"][data-keys~="answer-acc"] .a3-card{opacity:0}
+.stage[data-v="a3"][data-keys~="answer-dec"] .a3-card,.stage[data-v="a3"][data-keys~="answer-exp"] .a3-card,
+.stage[data-v="a3"][data-keys~="answer-can"] .a3-card{filter:grayscale(.85) brightness(.85)}
+.a3-ph{aspect-ratio:16/9;background:rgba(255,255,255,.05)}
+.a3-line{display:flex;align-items:center;gap:9px;padding:10px 12px}
+.a3-line b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap}
+.a3-line em{font-style:normal;font-size:11px;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.a3-chev{color:var(--n5);font-size:11px;transition:transform .4s}
+.stage[data-v="a3"][data-keys~="focus"] .a3-chev{transform:rotate(180deg)}
+.a3-open{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.8,.2,1)}
+.stage[data-v="a3"][data-keys~="focus"] .a3-open{max-height:150px}
+.a3-open .in{padding:0 12px}
+.a3-prev{position:absolute;left:var(--a3l,0);top:var(--a3t,0);width:var(--a3w,250px);height:var(--a3h,141px);z-index:7;overflow:hidden;opacity:0;border-radius:11px 11px 0 0;
+  transition:left .6s cubic-bezier(.2,.8,.2,1),top .6s cubic-bezier(.2,.8,.2,1),width .6s cubic-bezier(.2,.8,.2,1),height .6s cubic-bezier(.2,.8,.2,1),border-radius .5s,opacity .4s,filter .45s}
+.stage[data-v="a3"][data-keys~="arrive"] .a3-prev,.stage[data-v="a3"][data-keys~="answer-dec"] .a3-prev,
+.stage[data-v="a3"][data-keys~="answer-exp"] .a3-prev,.stage[data-v="a3"][data-keys~="answer-can"] .a3-prev{opacity:1}
+.stage[data-v="a3"][data-keys~="focus"] .a3-prev{opacity:1;left:var(--a4l,0);top:var(--a4t,0);width:var(--a4w,250px);height:var(--a4h,141px)}
+.stage[data-v="a3"][data-keys~="answer-dec"] .a3-prev{filter:grayscale(.9) brightness(.7)}
+.stage[data-v="a3"][data-keys~="answer-exp"] .a3-prev,.stage[data-v="a3"][data-keys~="answer-can"] .a3-prev{filter:grayscale(1) brightness(.6)}
+/* mid-episode the tile rides above the player controls, so it is measured there too */
+.stage[data-v="a3"][data-keys~="watch"] .a3-prev{left:var(--a5l,0);top:var(--a5t,0);width:var(--a5w,250px);height:var(--a5h,141px)}
+.stage[data-v="a3"][data-keys~="watch"][data-keys~="focus"] .a3-prev{left:var(--a6l,0);top:var(--a6t,0);width:var(--a6w,250px);height:var(--a6h,141px)}
+.stage[data-v="a3"][data-keys~="answer-acc"] .a3-prev,
+.stage[data-v="a3"][data-keys~="watch"][data-keys~="answer-acc"] .a3-prev{opacity:1;left:0;top:0;width:100%;height:100%;border-radius:0}
+.a3-pov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.7),transparent 58%)}
+.a3-mu{position:absolute;right:9px;top:9px;color:#cbd5e1;opacity:.9;font-size:9px}
+.a3-mu.on{color:var(--g);opacity:1}
+.a3-seek{position:absolute;left:9px;right:9px;bottom:8px;height:2px;border-radius:2px;background:rgba(255,255,255,.26)}
+.a3-seek i{position:absolute;inset:0 32% 0 0;background:rgba(255,255,255,.82);border-radius:2px}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+<header class="brief">
+  <div class="eyebrow">Care.tv · receiving a party invitation</div>
+  <h1>An invitation should arrive without taking her screen hostage.</h1>
+  <div class="cards">
+    <div>A modal gets dismissed on reflex.</div>
+    <div>She may be mid-episode; nothing can stop playback.</div>
+    <div>One object carries joined, declined, expired, withdrawn.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="Blocking modal, buttons above the card">
+  <div class="var-h"><span class="id">Now</span><h2>Blocking modal, buttons above the card</h2></div>
+  <div class="frame"><div class="mk" data-mount="now"></div></div>
+  <div class="rail" data-rail="v-now"></div>
+  <div class="notes">
+    <div class="note good">The card sells it: sender, show, artwork.</div>
+    <div class="note bad">Blacks out what she was watching.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="Doorbell — rings in the corner">
+  <div class="var-h"><span class="id">A</span><h2>Doorbell — rings in the corner</h2></div>
+  <div class="frame"><div class="mk" data-mount="a"></div></div>
+  <div class="rail" data-rail="v-a"></div>
+  <div class="notes">
+    <div class="note good">Arrives beside her screen; nothing stops.</div>
+    <div class="note bad">Easiest thing on screen to miss.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2" data-id="A2" data-name="Toast first, the card on tap">
+  <div class="var-h"><span class="id">A2</span><h2>Toast first, the card on tap</h2></div>
+  <div class="frame"><div class="mk" data-mount="a2"></div></div>
+  <div class="rail" data-rail="v-a2"></div>
+  <div class="notes">
+    <div class="note good">One line, with a strip of the movie.</div>
+    <div class="note good">It grows in place; no second surface.</div>
+    <div class="note bad">A 42px strip is a thin promise.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a3" data-id="A3" data-name="Toast is a live tile">
+  <div class="var-h"><span class="id">A3</span><h2>Toast is a live tile</h2></div>
+  <div class="frame"><div class="mk" data-mount="a3"></div></div>
+  <div class="rail" data-rail="v-a3"></div>
+  <div class="notes">
+    <div class="note good">The peek is the toast: a muted live frame.</div>
+    <div class="note good">The frame grows into her player.</div>
+    <div class="note bad">A live corner tile is a privacy call.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Marquee — the artwork makes the ask">
+  <div class="var-h"><span class="id">B</span><h2>Marquee — the artwork makes the ask</h2></div>
+  <div class="frame"><div class="mk" data-mount="b"></div></div>
+  <div class="rail" data-rail="v-b"></div>
+  <div class="notes">
+    <div class="note good">Accepting unblurs the poster into playback.</div>
+    <div class="note bad">Still a takeover over her own episode.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c" data-id="C" data-name="Live row — the invite is content">
+  <div class="var-h"><span class="id">C</span><h2>Live row — the invite is content</h2></div>
+  <div class="frame"><div class="mk" data-mount="c"></div></div>
+  <div class="rail" data-rail="v-c"></div>
+  <div class="notes">
+    <div class="note good">Joining grows the card into the player.</div>
+    <div class="note bad">Mid-episode it's a pill that pulls her out.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d" data-id="D" data-name="Peek — the party before answering">
+  <div class="var-h"><span class="id">D</span><h2>Peek — the party before answering</h2></div>
+  <div class="frame"><div class="mk" data-mount="d"></div></div>
+  <div class="rail" data-rail="v-d"></div>
+  <div class="notes">
+    <div class="note good">She answers on what it is, not a poster.</div>
+    <div class="note bad">Peeking in muted is a privacy call.</div>
+  </div>
+</section>
+
+<section class="var" id="v-e" data-id="E" data-name="Reply — answer it in words">
+  <div class="var-h"><span class="id">E</span><h2>Reply — answer it in words</h2></div>
+  <div class="frame"><div class="mk" data-mount="e"></div></div>
+  <div class="rail" data-rail="v-e"></div>
+  <div class="notes">
+    <div class="note good">"Give me 10" is an answer here.</div>
+    <div class="note bad">Care.tv has no inbox to put this in.</div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from A2 as an OS notification.</div>
+    <div><b>Remix</b>Remix A3 so two invites stack.</div>
+    <div><b>Settle</b>Settle on A2 if the strip earns the tap.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/9b2e-party-invitation-flow.html';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F'};
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings'},
+  {id:'hollow', t:'Hollow County', y:2023, len:'S2 · E4', c:['#a3e635','#14240a'], p:'stripes'},
+  {id:'paper', t:'Paper Moons', y:2024, len:'1h 52m', c:['#ff7a59','#3b0d4c'], p:'sun'},
+  {id:'orbit', t:'Orbit Diner', y:2024, len:'S1 · E7', c:['#f7c948','#7a1f4d'], p:'dots'},
+  {id:'ferry', t:'Night Ferry', y:2023, len:'1h 41m', c:['#1fd1f9','#0b1b3f'], p:'stripes'},
+  {id:'under', t:'The Understudies', y:2025, len:'S1 · E2', c:['#c084fc','#2a0e5c'], p:'split'}
+];
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'sun': return `radial-gradient(circle at 68% 36%, ${a} 0 17%, ${a}00 17.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+    default: return `radial-gradient(55% 45% at 22% 28%, ${a}dd, ${a}00 70%), linear-gradient(160deg, ${b}, #06060b 80%)`;
+  }
+}
+const poster = (s, o = {}) => `<div class="art" style="background:${art(s)}">${o.title ? `<b class="art-t">${esc(s.t)}</b>` : ''}</div>`;
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const FEAT = byId('velvet'), HERS = {...byId('hollow'), c:['#b6f04a','#2a4a16']};
+const ICON = {
+  play:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  vol:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4z"/></svg>',
+  full:'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'
+};
+const ctl = (a,b,p) => `<div class="ctl"><span class="ic">${ICON.play}</span><span class="t">${a}</span><div class="seek"><i style="right:${p}"></i></div><span class="t">${b}</span><span class="ic">${ICON.vol}</span><span class="ic">${ICON.full}</span></div>`;
+
+/* ───── her screen ───── */
+const tile = s => `<div class="gl-c">${poster(s)}<div class="shade"></div><b>${esc(s.t)}</b></div>`;
+const library = (o = {}) => `<div class="gl">
+  <div class="gl-nav"><span class="gl-logo">care<i>.</i>tv</span><span class="sub on">All</span><span class="sub">Movies</span><span class="sub">Series</span><span class="sub">Parties</span>${av('Joyce','s me')}</div>
+  ${o.top || ''}
+  <h6 class="sub gl-h">Keep watching</h6>
+  <div class="gl-grid">${SHOWS.slice(0,4).map(tile).join('')}</div>
+  <h6 class="sub gl-h">Because you watched Hollow County</h6>
+  <div class="gl-grid">${[...SHOWS].reverse().slice(0,4).map(tile).join('')}</div>
+  <h6 class="sub gl-h">Parties you missed</h6>
+  <div class="gl-grid">${[SHOWS[3],SHOWS[0],SHOWS[5],SHOWS[1]].map(tile).join('')}</div>
+</div>`;
+const herShow = () => `<div class="pl">
+  <div class="pl-top"><span class="bk">←</span><div><b>${esc(HERS.t)}</b><em>S2 · E4 · The Radio Guy</em></div></div>
+  <div class="pl-vid">${poster(HERS,{title:1})}<div class="pl-ov"></div>${ctl('18:04','52:10','64%')}</div>
+</div>`;
+const party = () => `<div class="party"><div class="hp">
+  <div class="pl"><div class="pl-vid">${poster(FEAT)}<div class="pl-ov"></div>${ctl('41:12','2:04:00','68%')}</div></div>
+  <div class="hp-chat">
+    <div class="hp-ch"><h5 class="sub">Party</h5><span class="mem">${av('Kier','s')}${av('Leo','s')}${av('Joyce','s')}</span></div>
+    <div class="hp-msgs">
+      <div class="msg">${av('Leo','s')}<div><b>Leo</b><p>wait go back, that was the radio guy</p></div></div>
+      <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>told you. ok pausing</p></div></div>
+      <div class="msg sys">${av('Joyce','s')} You joined the party</div>
+      <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>JOYCE. we waited 41 minutes</p></div></div>
+    </div>
+    <div class="hp-inp">Say something…</div>
+  </div></div></div>`;
+const shell = (v, inner, libOpts) => `<div class="stage" data-v="${v}" data-stage="idle" data-branch="acc" data-ctx="browse">
+  <div class="sh">
+    <div class="bgs"><div class="bg bg-lib">${library(libOpts)}</div><div class="bg bg-play">${herShow()}</div></div>
+    ${inner}${party()}
+  </div></div>`;
+
+/* ───── Now ───── */
+function mountNow(sc){
+  const live = 'arrive focus';
+  const held = 'arrive focus answer-acc';
+  const dead = 'answer-exp answer-can after-exp after-can';
+  const card = `<div class="n-ov wf" data-w="${held} ${dead}"><div class="n-card">
+    <div class="n-acts wf" data-w="${live}"><span class="btn">Decline</span><span class="btn pk">Accept</span></div>
+    <div class="n-acts one wf" data-w="${dead}"><span class="btn">Close</span></div>
+    <div class="n-inv">
+      <div class="who">${av('Kier','l')}<h2>Kier</h2><h6 class="sub">Invited you to watch</h6></div>
+      <div class="th">${poster(FEAT)}<div class="shade"></div><div class="d"><h6 class="sub">Movie · ${FEAT.y}</h6><h3>${esc(FEAT.t)}</h3></div></div>
+    </div>
+    <div class="n-exp">
+      <h6 class="sub" data-w="${live}">Expires in <span style="text-transform:lowercase">4 minutes 52 seconds</span></h6>
+      <h6 class="sub warn" data-w="${dead}">⚠ Invitation no longer exists</h6>
+    </div>
+  </div></div>`;
+  sc.innerHTML = shell('now', card);
+}
+
+/* ───── A — Doorbell ───── */
+function mountA(sc){
+  const card = `<div class="a-card">
+    <div class="a-bar"><i></i></div>
+    <div class="a-top"><span class="a-pulse">${av('Kier')}</span>
+      <div><b>Kier is watching</b>
+        <em data-w="arrive focus">with Leo · 41m in</em>
+        <em data-w="answer-acc" style="color:var(--g)">Joining…</em>
+        <em data-w="answer-dec">Maybe next time</em>
+        <em data-w="answer-exp">Invitation expired</em>
+        <em data-w="answer-can">Kier called it off</em>
+      </div><span class="x">✕</span></div>
+    <div class="a-open"><div class="in">
+      <div class="a-th">${poster(FEAT)}<div class="shade"></div><div class="d"><h6 class="sub">Movie · ${FEAT.len}</h6><h3>${esc(FEAT.t)}</h3></div></div>
+      <div class="a-who">${av('Kier','s')}${av('Leo','s')}<span style="margin-left:5px">Kier and Leo are 41 minutes in</span></div>
+    </div></div>
+    <div class="a-acts wf" data-w="arrive focus"><span class="btn gh">Later</span><span class="btn pk">Join them</span></div>
+    <div class="a-sum wf" data-w="answer-exp answer-can"><span class="btn gh sm">Dismiss</span><span>Ask Kier to invite you again</span></div>
+  </div>
+  <div class="a-join">${av('Kier','s')}<span><b>Joining Kier's party</b></span><span class="a-spin"></span></div>
+  <div class="a-chip">${av('Kier','s')}<span><b>Kier is watching</b></span><em>Join anytime</em></div>`;
+  sc.innerHTML = shell('a', card);
+}
+
+/* ───── A2 — Toast first, the card on tap ───── */
+function mountA2(sc){
+  const card = `<div class="a2-card">
+    <div class="a2-strip">${poster(FEAT)}<div class="a2-sh"></div>
+      <div class="d-badge wf" data-w="arrive focus"><i></i>LIVE</div>
+      <div class="a2-ttl"><h6 class="sub">Movie · ${FEAT.len} · 41m in</h6><h3>${esc(FEAT.t)}</h3></div>
+    </div>
+    <div class="a-bar"><i></i></div>
+    <div class="a2-line">${av('Kier','s')}
+      <div><b>Kier invited you</b>
+        <em data-w="arrive">${esc(FEAT.t)} · 41m in</em>
+        <em data-w="focus">Expires in 4:52</em>
+        <em data-w="answer-acc" style="color:var(--g)">Joining…</em>
+        <em data-w="answer-dec">Maybe next time</em>
+        <em data-w="answer-exp">Invitation expired</em>
+        <em data-w="answer-can">Kier called it off</em>
+      </div>
+      <span class="btn pk sm" data-w="arrive">Join</span>
+      <span class="a2-chev">⌄</span>
+    </div>
+    <div class="a2-open"><div class="in">
+      <div class="d-who">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo are watching</span></div>
+      <p class="d-note">You'd come in at 41:12, right where they are.</p>
+    </div></div>
+    <div class="a2-acts wf" data-w="focus"><span class="btn gh">Not now</span><span class="btn pk">Join them</span></div>
+    <div class="a2-acts wf" data-w="answer-exp answer-can"><span class="btn gh">Ask Kier again</span></div>
+  </div>
+  <div class="a-join">${av('Kier','s')}<span><b>Joining Kier's party</b></span><span class="a-spin"></span></div>
+  <div class="a-chip">${av('Kier','s')}<span><b>Kier is watching</b></span><em>Join anytime</em></div>`;
+  sc.innerHTML = shell('a2', card);
+}
+
+/* ───── A3 — Toast is a live tile ───── */
+function mountA3(sc){
+  const pip = `<div class="a3-card">
+    <div class="a3-ph"></div>
+    <div class="a-bar"><i></i></div>
+    <div class="a3-line">${av('Kier','s')}
+      <div><b>Kier invited you</b>
+        <em data-w="arrive">${esc(FEAT.t)} · 41m in</em>
+        <em data-w="focus">Expires in 4:52</em>
+        <em data-w="answer-acc" style="color:var(--g)">Joining…</em>
+        <em data-w="answer-dec">Maybe next time</em>
+        <em data-w="answer-exp">Invitation expired</em>
+        <em data-w="answer-can">Kier called it off</em>
+      </div>
+      <span class="btn pk sm" data-w="arrive">Join</span>
+      <span class="a3-chev">⌄</span>
+    </div>
+    <div class="a3-open"><div class="in">
+      <div class="d-who">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo</span>
+        <span class="d-lvl wi" data-w="focus"><i></i><i></i><i></i></span></div>
+      <div class="d-chat">
+        <div class="msg">${av('Leo','s')}<div><b>Leo</b><p>wait go back, that was the radio guy</p></div></div>
+        <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>told you. ok pausing</p></div></div>
+      </div>
+    </div></div>
+    <div class="a3-acts wf" data-w="focus"><span class="btn gh">Not now</span><span class="btn pk">Join them</span></div>
+    <div class="a3-acts wf" data-w="answer-exp answer-can"><span class="btn gh">Ask Kier again</span></div>
+  </div>
+  <div class="a3-prev">${poster(FEAT)}<div class="a3-pov"></div>
+    <div class="d-badge wf" data-w="arrive focus"><i></i>LIVE</div>
+    <h6 class="sub a3-mu" data-w="arrive">Muted</h6>
+    <h6 class="sub a3-mu on" data-w="focus">Sound on</h6>
+    <div class="a3-seek"><i></i></div>
+  </div>
+  <div class="a-chip">${av('Kier','s')}<span><b>Kier is watching</b></span><em>Join anytime</em></div>`;
+  sc.innerHTML = shell('a3', pip);
+  const st = sc.querySelector('.stage');
+  anchor(st, '.a3-ph', 'a3');
+  anchor(st, '.a3-ph', 'a4', 'focus acc focus-acc browse');
+  anchor(st, '.a3-ph', 'a5', 'arrive acc arrive-acc watch');
+  anchor(st, '.a3-ph', 'a6', 'focus acc focus-acc watch');
+}
+
+/* ───── B — Marquee ───── */
+function mountB(sc){
+  const take = `<div class="b-take">
+    <div class="b-bg">${poster(FEAT)}</div>
+    <div class="b-card">
+      <span class="b-from">${av('Kier','s')}<b data-w="arrive focus answer-acc">Kier saved you a seat</b><b data-w="answer-exp">Kier's invite ran out</b><b data-w="answer-can">Kier called it off</b></span>
+      <h1>${esc(FEAT.t)}</h1>
+      <div class="b-mt"><span class="sub">Movie</span><i></i><span class="sub">${FEAT.len}</span><i></i>
+        <span class="b-live wi" data-w="arrive focus"><i></i><span class="sub">41m in · Leo watching</span></span>
+        <span class="sub" data-w="answer-exp answer-can" style="color:var(--y)">No longer open</span></div>
+      <div class="b-open"><div class="in">
+        <div class="b-into">${av('Kier','s')}${av('Leo','s')}<span>You'll come in at 41:12, right where they are</span></div>
+        <div class="b-prog"><i></i><b></b></div>
+      </div></div>
+      <div class="b-row wf" data-w="arrive focus"><span class="btn pk lg">Join the party</span><span class="b-no">Not tonight</span>
+        <span class="b-dial" style="margin-left:auto"><em>4:52</em></span></div>
+      <div class="b-row wf" data-w="answer-exp answer-can"><span class="btn gh lg">Back to browsing</span><span class="b-no">Ask Kier to re-invite me</span></div>
+    </div>
+  </div>`;
+  sc.innerHTML = shell('b', take);
+}
+
+/* ───── C — Live row ───── */
+function mountC(sc){
+  const row = `<div class="c-row">
+    <div class="hd"><i class="dot"></i><h6 class="sub" data-w="arrive focus answer-acc">Live now · Kier invited you</h6>
+      <h6 class="sub" data-w="answer-dec after-dec">Dismissed · still open for 4:52</h6>
+      <h6 class="sub" data-w="answer-exp after-exp">Invitation expired</h6>
+      <h6 class="sub" data-w="answer-can after-can">Kier called it off</h6></div>
+    <div class="c-live">
+      <div class="c-ph"></div>
+      <div class="c-info">
+        <h3>${esc(FEAT.t)}</h3>
+        <div class="mt"><span class="sub">Movie</span><i></i><span class="sub">${FEAT.len}</span><i></i><span class="sub" style="color:var(--g)">41m in</span></div>
+        <div class="c-acts wf" data-w="arrive focus"><span class="btn pk">Join Kier</span><span class="btn gh">Not now</span>
+          <span class="c-dial"><em>4:52</em></span></div>
+        <div class="c-acts wf" data-w="answer-dec after-dec"><span class="btn gh">Changed my mind</span></div>
+        <div class="c-acts wf" data-w="answer-exp after-exp answer-can after-can"><span class="btn gh">Clear</span></div>
+        <div class="c-open"><div class="in">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo are watching · you'd be the third</span></div></div>
+      </div>
+    </div>
+  </div>`;
+  const float = `<div class="c-art">${poster(FEAT)}<div class="shade"></div></div>
+  <div class="c-join">${av('Kier','s')}<span><b>Taking your seat</b></span><span class="a-spin"></span></div>
+  <div class="c-pill">${av('Kier','s')}<span><b>Kier is live</b></span><em>${esc(FEAT.t)} · 41m in</em><span class="btn pk sm">Look</span></div>`;
+  sc.innerHTML = shell('c', float, {top: row});
+  anchor(sc.querySelector('.stage'), '.c-ph', 'c');
+}
+
+/* a floating piece that grows into the player is pinned to the real box it replaces */
+function anchor(st, phSel, pre, keys){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '';
+    st.classList.add('measuring');
+    st.dataset.keys = keys || 'arrive acc arrive-acc browse';
+    void st.offsetWidth;
+    const sh = st.querySelector('.sh').getBoundingClientRect(), ph = st.querySelector(phSel).getBoundingClientRect();
+    st.style.setProperty('--' + pre + 'l', (ph.left - sh.left) + 'px');
+    st.style.setProperty('--' + pre + 't', (ph.top - sh.top) + 'px');
+    st.style.setProperty('--' + pre + 'w', ph.width + 'px');
+    st.style.setProperty('--' + pre + 'h', ph.height + 'px');
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+
+/* ───── D — Peek ───── */
+function mountD(sc){
+  const side = `<div class="d-side">
+    <div class="d-hd">${av('Kier','s')}<div><b>Kier's party</b><em>live now</em></div><span class="x">✕</span></div>
+    <div class="d-ph"></div>
+    <div class="d-info">
+      <h3>${esc(FEAT.t)}</h3>
+      <div class="mt"><span class="sub">Movie</span><i></i><span class="sub">41m in</span></div>
+      <div class="d-who">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo</span>
+        <span class="d-lvl wi" data-w="focus"><i></i><i></i><i></i></span></div>
+      <p class="d-note" data-w="arrive">Peeking muted. They can't see you yet.</p>
+      <p class="d-note" data-w="focus">Sound on — that's Leo talking.</p>
+      <p class="d-note" data-w="answer-exp">The invite ran out, but the party's still going.</p>
+      <p class="d-note" data-w="answer-can">Kier called it off.</p>
+      <div class="d-chat" data-w="arrive focus">
+        <div class="msg">${av('Leo','s')}<div><b>Leo</b><p>wait go back, that was the radio guy</p></div></div>
+        <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>told you. ok pausing</p></div></div>
+      </div>
+    </div>
+    <div class="d-acts wf" data-w="arrive focus"><span class="btn pk">Join them</span><span class="btn gh">Not now</span></div>
+    <div class="d-acts wf" data-w="answer-exp"><span class="btn gh">Ask to join</span></div>
+    <div class="d-acts wf" data-w="answer-can"><span class="btn gh">Close</span></div>
+  </div>
+  <div class="d-prev">${poster(FEAT)}<div class="d-badge wf" data-w="arrive focus"><i></i>LIVE</div></div>`;
+  sc.innerHTML = shell('d', side);
+  anchor(sc.querySelector('.stage'), '.d-ph', 'd');
+}
+
+/* ───── E — Reply ───── */
+function mountE(sc){
+  const thread = `<div class="e-toast">${av('Kier','s')}
+    <div><b>Kier invited you</b><em>${esc(FEAT.t)} · 41m in</em></div>
+    <span class="btn gh sm">Reply</span><span class="btn pk sm">Join</span></div>
+  <div class="e-dim"></div>
+  <div class="e-panel">
+    <div class="e-hd">${av('Kier')}<div><b>Kier</b><em>watching now</em></div><span class="x">✕</span></div>
+    <div class="e-msgs">
+      <div class="e-b them">we're putting on velvet static, come</div>
+      <div class="e-card"><span class="th">${poster(FEAT)}</span>
+        <div><h3>${esc(FEAT.t)}</h3><div class="mt">Movie · ${FEAT.len}</div>
+          <div class="e-live"><i></i>41m in · Leo's here</div></div></div>
+      <div class="e-b them">41 minutes in now, we'll rewind</div>
+      <div class="e-b me" data-w="answer-acc after-acc">omw, start it over</div>
+      <div class="e-b me" data-w="answer-dec after-dec">can't tonight — enjoy it</div>
+      <div class="e-sys" data-w="answer-exp after-exp">This invitation expired</div>
+      <div class="e-sys" data-w="answer-can after-can">Kier cancelled the invitation</div>
+    </div>
+    <div class="e-quick wf" data-w="focus"><span class="btn pk sm">Joining now</span><span class="btn gh sm">Give me 10</span><span class="btn gh sm">Can't tonight</span></div>
+    <div class="e-inp">Message Kier…</div>
+  </div>`;
+  sc.innerHTML = shell('e', thread);
+}
+
+/* ───── Stage rails ───── */
+const ST = [{k:'idle',l:'Idle'},{k:'arrive',l:'Arrives'},{k:'focus',l:'Opens'},{k:'answer',l:'Answers'},{k:'after',l:'After'}];
+const BR = [{k:'acc',l:'Joins'},{k:'dec',l:'Declines'},{k:'exp',l:'Expires'},{k:'can',l:'Host cancels'}];
+const ANS = {acc:'Accepts', dec:'Declines', exp:'Expires', can:'Withdrawn'};
+const CX = [{k:'browse',l:'Browsing'},{k:'watch',l:'Mid-episode'}];
+
+/* stage-conditional display: keys are matched token-for-token */
+const KEYS = [];
+ST.forEach(s => { KEYS.push(s.k); BR.forEach(b => KEYS.push(s.k + '-' + b.k)); });
+BR.forEach(b => KEYS.push(b.k)); CX.forEach(c => KEYS.push(c.k));
+const kst = document.createElement('style');
+kst.textContent = KEYS.map(k => `.stage[data-keys~="${k}"] [data-w~="${k}"]{display:block}
+.stage[data-keys~="${k}"] .wf[data-w~="${k}"]{display:flex}
+.stage[data-keys~="${k}"] .wi[data-w~="${k}"]{display:inline-flex}`).join('');
+document.head.append(kst);
+
+const MOUNTS = {now: mountNow, a: mountA, a2: mountA2, a3: mountA3, b: mountB, c: mountC, d: mountD, e: mountE};
+document.querySelectorAll('[data-mount]').forEach(sc => MOUNTS[sc.dataset.mount](sc));
+
+function setKeys(st){
+  const s = st.dataset.stage, b = st.dataset.branch, c = st.dataset.ctx;
+  st.dataset.keys = `${s} ${b} ${s}-${b} ${c}`;
+}
+document.querySelectorAll('[data-rail]').forEach(rail => {
+  const stage = document.getElementById(rail.dataset.rail).querySelector('.stage');
+  rail.innerHTML = `<div class="grp st">${ST.map(s => `<button type="button" data-s="${s.k}">${s.l}</button>`).join('')}</div>
+    <div class="grp br">${BR.map(b => `<button type="button" data-b="${b.k}">${b.l}</button>`).join('')}</div>
+    <div class="grp cx">${CX.map(c => `<button type="button" data-c="${c.k}">${c.l}</button>`).join('')}</div>
+    <button type="button" class="play">Play flow</button>
+    <span class="hint">Her screen only — the host is elsewhere.</span>`;
+  const sb = [...rail.querySelectorAll('[data-s]')], bb = [...rail.querySelectorAll('[data-b]')], cb = [...rail.querySelectorAll('[data-c]')];
+  const play = rail.querySelector('.play');
+  let timer = null;
+  const sync = () => {
+    sb.forEach(x => x.classList.toggle('on', x.dataset.s === stage.dataset.stage));
+    bb.forEach(x => x.classList.toggle('on', x.dataset.b === stage.dataset.branch));
+    cb.forEach(x => x.classList.toggle('on', x.dataset.c === stage.dataset.ctx));
+    sb[3].textContent = ANS[stage.dataset.branch];
+    setKeys(stage);
+  };
+  sb.forEach(x => x.addEventListener('click', () => { clearInterval(timer); stage.dataset.stage = x.dataset.s; sync(); }));
+  bb.forEach(x => x.addEventListener('click', () => { stage.dataset.branch = x.dataset.b; sync(); }));
+  cb.forEach(x => x.addEventListener('click', () => { stage.dataset.ctx = x.dataset.c; sync(); }));
+  play.addEventListener('click', () => {
+    clearInterval(timer); let i = 0; stage.dataset.stage = ST[0].k; sync();
+    timer = setInterval(() => { i++; if(i >= ST.length){ clearInterval(timer); return; } stage.dataset.stage = ST[i].k; sync(); }, REDUCED ? 900 : 1600);
+  });
+  sync();
+});
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:(id) => `Explore from ${id} in ${FILE}`},
+  {label:'Remix this', hint:'Fork it and apply your changes.', make:(id) => `Remix ${id} in ${FILE}:`},
+  {label:'Settle on this', hint:'Stop exploring; build from this one.', make:(id) => `Settle on ${id} in ${FILE}`}
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded','false'); } }); }
+function copyText(text){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, () => legacyCopy(text));
+  return Promise.resolve(legacyCopy(text));
+}
+function legacyCopy(text){
+  const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0'; document.body.append(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch(e){} ta.remove(); return ok;
+}
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, h = sec.querySelector('.var-h');
+  const btn = document.createElement('button'); btn.className = 'pick-btn'; btn.type = 'button'; btn.textContent = 'Pick ▾';
+  btn.setAttribute('aria-haspopup','menu'); btn.setAttribute('aria-expanded','false'); h.append(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.setAttribute('role','menu'); menu.hidden = true;
+  menu.innerHTML = VERBS.map((v,i) => `<button type="button" role="menuitem" data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  h.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', e => { e.stopPropagation(); const willOpen = menu.hidden; closeAll(); menu.hidden = !willOpen; btn.setAttribute('aria-expanded', String(willOpen)); if(willOpen) menu.querySelector('button').focus(); });
+  menu.addEventListener('click', async e => {
+    e.stopPropagation(); const b = e.target.closest('button'); if(!b) return;
+    const text = VERBS[b.dataset.i].make(id); closeAll(); btn.focus();
+    const ok = await copyText(text); out.hidden = false;
+    if(ok){ out.innerHTML = `<code></code><span class="ok">Copied</span>`; out.querySelector('code').textContent = text; }
+    else { out.innerHTML = `<span>Copy this prompt</span><input readonly>`; const f = out.querySelector('input'); f.value = text; f.focus(); f.select(); }
+  });
+});
+document.addEventListener('click', e => { if(!e.target.closest('.pick-menu')) closeAll(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAll(); });
+
+/* ───── Minimap ───── */
+const mm = document.querySelector('.mm'), secs = [...document.querySelectorAll('.var')];
+mm.innerHTML = secs.map(s => `<a href="#${s.id}" data-for="${s.id}"><i></i><span><b>${s.dataset.id}</b>${esc(s.dataset.name)}</span></a>`).join('');
+mm.addEventListener('click', e => { const a = e.target.closest('a'); if(!a) return; e.preventDefault(); document.getElementById(a.dataset.for).scrollIntoView({behavior:'smooth', block:'start'}); });
+function syncMM(){
+  let cur = secs[0];
+  secs.forEach(s => { if(s.getBoundingClientRect().top <= innerHeight * .35) cur = s; });
+  mm.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.for === cur.id));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+</script>
+</body>
+</html>

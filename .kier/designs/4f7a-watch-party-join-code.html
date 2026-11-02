@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Care.tv Join & Party Codes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Syne:wght@700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.frame{position:relative;height:clamp(560px,calc(100vh - 190px),768px);margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#0E151C;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail .steps{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .steps button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 12px;cursor:pointer}
+.rail .steps button.on{background:var(--ink);color:var(--bg)}
+.rail .play{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+.rail .hint{font-size:13px;color:var(--mut);margin-left:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:220px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup base (Care.tv look) ───────────── */
+.mk{--pk:#E8368F;--y:#F7C948;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);height:100%;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;font-size:13px;line-height:1.45}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h1,.mk h2,.mk h3,.mk h4,.mk h5,.mk p{margin:0}
+.sub{font-family:'Work Sans',sans-serif;font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;font-weight:600}
+.mono{font-family:ui-monospace,'SFMono-Regular',Menlo,monospace}
+.art{position:relative;width:100%;height:100%;overflow:hidden}
+.art::after{content:"";position:absolute;inset:0;opacity:.24;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.art-t{position:absolute;left:7%;right:7%;bottom:9%;color:#fff;line-height:.9;text-shadow:0 2px 16px rgba(0,0,0,.5);font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(9px,8.4cqi,52px)}
+.av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:11px;font-style:normal;flex:none}
+.av.s{width:21px;height:21px;font-size:9.5px}
+.av.l{width:40px;height:40px;font-size:16px}
+.av.gh{background:none;border:1.5px dashed var(--n4);color:var(--n5);font-weight:600}
+.avs{display:flex}
+.avs .av{box-shadow:0 0 0 2px var(--n1)}
+.avs .av+.av{margin-left:-7px}
+.btn{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 15px;border-radius:4px;background:var(--n3);color:#fff;font-weight:600;font-size:13px;white-space:nowrap;transition:transform .15s,background .18s,box-shadow .18s}
+.btn:hover{transform:translateY(-1px)}
+.btn.pk{background:var(--pk)}
+.btn.gh{background:rgba(255,255,255,.09)}
+.btn.ln{background:none;color:var(--n5)}
+.btn.lg{height:46px;font-size:15px;border-radius:5px;padding:0 22px}
+.btn.blk{width:100%}
+.ic{display:inline-grid;place-items:center;width:22px;height:22px;opacity:.85;flex:none}
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;background:rgba(255,255,255,.08);color:#dbe4ec;font-size:11px;font-weight:600}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--g);flex:none;box-shadow:0 0 0 0 rgba(101,214,173,.6);animation:ping 2.2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(101,214,173,.55)}70%{box-shadow:0 0 0 7px rgba(101,214,173,0)}100%{box-shadow:0 0 0 0 rgba(101,214,173,0)}}
+
+/* layers */
+.layer{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .34s ease,transform .34s cubic-bezier(.2,.8,.2,1);transform:scale(.995)}
+.layer.on{opacity:1;visibility:visible;transform:none}
+
+/* nav + listing (c41d direction) */
+.nav{flex:none;display:flex;align-items:center;gap:22px;padding:0 26px;height:54px;border-bottom:1px solid rgba(255,255,255,.06);background:rgba(16,23,30,.92);position:relative;z-index:4}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:-.02em}
+.logo i{color:var(--pk);font-style:normal}
+.tabs{display:flex;gap:18px}
+.tabs button{font-size:12.5px;font-weight:600;color:var(--n5);padding:4px 0;border-bottom:2px solid transparent}
+.tabs button.on{color:#fff;border-color:var(--pk)}
+.nav .sp{flex:1}
+.srch{display:flex;align-items:center;gap:8px;height:30px;width:210px;padding:0 11px;border-radius:4px;background:var(--n3);color:var(--n5);font-size:12px}
+.joinbtn{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 14px;border-radius:4px;background:var(--pk);font-size:12.5px;font-weight:700}
+.scroll{flex:1;min-height:0;overflow:hidden;padding:22px 26px 0}
+.rowh{display:flex;align-items:baseline;gap:10px;margin:0 0 11px}
+.rowh h4{font-size:14px;font-weight:700;letter-spacing:-.01em}
+.rowh .sub{color:var(--n5)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.gcard{position:relative;border-radius:5px;overflow:hidden;aspect-ratio:16/9;background:var(--n3);container-type:inline-size;transition:transform .2s}
+.gcard:hover{transform:translateY(-2px)}
+.gcard .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 11px 9px;background:linear-gradient(0deg,rgba(6,9,13,.9),transparent);font-size:12px;font-weight:700}
+.gcard .cap em{display:block;font-style:normal;font-size:10px;font-weight:500;color:#b7c4cf}
+.dim{filter:brightness(.42) saturate(.7);transition:filter .4s}
+
+/* player */
+.pl{position:absolute;inset:0;display:flex;background:#06090d}
+.pl-main{position:relative;flex:1;min-width:0;display:flex;flex-direction:column}
+.pl-vid{position:relative;flex:1;min-height:0;container-type:inline-size}
+.pl-top{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:10px;padding:13px 16px;background:linear-gradient(180deg,rgba(6,9,13,.85),transparent);z-index:2}
+.pl-top h4{font-size:13px;font-weight:700}
+.pl-top .sp{flex:1}
+.pl-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.92),transparent 42%),linear-gradient(180deg,rgba(6,9,13,.55),transparent 24%)}
+.pl-ctl{position:absolute;left:0;right:0;bottom:0;padding:0 16px 14px;display:flex;align-items:center;gap:11px;z-index:2}
+.seek{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.seek i{position:absolute;inset:0 62% 0 0;background:var(--pk);border-radius:3px}
+.seek i::after{content:"";position:absolute;right:-4px;top:-3px;width:9px;height:9px;border-radius:50%;background:#fff}
+.tt{font-size:11px;color:#c7d3dd;font-variant-numeric:tabular-nums}
+.chat{width:216px;flex:none;display:flex;flex-direction:column;background:var(--n2);border-left:1px solid #000}
+.chat-h{flex:none;display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.06)}
+.chat-h .sub{color:var(--n5)}
+.chat-h .plus{margin-left:auto;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:var(--n3);font-size:14px}
+.msgs{flex:1;min-height:0;padding:11px 13px;display:flex;flex-direction:column;gap:9px;justify-content:flex-end;overflow:hidden}
+.msg{display:flex;gap:8px;align-items:flex-start}
+.msg b{font-weight:600;font-size:11px;display:block}
+.msg p{font-size:11.5px;color:#c3cfda}
+.msg.sys{justify-content:center;align-items:center;gap:5px;font-size:10.5px;color:var(--n5);text-align:center}
+.msg.sys.new{animation:pop .45s cubic-bezier(.2,.9,.3,1.5) both}
+@keyframes pop{from{opacity:0;transform:translateY(7px) scale(.94)}to{opacity:1;transform:none}}
+.chat-i{flex:none;margin:11px 13px;height:31px;border-radius:4px;background:var(--n3);display:flex;align-items:center;padding:0 10px;color:var(--n5);font-size:11.5px}
+
+/* sheets / modals */
+.scrim{position:absolute;inset:0;background:rgba(6,9,13,.72);backdrop-filter:blur(3px)}
+.sheet{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,86%);background:var(--n2);border-radius:8px;overflow:hidden;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translate(-50%,-44%) scale(.97)}}
+.sheet-c{position:relative;aspect-ratio:16/9;container-type:inline-size}
+.sheet-b{padding:18px 20px 20px}
+.sheet-b h3{font-size:19px;font-weight:700;letter-spacing:-.015em}
+.sheet-b p{font-size:12.5px;color:#9fb0bd;margin-top:6px}
+.play-o{position:absolute;inset:0;display:grid;place-items:center}
+.play-c{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:rgba(232,54,143,.92);font-size:17px}
+
+/* code cells */
+.cells{display:flex;gap:7px;align-items:center}
+.cell{width:42px;height:54px;border-radius:5px;background:var(--n3);border:1px solid var(--n4);display:grid;place-items:center;font-size:24px;font-weight:700;letter-spacing:.02em;color:#fff;transition:border-color .2s,background .2s,transform .2s}
+.cell.fill{background:#223246;border-color:#4e6075;animation:tick .22s cubic-bezier(.2,.9,.3,1.5)}
+@keyframes tick{from{transform:scale(.88)}}
+.cell.cur{border-color:var(--pk);box-shadow:0 0 0 2px rgba(232,54,143,.25)}
+.cell.cur::after{content:"";width:2px;height:24px;background:var(--pk);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.cell.sm{width:32px;height:40px;font-size:18px;border-radius:4px}
+.sep{width:9px;height:2px;background:var(--n4);border-radius:2px}
+.cells.ok .cell{border-color:var(--g);background:rgba(101,214,173,.12)}
+.cells.err{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* party preview card */
+.ppc{display:flex;gap:14px;align-items:center;padding:13px;border-radius:7px;background:var(--n3);border:1px solid rgba(255,255,255,.07)}
+.ppc .th{width:112px;flex:none;aspect-ratio:16/9;border-radius:4px;overflow:hidden;container-type:inline-size}
+.ppc .mt{flex:1;min-width:0}
+.ppc h4{font-size:14.5px;font-weight:700}
+.ppc .mm2{font-size:11.5px;color:var(--n5);margin-top:3px;display:flex;align-items:center;gap:7px}
+.prog{max-width:300px;height:2px;border-radius:2px;background:rgba(255,255,255,.14);position:relative;margin-top:9px}
+.prog i{position:absolute;left:0;top:0;bottom:0;background:var(--pk);border-radius:2px}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);display:flex;align-items:center;gap:9px;padding:9px 15px;border-radius:999px;background:rgba(10,15,21,.94);border:1px solid rgba(255,255,255,.1);font-size:12px;box-shadow:0 18px 40px -18px #000;animation:up .5s cubic-bezier(.2,.9,.3,1.4) both;z-index:6}
+@keyframes up{from{opacity:0;transform:translate(-50%,14px)}}
+
+/* ── A: front door ── */
+.door{position:relative;z-index:3;flex:none;padding:30px 26px 24px;background:
+  radial-gradient(120% 100% at 15% 0%,rgba(232,54,143,.22),transparent 58%),
+  linear-gradient(180deg,#141E29,rgba(16,23,30,.4));border-bottom:1px solid rgba(255,255,255,.07)}
+.door h2{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-.02em;text-transform:uppercase}
+.door .lead{font-size:12.5px;color:#9fb0bd;margin-top:5px}
+.door-row{display:flex;align-items:flex-end;gap:16px;margin-top:16px}
+.door .alt{margin-left:auto;text-align:right;font-size:12px;color:var(--n5);max-width:210px}
+.door .alt b{display:block;color:#fff;font-size:12.5px;margin-bottom:4px}
+.recent{display:flex;gap:8px;align-items:center;margin-top:14px;font-size:11.5px;color:var(--n5)}
+.recent .chip{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 11px;border-radius:999px;border:1px solid var(--n4);color:#dbe4ec;font-weight:600}
+.resolve{display:none;gap:14px;align-items:center;animation:rise2 .4s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise2{from{opacity:0;transform:translateY(10px)}}
+.door .entry{display:flex;align-items:center;gap:12px;margin-top:15px}
+.mk[data-step="1"] .door .entry{display:none}
+.mk[data-step="1"] .door .resolve{display:flex}
+.mk[data-step="1"] .door .alt{opacity:.35}
+.codechip{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 6px 0 11px;border-radius:4px;background:rgba(255,255,255,.1);font-size:12px;font-weight:700;letter-spacing:.06em}
+.codechip b{display:grid;place-items:center;width:20px;height:20px;border-radius:3px;background:rgba(255,255,255,.14);font-size:10px;font-weight:600}
+
+/* ── B: ticket ── */
+.tk{position:relative;width:min(470px,84%);margin:auto;background:#F4F1EA;color:#121922;border-radius:7px;display:flex;overflow:hidden;box-shadow:0 44px 80px -30px rgba(0,0,0,.85);animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+.tk-m{flex:1;padding:20px;min-width:290px}
+.tk .sub{color:#7c8794}
+.tk h3{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;margin-top:5px;line-height:1}
+.tk .meta{font-size:11.5px;color:#5e6a77;margin-top:7px}
+.tk-s{position:relative;width:194px;flex:none;padding:20px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:#EAE5DA;transition:transform .55s cubic-bezier(.3,.9,.3,1),opacity .4s}
+.tk-s::before{content:"";position:absolute;left:0;top:0;bottom:0;width:0;border-left:2px dashed #C9C2B4}
+.tk-s .sub{color:#8a93a0}
+.tk-code{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;letter-spacing:.03em;color:#121922;white-space:nowrap}
+.tk-acts{display:flex;gap:7px;margin-top:14px}
+.tk .mini{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;height:30px;padding:0 12px;border-radius:4px;background:#121922;color:#fff;font-size:11.5px;font-weight:600}
+.tk .mini.o{background:none;border:1px solid #C9C2B4;color:#3b4551}
+.tk-seats{display:flex;gap:5px;margin-top:15px;align-items:center}
+.seat{width:21px;height:21px;border-radius:4px;display:grid;place-items:center;font-size:9.5px;font-weight:800;background:#121922;color:#F4F1EA}
+.seat.e{background:none;border:1.5px dashed #C2BBAC;color:#A79F8E}
+.mk[data-step="1"] .tk-s{transform:translateX(118%) rotate(5deg);opacity:0}
+.mk[data-step="1"] .tk{width:min(360px,72%)}
+.fly{position:absolute;right:28px;top:62px;width:150px;padding:11px 13px;border-radius:7px;background:var(--n2);border:1px solid rgba(255,255,255,.1);opacity:0;transform:translateY(-8px) scale(.95);transition:all .5s cubic-bezier(.2,.8,.2,1) .25s;z-index:5}
+.mk[data-step="1"] .fly{opacity:1;transform:none}
+.fly .sub{color:var(--n5)}
+.fly .lines{display:flex;flex-direction:column;gap:7px;margin-top:9px;font-size:11.5px}
+.fly .lines span{display:flex;align-items:center;gap:7px;color:#cad5df}
+.stub-in{width:min(430px,82%);margin:auto;text-align:center}
+.stub-in .box{position:relative;padding:26px 22px;border-radius:7px;background:#EAE5DA;color:#121922;box-shadow:0 44px 80px -34px rgba(0,0,0,.85)}
+.stub-in .box::before,.stub-in .box::after{content:"";position:absolute;top:-9px;width:18px;height:18px;border-radius:50%;background:#0E151C}
+.stub-in .box::before{left:-9px}.stub-in .box::after{right:-9px}
+.stub-in h3{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;text-transform:uppercase}
+.stub-in .cells{justify-content:center;margin-top:16px}
+.stub-in .cell{background:#DED7C8;border-color:#C6BFB0;color:#121922}
+.stub-in .cell.cur{border-color:var(--pk)}
+.stub-in .hint{font-size:11.5px;color:#6c7682;margin-top:14px}
+
+/* ── C: lobby ── */
+.lob{flex:1;min-height:0;padding:24px 26px;display:flex;flex-direction:column;gap:11px;overflow:hidden}
+.lob-h{display:flex;align-items:flex-end;gap:12px}
+.lob-h h2{font-family:'Syne',sans-serif;font-size:23px;font-weight:800;text-transform:uppercase;letter-spacing:-.02em}
+.lob-h .sub{color:var(--n5);margin-bottom:4px}
+.lrow{display:flex;align-items:center;gap:14px;padding:11px;border-radius:7px;background:var(--n2);border:1px solid rgba(255,255,255,.06);transition:border-color .2s,transform .2s,background .2s}
+.lrow:hover{border-color:rgba(255,255,255,.18);transform:translateX(2px)}
+.lrow .th{width:124px;flex:none;aspect-ratio:16/9;border-radius:4px;overflow:hidden;container-type:inline-size}
+.lrow .mt{flex:1;min-width:0}
+.lrow h4{font-size:14px;font-weight:700}
+.lrow .mm2{font-size:11.5px;color:var(--n5);display:flex;align-items:center;gap:8px;margin-top:4px}
+.lrow .rt{display:flex;align-items:center;gap:12px}
+.lrow.ghost{opacity:.55}
+.lrow.inv{background:linear-gradient(90deg,rgba(232,54,143,.16),rgba(21,32,43,0) 62%);border-color:rgba(232,54,143,.4)}
+.lob-code{margin-top:auto;display:flex;align-items:center;gap:12px;padding:14px;border-radius:7px;border:1px dashed var(--n4)}
+.lob-code .t{font-size:12.5px;color:#9fb0bd}
+.lob-code .t b{display:block;color:#fff;font-size:13px}
+
+/* ── D: omnibar ── */
+.omni{position:absolute;left:50%;top:9px;transform:translateX(-50%);width:420px;z-index:9}
+.omni-f{display:flex;align-items:center;gap:9px;height:36px;padding:0 13px;border-radius:5px;background:#223246;border:1px solid rgba(255,255,255,.14);font-size:13px;box-shadow:0 10px 30px -12px rgba(0,0,0,.6)}
+.omni-f .kb{margin-left:auto;font-size:10px;color:var(--n5);border:1px solid var(--n4);border-radius:3px;padding:2px 5px}
+.dd{margin-top:7px;border-radius:6px;background:#17222E;border:1px solid rgba(255,255,255,.1);overflow:hidden;box-shadow:0 30px 60px -22px rgba(0,0,0,.8);animation:rise2 .25s both}
+.dd .sec{padding:7px 12px;color:var(--n5);border-bottom:1px solid rgba(255,255,255,.05)}
+.dd .it{display:flex;align-items:center;gap:11px;padding:9px 12px;font-size:12.5px}
+.dd .it .th{width:58px;flex:none;aspect-ratio:16/9;border-radius:3px;overflow:hidden;container-type:inline-size}
+.dd .it em{font-style:normal;color:var(--n5);font-size:11px}
+.dd .it.on{background:rgba(232,54,143,.14);box-shadow:inset 2px 0 0 var(--pk)}
+.dd .it .sp{flex:1}
+.dd .party{padding:13px 12px;background:linear-gradient(90deg,rgba(232,54,143,.16),transparent)}
+.dd .foot{padding:8px 12px;font-size:11px;color:var(--n5);border-top:1px solid rgba(255,255,255,.05);display:flex;gap:14px}
+.hero{position:relative;flex:1;min-height:0;container-type:inline-size}
+.hero .cap{position:absolute;left:34px;bottom:34px;right:34px}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(26px,5.4cqi,52px);font-weight:800;text-transform:uppercase;line-height:.9;letter-spacing:-.02em}
+.hero .sub{color:#c3cfda;margin-top:9px}
+.hero .acts{display:flex;gap:9px;margin-top:16px}
+
+/* ── E: party dock (Discord / Steam party) ── */
+.dock{position:absolute;left:24px;bottom:24px;width:262px;z-index:7;background:rgba(19,28,38,.97);border:1px solid rgba(255,255,255,.1);border-radius:6px;box-shadow:0 30px 56px -26px rgba(0,0,0,.9);overflow:hidden;animation:rise2 .4s cubic-bezier(.2,.8,.2,1) both}
+.dock-h{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.dock-h .sub{color:var(--n5)}
+.dock-b{padding:12px}
+.dock .empty{font-size:11.5px;color:#93a4b3;line-height:1.5}
+.dock .acts{display:flex;gap:7px;margin-top:12px}
+.dock .mini{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:28px;padding:0 11px;border-radius:4px;background:rgba(255,255,255,.08);font-size:11.5px;font-weight:600;white-space:nowrap}
+.dock .mini.pk{background:var(--pk)}
+.dock .mini.w{width:100%;margin-top:11px}
+.dock .mem{display:flex;align-items:center;gap:9px;padding:4px 0;font-size:12px;font-weight:600}
+.dock .mem .st{margin-left:auto;font-size:10.5px;font-weight:500;color:var(--n5)}
+.dock .codeline{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);font-size:11px;color:var(--n5)}
+.dock .codeline b{font-family:ui-monospace,Menlo,monospace;letter-spacing:.14em;color:#e4ebf2;font-size:12px;font-weight:600}
+.dock .found{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:11.5px;animation:rise2 .3s both}
+.dock .found .th{width:54px;flex:none;aspect-ratio:16/9;border-radius:3px;overflow:hidden;container-type:inline-size}
+.dock .found em{font-style:normal;display:block;color:var(--n5);margin-top:2px}
+.gcard.sel{outline:2px solid var(--pk);outline-offset:1px}
+.gcard.sel::after{content:"Play for 3";position:absolute;left:8px;top:8px;z-index:3;padding:4px 8px;border-radius:999px;background:var(--pk);font-size:10px;font-weight:700;letter-spacing:.02em}
+
+/* ── F: waiting room (Jackbox / Among Us lobby) ── */
+.lby{position:absolute;inset:0;display:grid;place-items:center}
+.lby-bg{position:absolute;inset:0;filter:brightness(.34) saturate(.7);transform:scale(1.04);transition:filter 1.1s ease,transform 1.1s ease}
+.mk[data-step="2"] .lby-bg{filter:brightness(.6) saturate(1)}
+.lby-in{position:relative;z-index:2;text-align:center;transition:opacity .5s,transform .5s}
+.mk[data-step="2"] .lby-in{opacity:0;transform:translateY(-10px)}
+.lby-in .sub{color:var(--n5)}
+.lby-in h2{font-size:30px;font-weight:600;letter-spacing:-.02em;margin-top:7px}
+.lby-in p{font-size:12.5px;color:#93a4b3;margin-top:6px}
+.seats{display:flex;gap:9px;justify-content:center;margin:24px 0 22px}
+.seats .st{width:46px;height:46px;border-radius:7px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);transition:background .4s,border-color .4s}
+.seats .st.e{background:none;border:1px dashed var(--n4)}
+.seats .st .av{transition:opacity .4s,transform .4s cubic-bezier(.2,.9,.3,1.5)}
+.mk[data-step="0"] .seats .st.late{background:none;border:1px dashed var(--n4)}
+.mk[data-step="0"] .seats .st.late .av{opacity:0;transform:scale(.5)}
+.lby-ft{font-size:11.5px;color:var(--n5);margin-top:16px}
+.lby-top{position:absolute;left:0;right:0;top:0;z-index:3;display:flex;align-items:center;gap:12px;padding:13px 22px}
+.lby-top .sp{flex:1}
+.lby-code{position:absolute;left:30px;bottom:28px;z-index:2;text-align:left}
+.lby-code .sub{color:var(--n5)}
+.lby-code b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:26px;font-weight:500;letter-spacing:.2em;margin-top:5px}
+.lby-code em{font-style:normal;font-size:11px;color:var(--n5)}
+.lby-host{position:absolute;right:30px;bottom:28px;z-index:2;display:flex;align-items:center;gap:9px}
+.cnt{position:absolute;inset:0;display:grid;place-items:center;font-family:ui-monospace,Menlo,monospace;font-size:68px;font-weight:300;color:#fff;text-shadow:0 8px 40px rgba(0,0,0,.6)}
+
+/* ── G: cold open (console user-select) ── */
+.open{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(90% 70% at 50% -10%,#1b2836,#0B1118 70%)}
+.open-in{position:relative;width:min(680px,86%)}
+.open-in .sub{color:var(--n5)}
+.open-in h2{font-size:29px;font-weight:600;letter-spacing:-.02em;margin-top:7px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;transition:grid-template-columns .45s cubic-bezier(.2,.8,.2,1)}
+.choice{position:relative;min-height:186px;padding:18px;border-radius:7px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.035);display:flex;flex-direction:column;justify-content:space-between;transition:border-color .3s,background .3s,opacity .4s,transform .4s}
+.choice:hover{border-color:rgba(255,255,255,.3)}
+.choice .lab{font-size:16px;font-weight:600}
+.choice .hint{font-size:11.5px;color:var(--n5);margin-top:5px;line-height:1.5}
+.choice .th{width:92px;aspect-ratio:16/9;border-radius:4px;overflow:hidden;container-type:inline-size}
+.choice .cells{margin-top:14px}
+.mk[data-step="1"] .choices{grid-template-columns:1fr 0fr;gap:0}
+.mk[data-step="1"] .choice.keep{opacity:0;padding:0;border-color:transparent;overflow:hidden}
+.mk[data-step="1"] .choice.j{border-color:rgba(232,54,143,.55);background:rgba(232,54,143,.07)}
+.resolved{display:none;align-items:center;gap:10px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);font-size:12px;animation:rise2 .35s both}
+.mk[data-step="1"] .resolved{display:flex}
+.resolved .th{width:64px;flex:none}
+.resolved em{font-style:normal;display:block;color:var(--n5);font-size:11px;margin-top:2px}
+.open-foot{margin-top:16px;font-size:12px;color:var(--n5)}
+
+
+/* ── H / I / J: sidebar shell ── */
+.app{position:absolute;inset:0;display:flex}
+.sb{flex:none;display:flex;flex-direction:column;min-height:0;background:#0B1117;border-right:1px solid rgba(255,255,255,.07)}
+.cv{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;position:relative}
+.layer.p66{left:66px}
+.layer.p240{left:240px}
+
+/* H: rail of rooms */
+.sb.icons{width:66px;align-items:center;padding:13px 0;gap:9px}
+.sb.icons .mark{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;margin-bottom:3px}
+.sb.icons .mark i{color:var(--pk);font-style:normal}
+.sb.icons .it{position:relative;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.06);font-size:15px;color:#cbd6e0;transition:border-radius .2s,background .2s}
+.sb.icons .it:hover{border-radius:11px;background:rgba(255,255,255,.1)}
+.sb.icons .it.on{background:rgba(232,54,143,.16);color:#fff;box-shadow:inset 0 0 0 1px rgba(232,54,143,.45)}
+.sb.icons .it.on::before{content:"";position:absolute;left:-12px;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--pk)}
+.sb.icons .it.gh{background:none;box-shadow:inset 0 0 0 1px var(--n4);color:var(--n5);font-size:17px}
+.sb.icons .hr{width:22px;height:1px;background:rgba(255,255,255,.1);margin:2px 0}
+.sb.icons .room{background:none}
+.sb.icons .room.live::after{content:"";position:absolute;right:0;bottom:0;width:11px;height:11px;border-radius:50%;background:var(--g);border:2px solid #0B1117}
+.sb.icons .room .n{position:absolute;top:-3px;right:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:var(--pk);border:2px solid #0B1117;font-size:9.5px;font-weight:800;font-style:normal;display:grid;place-items:center}
+.sb .sp{flex:1}
+.mk[data-step="2"] .sb.icons .it.on{background:rgba(255,255,255,.06);box-shadow:none;color:#cbd6e0}
+.mk[data-step="2"] .sb.icons .it.on::before{display:none}
+.mk[data-step="2"] .sb.icons .jrm::before{content:"";position:absolute;left:-12px;top:5px;bottom:5px;width:3px;border-radius:0 3px 3px 0;background:var(--pk)}
+.pop{position:absolute;left:22px;top:196px;width:330px;padding:17px;border-radius:8px;background:#17222E;border:1px solid rgba(255,255,255,.12);box-shadow:0 36px 70px -26px rgba(0,0,0,.85);animation:rise2 .3s both;z-index:8}
+.pop::after{content:"";position:absolute;left:-7px;top:26px;width:12px;height:12px;background:#17222E;border-left:1px solid rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.12);transform:rotate(45deg)}
+.pop .sub{color:var(--n5)}
+.pop h3{font-size:15px;font-weight:600;margin-top:5px}
+.pop .cells{margin-top:13px}
+.pop .hint{font-size:11px;color:var(--n5);margin-top:11px}
+.pop .found{display:flex;align-items:center;gap:10px;margin-top:13px;font-size:11.5px}
+.pop .found .th{width:56px;flex:none;aspect-ratio:16/9;border-radius:3px;overflow:hidden;container-type:inline-size}
+.pop .found em{font-style:normal;display:block;color:var(--n5);margin-top:2px}
+
+/* I / J: wide sidebar */
+.sb.wide{width:240px;padding:0}
+.sb-top{display:flex;align-items:center;gap:9px;height:54px;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.06)}
+.sb-nav{display:flex;flex-direction:column;padding:10px 9px;gap:1px}
+.sb-nav button{display:flex;align-items:center;gap:10px;height:31px;padding:0 9px;border-radius:5px;font-size:12.5px;font-weight:600;color:#9fb0bd}
+.sb-nav button.on{background:rgba(255,255,255,.07);color:#fff}
+.sb-sec{display:flex;align-items:center;gap:7px;padding:11px 16px 7px;color:var(--n5)}
+.sb-sec .sp{flex:1}
+.pr{display:flex;align-items:center;gap:10px;margin:0 9px;padding:7px 8px;border-radius:6px;font-size:12px;transition:background .2s}
+.pr:hover{background:rgba(255,255,255,.05)}
+.pr .mt{flex:1;min-width:0}
+.pr b{display:block;font-weight:600;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr em{font-style:normal;display:block;color:var(--n5);font-size:10.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pr .j{flex:none;height:24px;padding:0 10px;border-radius:999px;background:rgba(232,54,143,.16);color:#ff8ec4;font-size:11px;font-weight:700;display:grid;place-items:center}
+.pr.on{background:rgba(232,54,143,.12);box-shadow:inset 2px 0 0 var(--pk)}
+.mk[data-step="2"] .sb.wide button.pr:first-of-type{background:rgba(232,54,143,.12);box-shadow:inset 2px 0 0 var(--pk)}
+.mk[data-step="2"] .sb.wide button.pr:first-of-type .j{display:none}
+.pr.idle{opacity:.5}
+.sb-code{margin:9px;padding:11px;border-radius:6px;border:1px dashed var(--n4)}
+.sb-code .sub{color:var(--n5)}
+.sb-code .cells{margin-top:9px;justify-content:space-between}
+.sb-code .cell.sm{width:26px;height:32px;font-size:15px}
+.sb-code .sep{width:5px}
+.sb-code .found{display:none;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.1);font-size:11.5px;animation:rise2 .3s both}
+.sb-code .found b{font-weight:600}
+.sb-code .found em{font-style:normal;display:block;color:var(--n5);font-size:10.5px;margin-top:2px}
+.mk[data-step="1"] .sb-code{border-color:rgba(232,54,143,.5);background:rgba(232,54,143,.06)}
+.mk[data-step="1"] .sb-code .found{display:block}
+.sb-me{display:flex;align-items:center;gap:9px;padding:10px 16px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;font-weight:600}
+.sb-me .sp{flex:1}
+.sb-me .ic{font-size:13px;color:var(--n5)}
+
+/* J: squad */
+.squad{margin-top:auto;border-top:1px solid rgba(255,255,255,.07);padding:12px 9px 10px}
+.sq-h{display:flex;align-items:center;gap:8px;padding:0 7px 10px}
+.sq-h .sub{color:var(--n5)}
+.sq-h b{margin-left:auto;font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.12em;font-weight:600;color:#e4ebf2}
+.slot{display:flex;align-items:center;gap:10px;padding:6px 7px;border-radius:6px;font-size:12px;font-weight:600}
+.slot em{font-style:normal;margin-left:auto;font-size:10.5px;font-weight:500;color:var(--n5)}
+.slot.empty{color:var(--n5);font-weight:500;border:1px dashed var(--n4);margin-top:4px}
+.slot.late .av,.slot.late span{transition:opacity .4s,transform .4s cubic-bezier(.2,.9,.3,1.5)}
+.mk[data-step="0"] .slot.late{color:var(--n5);font-weight:500}
+.mk[data-step="0"] .slot.late .av{opacity:.28;transform:scale(.85)}
+.slot.late em .w{display:none}
+.mk[data-step="0"] .slot.late em .w{display:inline}
+.mk[data-step="0"] .slot.late em .h{display:none}
+.squad .btn{margin-top:10px;width:100%}
+.chatblock{display:none;flex-direction:column;gap:9px;padding:4px 7px 2px}
+.mk[data-step="2"] .chatblock{display:flex}
+.mk[data-step="2"] .squad .slots,.mk[data-step="2"] .squad>.btn{display:none}
+.chatblock .chat-i{margin:4px 0 0}
+
+@media (prefers-reduced-motion:reduce){.mk *,.layer{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+<header class="brief">
+  <div class="eyebrow">Care.tv · codes · follows .kier/designs/9b2e-party-invitation-flow.html</div>
+  <h1>A watch party needs a door, not just invitations.</h1>
+  <div class="cards">
+    <div>Open on Join.</div>
+    <div>Every party carries a code.</div>
+    <div>Start one, or join Joyce's.</div>
+    <div>Invites push, codes pull.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="No door — a party is a URL">
+  <div class="var-h"><span class="id">Now</span><h2>No door — a party is a URL</h2></div>
+  <div class="frame"><div class="mk" data-mount="now"></div></div>
+  <div class="rail" data-rail="v-now"></div>
+  <div class="notes">
+    <div class="note good">One tap from a title.</div>
+    <div class="note bad">A party is /watch/18231 — unsayable.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="Front door — a slab above the listing">
+  <div class="var-h"><span class="id">A</span><h2>Front door — a slab above the listing</h2></div>
+  <div class="frame"><div class="mk" data-mount="a"></div></div>
+  <div class="rail" data-rail="v-a"></div>
+  <div class="notes">
+    <div class="note good">Join is the loudest thing.</div>
+    <div class="note bad">Browsing lives under a slab.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Ticket — one stub, torn in half">
+  <div class="var-h"><span class="id">B</span><h2>Ticket — one stub, torn in half</h2></div>
+  <div class="frame"><div class="mk" data-mount="b"></div></div>
+  <div class="rail" data-rail="v-b"></div>
+  <div class="notes">
+    <div class="note good">Two halves: keep one, give one.</div>
+    <div class="note bad">A metaphor to maintain.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c" data-id="C" data-name="Lobby — rooms, not strings">
+  <div class="var-h"><span class="id">C</span><h2>Lobby — rooms, not strings</h2></div>
+  <div class="frame"><div class="mk" data-mount="c"></div></div>
+  <div class="rail" data-rail="v-c"></div>
+  <div class="notes">
+    <div class="note good">You join people, not strings.</div>
+    <div class="note bad">Empty most nights.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d" data-id="D" data-name="Omnibar — search takes codes">
+  <div class="var-h"><span class="id">D</span><h2>Omnibar — search takes codes</h2></div>
+  <div class="frame"><div class="mk" data-mount="d"></div></div>
+  <div class="rail" data-rail="v-d"></div>
+  <div class="notes">
+    <div class="note good">Codes resolve where you type.</div>
+    <div class="note bad">A door that looks like search.</div>
+  </div>
+</section>
+
+<section class="var" id="v-e" data-id="E" data-name="Party dock — outlives the film">
+  <div class="var-h"><span class="id">E</span><h2>Party dock — outlives the film</h2></div>
+  <div class="frame"><div class="mk" data-mount="e"></div></div>
+  <div class="rail" data-rail="v-e"></div>
+  <div class="notes">
+    <div class="note good">A party before any film.</div>
+    <div class="note bad">A panel parked all evening.</div>
+  </div>
+</section>
+
+<section class="var" id="v-f" data-id="F" data-name="Waiting room — nothing plays yet">
+  <div class="var-h"><span class="id">F</span><h2>Waiting room — nothing plays yet</h2></div>
+  <div class="frame"><div class="mk" data-mount="f"></div></div>
+  <div class="rail" data-rail="v-f"></div>
+  <div class="notes">
+    <div class="note good">Nobody arrives fourteen minutes late.</div>
+    <div class="note bad">A room before anything plays.</div>
+  </div>
+</section>
+
+<section class="var" id="v-g" data-id="G" data-name="Cold open — two doors">
+  <div class="var-h"><span class="id">G</span><h2>Cold open — two doors</h2></div>
+  <div class="frame"><div class="mk" data-mount="g"></div></div>
+  <div class="rail" data-rail="v-g"></div>
+  <div class="notes">
+    <div class="note good">Join first, without shouting.</div>
+    <div class="note bad">A gate before the library.</div>
+  </div>
+</section>
+
+<section class="var" id="v-h" data-id="H" data-name="Rail of rooms — Discord's column">
+  <div class="var-h"><span class="id">H</span><h2>Rail of rooms — Discord's column</h2></div>
+  <div class="frame"><div class="mk" data-mount="h"></div></div>
+  <div class="rail" data-rail="v-h"></div>
+  <div class="notes">
+    <div class="note good">Rooms outrank pages.</div>
+    <div class="note bad">Sparse with one room.</div>
+  </div>
+</section>
+
+<section class="var" id="v-i" data-id="I" data-name="Roster — friends down the left">
+  <div class="var-h"><span class="id">I</span><h2>Roster — friends down the left</h2></div>
+  <div class="frame"><div class="mk" data-mount="i"></div></div>
+  <div class="rail" data-rail="v-i"></div>
+  <div class="notes">
+    <div class="note good">Presence makes joining obvious.</div>
+    <div class="note bad">Eats width posters wanted.</div>
+  </div>
+</section>
+
+<section class="var" id="v-j" data-id="J" data-name="Squad panel — your room, docked">
+  <div class="var-h"><span class="id">J</span><h2>Squad panel — your room, docked</h2></div>
+  <div class="frame"><div class="mk" data-mount="j"></div></div>
+  <div class="rail" data-rail="v-j"></div>
+  <div class="notes">
+    <div class="note good">Seats, code, then chat.</div>
+    <div class="note bad">Rebuilds the nav to ship.</div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from J with the guest's side.</div>
+    <div><b>Remix</b>Remix H with a wider rail.</div>
+    <div><b>Settle</b>Settle on J to rebuild the frame.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/4f7a-watch-party-join-code.html';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F'};
+const CODE = 'K7M2QD';
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings'},
+  {id:'hollow', t:'Hollow County', y:2023, len:'S2 · E4', c:['#a3e635','#14240a'], p:'stripes'},
+  {id:'paper',  t:'Paper Moons',   y:2024, len:'1h 52m', c:['#ff7a59','#3b0d4c'], p:'sun'},
+  {id:'orbit',  t:'Orbit Diner',   y:2024, len:'S1 · E7', c:['#f7c948','#7a1f4d'], p:'dots'},
+  {id:'ferry',  t:'Night Ferry',   y:2023, len:'1h 41m', c:['#1fd1f9','#0b1b3f'], p:'stripes'},
+  {id:'under',  t:'The Understudies', y:2025, len:'S1 · E2', c:['#c084fc','#2a0e5c'], p:'split'},
+  {id:'gloss',  t:'Glass Harbour', y:2022, len:'1h 58m', c:['#34d399','#06283d'], p:'split'},
+  {id:'kite',   t:'Kite Season',   y:2025, len:'S1 · E1', c:['#fb7185','#2b0a1f'], p:'dots'}
+];
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'sun': return `radial-gradient(circle at 68% 34%, ${a} 0 16%, ${a}00 16.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+    default: return `radial-gradient(55% 45% at 22% 28%, ${a}dd, ${a}00 70%), linear-gradient(160deg, ${b}, #06060b 80%)`;
+  }
+}
+const poster = (s, o = {}) => `<div class="art" style="background:${art(s)}">${o.title ? `<b class="art-t">${esc(s.t)}</b>` : ''}</div>`;
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const avs = (ns, cls = '') => `<div class="avs">${ns.map(n => av(n, cls)).join('')}</div>`;
+const cells = (code, shown, o = {}) => {
+  const ch = code.split('');
+  return `<div class="cells ${o.cls || ''}">${ch.map((c, i) => {
+    const on = i < shown;
+    const cur = i === shown && !o.done;
+    return `${i === 3 ? '<span class="sep"></span>' : ''}<span class="cell ${o.sm ? 'sm' : ''} ${on ? 'fill' : ''} ${cur ? 'cur' : ''}">${on ? c : ''}</span>`;
+  }).join('')}</div>`;
+};
+const grid = ids => `<div class="grid">${ids.map(id => { const s = byId(id); return `<div class="gcard">${poster(s)}<div class="cap">${esc(s.t)}<em>${s.y} · ${s.len}</em></div></div>`; }).join('')}</div>`;
+function nav(o = {}){
+  const tabs = ['All','Movies','Series','Parties'];
+  return `<header class="nav">
+    <div class="logo">care<i>.</i>tv</div>
+    ${o.plain ? '' : `<div class="tabs">${tabs.map(t => `<button class="${t === (o.tab || 'All') ? 'on' : ''}">${t}</button>`).join('')}</div>`}
+    <div class="sp"></div>
+    ${o.search === false ? '' : `<div class="srch"><span class="ic">⌕</span>${o.searchText || 'Search'}</div>`}
+    ${o.join ? `<button class="joinbtn"><span class="ic">⇥</span>Join</button>` : ''}
+    ${av('Kier')}
+  </header>`;
+}
+function nav2(o = {}){
+  const tabs = o.tabs || ['All','Movies','Series'];
+  return `<header class="nav">
+    <div class="tabs">${tabs.map(t => `<button class="${t === (o.tab || 'All') ? 'on' : ''}">${t}</button>`).join('')}</div>
+    <div class="sp"></div>
+    <div class="srch">${'<span class="ic">⌕</span>'}${o.searchText || 'Search'}</div>
+  </header>`;
+}
+function player(o = {}){
+  const s = o.show || byId('velvet');
+  return `<div class="pl">
+    <div class="pl-main">
+      <div class="pl-vid">
+        ${poster(s)}<div class="pl-ov"></div>
+        <div class="pl-top">${o.top || ''}</div>
+        <div class="pl-ctl"><span class="ic">❚❚</span><span class="tt">${o.time || '14:02'}</span><div class="seek"><i style="right:${o.right || '78%'}"></i></div><span class="tt">${s.len}</span><span class="ic">⛶</span></div>
+      </div>
+    </div>
+    ${o.chat === false ? '' : `<aside class="chat">
+      <div class="chat-h"><span class="sub">Party</span>${avs(o.who || ['Joyce','Kier'], 's')}<span class="plus">+</span></div>
+      <div class="msgs">${(o.msgs || []).join('')}</div>
+      <div class="chat-i">Say something…</div>
+    </aside>`}
+  </div>`;
+}
+const sysMsg = (t, cls = '') => `<div class="msg sys ${cls}">${t}</div>`;
+const chatMsg = (n, t) => `<div class="msg">${av(n, 's')}<div><b>${n}</b><p>${t}</p></div></div>`;
+
+/* ───────────── Canvases ───────────── */
+const CANVAS = {};
+
+CANVAS.now = {
+  steps: ['Home','Title','Invite'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0;display:flex;flex-direction:column">
+    ${nav({plain:true, search:false})}
+    <div class="scroll">
+      <div class="rowh"><h4>You were watching</h4></div>
+      ${grid(['velvet','hollow','paper','orbit'])}
+      <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+      ${grid(['ferry','under','gloss','kite'])}
+    </div>
+  </div>
+  <div class="layer" data-show="0"></div>
+  <div class="layer" data-show="1">
+    <div class="scrim"></div>
+    <div class="sheet">
+      <div class="sheet-c">${poster(byId('velvet'))}<div class="play-o"><div class="play-c">▶</div></div></div>
+      <div class="sheet-b"><span class="sub" style="color:var(--n5)">2025 · 2h 04m</span><h3 style="margin-top:6px">Velvet Static</h3>
+      <p>A radio engineer starts hearing tomorrow's broadcasts in the static.</p></div>
+    </div>
+  </div>
+  <div class="layer" data-show="2">
+    ${player({msgs:[chatMsg('Joyce','this score though'), sysMsg('Kier paused · 14:02')]})}
+    <div class="scrim"></div>
+    <div class="sheet" style="width:min(380px,74%)">
+      <div class="sheet-b">
+        <h3 style="font-size:17px">Invite a friend</h3>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px">
+          ${['Joyce','Leo','Mira'].map(n => `<div style="display:flex;align-items:center;gap:10px">${av(n)}<b style="font-size:13px">${n}</b><span style="flex:1"></span><button class="btn gh" style="height:28px;font-size:12px">Invite</button></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`
+};
+
+CANVAS.a = {
+  steps: ['Knock','Found','Start one','Inside'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0;display:flex;flex-direction:column">
+    ${nav({tab:'All'})}
+    <section class="door">
+      <span class="sub" style="color:#f4a0c6">Watch party</span>
+      <div class="door-row">
+        <div>
+          <h2>Join a party</h2>
+          <p class="lead">Six characters from whoever's hosting. No invite needed.</p>
+          <div class="entry">
+            ${cells(CODE, 0)}
+            <button class="btn pk lg">Join</button>
+          </div>
+          <div class="resolve">
+            <div class="ppc" style="width:380px">
+              <div class="th">${poster(byId('velvet'))}</div>
+              <div class="mt">
+                <h4>Joyce's party</h4>
+                <div class="mm2"><span class="dot"></span>Velvet Static · 14:02 in</div>
+                <div class="prog"><i style="width:22%"></i></div>
+              </div>
+            </div>
+            ${avs(['Joyce','Leo'])}
+            <button class="btn pk lg">Join</button>
+          </div>
+          <div class="recent"><span>Last time:</span><span class="chip">↺ Rejoin K7M‑2QD</span><span>Velvet Static with Joyce</span></div>
+        </div>
+        <div class="alt"><b>Nothing to join?</b>Press play on anything below — your party gets its own code.</div>
+      </div>
+    </section>
+    <div class="scroll" style="padding-top:18px">
+      <div class="rowh"><h4>Continue watching</h4><span class="sub">You, alone</span></div>
+      ${grid(['hollow','paper','orbit','ferry'])}
+      <div class="rowh" style="margin-top:20px"><h4>New releases</h4></div>
+      ${grid(['under','gloss','kite','velvet'])}
+    </div>
+  </div>
+  <div class="layer" data-show="0 1"></div>
+  <div class="layer" data-show="2">
+    <div class="scrim"></div>
+    <div class="sheet">
+      <div class="sheet-c">${poster(byId('hollow'), {title:true})}</div>
+      <div class="sheet-b">
+        <span class="sub" style="color:var(--n5)">Season 2 · Episode 4</span>
+        <div style="display:flex;gap:9px;margin-top:14px">
+          <button class="btn pk lg">Start a watch party</button>
+          <button class="btn gh lg">Watch alone</button>
+        </div>
+        <p style="margin-top:12px">Starting one gives you a code to hand out — <b style="color:#fff">anyone with it walks in</b>.</p>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="3">
+    ${player({show:byId('hollow'), time:'02:11', right:'94%', who:['Kier','Joyce'],
+      top:`<span class="sub" style="color:#9fb0bd">Your party</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Kier','Joyce'])}`,
+      msgs:[sysMsg('You started the party'), sysMsg('Joyce joined with the code','new')]})}
+    <div class="toast"><span class="dot"></span>Joyce walked in — no invite sent</div>
+  </div>`
+};
+
+CANVAS.b = {
+  steps: ['Print','Hand over','Tear in'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0">
+    ${player({time:'14:02', who:['Kier'], top:`<span class="sub" style="color:#9fb0bd">Velvet Static</span><div class="sp"></div><span class="codechip">K7M‑2QD <b>⧉</b></span>`,
+      msgs:[sysMsg('You started the party · 14:02')]})}
+  </div>
+  <div class="layer" data-show="0 1" style="pointer-events:none">
+    <div class="scrim"></div>
+    <div class="tk">
+      <div class="tk-m">
+        <span class="sub">Care.tv · watch party</span>
+        <h3>Velvet Static</h3>
+        <div class="meta">Hosted by Kier · started 14 minutes ago</div>
+        <div class="tk-seats"><span class="seat">K</span><span class="seat e">+</span><span class="seat e">+</span><span class="seat e">+</span><span class="seat e">+</span><span style="font-size:11px;color:#6c7682;margin-left:5px">1 of 6 seats</span></div>
+        <div class="tk-acts"><button class="mini">⧉ Copy link</button><button class="mini o">Invite a friend</button></div>
+      </div>
+      <div class="tk-s">
+        <span class="sub">Party code</span>
+        <div class="tk-code">K7M‑2QD</div>
+        <span style="font-size:10.5px;color:#8a93a0">tear off, hand over</span>
+      </div>
+    </div>
+    <div class="fly">
+      <span class="sub">Handed to</span>
+      <div class="lines">
+        <span>${av('Joyce','s')} Joyce <em style="font-style:normal;color:var(--y);margin-left:auto;font-size:10px">ringing</em></span>
+        <span>${av('Leo','s')} Leo <em style="font-style:normal;color:var(--g);margin-left:auto;font-size:10px">in</em></span>
+        <span style="color:var(--n5)">⧉ link copied</span>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="2" style="background:var(--n1)">
+    ${nav({tab:'All'})}
+    <div style="flex:1;min-height:0;display:flex;position:relative">
+      <div class="scroll dim" style="position:absolute;inset:0;opacity:.45;filter:blur(2px) brightness(.5)">${grid(['velvet','hollow','paper','orbit'])}<div style="height:13px"></div>${grid(['ferry','under','gloss','kite'])}</div>
+      <div class="stub-in" style="position:relative">
+        <div class="box">
+          <span class="sub" style="color:#7c8794">Someone handed you a stub</span>
+          <h3 style="margin-top:7px">Enter the party code</h3>
+          ${cells(CODE, 0)}
+          <div class="hint">A care.tv link works too — paste it anywhere here.</div>
+        </div>
+        <div style="display:flex;gap:9px;justify-content:center;margin-top:18px">
+          <button class="btn pk lg">Take my seat</button>
+          <button class="btn ln lg">Browse instead</button>
+        </div>
+      </div>
+    </div>
+  </div>`
+};
+
+CANVAS.c = {
+  steps: ['Lobby','On a title','Joined'],
+  html: () => {
+    const row = (o) => `<div class="lrow ${o.ghost ? 'ghost' : ''} ${o.invite ? 'inv' : ''}">
+      <div class="th">${poster(byId(o.show))}</div>
+      <div class="mt">
+        <h4>${o.who}</h4>
+        <div class="mm2">${o.live ? '<span class="dot"></span>' : ''}${o.meta}</div>
+        <div class="prog"><i style="width:${o.at}"></i></div>
+      </div>
+      <div class="rt">${avs(o.people)}<button class="btn ${o.ghost ? 'gh' : 'pk'}">${o.cta}</button></div>
+    </div>`;
+    return `
+  <div class="base" style="position:absolute;inset:0;display:flex;flex-direction:column">
+    ${nav({tab:'Parties'})}
+    <div class="lob">
+      <div class="lob-h"><h2>Live now</h2><span class="sub">3 people watching something</span></div>
+      ${row({who:"Joyce's party", show:'velvet', live:true, meta:'Velvet Static · 14:02 in · 1 free seat', at:'22%', people:['Joyce','Leo'], cta:'Join'})}
+      ${row({who:"Mira &amp; Nico", show:'hollow', live:true, meta:'Hollow County S2·E4 · 31:20 in', at:'64%', people:['Mira','Nico'], cta:'Join'})}
+      ${row({who:"Leo is holding a seat for you", show:'ferry', live:true, meta:'Night Ferry · invited you 40 seconds ago', at:'4%', people:['Leo'], cta:'Accept', invite:true})}
+      ${row({who:"Leo finished Paper Moons", show:'paper', meta:'Ended 20 minutes ago', at:'100%', people:['Leo'], cta:'Watch it', ghost:true})}
+      <div class="lob-code">
+        <div class="t"><b>Have a code?</b>From someone not on your list.</div>
+        ${cells(CODE, 3, {sm:true})}
+        <button class="btn">Join</button>
+        <span style="flex:1"></span>
+        <button class="btn gh">＋ Start a party</button>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="0"></div>
+  <div class="layer" data-show="1">
+    <div class="scrim"></div>
+    <div class="sheet">
+      <div class="sheet-c">${poster(byId('velvet'), {title:true})}</div>
+      <div class="sheet-b">
+        <div class="ppc" style="background:rgba(232,54,143,.12);border-color:rgba(232,54,143,.35)">
+          <div style="display:flex;align-items:center;gap:9px;flex:1">${avs(['Joyce','Leo'])}<div><b style="font-size:13px">Joyce is 14 minutes in</b><div style="font-size:11.5px;color:#9fb0bd">You'll land where she is</div></div></div>
+          <button class="btn pk">Join them</button>
+        </div>
+        <div style="display:flex;gap:9px;margin-top:12px;align-items:center">
+          <button class="btn gh lg">Start my own party</button>
+          <button class="btn ln lg">Watch alone</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce's party</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[chatMsg('Joyce','you made it'), sysMsg('Kier joined · synced to 14:02','new')]})}
+    <div class="toast"><span class="dot"></span>Synced to Joyce — 14:02</div>
+  </div>`;
+  }
+};
+
+CANVAS.d = {
+  steps: ['Searching','Pasting a code','Inside'],
+  html: () => {
+    const dd = (inner) => `<div class="dd">${inner}</div>`;
+    const item = (id, sub, on) => { const s = byId(id); return `<div class="it ${on ? 'on' : ''}"><div class="th">${poster(s)}</div><b>${esc(s.t)}</b><em>${sub}</em><span class="sp"></span><em>↵</em></div>`; };
+    return `
+  <div class="base" style="position:absolute;inset:0;display:flex;flex-direction:column">
+    ${nav({tab:'All', searchText:'Search or paste a code'})}
+    <div class="hero">
+      ${poster(byId('under'))}
+      <div class="cap">
+        <span class="sub" style="color:#f4a0c6">New season</span>
+        <h1>The<br>Understudies</h1>
+        <div class="acts"><button class="btn pk lg">▶ Play</button><button class="btn gh lg">Start a party</button></div>
+      </div>
+    </div>
+    <div class="scroll" style="flex:none;padding:16px 26px 20px">${grid(['velvet','hollow','paper','orbit'])}</div>
+  </div>
+  <div class="layer" data-show="0">
+    <div class="scrim" style="background:rgba(6,9,13,.6)"></div>
+    <div class="omni">
+      <div class="omni-f"><span class="ic">⌕</span><span class="q">velv</span><span style="width:1.5px;height:15px;background:var(--pk)"></span><span class="kb">esc</span></div>
+      ${dd(`<div class="sec sub">Titles</div>${item('velvet','2025 · 2h 04m', true)}${item('ferry','2023 · 1h 41m')}<div class="foot"><span>↑↓ to move</span><span>A party code jumps straight in</span></div>`)}
+    </div>
+  </div>
+  <div class="layer" data-show="1">
+    <div class="scrim" style="background:rgba(6,9,13,.6)"></div>
+    <div class="omni">
+      <div class="omni-f"><span class="ic">⌕</span><span class="q mono" style="letter-spacing:.14em;font-weight:700"></span><span style="width:1.5px;height:15px;background:var(--pk)"></span><span class="kb">↵ join</span></div>
+      ${dd(`<div class="sec sub">That's a party code</div>
+      <div class="it party"><div class="th">${poster(byId('velvet'))}</div>
+        <div><b>Joyce's party</b><div style="color:#9fb0bd;font-size:11.5px">Velvet Static · 14:02 in · 1 free seat</div></div>
+        <span class="sp"></span>${avs(['Joyce','Leo'])}<button class="btn pk" style="height:30px">Join ↵</button></div>
+      <div class="foot"><span>care.tv/p/K7M‑2QD pastes the same</span><span>⌘J from anywhere</span></div>`)}
+    </div>
+  </div>
+  <div class="layer" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce's party</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}<span class="pill">⌘I invite</span>`,
+      msgs:[chatMsg('Leo','sound ok for everyone?'), sysMsg('Kier joined · synced to 14:02','new')]})}
+    <div class="toast">⌘J anywhere · ⌘I hands out the code</div>
+  </div>`;
+  }
+};
+
+CANVAS.e = {
+  steps: ['Alone','Code','Together','Playing'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0;display:flex;flex-direction:column">
+    ${nav({tab:'All'})}
+    <div class="scroll">
+      <div class="rowh"><h4>Continue watching</h4></div>
+      ${grid(['velvet','hollow','paper','orbit'])}
+      <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+      ${grid(['ferry','under','gloss','kite'])}
+    </div>
+  </div>
+  <div class="layer" data-show="0">
+    <div class="dock">
+      <div class="dock-h"><span class="sub">Party</span><span style="margin-left:auto;font-size:10.5px;color:var(--n5)">⌘J</span></div>
+      <div class="dock-b">
+        <div class="empty">Nobody here yet. Take someone's code, or start one and hand yours out.</div>
+        <div class="acts"><button class="mini pk">Enter a code</button><button class="mini">Start a party</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="1">
+    <div class="dock" style="width:292px">
+      <div class="dock-h"><span class="sub">Enter a code</span><span style="margin-left:auto;font-size:10.5px;color:var(--n5)">esc</span></div>
+      <div class="dock-b">
+        ${cells(CODE, 0, {sm:true})}
+        <div class="found"><div class="th">${poster(byId('velvet'))}</div><div><b>Joyce's party</b><em>Two here · nothing playing yet</em></div></div>
+        <button class="mini pk w">Join</button>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="2">
+    <div class="dock">
+      <div class="dock-h"><span class="dot"></span><span class="sub">Joyce's party</span><span style="margin-left:auto">${avs(['Joyce','Leo','Kier'],'s')}</span></div>
+      <div class="dock-b">
+        <div class="mem">${av('Joyce','s')}Joyce<span class="st">browsing</span></div>
+        <div class="mem">${av('Leo','s')}Leo<span class="st">browsing</span></div>
+        <div class="mem">${av('Kier','s')}You<span class="st">picking</span></div>
+        <div class="codeline">Code <b>K7M 2QD</b><span style="margin-left:auto">⧉ Copy</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="3">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce's party</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      time:'00:12', right:'97%',
+      msgs:[sysMsg('Kier put on Velvet Static — playing for 3','new'), chatMsg('Leo','good pick')]})}
+  </div>`
+};
+
+CANVAS.f = {
+  steps: ['Two here','Leo arrives','Lights down','Playing'],
+  html: () => {
+    const seat = (n, cls = '') => `<div class="st ${cls}">${n ? av(n) : ''}</div>`;
+    return `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="lby">
+      <div class="lby-bg">${poster(byId('velvet'))}</div>
+      <div class="lby-top"><div class="logo">care<i>.</i>tv</div><span class="sp"></span><button class="btn ln">Leave room</button>${av('Kier')}</div>
+      <div class="lby-in">
+        <span class="sub">Waiting room</span>
+        <h2>Velvet Static</h2>
+        <p>Joyce opened this room four minutes ago</p>
+        <div class="seats">${seat('Joyce')}${seat('Kier')}${seat('Leo','late')}${seat('', 'e')}</div>
+        <button class="btn pk lg">Start for everyone</button>
+        <div class="lby-ft">Nothing has played yet — nobody is behind.</div>
+      </div>
+      <div class="lby-code">
+        <span class="sub">Room code</span>
+        <b>K7M 2QD</b>
+        <em>care.tv/p/K7M‑2QD</em>
+      </div>
+      <div class="lby-host"><button class="btn gh">⧉ Copy</button><button class="btn gh">Invite</button></div>
+    </div>
+  </div>
+  <div class="layer" data-show="1"><div class="toast"><span class="dot"></span>Leo took a seat</div></div>
+  <div class="layer" data-show="2"><div class="cnt">3</div></div>
+  <div class="layer" data-show="3">
+    ${player({who:['Joyce','Leo','Kier'], time:'00:04', right:'99%',
+      top:`<span class="sub" style="color:#9fb0bd">Joyce's room</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[sysMsg('Started together · 00:00','new'), chatMsg('Joyce','no spoilers, Leo')]})}
+  </div>`;
+  }
+};
+
+CANVAS.g = {
+  steps: ['Open','Code','Inside'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="open">
+      <div class="open-in">
+        <span class="sub">Tuesday · 9:40pm</span>
+        <h2>Evening, Kier</h2>
+        <div class="choices">
+          <div class="choice j">
+            <div><div class="lab">Join a party</div><div class="hint">Six characters from whoever asked you over.</div></div>
+            ${cells(CODE, 0, {sm:true})}
+            <div class="resolved"><div class="th">${poster(byId('velvet'))}</div><div><b>Joyce's party · Velvet Static</b><em>14:02 in · one seat free</em></div><span style="flex:1"></span><button class="btn pk">Join ↵</button></div>
+          </div>
+          <div class="choice keep">
+            <div><div class="lab">Keep watching</div><div class="hint">Velvet Static, 14 minutes left.</div></div>
+            <div class="th">${poster(byId('velvet'))}</div>
+          </div>
+        </div>
+        <div class="open-foot">or browse everything →</div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce's party</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[chatMsg('Joyce','that was quick'), sysMsg('Kier joined · synced to 14:02','new')]})}
+  </div>`
+};
+
+CANVAS.h = {
+  steps: ['Library','Join a room','Inside'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="app">
+      <aside class="sb icons">
+        <div class="mark">c<i>.</i></div>
+        <button class="it on">▦</button>
+        <div class="hr"></div>
+        <button class="it room live jrm">${av('Joyce','l')}<i class="n">3</i></button>
+        <button class="it room live">${av('Mira','l')}</button>
+        <button class="it gh">＋</button>
+        <div class="sp"></div>
+        <div class="hr"></div>
+        ${av('Kier')}
+      </aside>
+      <div class="cv">
+        ${nav2({tab:'All'})}
+        <div class="scroll">
+          <div class="rowh"><h4>Continue watching</h4></div>
+          ${grid(['velvet','hollow','paper','orbit'])}
+          <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+          ${grid(['ferry','under','gloss','kite'])}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer p66" data-show="1">
+    <div class="scrim" style="background:rgba(6,9,13,.5)"></div>
+    <div class="pop">
+      <span class="sub">Join a room</span>
+      <h3>Paste a code or a care.tv link</h3>
+      ${cells(CODE, 0, {sm:true})}
+      <div class="found"><div class="th">${poster(byId('velvet'))}</div><div><b>Joyce's room</b><em>Velvet Static · 14:02 in · one seat free</em></div></div>
+      <button class="btn pk blk" style="margin-top:13px">Join</button>
+      <div class="hint">Rooms you join stay in the rail.</div>
+    </div>
+  </div>
+  <div class="layer p66" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce's room</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[chatMsg('Joyce','that was quick'), sysMsg('Kier joined · synced to 14:02','new')]})}
+  </div>`
+};
+
+CANVAS.i = {
+  steps: ['Who is around','Code','Joined'],
+  html: () => {
+    const person = (o) => `<button class="pr ${o.cls || ''}">${avs(o.people,'s')}<div class="mt"><b>${o.who}</b><em>${o.meta}</em></div>${o.cta ? `<span class="j">${o.cta}</span>` : ''}</button>`;
+    const side = (o = {}) => `<aside class="sb wide">
+      <div class="sb-top"><div class="logo">care<i>.</i>tv</div></div>
+      <nav class="sb-nav"><button class="on"><span class="ic">▦</span>Library</button><button><span class="ic">★</span>My list</button></nav>
+      <div class="sb-sec sub">In a room<span class="sp"></span>2</div>
+      ${person({who:'Joyce &amp; Leo', meta:'Velvet Static · 14:02 in', people:['Joyce','Leo'], cta:'Join', cls:o.joined ? 'on' : ''})}
+      ${person({who:'Mira &amp; Nico', meta:'Hollow County · 31:20 in', people:['Mira','Nico'], cta:'Join'})}
+      <div class="sb-sec sub">Around</div>
+      ${person({who:'Nico', meta:'Idle · 20 minutes', people:['Nico'], cls:'idle'})}
+      <div class="sp"></div>
+      <div class="sb-code"><span class="sub">Join with a code</span>${cells(CODE, 0, {sm:true})}
+        <div class="found"><b>Joyce &amp; Leo</b><em>Velvet Static · 14:02 in</em></div>
+      </div>
+      <div class="sb-me">${av('Kier','s')}Kier<span class="sp"></span><span class="ic">⚙</span></div>
+    </aside>`;
+    return `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="app">
+      ${side()}
+      <div class="cv">
+        ${nav2({tab:'All'})}
+        <div class="scroll">
+          <div class="rowh"><h4>Continue watching</h4></div>
+          ${grid(['velvet','hollow','paper','orbit'])}
+          <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+          ${grid(['ferry','under','gloss','kite'])}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer p240" data-show="2">
+    ${player({who:['Joyce','Leo','Kier'], top:`<span class="sub" style="color:#9fb0bd">Joyce &amp; Leo</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Joyce','Leo','Kier'])}`,
+      msgs:[chatMsg('Leo','you missed nothing'), sysMsg('Kier joined · synced to 14:02','new')]})}
+  </div>`;
+  }
+};
+
+CANVAS.j = {
+  steps: ['Your room','Joyce arrives','Playing'],
+  html: () => `
+  <div class="base" style="position:absolute;inset:0">
+    <div class="app">
+      <aside class="sb wide">
+        <div class="sb-top"><div class="logo">care<i>.</i>tv</div></div>
+        <nav class="sb-nav"><button class="on"><span class="ic">▦</span>Library</button><button><span class="ic">★</span>My list</button><button><span class="ic">⌕</span>Search</button></nav>
+        <div class="squad">
+          <div class="sq-h"><span class="sub">Your room</span><b>K7M 2QD</b><span class="ic">⧉</span></div>
+          <div class="slots">
+            <div class="slot">${av('Kier','s')}You<em>host</em></div>
+            <div class="slot late">${av('Joyce','s')}<span>Joyce</span><em><span class="w">invited</span><span class="h">here</span></em></div>
+            <div class="slot empty"><span class="ic">＋</span>Invite someone</div>
+          </div>
+          <div class="chatblock">
+            ${chatMsg('Joyce','this score though')}
+            ${sysMsg('Kier paused · 14:02')}
+            <div class="chat-i">Say something…</div>
+          </div>
+          <button class="btn pk">Pick something to watch</button>
+        </div>
+      </aside>
+      <div class="cv">
+        ${nav2({tab:'All'})}
+        <div class="scroll">
+          <div class="rowh"><h4>Continue watching</h4></div>
+          ${grid(['velvet','hollow','paper','orbit'])}
+          <div class="rowh" style="margin-top:22px"><h4>New releases</h4></div>
+          ${grid(['ferry','under','gloss','kite'])}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer" data-show="1" style="left:240px"><div class="toast"><span class="dot"></span>Joyce took a seat</div></div>
+  <div class="layer p240" data-show="2">
+    ${player({chat:false, time:'14:02',
+      top:`<span class="sub" style="color:#9fb0bd">Your room</span><span class="codechip">K7M‑2QD <b>⧉</b></span><div class="sp"></div>${avs(['Kier','Joyce'])}`})}
+  </div>`
+};
+
+/* ───────────── Wiring ───────────── */
+const timers = new WeakMap();
+function stopTimers(mk){ (timers.get(mk) || []).forEach(clearInterval); timers.set(mk, []); }
+function addTimer(mk, t){ const a = timers.get(mk) || []; a.push(t); timers.set(mk, a); }
+function typeCells(mk, wrap, code, delay){
+  if(!wrap) return;
+  const nodes = [...wrap.querySelectorAll('.cell')];
+  nodes.forEach(n => { n.textContent = ''; n.classList.remove('fill','cur'); });
+  wrap.classList.remove('ok');
+  if(REDUCED){ nodes.forEach((n, i) => { n.textContent = code[i]; n.classList.add('fill'); }); wrap.classList.add('ok'); return; }
+  let i = 0;
+  nodes[0].classList.add('cur');
+  const t = setInterval(() => {
+    nodes[i].classList.remove('cur'); nodes[i].textContent = code[i]; nodes[i].classList.add('fill');
+    i++;
+    if(i < nodes.length) nodes[i].classList.add('cur');
+    else { clearInterval(t); wrap.classList.add('ok'); }
+  }, delay || 240);
+  addTimer(mk, t);
+}
+function typeText(mk, el, text, delay){
+  if(!el) return;
+  el.textContent = '';
+  if(REDUCED){ el.textContent = text; return; }
+  let i = 0;
+  const t = setInterval(() => {
+    el.textContent = text.slice(0, ++i);
+    if(i >= text.length) clearInterval(t);
+  }, delay || 110);
+  addTimer(mk, t);
+}
+function enter(mk, key, i){
+  stopTimers(mk);
+  if(key === 'a' && i === 0) typeCells(mk, mk.querySelector('.door .cells'), CODE);
+  if(key === 'b' && i === 2) typeCells(mk, mk.querySelector('.stub-in .cells'), CODE);
+  if(key === 'd' && i === 1) typeText(mk, mk.querySelector('[data-show="1"] .q'), 'K7M-2QD', 130);
+  if(key === 'e'){
+    const c = mk.querySelector('.scroll .gcard');
+    if(c) c.classList.toggle('sel', i === 2);
+    if(i === 1) typeCells(mk, mk.querySelector('.dock .cells'), CODE, 200);
+  }
+  if(key === 'f' && i === 2){
+    const el = mk.querySelector('.cnt');
+    if(el){
+      let n = 3; el.textContent = n;
+      if(!REDUCED){ const t = setInterval(() => { n--; el.textContent = n > 0 ? n : ''; if(n <= 0) clearInterval(t); }, 780); addTimer(mk, t); }
+    }
+  }
+  if(key === 'h' && i === 1) typeCells(mk, mk.querySelector('.pop .cells'), CODE, 200);
+  if(key === 'i'){
+    const w = mk.querySelector('.sb-code .cells');
+    if(w && i !== 1){ w.classList.remove('ok'); w.querySelectorAll('.cell').forEach(n => { n.textContent = ''; n.classList.remove('fill','cur'); }); }
+    if(i === 1) typeCells(mk, w, CODE, 200);
+  }
+  if(key === 'g'){
+    const w = mk.querySelector('.choice.j .cells');
+    if(w && i !== 1){ w.classList.remove('ok'); w.querySelectorAll('.cell').forEach(n => { n.textContent = ''; n.classList.remove('fill','cur'); }); }
+    if(i === 1) typeCells(mk, w, CODE, 190);
+  }
+}
+function setStep(mk, key, i){
+  mk.dataset.step = i;
+  mk.querySelectorAll('.layer').forEach(l => l.classList.toggle('on', l.dataset.show.split(' ').includes(String(i))));
+  const rail = document.querySelector(`[data-rail="v-${key === 'now' ? 'now' : key}"]`);
+  if(rail) rail.querySelectorAll('.steps button').forEach((b, j) => b.classList.toggle('on', j === i));
+  enter(mk, key, i);
+}
+document.querySelectorAll('.mk[data-mount]').forEach(mk => {
+  const key = mk.dataset.mount, c = CANVAS[key];
+  mk.innerHTML = c.html();
+  const rail = document.querySelector(`[data-rail="v-${key}"]`);
+  rail.innerHTML = `<div class="steps">${c.steps.map(s => `<button>${s}</button>`).join('')}</div><button class="play">↻ Replay</button><span class="hint">${c.hint || 'Step through the flow'}</span>`;
+  rail.querySelectorAll('.steps button').forEach((b, j) => b.onclick = () => setStep(mk, key, j));
+  rail.querySelector('.play').onclick = () => setStep(mk, key, +mk.dataset.step || 0);
+  setStep(mk, key, 0);
+});
+
+/* ── Pick menus ── */
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:id => `Explore from ${id} in ${FILE}`},
+  {label:'Remix this',        hint:'Fork it and apply changes.',        make:id => `Remix ${id} in ${FILE}:`},
+  {label:'Settle on this',    hint:'This is the direction from here.',  make:id => `Settle on ${id} in ${FILE}`}
+];
+let openMenu = null;
+function closeMenu(){ if(openMenu){ openMenu.menu.hidden = true; openMenu.btn.setAttribute('aria-expanded','false'); openMenu = null; } }
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-expanded','false');
+  head.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true;
+  menu.innerHTML = VERBS.map((v, i) => `<button data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  head.after(menu); menu.after(out);
+  btn.onclick = () => { const was = openMenu && openMenu.menu === menu; closeMenu(); if(!was){ menu.hidden = false; btn.setAttribute('aria-expanded','true'); openMenu = {menu, btn}; } };
+  menu.querySelectorAll('button').forEach(b => b.onclick = async () => {
+    const prompt = VERBS[+b.dataset.i].make(id);
+    closeMenu();
+    out.hidden = false;
+    try {
+      await navigator.clipboard.writeText(prompt);
+      out.innerHTML = `<span class="ok">Copied</span><code>${esc(prompt)}</code>`;
+    } catch(e) {
+      out.innerHTML = `<span>Copy this</span><input readonly value="${esc(prompt)}">`;
+      out.querySelector('input').select();
+    }
+  });
+});
+document.addEventListener('click', e => { if(openMenu && !e.target.closest('.pick-menu') && !e.target.closest('.pick-btn')) closeMenu(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeMenu(); });
+
+/* ── Minimap ── */
+const secs = [...document.querySelectorAll('.var')];
+const mm = document.querySelector('.mm');
+mm.innerHTML = secs.map(s => `<a href="#${s.id}"><i></i><span><b>${s.dataset.id}</b>${s.dataset.name}</span></a>`).join('');
+const links = [...mm.querySelectorAll('a')];
+function syncMap(){
+  let best = 0, bd = Infinity;
+  secs.forEach((s, i) => { const d = Math.abs(s.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((l, i) => l.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMap, {passive:true});
+addEventListener('resize', syncMap);
+syncMap();
+</script>
+</body>
+</html>

@@ -25,8 +25,8 @@ export default function UiModal(props: Props) {
       props.onClose?.()
     }}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="ui-modal-backdrop" />
-        <Dialog.Viewport className={cx('ui-modal-overlay', props.overlayClassName)}>
+        <Dialog.Backdrop className={cx('ui-modal-backdrop', props.overlayClassName)} />
+        <Dialog.Viewport className={cx('ui-modal-overlay', props.overlayClassName)} style={{ background: 'transparent' }}>
           <Dialog.Popup className={cx('ui-modal', props.modalClassName)} aria-label="Dialog">
             {children}
           </Dialog.Popup>

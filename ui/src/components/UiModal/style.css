@@ -1,6 +1,7 @@
 .ui-modal-backdrop {
   position: fixed;
   inset: 0;
+  background: rgba(0,0,0,0.7);
   z-index: var(--zindex-modal);
 }
 
@@ -10,7 +11,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.7);
   overflow-y: scroll;
   z-index: var(--zindex-modal);
 }
@@ -24,12 +24,15 @@
   padding: 0;
 }
 
-.ui-modal-overlay {
+.ui-modal,
+.ui-modal-backdrop {
   opacity: 1;
   transition: opacity 200ms ease-in-out;
 }
 
-.ui-modal-overlay[data-starting-style],
-.ui-modal-overlay[data-ending-style] {
+.ui-modal[data-starting-style],
+.ui-modal[data-ending-style],
+.ui-modal-backdrop[data-starting-style],
+.ui-modal-backdrop[data-ending-style] {
   opacity: 0;
 }

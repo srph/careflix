@@ -62,8 +62,32 @@ test('authenticated catalog opens and dismisses a movie dialog', async ({ page, 
   await card.getByRole('heading', { name: show.title, exact: true }).click()
   await expect(page.getByRole('dialog')).toBeVisible()
   await expect(page.getByRole('dialog').getByText(show.synopsis)).toBeVisible()
+  await expect(page.getByRole('dialog')).toHaveCSS('opacity', '1')
+  const exitDuration = page.evaluate(() => new Promise<number>((resolve, reject) => {
+    const dialog = document.querySelector('[role="dialog"]')!
+    let started = 0
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') started = performance.now()
+    }
+    document.addEventListener('keydown', onKey, true)
+    const observer = new MutationObserver(() => {
+      if (!dialog.isConnected && started) {
+        observer.disconnect()
+        document.removeEventListener('keydown', onKey, true)
+        clearTimeout(timer)
+        resolve(performance.now() - started)
+      }
+    })
+    const timer = window.setTimeout(() => {
+      observer.disconnect()
+      document.removeEventListener('keydown', onKey, true)
+      reject(new Error('Dialog exit did not complete'))
+    }, 3000)
+    observer.observe(document.body, { childList: true, subtree: true })
+  }))
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).not.toBeVisible()
+  expect(await exitDuration).toBeGreaterThanOrEqual(100)
   // Pointer clicks focus the card in Chromium/Firefox. Safari leaves focus on
   // the body in the original UI as well, so that is its restoration target.
   await expect(browserName === 'webkit' ? page.locator('body') : card).toBeFocused()

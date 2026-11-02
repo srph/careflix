@@ -21,7 +21,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 | M0 | Verification plan and working baseline | Complete | Verification cases and expected outcomes are defined; branch and baseline commit are recorded; baseline behavior and existing issues are documented. |
 | M1 | Vite and TypeScript | Complete | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
 | M2 | React 18.3 checkpoint and focused tests | Complete | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
-| M3 | Component and hook replacements | In progress: local hooks verified | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
+| M3 | Component and hook replacements | Complete | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
 | M4 | React 19 and current router | Pending | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
 | M5 | Final integration verification | Pending | The acceptance checklist is verified across the browser targets and two live sessions; remaining limitations and developer instructions are documented. |
 
@@ -74,10 +74,10 @@ The current dependency tree already has invalid React peer declarations. Coordin
 
 ### M3: component and hook replacements
 
-- [ ] Complete the agreed dependency replacement table and local-hook cleanup, using package versions compatible with this checkpoint.
-- [ ] Test `InfiniteScroll` for overlapping requests, retries, and the last page.
-- [ ] Test that seeking previews locally and commits the final change once per completed interaction.
-- [ ] Verify dialog dismissal/focus restoration, tooltips, animations, textarea fallback, and Font Awesome rendering.
+- [x] Complete the agreed dependency replacement table and local-hook cleanup, using package versions compatible with this checkpoint.
+- [x] Test `InfiniteScroll` for overlapping requests, retries, and the last page.
+- [x] Test that seeking previews locally and commits the final change once per completed interaction.
+- [x] Verify dialog dismissal/focus restoration, tooltips, animations, textarea fallback, and Font Awesome rendering.
 
 React 19-native metadata and the current router are completed in M4. Add tests to our wrappers and integration behavior rather than duplicating third-party library tests.
 
@@ -116,6 +116,9 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 | Watch-party integration | Two distinct users receive invitations, presence, and chat; playback/seek and episode changes synchronize; reconnecting works. | Two browser sessions, real API/Pusher, two test accounts, playable media, subtitles, and a multi-episode series. | Live baseline in M0 if available; final verification in M5. |
 
 ### M3 evidence
+
+- Native textarea checkpoint: `793253c`. The in-house `InfiniteScroll` now replaces the React 15 package. It retains scroll-triggered loading, uses an intersection observer, prevents concurrent/non-progressing automatic requests, and supports explicit retry. The caller returns its existing fetch promise; existing fetch/has-more logic is otherwise unchanged.
+- Four pagination tests cover deferred first load, overlap/progress guards, retry, and the last page. Total focused suite: 14 passing tests. Build/type checking and all 6 production browser smoke cases pass. An additional dialog case explicitly verified focus restoration to the movie card after Escape.
 
 - Motion checkpoint: `253e1f7`. Chat now uses a native one-row textarea with CSS auto-sizing, a 200px height bound, and a scrollable 50px fallback. Ref/event declarations now use the actual textarea element.
 - Build/type checking and 10 focused tests pass. A production browser check measured 200px height with 515px scroll content under auto-sizing, and 50px height with the same scroll content when the fallback was forced.

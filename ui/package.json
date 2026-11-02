@@ -31,7 +31,6 @@
     "react-helmet": "^5.2.1",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "react-simple-infinite-scroll": "0.0.1",
     "sanitize.css": "^8.0.0",
     "screenfull": "^4.2.0",
     "use-query-params": "^0.3.3",

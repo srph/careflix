@@ -17,7 +17,10 @@ async function authenticatedCatalog(page: Page) {
     let body: unknown = {}
     if (path === '/api/me') body = { id: 90001, name: 'Migration Viewer', email: 'migration@example.test', avatar: image, invitations: [], is_online: true }
     if (path === '/api/me/recent-party') body = { party: null }
-    if (path === '/api/shows') body = { data: [show], current_page: 1, last_page: 1 }
+    if (path === '/api/shows') {
+      const pageNumber = Number(new URL(route.request().url()).searchParams.get('page') || 1)
+      body = { data: pageNumber === 1 ? [show] : [], current_page: pageNumber, last_page: 1 }
+    }
     await route.fulfill({ json: body })
   })
 }
@@ -60,6 +63,7 @@ test('authenticated catalog opens and dismisses a movie dialog', async ({ page }
   await expect(page.getByRole('dialog').getByText(show.synopsis)).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).not.toBeVisible()
+  await expect(page.getByRole('button', { name: /Migration Test Movie/ })).toBeFocused()
 })
 
 test('authenticated settings preserve the heading and back navigation', async ({ page }) => {

@@ -8,7 +8,7 @@ import UiContainer from '~/components/UiContainer'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiSpacer from '~/components/UiSpacer'
 import ShowModal from '../ShowModal'
-import { InfiniteScroll as Infinite } from 'react-simple-infinite-scroll'
+import InfiniteScroll from '~/components/InfiniteScroll'
 import YouWereWatching from '../YouWereWatching'
 import parseStandardTime from '~/utils/date/parseStandardTime'
 
@@ -41,7 +41,7 @@ function AuthHome() {
   }
 
   function handleLoadMore() {
-    fetch(collection.current_page + 1)
+    return fetch(collection.current_page + 1)
   }
 
   async function handleShowClick(show: AppShow) {
@@ -63,13 +63,12 @@ function AuthHome() {
 
         <UiSpacer size={2} />
 
-        <Infinite
-          throttle={100}
+        <InfiniteScroll
           threshold={300}
           isLoading={isLoading}
           hasMore={collection.current_page === 1 || collection.current_page !== collection.last_page}
           onLoadMore={handleLoadMore}
-          data={collection}>
+          itemCount={collection.data.length}>
           <div className="show-layout">
             {collection.data.map((show, j) => (
               <div className="column" key={j}>
@@ -103,7 +102,7 @@ function AuthHome() {
                 </div>
               ))}
           </div>
-        </Infinite>
+        </InfiniteScroll>
 
         <ShowModal show={selectedShow} onClose={handleShowClose} />
       </UiContainer>

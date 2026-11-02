@@ -11,7 +11,6 @@ import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import { QueryParamProvider } from 'use-query-params';
 import history from '~/lib/history'
 
-import { GatewayProvider } from 'react-gateway'
 import { Toast } from '~/components/Toast'
 import { AuthProvider } from '~/contexts/Auth'
 import { AxiosManager } from '~/lib/axios/AxiosManager'
@@ -38,7 +37,6 @@ function Mount() {
 
       <WindowVhSetter />
 
-      <GatewayProvider>
           <Router history={history}>
             <QueryParamProvider ReactRouterRoute={Route}>
               <AuthProvider>
@@ -78,7 +76,6 @@ function Mount() {
               </AuthProvider>
             </QueryParamProvider>
           </Router>
-      </GatewayProvider>
 
       <Toast />
     </React.Fragment>

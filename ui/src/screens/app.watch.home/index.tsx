@@ -2,7 +2,6 @@ import './style.css'
 
 import * as React from 'react'
 import cx from 'classnames'
-import BodyClassName from 'react-body-classname'
 import UiLoader from '~/components/UiLoader'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
@@ -191,6 +190,11 @@ const reducer = (state: State, action: Action): State => {
  */
 function AppWatchHome(props: ReactComponentWrapper) {
   const context = usePartyContext()
+
+  useEffect(() => {
+    document.body.classList.add("watch-screen-html-body")
+    return () => document.body.classList.remove("watch-screen-html-body")
+  }, [])
 
   const [state, dispatch] = useReducer(reducer, {
     time: context.party.current_time,
@@ -464,7 +468,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
   return (
     <React.Fragment>
-      <BodyClassName className="watch-screen-html-body" />
 
       <div className="watch-screen">
         <div

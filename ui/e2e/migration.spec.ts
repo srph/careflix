@@ -67,5 +67,7 @@ test('authenticated settings preserve the heading and back navigation', async ({
   await page.goto('/settings/profile')
   await expect(page).toHaveURL(/\/settings\/profile$/)
   await expect(page).toHaveTitle(/Care.tv$/)
-  await expect(page.locator('.ui-navigation')).toBeVisible()
+  await expect(page.locator('.ui-navigation')).toContainText('Account Settings')
+  await page.getByRole('link', { name: 'Go Back' }).click()
+  await expect(page).toHaveURL(/\/settings$/)
 })

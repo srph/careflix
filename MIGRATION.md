@@ -117,6 +117,10 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 
 ### M3 evidence
 
+- Local hook replacement checkpoint: `61efc97`.
+- Removed Gateway and body-class dependencies. Header title/back-link selection now uses route conditionals; the watch-screen body class uses a native effect. Replaced the spacer's function default props with a default parameter.
+- Build/type checking, 6 focused tests, and all 6 browser smoke cases passed after layout changes. The settings case now checks the exact title and back navigation.
+
 - Replaced `react-use`, `@use-it/interval`, and `use-async-effect` with local hooks and ordinary state. Preserved the original update-only and async cleanup semantics; cancellation/error-policy improvements remain outside scope.
 - Type checking and production build pass. Six focused tests cover interval timing/cleanup, window resize, update-only effects under Strict Mode, and async result cleanup. All six baseline browser smoke cases pass.
 - React checkpoint committed as `ad44d1f`; component replacements follow in separate focused commits.

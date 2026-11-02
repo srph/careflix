@@ -1,5 +1,5 @@
 import { useReducer } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from '~/hooks/useAsyncEffect'
 import axios from '~/lib/axios'
 
 interface State<T> {

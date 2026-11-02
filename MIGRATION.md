@@ -21,7 +21,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 | M0 | Verification plan and working baseline | In progress: build and six browser baseline tests passed; live party baseline pending | Verification cases and expected outcomes are defined; branch and baseline commit are recorded; baseline behavior and existing issues are documented. |
 | M1 | Vite and TypeScript | Complete | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
 | M2 | React 18.3 checkpoint and focused tests | Complete | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
-| M3 | Component and hook replacements | Pending | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
+| M3 | Component and hook replacements | In progress: local hooks verified | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
 | M4 | React 19 and current router | Pending | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
 | M5 | Final integration verification | Pending | The acceptance checklist is verified across the browser targets and two live sessions; remaining limitations and developer instructions are documented. |
 
@@ -114,6 +114,12 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 | Dialogs and tooltips | Dismissal, Escape handling, focus restoration, hints, and animations preserve usable interactions. | Browser interaction checks against migrated components. | M3; cross-browser confirmation in M5. |
 | Chat textarea | Input remains usable within height bounds, with and without CSS auto-sizing support. | Browser checks of progressive enhancement and the scrollable fallback. | M3 and M5. |
 | Watch-party integration | Two distinct users receive invitations, presence, and chat; playback/seek and episode changes synchronize; reconnecting works. | Two browser sessions, real API/Pusher, two test accounts, playable media, subtitles, and a multi-episode series. | Live baseline in M0 if available; final verification in M5. |
+
+### M3 evidence
+
+- Replaced `react-use`, `@use-it/interval`, and `use-async-effect` with local hooks and ordinary state. Preserved the original update-only and async cleanup semantics; cancellation/error-policy improvements remain outside scope.
+- Type checking and production build pass. Six focused tests cover interval timing/cleanup, window resize, update-only effects under Strict Mode, and async result cleanup. All six baseline browser smoke cases pass.
+- React checkpoint committed as `ad44d1f`; component replacements follow in separate focused commits.
 
 ### M2 evidence
 

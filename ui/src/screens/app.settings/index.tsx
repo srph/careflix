@@ -9,7 +9,7 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useAuth } from '~/contexts/Auth'
 import { useIsPWA } from '~/hooks/useIsPWA'
-import useWindowSize from 'react-use/esm/useWindowSize'
+import useWindowSize from '~/hooks/useWindowSize'
 
 import config from '~/config'
 import asset_author from '~/assets/author.jpg'

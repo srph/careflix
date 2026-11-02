@@ -1,7 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import { useState, } from 'react'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from '~/hooks/useAsyncEffect'
 import UiContainer from '~/components/UiContainer'
 import UiButton from '~/components/UiButton'
 import UiAvatarGroup from '~/components/UiAvatarGroup'

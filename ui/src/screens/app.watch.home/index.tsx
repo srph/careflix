@@ -12,7 +12,7 @@ import MobileTitleBar from './MobileTitleBar'
 import PlayerStateBufferedIndicator from './PlayerStateBufferedIndicator'
 import KeyboardInfoModal from './KeyboardInfoModal'
 
-import useUpdateEffect from 'react-use/esm/useUpdateEffect'
+import useUpdateEffect from '~/hooks/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { useBufferState } from '~/hooks/useBufferState'

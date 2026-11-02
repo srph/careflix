@@ -15,7 +15,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@use-it/interval": "^0.1.3",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "color-hash": "^1.0.3",
@@ -41,11 +40,9 @@
     "react-simple-infinite-scroll": "0.0.1",
     "react-textarea-autosize": "^7.1.0",
     "react-tiny-popover": "^3.4.5",
-    "react-use": "^9.0.0",
     "sanitize.css": "^8.0.0",
     "screenfull": "^4.2.0",
     "scrollbar-compensate": "^0.2.2",
-    "use-async-effect": "^2.0.1",
     "use-query-params": "^0.3.3",
     "use-react-router": "^1.0.6",
     "uuid": "^3.3.2"

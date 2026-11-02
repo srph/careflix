@@ -2,7 +2,7 @@ import './style.css'
 import * as React from 'react'
 import { useEffect, useRef } from 'react'
 import Transition from 'react-addons-css-transition-group'
-import useSetState from 'react-use/esm/useSetState'
+import { useState } from 'react'
 
 interface Message {
   id: number,
@@ -23,7 +23,7 @@ let instance: Instance = {
 }
 
 function Toast() {
-  const [state, setState] = useSetState<State>({
+  const [state, setState] = useState<State>({
     messages: []
   })
 

@@ -2,7 +2,7 @@ import './style.css'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { useIsPWA } from '~/hooks/useIsPWA'
-import useWindowSize from 'react-use/esm/useWindowSize'
+import useWindowSize from '~/hooks/useWindowSize'
 import history from '~/lib/history'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'

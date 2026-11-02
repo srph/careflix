@@ -1,4 +1,4 @@
-import useWindowSize from 'react-use/esm/useWindowSize'
+import useWindowSize from '~/hooks/useWindowSize'
 
 function useMediaMode(): 'desktop' | 'mobile' {
   const { width } = useWindowSize();

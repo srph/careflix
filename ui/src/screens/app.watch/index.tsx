@@ -4,7 +4,7 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
-import { useAsyncEffect } from 'use-async-effect'
+import { useAsyncEffect } from '~/hooks/useAsyncEffect'
 import routerModule from 'use-react-router'
 const useReactRouter = (routerModule as typeof routerModule & { default?: typeof routerModule }).default || routerModule
 import axios from '~/lib/axios'

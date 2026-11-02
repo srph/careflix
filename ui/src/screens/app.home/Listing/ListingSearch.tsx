@@ -1,8 +1,27 @@
 import { Fragment, useEffect, useId, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import UiSkeleton from '~/components/UiSkeleton'
 import { useListingSearchQuery } from '../queries'
 import Artwork from './Artwork'
 import { partyDetails, partyStatus, showMeta } from './format'
+
+function SearchSkeleton() {
+  return <div className="listing-search-loading">
+    <span className="listing-search-loading-label" role="status">Searching titles and parties…</span>
+    <div aria-hidden="true">
+      {[{ label: 'Titles', widths: [68, 52, 60] }, { label: 'Parties', widths: [58, 72] }].map(({ label, widths }) => <Fragment key={label}>
+        <div className="listing-search-group">{label}</div>
+        {widths.map((width, index) => <div className="listing-search-skeleton-row" key={index}>
+          <UiSkeleton className="listing-search-skeleton-artwork" />
+          <div className="listing-search-skeleton-copy">
+            <UiSkeleton width={`${width}%`} height={14} />
+            <UiSkeleton width={`${width + 12}%`} height={10} />
+          </div>
+        </div>)}
+      </Fragment>)}
+    </div>
+  </div>
+}
 
 export default function ListingSearch({ onShowSelect, recentParties }: { onShowSelect: (show: AppShow) => void; recentParties: AppParty[] }) {
   const [text, setText] = useState('')
@@ -79,7 +98,7 @@ export default function ListingSearch({ onShowSelect, recentParties }: { onShowS
       }} />
     <kbd aria-hidden="true">/</kbd>
     {expanded && <div className="listing-search-dropdown">
-      {busy ? <p role="status">Searching…</p> : trimmed && query.isError ? <div role="alert">Unable to search. <button type="button" onClick={() => { void query.refetch() }}>Retry</button></div> : null}
+      {busy ? <SearchSkeleton /> : trimmed && query.isError ? <div role="alert">Unable to search. <button type="button" onClick={() => { void query.refetch() }}>Retry</button></div> : null}
       <div id={`${id}-results`} role="listbox" aria-label="Search results" aria-busy={busy}>
         {!busy && !(trimmed && query.isError) && !options.length && <p role="status">{trimmed ? `No matches for “${trimmed}”.` : 'Search for a title or a party.'}</p>}
         {options.map((option, index) => <Fragment key={`${option.party ? 'party' : 'title'}-${option.party?.id ?? option.show.id}`}>

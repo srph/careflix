@@ -100,6 +100,54 @@ test('search groups titles and parties and opens details with the keyboard', asy
   await expect(page.getByRole('listbox')).not.toBeVisible()
 })
 
+test('search skeletons match result rows and remain decorative while requests are pending', async ({ page }) => {
+  await catalog(page)
+  let releaseSearch: () => void
+  const searchReady = new Promise<void>(resolve => { releaseSearch = resolve })
+  const searchRequests: string[] = []
+  await page.route('**/api/**', async route => {
+    if (new URL(route.request().url()).searchParams.has('q')) {
+      searchRequests.push(route.request().url())
+      await searchReady
+    }
+    await route.fallback()
+  })
+  await page.goto('/')
+  await expect(page.locator('.listing-show-card')).toHaveCount(6)
+  const input = page.getByRole('combobox', { name: 'Search titles and parties' })
+  await input.fill('Hollow')
+  const dropdown = page.locator('.listing-search-dropdown')
+  const loading = dropdown.locator('.listing-search-loading')
+  await expect(loading).toBeVisible()
+  await expect(dropdown.getByRole('status')).toHaveText('Searching titles and parties…')
+  await expect(page.getByRole('listbox')).toHaveAttribute('aria-busy', 'true')
+  await expect(page.getByRole('option')).toHaveCount(0)
+  await expect.poll(() => searchRequests.length).toBe(2)
+  const thumbnail = loading.locator('.listing-search-skeleton-artwork').first()
+  await expect(thumbnail).toHaveCSS('width', '72px')
+  await expect(thumbnail).toHaveCSS('height', '40px')
+  await expect(thumbnail).toHaveCSS('animation-name', 'ui-skeleton-pulse')
+  await input.press('ArrowDown')
+  await input.press('Enter')
+  await expect(input).not.toHaveAttribute('aria-activedescendant')
+  await expect(page.getByRole('dialog')).not.toBeVisible()
+  await expect(page).toHaveURL(/\/$/)
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(thumbnail).toHaveCSS('animation-name', 'none')
+  await page.screenshot({ path: test.info().outputPath('search-loading.png') })
+  releaseSearch()
+  await expect(loading).not.toBeVisible()
+  await expect(page.getByRole('listbox')).toHaveAttribute('aria-busy', 'false')
+  await expect(page.getByRole('option')).toHaveCount(2)
+  const artwork = dropdown.locator('.listing-search-option .listing-artwork').first()
+  await expect(artwork).toHaveCSS('width', '72px')
+  await expect(artwork).toHaveCSS('height', '40px')
+  await input.press('ArrowDown')
+  await input.press('Enter')
+  await expect(page.getByRole('dialog')).toBeVisible()
+})
+
 test('recent parties leads to history and rejoining enters the existing room', async ({ page }) => {
   await catalog(page)
   await page.goto('/')

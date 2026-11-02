@@ -1,7 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import { useEffect, useRef } from 'react'
-import Transition from 'react-addons-css-transition-group'
+import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 
 interface Message {
@@ -61,21 +61,17 @@ function KeyCastr() {
   }, [])
 
   return (
-    <Transition
-      component='div'
-      className='key-castr'
-      transitionName={{
-        enter: '-enter',
-        leave: '-leave'
-      }}
-      transitionEnterTimeout={400}
-      transitionLeaveTimeout={400}>
+    <div className='key-castr'>
+      <AnimatePresence initial={false}>
       {state.messages.map(message =>
-        <div className='item' key={message.id}>
+        <motion.div className='item' key={message.id}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
           {message.text}
-        </div>
-      )}
-    </Transition>
+        </motion.div>
+        )}
+    </AnimatePresence>
+    </div>
   )
 }
 

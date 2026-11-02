@@ -33,24 +33,6 @@
   pointer-events: all;
 }
 
-.watch-player-container.-enter {
-  opacity: 0;
-}
-
-.watch-player-container.-enter-active {
-  opacity: 1;
-  transition: 0.1s all ease;
-}
-
-.watch-player-container.-leave {
-  opacity: 1;
-}
-
-.watch-player-container.-leave-active {
-  opacity: 0;
-  transition: 0.1s all ease;
-}
-
 .watch-player-contents {
   position: absolute;
   left: 0;

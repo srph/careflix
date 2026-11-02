@@ -42,25 +42,3 @@
 .toast-float > .item:not(:last-child) {
   margin-bottom: 16px;
 }
-
-.toast-float > .item.-enter {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-.toast-float > .item.-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: 0.3s all ease;
-}
-
-.toast-float > .item.-leave {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.toast-float > .item.-leave-active {
-  opacity: 0;
-  transform: translateY(-16px);
-  transition: 0.3s all ease;
-}

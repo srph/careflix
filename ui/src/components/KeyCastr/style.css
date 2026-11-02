@@ -24,25 +24,3 @@
 .key-castr > .item:not(:last-child) {
   margin-bottom: 16px;
 }
-
-.key-castr > .item.-enter {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-.key-castr > .item.-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-  transition: 0.3s all ease;
-}
-
-.key-castr > .item.-leave {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.key-castr > .item.-leave-active {
-  opacity: 0;
-  transform: translateY(-16px);
-  transition: 0.3s all ease;
-}

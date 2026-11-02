@@ -117,6 +117,9 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 
 ### M3 evidence
 
+- Base UI control checkpoint: `cb5ae50`. Replaced the deprecated transition addon with Motion for toast/key indicators and the player overlay, preserving their opacity/translation transitions and durations.
+- Build/type checking, 10 focused tests, and all 6 production browser smoke cases pass after the animation replacement.
+
 - Base UI 1.9.0 now supplies dialogs, player tooltips, and sliders. The wrappers retain their CSS classes and controlled interaction contracts. Removed `react-modal`, `react-tiny-popover`, `react-input-slider`, and `scrollbar-compensate`.
 - Base UI's optional calendar peer expects date-fns v4. The app retains exactly v1.30.1 under the `date-fns-v1` alias, with its original declarations, so existing parsing/formatting behavior is unchanged.
 - Type checking, build, and 10 focused tests pass, including modal render-prop/Escape and slider keyboard commit/playback-update behavior. All six browser smoke cases pass against a freshly optimized dev server. Restarting the test server after dependency changes avoids stale Vite optimization URLs.

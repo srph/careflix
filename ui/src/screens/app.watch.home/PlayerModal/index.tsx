@@ -2,7 +2,7 @@ import './style.css'
 import * as React from 'react'
 import cx from 'classnames'
 import { useState, useRef, useEffect } from 'react'
-import Transition from 'react-addons-css-transition-group'
+import { AnimatePresence, motion } from 'motion/react'
 import UiPlainButton from '~/components/UiPlainButton'
 import toReadableTime from '~/utils/date/toReadableTime'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
@@ -146,16 +146,10 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   return (
-    <Transition
-      component="div"
-      transitionName={{
-        enter: '-enter',
-        leave: '-leave'
-      }}
-      transitionEnterTimeout={100}
-      transitionLeaveTimeout={100}>
+    <div>
+      <AnimatePresence initial={false}>
       {props.isOpen && (
-        <div className="watch-player-container">
+        <motion.div className="watch-player-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
           <div className="watch-player-overlay" ref={overlayRef} onClick={handleClickOverlay} />
 
           <Link to="/" className="watch-player-browse">
@@ -354,9 +348,10 @@ function PlayerModal({ party, ...props }: Props) {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
-    </Transition>
+      </AnimatePresence>
+    </div>
   )
 }
 

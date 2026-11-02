@@ -49,6 +49,7 @@ function VolumeControl(props: Props) {
 
       <div className="slider">
         <UiInputSlider
+        ariaLabel="Volume"
           value={props.volume}
           min={0}
           max={1}

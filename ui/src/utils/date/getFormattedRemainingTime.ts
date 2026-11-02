@@ -1,4 +1,4 @@
-import { differenceInSeconds } from 'date-fns'
+import { differenceInSeconds } from 'date-fns-v1'
 import getRemainingTime from './getRemainingTime'
 
 type Payload = Date | string | number

@@ -5,7 +5,7 @@ import immer from 'immer'
 import axios from '~/lib/axios'
 import history from '~/lib/history'
 import config from '~/config'
-import { addYears } from 'date-fns'
+import { addYears } from 'date-fns-v1'
 import { toast } from '~/components/Toast'
 
 export interface AuthContext {

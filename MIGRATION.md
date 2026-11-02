@@ -18,7 +18,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 
 | ID | Milestone | Status | Complete when |
 | --- | --- | --- | --- |
-| M0 | Verification plan and working baseline | In progress: build and six browser baseline tests passed; live party baseline pending | Verification cases and expected outcomes are defined; branch and baseline commit are recorded; baseline behavior and existing issues are documented. |
+| M0 | Verification plan and working baseline | Complete | Verification cases and expected outcomes are defined; branch and baseline commit are recorded; baseline behavior and existing issues are documented. |
 | M1 | Vite and TypeScript | Complete | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
 | M2 | React 18.3 checkpoint and focused tests | Complete | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
 | M3 | Component and hook replacements | In progress: local hooks verified | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
@@ -46,8 +46,8 @@ Request input only for a concrete missing item or unresolved product decision. C
 - [x] Review and finalize the verification matrix below before application changes: cases, expected outcomes, test method, fixtures, and the milestone responsible.
 - [x] Create `v2` from `8977ac1b6929fad4b3378728d98e0dd70abb305d`; include this plan in the first checkpoint.
 - [x] Confirm the MySQL, API, and existing Parcel UI startup paths using the repository's Makefile.
-- [ ] Confirm frontend/API URLs, OAuth configuration, and Pusher configuration work together. Inspect the existing setup before requesting missing inputs.
-- [ ] Confirm two usable test accounts, a playable title, subtitles, and a series with more than one episode. Use disposable local fixtures if the existing data is insufficient.
+- [x] Confirm frontend/API URLs, OAuth configuration, and Pusher configuration work together. Inspect the existing setup before requesting missing inputs.
+- [x] Confirm two usable test accounts, a playable title, subtitles, and a series with more than one episode. Use disposable local fixtures if the existing data is insufficient.
 - [x] Record the current typecheck/build and key screen captures (see execution evidence).
 - [x] Capture a small Playwright smoke suite for login/redirects, catalog navigation, and opening a party wherever the baseline environment allows. It should assert behavior that can survive component replacements.
 
@@ -117,6 +117,11 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 
 ### M3 evidence
 
+- Base UI 1.9.0 now supplies dialogs, player tooltips, and sliders. The wrappers retain their CSS classes and controlled interaction contracts. Removed `react-modal`, `react-tiny-popover`, `react-input-slider`, and `scrollbar-compensate`.
+- Base UI's optional calendar peer expects date-fns v4. The app retains exactly v1.30.1 under the `date-fns-v1` alias, with its original declarations, so existing parsing/formatting behavior is unchanged.
+- Type checking, build, and 10 focused tests pass, including modal render-prop/Escape and slider keyboard commit/playback-update behavior. All six browser smoke cases pass against a freshly optimized dev server. Restarting the test server after dependency changes avoids stale Vite optimization URLs.
+- Two live migrated sessions loaded media, subscribed to four Pusher channels each, and received a remote seek to 12 seconds without page errors. Player control screenshot: `.migration-evidence/base-ui-watch.png`.
+
 - Local hook replacement checkpoint: `61efc97`.
 - Removed Gateway and body-class dependencies. Header title/back-link selection now uses route conditionals; the watch-screen body class uses a native effect. Replaced the spacer's function default props with a default parameter.
 - Build/type checking, 6 focused tests, and all 6 browser smoke cases passed after layout changes. The settings case now checks the exact title and back navigation.
@@ -143,6 +148,12 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 - `npm run build` passes. Six browser smoke cases pass against both the Vite development server on 8486 and the production preview on 8489. Production output includes the manifest, SPA redirects, and Font Awesome font assets; an inspection confirmed the Pusher server secret is absent from compiled JavaScript.
 - The intermediate dependency tree requires `--legacy-peer-deps` because of the baseline's incompatible React declarations. This is temporary; the final M4/M5 installation must succeed without that option.
 - Confirmed existing Pusher configuration mismatch using read-only service calls: the supplied credentials validate on `ap1` (HTTP 200), while `mt1` returns HTTP 400. Plan live verification with an isolated API process using a cluster override; leave the existing `.env` and backend source untouched.
+
+### M0 live baseline evidence
+
+- Preserved original Parcel output in `/tmp/careflix-v2-parcel-baseline`, served on 8491. Two disposable users loaded the original watch screen and real media, subscribed to four Pusher channels each, and received a seek to 12 seconds through the real broadcast path, without page errors (baseline party 2).
+- HTTP requests were forwarded to the isolated API on 8487; responses were real, not mocked. The process uses `BROADCAST_DRIVER=pusher` and `PUSHER_APP_CLUSTER=ap1`. The existing local server uses the log broadcaster and a mismatched cluster; those settings and backend source remain untouched.
+- Existing movie and subtitle URLs returned HTTP 200. Local series 63 has 12 episodes for episode-change checks.
 
 ### Execution evidence — 2026-11-02
 

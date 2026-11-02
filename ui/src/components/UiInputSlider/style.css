@@ -1,0 +1,5 @@
+.ui-input-slider { width: 100%; }
+.ui-input-slider-control { display: flex; align-items: center; position: relative; width: 100%; height: 28px; touch-action: none; user-select: none; }
+.ui-input-slider-track { position: relative; width: 100%; height: 8px; background: var(--color-black-4); border-radius: 4px; }
+.ui-input-slider-active { height: 100%; background: var(--color-primary); border-radius: inherit; }
+.ui-input-slider-thumb { position: absolute; top: 50%; width: 20px; height: 20px; background: var(--color-primary); border-radius: 50%; outline-offset: 4px; }

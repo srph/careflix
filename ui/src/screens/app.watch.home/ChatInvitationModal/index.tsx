@@ -18,7 +18,7 @@ import toSearchObject from '~/utils/toSearchObject'
 import toSearchIndexObject from '~/utils/toSearchIndexObject'
 
 import { useNow } from '~/hooks/useNow'
-import { isBefore, parse } from 'date-fns'
+import { isBefore, parse } from 'date-fns-v1'
 import getFormattedRemainingTime from '~/utils/date/getFormattedRemainingTime'
 
 interface State {

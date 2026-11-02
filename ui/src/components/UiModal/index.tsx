@@ -1,8 +1,7 @@
 import './style.css'
 import * as React from 'react'
-import ReactModal from 'react-modal'
+import { Dialog } from '@base-ui/react/dialog'
 import cx from 'classnames'
-import compensate from 'scrollbar-compensate'
 
 interface Props {
   isOpen: boolean
@@ -14,34 +13,25 @@ interface Props {
   overlayClassName?: string
 }
 
-function UiModal(props: Props) {
-  // Because `ReactModal` handles the enter and leaving state, the children
-  // we pass over to UiModal gets executed even when it's closed.
-  // We can pass a render prop if we don't want the children to be executed while closed.
+export default function UiModal(props: Props) {
   const children = typeof props.children === 'function' ? (props.isOpen ? props.children() : null) : props.children
-
   return (
-    <ReactModal
-      isOpen={props.isOpen}
-      shouldCloseOnOverlayClick={props.shouldCloseOnOverlayClick}
-      onRequestClose={props.onClose}
-      className={cx('ui-modal', [props.modalClassName])}
-      overlayClassName={cx('ui-modal-overlay', [props.overlayClassName])}
-      bodyOpenClassName="ui-modal-body is-open"
-      closeTimeoutMS={200}>
-      {children}
-    </ReactModal>
+    <Dialog.Root open={props.isOpen} onOpenChange={(open, details) => {
+      if (open) return
+      if (details.reason === 'outside-press' && props.shouldCloseOnOverlayClick === false) {
+        details.cancel()
+        return
+      }
+      props.onClose?.()
+    }}>
+      <Dialog.Portal>
+        <Dialog.Backdrop className="ui-modal-backdrop" />
+        <Dialog.Viewport className={cx('ui-modal-overlay', props.overlayClassName)}>
+          <Dialog.Popup className={cx('ui-modal', props.modalClassName)} aria-label="Dialog">
+            {children}
+          </Dialog.Popup>
+        </Dialog.Viewport>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
-
-UiModal.defaultProps = {
-  padding: true
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  compensate(['.ui-modal-body.is-open'])
-})
-
-ReactModal.setAppElement('#mount')
-
-export default UiModal

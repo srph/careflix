@@ -1,55 +1,32 @@
-import * as React from 'react'
-import { useState, useRef } from 'react'
-import Slider, { SliderValue } from 'react-input-slider'
-
-type Style = { [key: string]: any }
+import './style.css'
+import { useState, type CSSProperties } from 'react'
+import { Slider } from '@base-ui/react/slider'
 
 interface Props {
   value: number
   min: number
   max: number
   step?: number
-  styles?: {
-    active?: Style
-    thumb?: Style
-    track?: Style
-  }
+  ariaLabel?: string
+  styles?: { active?: CSSProperties; thumb?: CSSProperties; track?: CSSProperties }
   onChange?: (value: number) => void
 }
 
-/**
- * react-input-slider calls props.onChange each drag move.
- * This component lazily updates the value only after the drag / click.
- */
-function UiInputSlider(props: Props) {
-  const [slackX, setSlackX] = useState<number>(() => props.value)
-  const slackXRef = useRef(slackX) // Access the updated slackX from the other event listeners
-  const [isDragging, setIsDragging] = useState<boolean>(false)
-
-  function handleQueueChange({ x }: SliderValue) {
-    setIsDragging(true)
-    slackXRef.current = x
-    setSlackX(x)
-  }
-
-  function handleCommitChange() {
-    props.onChange && props.onChange(slackXRef.current)
-    setIsDragging(false)
-  }
-
+export default function UiInputSlider(props: Props) {
+  const [draft, setDraft] = useState(props.value)
+  const [isDragging, setIsDragging] = useState(false)
   return (
-    <Slider
-      axis="x"
-      x={isDragging ? slackX : props.value}
-      xmin={props.min}
-      xmax={props.max}
-      xstep={props.step}
-      onChange={handleQueueChange}
-      onClick={handleCommitChange}
-      onDragEnd={handleCommitChange}
-      styles={props.styles}
-    />
+    <Slider.Root className="ui-input-slider" value={isDragging ? draft : props.value}
+      min={props.min} max={props.max} step={props.step ?? 1}
+      onValueChange={value => { setDraft(value); setIsDragging(true) }}
+      onValueCommitted={value => { props.onChange?.(value); setIsDragging(false) }}
+      onPointerCancel={() => setIsDragging(false)}>
+      <Slider.Control className="ui-input-slider-control">
+        <Slider.Track className="ui-input-slider-track" style={props.styles?.track}>
+          <Slider.Indicator className="ui-input-slider-active" style={props.styles?.active} />
+          <Slider.Thumb className="ui-input-slider-thumb" style={props.styles?.thumb} aria-label={props.ariaLabel || 'Value'} />
+        </Slider.Track>
+      </Slider.Control>
+    </Slider.Root>
   )
 }
-
-export default UiInputSlider

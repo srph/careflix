@@ -14,7 +14,7 @@ import { useAuth } from '~/contexts/Auth'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 import { useNow } from '~/hooks/useNow';
-import { parse, isBefore } from 'date-fns'
+import { parse, isBefore } from 'date-fns-v1'
 import getFormattedRemainingTime from '~/utils/date/getFormattedRemainingTime'
 
 import asset_invitation from '~/assets/audio/invitation.ogg'

@@ -1,5 +1,7 @@
-.ui-modal-body.is-open {
-  overflow-y: hidden;
+.ui-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--zindex-modal);
 }
 
 .ui-modal-overlay {
@@ -22,15 +24,12 @@
   padding: 0;
 }
 
-.ui-modal-overlay.ReactModal__Overlay {
-  opacity: 0;
+.ui-modal-overlay {
+  opacity: 1;
   transition: opacity 200ms ease-in-out;
 }
 
-.ui-modal-overlay.ReactModal__Overlay--after-open {
-  opacity: 1;
-}
-
-.ui-modal-overlay.ReactModal__Overlay--before-close {
+.ui-modal-overlay[data-starting-style],
+.ui-modal-overlay[data-ending-style] {
   opacity: 0;
 }

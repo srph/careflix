@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format } from 'date-fns-v1'
 
 /**
  * Gives you a mysql standard formatted datetime

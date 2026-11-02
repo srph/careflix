@@ -55,6 +55,7 @@ function PlayerSeeker(props: Props) {
       )}
 
       <UiInputSlider
+        ariaLabel="Playback position"
         value={props.time}
         min={0}
         max={props.duration}

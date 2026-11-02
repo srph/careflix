@@ -9,7 +9,7 @@ interface Props {
   shouldCloseOnOverlayClick?: boolean
   onClose?: () => void
   padding?: boolean
-  children?: React.ReactNode
+  children?: React.ReactNode | (() => React.ReactNode)
   modalClassName?: string
   overlayClassName?: string
 }

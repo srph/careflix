@@ -5,7 +5,7 @@ React/TypeScript front-end for Care.tv — the watch party experience (synced vi
 ## Versions
 
 - Vite `8.3.5` with `@vitejs/plugin-react` `6.2.0`; entry point `index.html`, configuration in `vite.config.ts`.
-- React `^16.11.0` (class-free, hooks-based)
+- React `18.3.1` checkpoint with `createRoot` and the automatic JSX transform (primarily hooks-based)
 - React Router `^5.0.0` (`react-router-dom`, `<Switch>`/`<Route>` API, not the v6 data router)
 - TypeScript `7.0.2`, targeting `ES2022`, bundler module resolution, path alias `~/` → `src/` (see `tsconfig.json`). Preserve the existing non-strict checking policy during the migration.
 - Node `v24.19.0` (pinned in `.nvmrc`, run `nvm use`), npm `>=11` per `package.json` `engines`.
@@ -54,6 +54,7 @@ npm install
 cp .env.example .env   # set VITE_API_BASE_URL, VITE_API_CLIENT_*, VITE_PUSHER_*
 npm start               # Vite dev server, http://localhost:8484
 npm run typecheck       # tsc --noEmit
+npm test                # focused Vitest/React Testing Library suite
 npm run build            # typecheck + Vite production build (public/ files copied into dist)
 npm run preview          # serve the production build on :8484
 npm run test:e2e          # Playwright smoke tests; first run npx playwright install

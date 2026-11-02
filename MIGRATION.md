@@ -20,7 +20,7 @@ Verification criteria below apply to migrated behavior against the recorded base
 | --- | --- | --- | --- |
 | M0 | Verification plan and working baseline | In progress: build and six browser baseline tests passed; live party baseline pending | Verification cases and expected outcomes are defined; branch and baseline commit are recorded; baseline behavior and existing issues are documented. |
 | M1 | Vite and TypeScript | Complete | The app runs through Vite; type checking and the production build pass; assets, configuration, and deep links work. |
-| M2 | React 18.3 checkpoint and focused tests | Pending | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
+| M2 | React 18.3 checkpoint and focused tests | Complete | The intermediate runtime works; the test harness runs; migration deprecations and compatibility issues are addressed or assigned to M3/M4; pre-existing findings are recorded without repair. |
 | M3 | Component and hook replacements | Pending | The agreed Base UI, Motion, CSS, and local-hook replacements work, with tests covering the changed behavior. |
 | M4 | React 19 and current router | Pending | Runtime, types, routing, guards, metadata, and navigation blocking are migrated; focused tests and build checks pass. |
 | M5 | Final integration verification | Pending | The acceptance checklist is verified across the browser targets and two live sessions; remaining limitations and developer instructions are documented. |
@@ -67,10 +67,10 @@ The current dependency tree already has invalid React peer declarations. Coordin
 
 ### M2: React checkpoint and focused tests
 
-- [ ] Move to React 18.3 with matching types and `createRoot`; exercise development Strict Mode.
-- [ ] Add Vitest and React Testing Library for selected hook and interaction tests, with a non-watching test command.
-- [ ] Add focused tests around runtime and hook behavior changed by the migration. Record pre-existing subscription or async failures separately; do not turn them into unrelated fixes.
-- [ ] Record remaining deprecation warnings and the replacement milestone that resolves each one.
+- [x] Move to React 18.3 with matching types and `createRoot`; exercise development Strict Mode.
+- [x] Add Vitest and React Testing Library for selected hook and interaction tests, with a non-watching test command.
+- [x] Add focused tests around runtime and hook behavior changed by the migration. Record pre-existing subscription or async failures separately; do not turn them into unrelated fixes.
+- [x] Record remaining deprecation warnings and the replacement milestone that resolves each one.
 
 ### M3: component and hook replacements
 
@@ -114,6 +114,15 @@ Write the verification plan in M0. Add the initial browser smoke cases in M0 whe
 | Dialogs and tooltips | Dismissal, Escape handling, focus restoration, hints, and animations preserve usable interactions. | Browser interaction checks against migrated components. | M3; cross-browser confirmation in M5. |
 | Chat textarea | Input remains usable within height bounds, with and without CSS auto-sizing support. | Browser checks of progressive enhancement and the scrollable fallback. | M3 and M5. |
 | Watch-party integration | Two distinct users receive invitations, presence, and chat; playback/seek and episode changes synchronize; reconnecting works. | Two browser sessions, real API/Pusher, two test accounts, playable media, subtitles, and a multi-episode series. | Live baseline in M0 if available; final verification in M5. |
+
+### M2 evidence
+
+- Vite tooling checkpoint committed as `5bb2700`.
+- React/React DOM 18.3.1, matching v18 definitions, `createRoot`, and the automatic JSX transform are active. Router declarations now match the existing v5 runtime API.
+- Vitest 5.0.5 and React Testing Library cover the invitation clock's interval, changed delay, and Strict Mode timer cleanup: 3 tests passed.
+- Type checking and the production build passed. All 6 baseline browser smoke cases passed on the React 18.3 runtime after dependency optimization settled.
+- Remaining legacy context/default-prop/DOM lookup warnings belong to the packages removed in M3/M4. Strict Mode is exercised in focused tests; enabling it globally is not used to expand scope into pre-existing lifecycle defects.
+- An isolated API process runs on 8487 with a process-local Pusher cluster override (`ap1`). Neither the existing server configuration nor backend source was changed. The live catalog request succeeded with a disposable account (203 titles, 30 on the first page).
 
 ### M1 evidence
 

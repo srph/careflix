@@ -4,7 +4,7 @@ import 'font-awesome/css/font-awesome.css'
 import './global.css'
 
 import * as React from 'react'
-import * as ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Helmet } from 'react-helmet'
 import { Router, Route, Switch } from 'react-router-dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
@@ -85,4 +85,4 @@ function Mount() {
   )
 }
 
-ReactDOM.render(<Mount />, document.getElementById('mount'))
+createRoot(document.getElementById('mount')!).render(<Mount />)

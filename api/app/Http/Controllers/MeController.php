@@ -21,6 +21,7 @@ class MeController extends Controller
     public function parties(Request $request) {
         $request->validate([
             'q' => 'nullable|string|max:200',
+            'show_id' => 'nullable|integer|min:1',
             'per_page' => 'nullable|integer|min:1|max:60',
             'page' => 'nullable|integer|min:1'
         ]);
@@ -28,6 +29,12 @@ class MeController extends Controller
         $parties = $request->user()->parties()
             ->with('video.show.movieVideo')
             ->whereHas('video.show');
+
+        if ($request->filled('show_id')) {
+            $parties->whereHas('video', function ($videos) use ($request) {
+                $videos->where('show_id', $request->get('show_id'));
+            });
+        }
 
         if ($request->filled('q')) {
             $parties->whereHas('video.show', function ($shows) use ($request) {

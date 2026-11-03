@@ -105,4 +105,28 @@ class ListingApiTest extends TestCase
         $this->getJson('/api/shows')->assertStatus(401);
         $this->getJson('/api/me/parties')->assertStatus(401);
     }
+
+    public function test_title_party_history_filters_before_pagination_and_keeps_membership_private()
+    {
+        $viewer = $this->viewer();
+        $other = $this->viewer('Other');
+        list($show, $video) = $this->title('Selected title');
+        list($another, $otherVideo) = $this->title('Other title');
+        $older = $this->party($viewer, $video, '2026-01-01 00:00:00');
+        $newer = $this->party($viewer, $video, '2026-02-01 00:00:00');
+        $this->party($viewer, $otherVideo, '2026-03-01 00:00:00');
+        $this->party($other, $video, '2026-04-01 00:00:00');
+        Passport::actingAs($viewer);
+
+        $this->getJson('/api/me/parties?show_id=' . $show->id . '&per_page=1')
+            ->assertOk()->assertJsonFragment(['total' => 2, 'last_page' => 2])
+            ->assertJson(['data' => [0 => ['id' => $newer->id]]]);
+        $this->getJson('/api/me/parties?show_id=' . $show->id . '&per_page=1&page=2')
+            ->assertOk()->assertJson(['data' => [0 => ['id' => $older->id]]]);
+        $this->getJson('/api/me/parties?show_id=' . $show->id . '&q=other')
+            ->assertOk()->assertJsonFragment(['total' => 0]);
+        $this->getJson('/api/me/parties?show_id=99999')->assertOk()->assertJsonFragment(['total' => 0]);
+        $this->getJson('/api/me/parties?show_id[]=bad')->assertStatus(422);
+        $this->getJson('/api/me/parties?show_id=0')->assertStatus(422);
+    }
 }

@@ -11,6 +11,7 @@ interface Props {
   children?: React.ReactNode | (() => React.ReactNode)
   modalClassName?: string
   overlayClassName?: string
+  ariaLabel?: string
 }
 
 export default function UiModal(props: Props) {
@@ -27,7 +28,7 @@ export default function UiModal(props: Props) {
       <Dialog.Portal>
         <Dialog.Backdrop className={cx('ui-modal-backdrop', props.overlayClassName)} />
         <Dialog.Viewport className={cx('ui-modal-overlay', props.overlayClassName)} style={{ background: 'transparent' }}>
-          <Dialog.Popup className={cx('ui-modal', props.modalClassName)} aria-label="Dialog">
+          <Dialog.Popup className={cx('ui-modal', props.modalClassName)} aria-label={props.ariaLabel ?? 'Dialog'}>
             {children}
           </Dialog.Popup>
         </Dialog.Viewport>

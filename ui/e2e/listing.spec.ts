@@ -6,7 +6,7 @@ const titles = ['Velvet Static', 'Hollow County', 'Paper Moons', 'Orbit Diner', 
 const shows = titles.map((title, index) => ({
   id: index + 1, title, title_type: index % 2 ? 'series' : 'movie', preview_image: art(['#7a1f4d', '#24442a', '#60304c', '#7d532b'][index % 4]),
   synopsis: ['A late-night radio host starts hearing tomorrow’s callers tonight.', 'A small-town clerk keeps finding the same name in every cold case.', 'Two sisters keep their late father’s lantern shop open for one last festival.'][index % 3],
-  air_start: '2025-01-01 00:00:00', age_rating: 'R', groups_count: 3,
+  air_start: '2025-01-01 00:00:00', air_end: index % 2 ? '2026-01-01 00:00:00' : null, language: 'English', age_rating: 'R', groups_count: 2,
   movie: index % 2 ? null : { id: 100 + index, duration: 7440 },
 }))
 const user = { id: 90001, name: 'Kier', email: 'listing@example.test', avatar: null, invitations: [], is_online: true }
@@ -34,12 +34,19 @@ async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolea
       const type = url.searchParams.get('title_type')
       const source = options.empty ? [] : path === '/api/shows'
         ? shows.filter(show => (!type || show.title_type === type) && show.title.toLowerCase().includes(q))
-        : parties.filter(party => party.video.show.title.toLowerCase().includes(q))
+        : parties.filter(party => party.video.show.title.toLowerCase().includes(q) && (!url.searchParams.has('show_id') || party.video.show.id === Number(url.searchParams.get('show_id'))))
       const perPage = Number(url.searchParams.get('per_page') || options.pageSize || 6)
       const current = Number(url.searchParams.get('page') || 1)
       body = { data: source.slice((current - 1) * perPage, current * perPage), total: source.length, current_page: current, last_page: Math.max(1, Math.ceil(source.length / perPage)) }
     }
-    if (/\/api\/shows\/\d+\/groups/.test(path)) body = [{ id: 1, title: 'Season 1', videos: [{ id: 701, title: 'The first episode', duration: 1800 }] }]
+    if (/\/api\/shows\/\d+\/groups/.test(path)) body = [
+      { id: 1, title: 'Season 1', videos: [
+        { id: 701, title: 'The first episode', synopsis: 'A name in the records leads Joyce to an unexpected visitor.', duration: 1800 },
+        { id: 702, title: 'The visitor book', synopsis: 'The night shift runs long, and a stranger signs the visitor book twice.', duration: 2400, preview_image: art('#343864') },
+        { id: 703, title: 'Three years late', synopsis: 'A letter arrives with an answer nobody was looking for.', duration: 2100 },
+      ] },
+      { id: 2, title: 'Season 2', videos: [{ id: 801, title: 'A new beginning', duration: 2700 }] },
+    ]
     if (/\/api\/parties\/\d+$/.test(path)) body = parties[0]
     await route.fulfill({ json: body })
   })
@@ -348,3 +355,188 @@ test('movie and series actions create a party with the selected video', async ({
   await expect(page).toHaveURL(/\/watch\/222$/)
   expect(videos).toEqual([100, 701])
 })
+
+test('F2b series details show your room, preserve the selected season, and support keyboard tabs', async ({ page }) => {
+  await catalog(page)
+  await page.goto('/')
+  const opener = page.getByRole('button', { name: 'Details for Hollow County', exact: true })
+  await opener.click()
+  const dialog = page.getByRole('dialog', { name: 'Hollow County', exact: true })
+  await expect(dialog.locator('.show-modal-live')).toContainText('Your room with Joyce')
+  await expect(dialog.getByRole('link', { name: 'Join your room for Hollow County' })).toHaveAttribute('href', '/watch/200')
+  await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toHaveCount(1)
+  await expect(dialog.getByRole('tab', { name: 'Episodes', exact: true })).toHaveAttribute('aria-selected', 'true')
+  await expect(dialog.locator('.show-modal-episode')).toHaveCount(3)
+  await expect(dialog.getByText('The night shift runs long, and a stranger signs the visitor book twice.')).toBeVisible()
+  await dialog.screenshot({ path: test.info().outputPath('show-detail-series.png') })
+  await dialog.getByRole('combobox', { name: 'Season', exact: true }).selectOption('2')
+  await expect(dialog.getByText('A new beginning', { exact: true })).toBeVisible()
+  await dialog.getByRole('tab', { name: 'Episodes', exact: true }).focus()
+  await page.keyboard.press('ArrowRight')
+  await expect(dialog.getByRole('tab', { name: 'Parties', exact: true })).toHaveAttribute('aria-selected', 'true')
+  await dialog.screenshot({ path: test.info().outputPath('show-detail-parties.png') })
+  await page.keyboard.press('ArrowRight')
+  await expect(dialog.getByRole('tab', { name: 'Details', exact: true })).toHaveAttribute('aria-selected', 'true')
+  await expect(dialog.locator('.show-modal-facts')).toContainText('2025–2026')
+  await expect(dialog.locator('.show-modal-facts')).toContainText('2h 30m')
+  await expect(dialog.locator('.show-modal-seasons')).toContainText('3 episodes · 1h 45m')
+  await expect(dialog.locator('.show-modal-seasons')).toContainText('1 episode · 45m')
+  await expect.poll(() => dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await dialog.screenshot({ path: test.info().outputPath('show-detail-facts.png') })
+  await dialog.getByRole('tab', { name: 'Episodes', exact: true }).click()
+  await expect(dialog.getByRole('combobox', { name: 'Season', exact: true })).toHaveValue('2')
+  await page.keyboard.press('Escape')
+  await expect(dialog).not.toBeVisible()
+  await expect(opener).toBeFocused()
+  await opener.click()
+  await expect(page.getByRole('dialog').getByRole('combobox', { name: 'Season', exact: true })).toHaveValue('1')
+})
+
+test('F2b hides absent parties and shows a movie details table without a lone tab', async ({ page }) => {
+  await catalog(page)
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Details for Paper Moons', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: 'Paper Moons', exact: true })
+  await expect(dialog.getByText('Loading your parties…')).toHaveCount(0)
+  await expect(dialog.getByRole('tablist')).toHaveCount(0)
+  await expect(dialog.locator('.show-modal-live')).toHaveCount(0)
+  await expect(dialog.locator('.show-modal-facts')).toContainText('Released2025')
+  await expect(dialog.locator('.show-modal-facts')).toContainText('Runtime2h 04m')
+  await expect(dialog.locator('.show-modal-facts')).toContainText('LanguageEnglish')
+  await expect.poll(() => dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await dialog.screenshot({ path: test.info().outputPath('show-detail-no-parties.png') })
+  await dialog.getByRole('button', { name: 'Close details' }).click()
+  await page.getByRole('button', { name: 'Details for The Understudies', exact: true }).click()
+  const series = page.getByRole('dialog', { name: 'The Understudies', exact: true })
+  await expect(series.getByText('Loading your parties…')).toHaveCount(0)
+  await expect(series.getByRole('tab', { name: 'Episodes', exact: true })).toBeVisible()
+  await expect(series.getByRole('tab', { name: 'Details', exact: true })).toBeVisible()
+  await expect(series.getByRole('tab', { name: 'Parties', exact: true })).toHaveCount(0)
+})
+
+test('F2b loads title-specific history pages and rejoins the selected existing party', async ({ page }) => {
+  await catalog(page)
+  const older = { ...parties[2], id: 400 }
+  await page.route('**/api/me/parties*', async route => {
+    const url = new URL(route.request().url())
+    if (url.searchParams.get('show_id') !== '1') return route.fallback()
+    const current = Number(url.searchParams.get('page') || 1)
+    await route.fulfill({ json: { data: [current === 1 ? parties[2] : older], current_page: current, last_page: 2, total: 2 } })
+  })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Details for Velvet Static', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: 'Velvet Static', exact: true })
+  await expect(dialog.getByRole('tab', { name: 'Parties', exact: true })).toHaveAttribute('aria-selected', 'true')
+  await expect(dialog.locator('.show-modal-live')).toHaveCount(0)
+  await expect(dialog.locator('.show-modal-party')).toHaveCount(1)
+  await dialog.getByRole('button', { name: 'Load more parties', exact: true }).click()
+  await expect(dialog.locator('.show-modal-party')).toHaveCount(2)
+  await expect(dialog.getByRole('button', { name: 'Load more parties', exact: true })).toHaveCount(0)
+  await dialog.locator('.show-modal-party').last().click()
+  await expect(page).toHaveURL(/\/watch\/400$/)
+})
+
+test('F2b recovers episode and title-history failures without losing the details sheet', async ({ page }) => {
+  await catalog(page)
+  let failGroups = true
+  let failParties = true
+  await page.route('**/api/**', async route => {
+    const url = new URL(route.request().url())
+    if ((failGroups && url.pathname === '/api/shows/2/groups') || (failParties && url.pathname === '/api/me/parties' && url.searchParams.has('show_id'))) {
+      return route.fulfill({ status: 422, json: { message: 'Fixture unavailable' } })
+    }
+    await route.fallback()
+  })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Details for Hollow County', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: 'Hollow County', exact: true })
+  await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeDisabled()
+  await expect(dialog.getByRole('alert').filter({ hasText: 'Unable to load episodes.' })).toBeVisible()
+  await expect(dialog.getByRole('alert').filter({ hasText: 'Unable to load your parties.' })).toBeVisible()
+  failGroups = false
+  await dialog.getByRole('alert').filter({ hasText: 'Unable to load episodes.' }).getByRole('button', { name: 'Retry' }).click()
+  await expect(dialog.locator('.show-modal-episode')).toHaveCount(3)
+  await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeEnabled()
+  failParties = false
+  await dialog.getByRole('alert').filter({ hasText: 'Unable to load your parties.' }).getByRole('button', { name: 'Retry' }).click()
+  await expect(dialog.locator('.show-modal-live')).toBeVisible()
+  await expect(dialog.getByRole('tab', { name: 'Parties', exact: true })).toBeVisible()
+  await expect(dialog.getByRole('alert')).toHaveCount(0)
+})
+
+test('F2b starts the selected season and prevents duplicate requests while creating a party', async ({ page }) => {
+  await catalog(page)
+  let releaseCreate = () => {}
+  const createReady = new Promise<void>(resolve => { releaseCreate = resolve })
+  const videos: number[] = []
+  await page.route('**/api/parties', async route => {
+    videos.push(route.request().postDataJSON().show_video_id)
+    await createReady
+    await route.fulfill({ status: 422, json: { message: 'Fixture unavailable', errors: { show_video_id: ['Fixture unavailable'] } } })
+  })
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Details for Hollow County', exact: true }).click()
+  const dialog = page.getByRole('dialog', { name: 'Hollow County', exact: true })
+  await dialog.getByRole('combobox', { name: 'Season', exact: true }).selectOption('2')
+  await dialog.getByRole('button', { name: 'Start Party', exact: true }).click()
+  await expect(dialog.getByRole('button', { name: 'Starting…' })).toBeDisabled()
+  await expect(dialog.locator('.show-modal-episode')).toBeDisabled()
+  expect(videos).toEqual([801])
+  releaseCreate()
+  await expect(dialog.getByRole('alert')).toContainText('Unable to start the party.')
+  await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeEnabled()
+  await expect(dialog.getByRole('combobox', { name: 'Season', exact: true })).toHaveValue('2')
+})
+
+for (const first of ['episodes', 'parties']) {
+  test(`F2b keeps its frame steady when ${first} load first and tabs change`, async ({ page }) => {
+    await catalog(page)
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    let releaseEpisodes = () => {}
+    let releaseParties = () => {}
+    const episodesReady = new Promise<void>(resolve => { releaseEpisodes = resolve })
+    const partiesReady = new Promise<void>(resolve => { releaseParties = resolve })
+    await page.route('**/api/**', async route => {
+      const url = new URL(route.request().url())
+      if (url.pathname === '/api/shows/2/groups') await episodesReady
+      if (url.pathname === '/api/me/parties' && url.searchParams.has('show_id')) await partiesReady
+      await route.fallback()
+    })
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Details for Hollow County', exact: true }).click()
+    const dialog = page.getByRole('dialog', { name: 'Hollow County', exact: true })
+    await expect(dialog).toHaveCSS('opacity', '1')
+    const geometry = () => dialog.evaluate(element => {
+      const frame = element.getBoundingClientRect()
+      const heading = element.querySelector('.show-modal-heading')!.getBoundingClientRect()
+      return { height: frame.height, width: frame.width, heading: heading.top - frame.top }
+    })
+    const initial = await geometry()
+    try {
+      if (first === 'episodes') {
+        releaseEpisodes()
+        await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeEnabled()
+      } else {
+        releaseParties()
+        await expect(dialog.getByRole('tab', { name: 'Episodes', exact: true })).toBeVisible()
+      }
+      await expect.poll(geometry).toEqual(initial)
+      if (first === 'parties') await dialog.getByRole('tab', { name: 'Details', exact: true }).click()
+      releaseEpisodes()
+      releaseParties()
+      await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeEnabled()
+      await expect(dialog.locator('.show-modal-live')).toBeVisible()
+      if (first === 'parties') await expect(dialog.getByRole('tab', { name: 'Details', exact: true })).toHaveAttribute('aria-selected', 'true')
+      await expect.poll(geometry).toEqual(initial)
+      for (const name of ['Parties', 'Details', 'Episodes']) {
+        await dialog.getByRole('tab', { name, exact: true }).click()
+        await expect.poll(geometry).toEqual(initial)
+      }
+      await expect(dialog.getByText('The first episode', { exact: true })).toBeVisible()
+      await expect.poll(() => dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+    } finally {
+      releaseEpisodes()
+      releaseParties()
+    }
+  })
+}

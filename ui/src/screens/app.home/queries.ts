@@ -34,11 +34,11 @@ export function useShowsQuery(titleType?: 'movie' | 'series', enabled = true) {
   })
 }
 
-export function useMyPartiesQuery() {
+export function useMyPartiesQuery(show?: AppShow) {
   const { data: user, isAuthenticated } = useAuth()
   return useInfiniteQuery({
-    queryKey: ['listing', user?.id, 'parties'],
-    queryFn: ({ pageParam, signal }) => get<AppCollection<AppParty>>('/api/me/parties', { page: pageParam }, signal),
+    queryKey: show ? ['listing', user?.id, 'parties', show.id] : ['listing', user?.id, 'parties'],
+    queryFn: ({ pageParam, signal }) => get<AppCollection<AppParty>>('/api/me/parties', { page: pageParam, ...(show && { show_id: show.id }) }, signal),
     initialPageParam: 1,
     getNextPageParam: nextPage,
     enabled: isAuthenticated,

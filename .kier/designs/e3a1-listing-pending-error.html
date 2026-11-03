@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listing Loading States</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.state{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--mut)}
+.state .seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.state .seg button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;padding:8px 12px;cursor:pointer}
+.state .seg button+button{border-left:1px solid var(--line)}
+.state .seg button[aria-pressed="true"]{color:var(--ink);background:var(--code);font-weight:600}
+.state .rp{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.state .rp:hover{border-color:var(--mut)}
+.state .rp:first-of-type{margin-left:auto}
+.frame{position:relative;height:clamp(600px,calc(100vh - 110px),820px);margin-top:12px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#090c11;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.frame>.scroll{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:220px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup: the shipped listing (ui/src/screens/app.home/AuthHome/style.css, desktop) ───────────── */
+.listing-home{--color-primary:#E8368F;--listing-muted:#8899a6;position:relative;min-height:100%;color:#fff;background:#090c11;font:14px/1.4 'halyard-display','Outfit',sans-serif;-webkit-font-smoothing:antialiased}
+.listing-home *{box-sizing:border-box}
+.listing-home h1,.listing-home h2,.listing-home h3,.listing-home p,.listing-home ol{margin:0}
+.listing-home button,.listing-home input{font:inherit;color:inherit;background:none;border:0;padding:0}
+.listing-home button{cursor:pointer}
+.listing-home a{color:inherit;text-decoration:none;cursor:pointer}
+.listing-shell{max-width:1600px;margin:0 auto}
+.listing-navigation{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:36px;min-height:76px;padding:12px 40px;background:rgba(9,12,17,.95)}
+.ui-logo{color:#fff;font:700 20px 'Work Sans',sans-serif}
+.ui-logo::first-letter{color:var(--color-primary)}
+.listing-tabs{display:flex;align-items:center;gap:26px}
+.listing-tabs button{position:relative;padding:10px 0;color:#929296;font-size:15px;font-weight:700}
+.listing-tabs button:hover,.listing-tabs button[aria-selected=true]{color:#fff}
+.listing-tabs button::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:2px;background:var(--color-primary);transform:scaleX(0);transition:transform .3s}
+.listing-tabs button[aria-selected=true]::after{transform:scaleX(1)}
+.listing-search{position:relative;margin-left:auto;display:flex;align-items:center;gap:10px;width:250px;height:42px;padding:0 12px 0 14px;color:#969a9e;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:12px}
+.listing-search input{flex:1;width:100%;min-width:0;outline:none}
+.listing-search input::placeholder{color:#909196;font-size:13px}
+.listing-search kbd{padding:2px 5px;border:1px solid #424448;border-radius:4px;font-size:11px;font-family:inherit}
+.ui-avatar{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--c,#E8368F);color:#10171E;font:700 12px/1 'Work Sans',sans-serif;font-style:normal;flex:none}
+.listing-account .ui-avatar{color:#fff}
+.listing-artwork{position:absolute;inset:0;width:100%;height:100%;background-color:#0b0f14;background-size:cover}
+.listing-featured{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;height:440px;margin:12px 40px 0}
+.listing-featured-stage{position:relative;overflow:hidden;border-radius:20px;background:#10151c;border:1px solid #ffffff0f}
+.listing-featured-slide{position:absolute;inset:0}
+.listing-featured-shade{position:absolute;inset:0;background:linear-gradient(90deg,#090c11b3,transparent 100%),linear-gradient(0deg,#090c11eb,#090c1110 95%)}
+.listing-featured-copy{position:absolute;left:40px;right:30px;bottom:38px;max-width:540px}
+.listing-featured-meta{color:#ffffffc7;font:600 12px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.listing-featured-copy h1{margin:14px 0 12px;font-size:clamp(40px,5.3vw,76px);font-weight:800;line-height:.98;letter-spacing:-.025em}
+.listing-featured-copy p{max-width:440px;margin-bottom:22px;color:#ffffffcc;font-size:15.5px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.listing-featured-actions{display:flex;flex-wrap:wrap;gap:12px}
+.ui-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 22px !important;border-radius:24px;background:#ffffff1c !important;font:700 11px 'Work Sans',sans-serif !important;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.ui-button.is-primary{background:var(--color-primary) !important}
+.ui-button:hover{filter:brightness(1.15)}
+.ui-button.sm{height:34px;padding:0 16px !important;font-size:10.5px !important}
+.listing-carousel-toggle{position:absolute;right:14px;top:14px;z-index:2;display:grid !important;place-items:center;width:32px;height:32px;border-radius:50%;background:#090c1177 !important;border:1px solid #ffffff40 !important}
+.listing-featured-list{display:flex;flex-direction:column;gap:6px;list-style:none;padding:0;margin:0;min-width:0}
+.listing-featured-list li{display:flex;flex:1;min-height:0}
+.listing-featured-list button{position:relative;display:flex;flex:1;align-items:center;overflow:hidden;padding:0 18px;background:#ffffff04;border-radius:14px;text-align:left}
+.listing-featured-list button:hover{background:#ffffff0c}
+.listing-featured-list button[aria-current=true]{background:#ffffff12}
+.listing-featured-list .listing-artwork{left:auto;right:0;top:50%;width:64%;height:auto;aspect-ratio:16/9;opacity:.26;transform:translateY(-50%) scale(1.06);-webkit-mask-image:linear-gradient(90deg,transparent,#0007 42%,#000);mask-image:linear-gradient(90deg,transparent,#0007 42%,#000)}
+.listing-featured-list button[aria-current=true] .listing-artwork{opacity:.52;transform:translateY(-50%)}
+.listing-featured-list button>span{position:relative;min-width:0}
+.listing-featured-list b{display:block;font-size:15px;font-weight:700}
+.listing-featured-list small{display:block;margin-top:2px;font-size:12px;color:var(--listing-muted)}
+.listing-carousel-progress{position:absolute;left:0;bottom:0;height:2px;background:var(--color-primary);animation:listing-fill 6s linear infinite}
+@keyframes listing-fill{from{width:0}to{width:100%}}
+.listing-body{padding:36px 40px 80px}
+.listing-body>*+*{margin-top:44px}
+.listing-section-heading{display:flex;align-items:baseline;gap:10px;margin-bottom:20px}
+.listing-section-heading h2{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.listing-section-heading>span{color:var(--listing-muted);font:600 12px 'Work Sans',sans-serif}
+.listing-section-heading>button{margin-left:auto;padding:5px 0;color:#cccfd3;font-size:13px}
+.listing-section-heading>button:hover{color:var(--color-primary)}
+.listing-party-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px 16px;padding:6px 0}
+.listing-party-card{position:relative;display:block;min-width:0;aspect-ratio:16/9;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px #ffffff12;outline:2px solid transparent;outline-offset:4px;transition:outline-color .25s}
+.listing-party-card:hover{outline:2px solid #fff}
+.listing-party-shade{position:absolute;inset:0;background:linear-gradient(0deg,#0a0e14f5 18%,#0a0e1414 95%)}
+.listing-party-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px}
+.listing-party-badges>span{padding:5px 9px;border-radius:99px;background:#10171ed9;font:700 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.listing-party-badges i{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:var(--color-primary)}
+.listing-party-content{position:absolute;bottom:12px;left:14px;right:14px}
+.listing-party-content h3{font-size:19px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.listing-party-content p{margin:1px 0 9px;color:#ffffffb3;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listing-party-progress{height:3px;margin-bottom:9px;border-radius:4px;overflow:hidden;background:#ffffff30}
+.listing-party-progress i{display:block;height:100%;border-radius:inherit;background:var(--color-primary)}
+.listing-party-members{display:flex;align-items:center;gap:10px}
+.listing-party-members .avs{display:inline-flex}
+.listing-party-members .ui-avatar{width:28px;height:28px;font-size:11px;border:2px solid #10171e}
+.listing-party-members .ui-avatar+.ui-avatar{margin-left:-7px}
+.listing-party-members>span{min-width:0;color:#ffffffb3;font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.listing-show-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px 16px}
+.listing-show-trigger{display:block;width:100%;text-align:left}
+.listing-show-thumbnail{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:10px;box-shadow:0 0 0 1px #ffffff12}
+.listing-show-trigger h3{margin-top:10px;font-size:15px;font-weight:600}
+.listing-show-trigger>span{color:var(--listing-muted);font-size:12.5px}
+.listing-empty{padding:36px 0;color:var(--listing-muted);font-size:16px}
+.listing-status{padding:24px;background:#ffffff06;border:1px solid #ffffff12;border-radius:12px;color:#b8c0c9}
+.listing-status button{padding:6px 12px;color:#fff;border:1px solid #ffffff40;border-radius:6px}
+.listing-featured-placeholder{height:440px;margin:12px 40px 0}
+.listing-card-placeholder{height:auto;aspect-ratio:16/9}
+.listing-show-placeholder{height:auto;aspect-ratio:16/11}
+/* UiSkeleton */
+.ui-skeleton{display:block;flex-shrink:0;height:1em;border-radius:4px;background:rgb(255 255 255/8%);animation:ui-skeleton-pulse 1.6s ease-in-out infinite alternate}
+@keyframes ui-skeleton-pulse{to{opacity:.35}}
+/* InfiniteScroll's unstyled alert, as browsers draw it */
+.raw-alert{font:13px/1.4 system-ui,sans-serif;color:#fff;padding:0 40px 40px;margin-top:-50px}
+.raw-alert button{font:13px system-ui,sans-serif !important;color:#000 !important;background:#efefef !important;border:1px solid #767676 !important;border-radius:3px;padding:1px 6px !important}
+.art::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.fade-in{animation:fadeIn .5s ease backwards}
+@keyframes fadeIn{from{opacity:0}}
+
+/* ───────────── Shaped skeletons (A, B, D) ───────────── */
+.sk{display:block;flex:none;border-radius:4px;background:rgb(255 255 255/8%);animation:ui-skeleton-pulse 1.6s ease-in-out infinite alternate}
+.sk-copy{position:absolute;left:40px;bottom:38px;width:min(540px,70%)}
+.sk-li{display:flex;flex:1;flex-direction:column;justify-content:center;gap:8px;padding:0 18px;border-radius:14px;background:#ffffff04}
+.sk-pc{position:relative;aspect-ratio:16/9;border-radius:14px;background:#ffffff05;box-shadow:0 0 0 1px #ffffff0d}
+.sk-pc .chips{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between}
+.sk-pc .low{position:absolute;left:14px;right:14px;bottom:12px}
+.sk-sc .th{aspect-ratio:16/9;width:100%;border-radius:10px}
+.sk-row{display:flex;align-items:center;gap:10px}
+.collapse{display:grid;grid-template-rows:1fr;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1),opacity .3s,margin-top .45s}
+.collapse>div{min-height:0;overflow:hidden}
+.collapse.shut{grid-template-rows:0fr;opacity:0;margin-top:0 !important}
+
+/* A — shaped skeletons, errors in place */
+.a-fail{display:flex;align-items:center;gap:24px;margin:12px 40px 0;padding:28px 32px;border-radius:20px;background:#10151c;border:1px solid #ffffff0f}
+.a-fail b{display:block;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.a-fail span{display:block;margin-top:3px;color:var(--listing-muted);font-size:14px}
+.a-fail .ui-button{margin-left:auto}
+.a-err{margin-left:auto;color:var(--listing-muted);font-size:13px;font-style:normal}
+.a-err button{margin-left:6px;color:#fff;font-weight:600}
+.a-err button:hover{color:var(--color-primary)}
+.a-more{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:34px;padding-top:26px;border-top:1px solid #ffffff12;color:#b8c0c9}
+
+/* B — frozen footprint */
+.v-b .sk{background:linear-gradient(100deg,#ffffff0a 30%,#ffffff17 50%,#ffffff0a 70%) fixed;background-size:200vw 100%;animation:sweep 1.8s linear infinite}
+@keyframes sweep{from{background-position:100vw 0}to{background-position:-100vw 0}}
+.frozen{position:relative}
+.frozen .sk{animation:none;background:#ffffff06}
+.b-over{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;background:radial-gradient(closest-side,#090c11e6 45%,#090c1100)}
+.b-over b{font-size:18px;font-weight:700}
+.b-over span{color:var(--listing-muted);font-size:13.5px}
+.b-over .ui-button{margin-top:12px}
+.b-over.row{flex-direction:row;gap:16px}
+.b-over.row .ui-button{margin-top:0}
+.b-fade{-webkit-mask-image:linear-gradient(180deg,#000 30%,transparent);mask-image:linear-gradient(180deg,#000 30%,transparent)}
+
+/* C — one page, one state */
+.v-c .sk{animation:none;background:#ffffff07}
+.c-bar{position:absolute;left:0;right:0;bottom:0;height:2px;overflow:hidden}
+.c-bar::before{content:"";position:absolute;top:0;bottom:0;width:28%;background:var(--color-primary);animation:cbar 1.15s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes cbar{from{left:-28%}to{left:100%}}
+.c-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:400px;margin:12px 40px 0;text-align:center}
+.c-empty svg{color:#5d6b78;margin-bottom:10px}
+.c-empty h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.c-empty p{color:var(--listing-muted);font-size:15px}
+.c-empty .acts{display:flex;align-items:center;gap:14px;margin-top:20px}
+.c-empty .acts small{color:var(--listing-muted);font-size:12.5px}
+.c-dock{position:sticky;bottom:0;height:0;z-index:40}
+.c-toast{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;white-space:nowrap;padding:10px 10px 10px 18px;border-radius:12px;background:#1c2938;box-shadow:0 20px 40px -12px #000,0 0 0 1px #ffffff14;font-size:13.5px;animation:toastIn .35s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}}
+.c-toast button{font-weight:700;color:var(--color-primary)}
+.c-toast .x{display:grid;place-items:center;width:28px;height:28px;border-radius:8px;color:#8899a6}
+.c-toast .x:hover{background:#ffffff10;color:#fff}
+
+/* D — status strip */
+.v-d .sk{animation-delay:calc(var(--i,0) * 110ms)}
+.v-d .frozen .sk{animation:none}
+.d-strip{display:flex;align-items:center;gap:12px;height:40px;margin:0 -40px -12px;padding:0 40px;background:#15202b;border-top:1px solid #ffffff10;font-size:13px;color:#cdd5dd;animation:stripIn .3s ease backwards}
+@keyframes stripIn{from{opacity:0;transform:translateY(-6px)}}
+.d-strip .dot{width:7px;height:7px;border-radius:50%;background:#f7c948;flex:none}
+.d-strip.ok .dot{background:#65d6ad}
+.d-strip small{color:var(--listing-muted);font-size:12.5px}
+.d-strip button{margin-left:auto;height:28px;padding:0 12px;border-radius:8px;background:#ffffff14;font:600 12px 'Work Sans',sans-serif;color:#fff}
+.d-strip button:hover{background:#ffffff22}
+.listing-navigation.has-strip{flex-wrap:wrap;row-gap:12px}
+.listing-navigation.has-strip .d-strip{flex-basis:calc(100% + 80px)}
+
+@media (prefers-reduced-motion:reduce){.listing-home *,.listing-home *::before,.listing-home *::after{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<nav class="mm" id="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+  <section class="brief">
+    <p class="eyebrow">Care.tv · listing · pending &amp; error states · follows c41d-movie-listing-nav-search.html (F2c2b2)</p>
+    <h1>The listing should show what's loading and what broke, in place.</h1>
+    <div class="cards">
+      <div>Hero and titles load and fail together.</div>
+      <div>Recent parties is its own request.</div>
+      <div>No parties: the section disappears.</div>
+      <div>Page two can fail on its own.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-now" data-id="Now" data-name="What ships today" data-key="now">
+    <div class="var-h"><span class="id">Now</span><h2>What ships today</h2></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note bad">Hero placeholder has no list column; layout jumps on load.</div>
+      <div class="note bad">No party heading while loading; titles count reads “0”.</div>
+      <div class="note bad">Catalog failure drops the hero entirely.</div>
+      <div class="note bad">Load-more error is an unstyled button.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-a" data-id="A" data-name="Shaped skeletons, errors in place" data-key="a">
+    <div class="var-h"><span class="id">A</span><h2>Shaped skeletons, errors in place</h2></div>
+    <div class="frame"><div class="scroll listing-home v-a"></div></div>
+    <div class="notes">
+      <div class="note good">Placeholders match their cards; nothing moves on load.</div>
+      <div class="note good">Failed parties cost one heading line.</div>
+      <div class="note bad">Catalog error panel is shorter than the hero, so the page shifts.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-b" data-id="B" data-name="Frozen footprint" data-key="b">
+    <div class="var-h"><span class="id">B</span><h2>Frozen footprint</h2></div>
+    <div class="frame"><div class="scroll listing-home v-b"></div></div>
+    <div class="notes">
+      <div class="note good">On failure the skeleton freezes under the message.</div>
+      <div class="note good">One shimmer sweeps the whole page.</div>
+      <div class="note bad">Frozen grey cards look broken, not calm.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-b2" data-id="B2" data-name="Frozen footprint, inline load-more" data-key="b2">
+    <div class="var-h"><span class="id">B2</span><h2>Frozen footprint, inline load-more</h2></div>
+    <div class="frame"><div class="scroll listing-home v-b"></div></div>
+    <div class="notes">
+      <div class="note good">B everywhere, except load-more fails as A's quiet row.</div>
+      <div class="note good">No frozen cards trailing a grid that already rendered.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-c" data-id="C" data-name="One page, one state" data-key="c">
+    <div class="var-h"><span class="id">C</span><h2>One page, one state</h2></div>
+    <div class="frame"><div class="scroll listing-home v-c"></div></div>
+    <div class="notes">
+      <div class="note good">Waits for both requests; changes once.</div>
+      <div class="note good">Catalog down, parties still rejoinable.</div>
+      <div class="note bad">Slow parties hold back the page.</div>
+      <div class="note bad">Toasts are easy to miss.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-d" data-id="D" data-name="Status strip under the nav" data-key="d">
+    <div class="var-h"><span class="id">D</span><h2>Status strip under the nav</h2></div>
+    <div class="frame"><div class="scroll listing-home v-d"></div></div>
+    <div class="notes">
+      <div class="note good">One home for every error, visible anywhere.</div>
+      <div class="note good">Auto-retries, then says “Back online”.</div>
+      <div class="note bad">Far from the section that failed.</div>
+    </div>
+  </section>
+
+  <section class="further">
+    <h2>Further Actions</h2>
+    <div class="cards">
+      <div><b>Explore</b> From B2, try the Parties, Movies and Series tabs.</div>
+      <div><b>Remix</b> B2 with D's auto-retry countdown on the catalog error.</div>
+      <div><b>Settle</b> B2 as the base for implementation.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const FILE = '.kier/designs/e3a1-listing-pending-error.html';
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8'};
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', type:'movie', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings', s:'A late-night radio host starts hearing tomorrow’s callers tonight.'},
+  {id:'hollow', t:'Hollow County', type:'series', y:2023, len:'3 seasons', c:['#a3e635','#14240a'], p:'stripes', s:'A small-town clerk keeps finding the same name in every cold case.'},
+  {id:'paper', t:'Paper Moons', type:'movie', y:2024, len:'1h 52m', c:['#ff7a59','#3b0d4c'], p:'sun', s:'Two sisters keep their late father’s lantern shop open for one last festival.'},
+  {id:'orbit', t:'Orbit Diner', type:'series', y:2024, len:'2 seasons', c:['#f7c948','#7a1f4d'], p:'dots', s:'The only all-night diner on a space station, and its very tired staff.'},
+  {id:'ferry', t:'Night Ferry', type:'movie', y:2023, len:'1h 41m', c:['#1fd1f9','#0b1b3f'], p:'stripes', s:'Eleven passengers, one crossing, and a captain who won’t turn back.'},
+  {id:'under', t:'The Understudies', type:'series', y:2025, len:'1 season', c:['#c084fc','#2a0e5c'], p:'split', s:'Five backups wait in the wings of a show that refuses to close.'},
+  {id:'lunch', t:'The Long Lunch', type:'movie', y:2022, len:'1h 38m', c:['#f7c948','#b4380c'], p:'sun', s:'A retirement lunch runs three days and nobody wants to leave.'},
+  {id:'signal', t:'Signal & Noise', type:'series', y:2022, len:'2 seasons', c:['#22d3ee','#082f49'], p:'rings', s:'An observatory crew decodes a message that seems to be about them.'},
+  {id:'glass', t:'Glasshouse', type:'movie', y:2024, len:'1h 57m', c:['#65d6ad','#0d2b2a'], p:'split', s:'A botanist’s greenhouse holds one plant too many.'},
+  {id:'lantern', t:'Lantern Street', type:'series', y:2021, len:'4 seasons', c:['#fbbf24','#3a1503'], p:'aurora', s:'Four generations, one row of shops, and a street that never sleeps.'},
+  {id:'kite', t:'Kite Season', type:'movie', y:2021, len:'1h 46m', c:['#7dd3fc','#9d174d'], p:'aurora', s:'A boy and his grandmother build a kite big enough to carry a letter.'},
+  {id:'neon', t:'Neon Gardeners', type:'series', y:2025, len:'1 season', c:['#4ade80','#3b0764'], p:'dots', s:'Rooftop farmers take on a developer one tomato at a time.'},
+  {id:'tide', t:'Low Tide', type:'movie', y:2023, len:'1h 33m', c:['#38bdf8','#0f172a'], p:'sun', s:'A lighthouse keeper’s last week on the job.'},
+  {id:'chorus', t:'Chorus Line Cafe', type:'series', y:2024, len:'2 seasons', c:['#fb7185','#3f0d1d'], p:'stripes', s:'Every regular has a song, and the owner has heard them all.'},
+  {id:'static', t:'After Static', type:'movie', y:2025, len:'2h 11m', c:['#a78bfa','#120a2e'], p:'rings', s:'A broadcast engineer chases a signal across three borders.'}
+];
+const PARTIES = [
+  {s:'hollow', st:'Watching now', live:true, det:'Season 2 · The Clerk', p:46, m:['Joyce','Nico','Mira']},
+  {s:'velvet', st:'Last watched yesterday', det:'Movie · 1:12:40 of 2:04:00', p:58, m:['Joyce']},
+  {s:'orbit', st:'Last watched 3 days ago', det:'Season 1 · Last Call', p:21, m:['Leo','Mira']}
+];
+const PAGE = 10;
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const typeL = s => s.type === 'movie' ? 'Movie' : 'Series';
+const SEARCH = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>';
+const PLAY = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+const RETRY = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>';
+const X = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const TV = '<svg viewBox="0 0 48 48" width="44" height="44" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="38" height="25" rx="4"/><path d="M17 42h14M18 4l6 6 6-6M6 6l36 36"/></svg>';
+
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'sun': return `radial-gradient(circle at 68% 36%, ${a} 0 17%, ${a}00 17.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), linear-gradient(118deg, ${a}38 0 52%, ${a}00 52.1%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+    default: return `radial-gradient(55% 45% at 22% 28%, ${a}dd, ${a}00 70%), radial-gradient(60% 50% at 85% 75%, ${a}66, ${a}00 70%), linear-gradient(160deg, ${b}, #06060b 80%)`;
+  }
+}
+const artwork = s => `<div class="listing-artwork art" style="background:${art(s)}"></div>`;
+const av = n => `<i class="ui-avatar" style="--c:${FR[n]}">${n[0]}</i>`;
+const bar = (w, h, extra = '') => `<i class="sk" style="width:${w};height:${h}px;${extra}"></i>`;
+
+/* ───── real, loaded regions (match the shipped components) ───── */
+function nav(extra = '', cls = ''){
+  return `<nav class="listing-navigation ${cls}">
+    <a class="listing-logo"><span class="ui-logo">Care.tv</span></a>
+    <div class="listing-tabs">${['All','Movies','Series','Parties'].map((l,i) => `<button aria-selected="${i === 0}">${l}</button>`).join('')}</div>
+    <label class="listing-search">${SEARCH}<input placeholder="Search titles &amp; parties"><kbd>/</kbd></label>
+    <a class="listing-account"><i class="ui-avatar">K</i></a>${extra}
+  </nav>`;
+}
+function featured(){
+  const items = SHOWS.slice(0, 5), s = items[0];
+  return `<section class="listing-featured fade-in">
+    <div class="listing-featured-stage"><article class="listing-featured-slide">${artwork(s)}<div class="listing-featured-shade"></div>
+      <div class="listing-featured-copy"><div class="listing-featured-meta">${typeL(s)} · ${s.y} · ${s.len}</div><h1>${esc(s.t)}</h1><p>${esc(s.s)}</p>
+        <div class="listing-featured-actions"><button class="ui-button is-primary">${PLAY} Start a party</button><button class="ui-button">Details</button></div></div></article>
+      <button class="listing-carousel-toggle">${PAUSE}</button></div>
+    <ol class="listing-featured-list">${items.map((it,i) => `<li><button ${i === 0 ? 'aria-current="true"' : ''}>${artwork(it)}<span><b>${esc(it.t)}</b><small>${typeL(it)} · ${it.y} · ${it.len}</small></span>${i === 0 ? '<i class="listing-carousel-progress"></i>' : ''}</button></li>`).join('')}</ol>
+  </section>`;
+}
+function partyCard(p){
+  const s = byId(p.s);
+  return `<a class="listing-party-card">${artwork(s)}<div class="listing-party-shade"></div>
+    <div class="listing-party-badges"><span>${p.live ? '<i></i>' : ''}${p.st}</span><span>${typeL(s)}</span></div>
+    <div class="listing-party-content"><h3>${esc(s.t)}</h3><p>${p.det}</p>
+      <div class="listing-party-progress"><i style="width:${p.p}%"></i></div>
+      <div class="listing-party-members"><span class="avs">${p.m.map(av).join('')}</span><span>${p.m.join(', ')}</span></div></div></a>`;
+}
+function parties(right = '<button>See all parties <span>→</span></button>', body = null, count = 3){
+  return `<section class="listing-section">
+    <div class="listing-section-heading"><h2>Recent parties</h2>${count != null ? `<span>${count}</span>` : ''}${right}</div>
+    ${body ?? `<div class="listing-party-grid fade-in">${PARTIES.map(partyCard).join('')}</div>`}
+  </section>`;
+}
+const showCard = (s, i) => `<button class="listing-show-trigger fade-in" style="animation-delay:${(i % PAGE) * 30}ms"><div class="listing-show-thumbnail">${artwork(s)}</div><h3>${esc(s.t)}</h3><span>${typeL(s)} · ${s.y}</span></button>`;
+function titles(st, tail = '', count = 48){
+  const n = st.more === 'done' ? SHOWS.length : PAGE;
+  return `<section class="listing-section"><div class="listing-section-heading"><h2>All titles</h2>${count != null ? `<span>${count}</span>` : ''}</div>
+    <div class="listing-show-grid">${SHOWS.slice(0, n).map(showCard).join('')}${tail}</div></section>`;
+}
+
+/* ───── shaped placeholders (A, B, D) ───── */
+function heroSk(){
+  return `<section class="listing-featured">
+    <div class="listing-featured-stage"><div class="sk-copy">${bar('150px',11)}${bar('62%',60,'margin-top:18px;border-radius:8px')}${bar('84%',13,'margin-top:20px')}${bar('70%',13,'margin-top:8px')}
+      <div style="display:flex;gap:12px;margin-top:26px">${bar('164px',44,'border-radius:24px')}${bar('104px',44,'border-radius:24px')}</div></div></div>
+    <ol class="listing-featured-list">${[56,48,62,44,52].map((w,i) => `<li style="--i:${i}"><div class="sk-li">${bar(w+'%',13)}${bar('34%',10)}</div></li>`).join('')}</ol>
+  </section>`;
+}
+const partySkCard = i => `<div class="sk-pc" style="--i:${i}"><div class="chips">${bar('96px',22,'border-radius:99px')}${bar('52px',22,'border-radius:99px')}</div>
+  <div class="low">${bar('52%',17)}${bar('36%',11,'margin-top:8px')}${bar('100%',3,'margin-top:12px')}
+  <div class="sk-row" style="margin-top:9px">${bar('28px',28,'border-radius:50%')}${bar('28px',28,'border-radius:50%;margin-left:-14px')}${bar('30%',10)}</div></div></div>`;
+const partySk = () => `<div class="listing-party-grid">${[0,1,2].map(partySkCard).join('')}</div>`;
+const showSk = (n, from = 0) => Array.from({length:n}, (_, i) => `<div class="sk-sc" style="--i:${(from + i) % 5}"><i class="sk th"></i>${bar(['68%','54%','74%','60%','48%'][i % 5],13,'margin-top:12px')}${bar('36%',10,'margin-top:8px')}</div>`).join('');
+const titlesSk = (count = null) => `<section class="listing-section"><div class="listing-section-heading"><h2>All titles</h2>${count ?? ''}</div><div class="listing-show-grid">${showSk(PAGE)}</div></section>`;
+const collapsing = inner => `<div class="collapse" data-collapse><div>${inner}</div></div>`;
+
+/* ───── variations ───── */
+const V = {};
+
+V.now = st => {
+  const body = [];
+  let hero = '';
+  if(st.cat === 'pending') hero = `<div class="listing-featured-placeholder"><i class="ui-skeleton" style="height:100%;border-radius:14px"></i></div>`;
+  else if(st.cat === 'ok') hero = featured();
+  if(st.par === 'pending') body.push(`<div class="listing-party-grid">${[0,1,2].map(() => '<i class="ui-skeleton listing-card-placeholder" style="border-radius:14px"></i>').join('')}</div>`);
+  else if(st.par === 'error') body.push(`<div class="listing-status">Unable to load your parties. <button data-retry="par">Retry</button></div>`);
+  else if(st.par === 'empty') body.push(parties('<button>See all parties <span>→</span></button>', '<p class="listing-empty">Your parties will appear here. Pick a title to start watching together.</p>', 0));
+  else body.push(parties());
+  if(st.cat === 'pending') body.push(`<section class="listing-section"><div class="listing-section-heading"><h2>All titles</h2><span>0</span></div><div class="listing-show-grid">${'<i class="ui-skeleton listing-show-placeholder" style="border-radius:14px"></i>'.repeat(5)}</div></section>`);
+  else if(st.cat === 'error') body.push(`<div class="listing-status">Unable to load titles. <button data-retry="cat">Retry</button></div>`);
+  else body.push(titles(st, st.more === 'pending' ? '<i class="ui-skeleton listing-show-placeholder" style="border-radius:14px"></i>'.repeat(5) : ''));
+  return `${nav()}${hero}<div class="listing-body">${body.join('')}</div>${st.more === 'error' ? '<div class="raw-alert">Unable to load more. <button data-retry="more">Retry</button></div>' : ''}`;
+};
+
+function partiesShaped(st, errRight){
+  if(st.par === 'pending') return parties('', partySk(), null);
+  if(st.par === 'collapsing') return collapsing(parties('', partySk(), null));
+  if(st.par === 'error') return errRight;
+  if(st.par === 'empty') return '';
+  return parties();
+}
+
+V.a = st => {
+  let hero, tl;
+  if(st.cat === 'pending'){ hero = heroSk(); tl = titlesSk(); }
+  else if(st.cat === 'error'){
+    hero = `<section class="a-fail fade-in"><div><b>Titles didn't load</b><span>Check your connection, then try again.</span></div><button class="ui-button" data-retry="cat">${RETRY} Try again</button></section>`;
+    tl = '';
+  } else {
+    hero = featured();
+    tl = titles(st, st.more === 'pending' ? showSk(5) : '');
+    if(st.more === 'error') tl += `<div class="a-more fade-in"><span>Couldn't load more titles.</span><button class="ui-button sm" data-retry="more">${RETRY} Retry</button></div>`;
+  }
+  const pr = partiesShaped(st, parties(`<em class="a-err">Couldn't load your parties.<button data-retry="par">Retry</button></em>`, '', null));
+  return `${nav()}${hero}<div class="listing-body">${pr}${tl}</div>`;
+};
+
+const frozenFootprint = inlineMore => st => {
+  let hero, tl;
+  if(st.cat === 'pending'){ hero = heroSk(); tl = titlesSk(); }
+  else if(st.cat === 'error'){
+    hero = heroSk().replace('<div class="listing-featured-stage">', `<div class="listing-featured-stage"><div class="b-over fade-in"><b>Titles didn't load</b><span>Check your connection, then try again.</span><button class="ui-button" data-retry="cat">${RETRY} Try again</button></div>`).replace('class="listing-featured"', 'class="listing-featured frozen"');
+    tl = `<section class="listing-section frozen b-fade"><div class="listing-section-heading"><h2>All titles</h2></div><div class="listing-show-grid">${showSk(5)}</div></section>`;
+  } else {
+    hero = featured();
+    tl = titles(st, st.more === 'pending' ? showSk(5) : '');
+    if(st.more === 'error' && inlineMore) tl += `<div class="a-more fade-in"><span>Couldn't load more titles.</span><button class="ui-button sm" data-retry="more">${RETRY} Retry</button></div>`;
+    else if(st.more === 'error') tl += `<div class="frozen" style="margin-top:26px"><div class="listing-show-grid">${showSk(5)}</div><div class="b-over row fade-in"><b style="font-size:15px">Couldn't load more titles</b><button class="ui-button sm" data-retry="more">${RETRY} Retry</button></div></div>`;
+  }
+  const pr = partiesShaped(st, parties('', `<div class="frozen">${partySk()}<div class="b-over fade-in"><b>Your parties didn't load</b><button class="ui-button sm" data-retry="par">${RETRY} Retry</button></div></div>`, null));
+  return `${nav()}${hero}<div class="listing-body">${pr}${tl}</div>`;
+};
+
+V.b = frozenFootprint(false);
+V.b2 = frozenFootprint(true);
+
+V.c = st => {
+  const busy = st.cat === 'pending' || st.par === 'pending' || st.more === 'pending';
+  const top = nav(busy ? '<i class="c-bar"></i>' : '');
+  if(st.cat === 'pending' || (st.par === 'pending' && st.boot)){
+    return `${top}${heroSk()}<div class="listing-body">${parties('', partySk(), null)}${titlesSk()}</div>`;
+  }
+  let toast = '';
+  if(st.par === 'error') toast = `<div class="c-dock"><div class="c-toast">Your parties didn't load.<button data-retry="par">Retry</button><button class="x" data-dismiss>${X}</button></div></div>`;
+  if(st.more === 'error') toast = `<div class="c-dock"><div class="c-toast">More titles didn't load.<button data-retry="more">Retry</button><button class="x" data-dismiss>${X}</button></div></div>`;
+  const pr = st.par === 'ok' ? parties() : '';
+  if(st.cat === 'error'){
+    return `${top}<section class="c-empty fade-in">${TV}<h1>Can't reach Care.tv right now</h1><p>Titles didn't load. ${st.par === 'ok' ? 'Your parties below still work.' : ''}</p>
+      <div class="acts"><button class="ui-button is-primary" data-retry="cat">${RETRY} Try again</button><small data-count>Trying again in ${st.wait}s</small></div></section>
+      ${pr ? `<div class="listing-body" style="padding-top:8px">${pr}</div>` : ''}${toast}`;
+  }
+  return `${top}${featured()}<div class="listing-body">${pr}${titles(st)}</div>${toast}`;
+};
+
+V.d = st => {
+  let strip = '';
+  if(st.flash) strip = `<div class="d-strip ok"><i class="dot"></i>Back online.</div>`;
+  else if(st.cat === 'error') strip = `<div class="d-strip"><i class="dot"></i>Can't reach Care.tv. <small data-count>Trying again in ${st.wait}s</small><button data-retry="cat">Retry now</button></div>`;
+  else if(st.par === 'error') strip = `<div class="d-strip"><i class="dot"></i>Your recent parties didn't load.<button data-retry="par">Retry</button></div>`;
+  else if(st.more === 'error') strip = `<div class="d-strip"><i class="dot"></i>More titles didn't load.<button data-retry="more">Retry</button></div>`;
+  let hero, tl;
+  if(st.cat === 'pending'){ hero = heroSk(); tl = titlesSk(); }
+  else if(st.cat === 'error'){ hero = heroSk().replace('class="listing-featured"', 'class="listing-featured frozen"'); tl = `<div class="frozen b-fade">${titlesSk()}</div>`; }
+  else { hero = featured(); tl = titles(st, st.more === 'pending' ? showSk(5) : ''); }
+  return `${nav(strip, strip ? 'has-strip' : '')}${hero}<div class="listing-body">${partiesShaped(st, '')}${tl}</div>`;
+};
+
+/* ───── state driver ───── */
+const PRESETS = [
+  ['Pending', {cat:'pending', par:'pending', more:'none'}],
+  ['Loading more', {cat:'ok', par:'ok', more:'pending'}],
+  ['Catalog failed', {cat:'error', par:'ok', more:'none'}],
+  ['Parties failed', {cat:'ok', par:'error', more:'none'}],
+  ['More failed', {cat:'ok', par:'ok', more:'error'}],
+  ['No parties', {cat:'ok', par:'empty', more:'none'}],
+  ['Loaded', {cat:'ok', par:'ok', more:'none'}]
+];
+const COLLAPSES = {a:1, b:1, b2:1, d:1};
+
+document.querySelectorAll('.var').forEach(v => {
+  const key = v.dataset.key, root = v.querySelector('.scroll');
+  let st = {}, timers = [], tick = null, fails = 0;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const clear = () => { timers.forEach(clearTimeout); timers = []; clearInterval(tick); tick = null; };
+
+  function render(){
+    root.innerHTML = V[key](st);
+    const c = root.querySelector('[data-collapse]');
+    if(c){ requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('shut'))); later(480, () => set({par:'empty'})); }
+    clearInterval(tick); tick = null;
+    if(st.cat === 'error' && root.querySelector('[data-count]')){
+      tick = setInterval(() => {
+        st.wait--;
+        const el = root.querySelector('[data-count]');
+        if(st.wait > 0){ if(el) el.textContent = `Trying again in ${st.wait}s`; return; }
+        // auto-retry: try, fail again, back off
+        clearInterval(tick); tick = null; fails++;
+        set({cat:'pending'});
+        later(900, () => set({cat:'error', wait: Math.min(60, 8 * 2 ** fails)}));
+      }, 1000);
+    }
+  }
+  function set(patch){
+    const prev = st;
+    st = {...st, ...patch};
+    if(COLLAPSES[key] && prev.par === 'pending' && st.par === 'empty') st.par = 'collapsing';
+    render();
+  }
+  function preset(i, scroll = true){
+    clear(); fails = 0;
+    row.querySelectorAll('.seg button').forEach((b, j) => b.setAttribute('aria-pressed', String(j === i)));
+    st = {...PRESETS[i][1], wait:8, flash:false, boot:true};
+    render();
+    if(scroll) root.scrollTop = st.more !== 'none' ? root.scrollHeight : 0;
+  }
+  function replay(empty){
+    clear(); fails = 0;
+    row.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    st = {cat:'pending', par:'pending', more:'none', wait:8, flash:false, boot:true};
+    root.scrollTop = 0;
+    render();
+    later(1200, () => set({cat:'ok'}));
+    later(2300, () => set({par: empty ? 'empty' : 'ok'}));
+  }
+
+  const row = document.createElement('div');
+  row.className = 'state';
+  row.innerHTML = `<span>State</span><div class="seg">${PRESETS.map(p => `<button>${p[0]}</button>`).join('')}</div>
+    <button class="rp" data-rp="0">Replay load</button><button class="rp" data-rp="1">Replay, no parties</button>`;
+  v.querySelector('.frame').before(row);
+  row.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if(!b) return;
+    if(b.dataset.rp) return replay(b.dataset.rp === '1');
+    preset([...row.querySelectorAll('.seg button')].indexOf(b));
+  });
+
+  root.addEventListener('click', e => {
+    const r = e.target.closest('[data-retry]'), d = e.target.closest('[data-dismiss]');
+    if(d){ d.closest('.c-dock').remove(); return; }
+    if(!r) return;
+    const k = r.dataset.retry;
+    clear();
+    set(k === 'more' ? {more:'pending', boot:false} : {[k]:'pending', boot:false});
+    later(1000, () => {
+      set(k === 'more' ? {more:'done'} : {[k]:'ok'});
+      if(key === 'd'){ set({flash:true}); later(1600, () => set({flash:false})); }
+    });
+  });
+
+  preset(0, false);
+});
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  ['Explore from this', 'More variations in this direction.', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and change something.', id => `Remix ${id} in ${FILE}: `],
+  ['Settle on this', 'Make it the direction.', id => `Settle on ${id} in ${FILE}`]
+];
+const menus = [];
+document.querySelectorAll('.var').forEach(v => {
+  const id = v.dataset.id, h = v.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick';
+  btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-haspopup', 'menu');
+  h.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  menu.innerHTML = VERBS.map((x, i) => `<button role="menuitem" data-i="${i}"><b>${x[0]}</b><span>${x[1]}</span></button>`).join('');
+  h.after(menu);
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  menu.after(out);
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+  menus.push(close);
+  btn.addEventListener('click', () => {
+    const open = menu.hidden;
+    menus.forEach(c => c());
+    menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', async e => {
+    const b = e.target.closest('button[data-i]');
+    if(!b) return;
+    const text = VERBS[Number(b.dataset.i)][2](id);
+    close();
+    out.hidden = false;
+    try{
+      await navigator.clipboard.writeText(text);
+      out.innerHTML = `<code>${esc(text)}</code><span class="ok">Copied</span>`;
+    }catch(err){
+      out.innerHTML = `<input readonly value="${esc(text)}">`;
+      out.querySelector('input').select();
+    }
+  });
+  document.addEventListener('click', e => { if(!h.contains(e.target) && !menu.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+});
+
+/* ───── minimap ───── */
+const vars = [...document.querySelectorAll('.var')];
+document.getElementById('mm').innerHTML = vars.map(v => `<a href="#${v.id}"><i></i><span><b>${v.dataset.id}</b>${v.dataset.name}</span></a>`).join('');
+const links = [...document.querySelectorAll('.mm a')];
+function syncMM(){
+  let best = 0, bd = Infinity;
+  vars.forEach((v, i) => { const d = Math.abs(v.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((a, i) => a.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMM, {passive:true});
+syncMM();
+</script>
+</body>
+</html>

@@ -16,7 +16,7 @@ const parties = [shows[1], shows[3], shows[0], shows[6]].map((show, index) => ({
   is_playing: index === 0, current_time: 1520, last_activity_at: '2026-11-02T18:00:00+08:00', invitations: [],
 }))
 
-async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolean } = {}) {
+async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolean; pageSize?: number } = {}) {
   await page.context().addCookies([{ name: 'app_token', value: 'listing-test-token', url: test.info().project.use.baseURL as string }])
   await page.routeWebSocket(/pusher/, socket => socket.close())
   let failed = false
@@ -35,7 +35,7 @@ async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolea
       const source = options.empty ? [] : path === '/api/shows'
         ? shows.filter(show => (!type || show.title_type === type) && show.title.toLowerCase().includes(q))
         : parties.filter(party => party.video.show.title.toLowerCase().includes(q))
-      const perPage = Number(url.searchParams.get('per_page') || 6)
+      const perPage = Number(url.searchParams.get('per_page') || options.pageSize || 6)
       const current = Number(url.searchParams.get('page') || 1)
       body = { data: source.slice((current - 1) * perPage, current * perPage), total: source.length, current_page: current, last_page: Math.max(1, Math.ceil(source.length / perPage)) }
     }
@@ -172,8 +172,8 @@ test('pagination appends titles without replacing the first page', async ({ page
 test('catalog errors can be retried and empty collections are explained', async ({ page }) => {
   await catalog(page, { failOnce: true })
   await page.goto('/')
-  await expect(page.getByRole('alert')).toContainText('Unable to load titles')
-  await page.getByRole('button', { name: 'Retry', exact: true }).click()
+  await expect(page.getByRole('alert')).toContainText("Titles didn't load")
+  await page.getByRole('button', { name: 'Try again', exact: true }).click()
   await expect(page.locator('.listing-show-card')).toHaveCount(6)
   await page.unroute('**/api/**')
   await catalog(page, { empty: true })
@@ -182,6 +182,153 @@ test('catalog errors can be retried and empty collections are explained', async 
   await page.getByRole('tab', { name: 'Parties', exact: true }).click()
   await expect(page.getByText('Your parties will appear here. Pick a title to start watching together.')).toBeVisible()
 })
+
+test('listing skeletons load independently and an empty recent section collapses away', async ({ page }) => {
+  await catalog(page)
+  let releaseTitles = () => {}
+  let releaseParties = () => {}
+  const titlesReady = new Promise<void>(resolve => { releaseTitles = resolve })
+  const partiesReady = new Promise<void>(resolve => { releaseParties = resolve })
+  await page.route('**/api/**', async route => {
+    const path = new URL(route.request().url()).pathname
+    if (path === '/api/shows') await titlesReady
+    if (path === '/api/me/parties') {
+      await partiesReady
+      return route.fulfill({ json: { data: [], total: 0, current_page: 1, last_page: 1 } })
+    }
+    await route.fallback()
+  })
+  await page.goto('/')
+  const featured = page.getByRole('region', { name: 'Featured', exact: true })
+  const recent = page.getByRole('region', { name: 'Recent parties' })
+  await expect(featured).toHaveAttribute('aria-busy', 'true')
+  await expect(featured.locator('.listing-skeleton-featured-item')).toHaveCount(5)
+  await expect(recent.locator('.listing-party-skeleton')).toHaveCount(3)
+  await expect(recent.getByRole('heading')).toHaveText('Recent parties')
+  await expect(page.locator('.listing-section-heading > span')).toHaveCount(0)
+  await expect(page.locator('.listing-show-skeleton')).toHaveCount(5)
+  const skeleton = featured.locator('.ui-skeleton').first()
+  await expect(skeleton).toHaveAttribute('aria-hidden', 'true')
+  await expect(skeleton).toHaveCSS('animation-name', 'listing-skeleton-sweep')
+  await expect(featured.getByRole('button')).toHaveCount(0)
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await page.screenshot({ path: test.info().outputPath('listing-pending.png'), fullPage: true })
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(skeleton).toHaveCSS('animation-name', 'none')
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.getByRole('heading', { name: 'All titles', exact: true }).scrollIntoViewIfNeeded()
+  await page.screenshot({ path: test.info().outputPath('listing-pending-titles.png') })
+  await page.evaluate(() => window.scrollTo(0, 0))
+  releaseTitles()
+  await expect(page.locator('.listing-show-card')).toHaveCount(6)
+  await expect(recent).toHaveAttribute('aria-busy', 'true')
+  releaseParties()
+  await expect(recent).toHaveCount(0)
+  await expect(page.locator('.listing-recent-parties')).toHaveCount(0)
+  await expect(page.getByText('Your parties will appear here.', { exact: false })).toHaveCount(0)
+  await expect(page.locator('.listing-show-card')).toHaveCount(6)
+  await page.getByRole('tab', { name: 'Parties', exact: true }).click()
+  await expect(page.getByText('Your parties will appear here. Pick a title to start watching together.')).toBeVisible()
+})
+
+for (const tab of ['All', 'Movies', 'Series', 'Parties']) {
+  test(`${tab} initial failures freeze placeholders and retry in place`, async ({ page }) => {
+    await catalog(page)
+    let attempts = 0
+    let releaseRetry = () => {}
+    const retryReady = new Promise<void>(resolve => { releaseRetry = resolve })
+    await page.route('**/api/**', async route => {
+      const url = new URL(route.request().url())
+      const target = tab === 'Parties' ? '/api/me/parties' : '/api/shows'
+      const type = tab === 'Movies' ? 'movie' : tab === 'Series' ? 'series' : null
+      if (url.pathname === target && url.searchParams.get('title_type') === type) {
+        attempts++
+        if (attempts === 1) return route.fulfill({ status: 422, json: { message: 'Fixture unavailable' } })
+        await retryReady
+      }
+      await route.fallback()
+    })
+    await page.goto('/')
+    if (tab !== 'All') await page.getByRole('tab', { name: tab, exact: true }).click()
+    const featured = page.getByRole('region', { name: 'Featured', exact: true })
+    await expect(featured.getByRole('alert')).toContainText(tab === 'Parties' ? "Your parties didn't load" : "Titles didn't load")
+    await expect(featured).toHaveAttribute('aria-busy', 'false')
+    await expect(featured.locator('.ui-skeleton').first()).toHaveCSS('animation-name', 'none')
+    if (tab === 'All') await expect(page.locator('.listing-party-card')).toHaveCount(3)
+    if (tab !== 'Parties') await expect(page.locator('.listing-catalog-placeholder.is-frozen')).toHaveCount(1)
+    await page.screenshot({ path: test.info().outputPath(`listing-${tab.toLowerCase()}-failed.png`), fullPage: true })
+    await featured.getByRole('button', { name: 'Try again', exact: true }).click()
+    await expect(featured).toHaveAttribute('aria-busy', 'true')
+    await expect(featured.getByRole('alert')).toHaveCount(0)
+    releaseRetry()
+    await expect(page.locator(tab === 'Parties' ? '.listing-party-card' : '.listing-show-card')).toHaveCount(tab === 'All' ? 6 : 4)
+    await expect(page.locator('.is-frozen')).toHaveCount(0)
+    expect(attempts).toBe(2)
+  })
+}
+
+test('recent parties can fail and recover while the catalog remains usable', async ({ page }) => {
+  await catalog(page, { pageSize: shows.length })
+  let fail = true
+  await page.route('**/api/me/parties*', async route => {
+    if (fail) return route.fulfill({ status: 422, json: { message: 'Fixture unavailable' } })
+    await route.fallback()
+  })
+  await page.goto('/')
+  await expect(page.locator('.listing-show-card')).toHaveCount(8)
+  const recent = page.getByRole('region', { name: 'Recent parties' })
+  await expect(recent.getByRole('alert')).toContainText("Your parties didn't load")
+  await expect(recent.locator('.listing-party-skeleton')).toHaveCount(3)
+  await expect(recent.locator('.ui-skeleton').first()).toHaveCSS('animation-name', 'none')
+  await expect(page.getByRole('region', { name: 'Featured', exact: true }).getByRole('button', { name: 'Start a party', exact: true })).toBeVisible()
+  await page.screenshot({ path: test.info().outputPath('listing-recent-parties-failed.png'), fullPage: true })
+  fail = false
+  await recent.getByRole('button', { name: 'Retry', exact: true }).click()
+  await expect(recent.locator('.listing-party-card')).toHaveCount(3)
+  await expect(page.locator('.listing-show-card')).toHaveCount(8)
+  await expect(page.getByRole('alert')).toHaveCount(0)
+})
+
+for (const collection of ['titles', 'parties']) {
+  test(`loading more ${collection} keeps loaded cards and offers an inline retry on failure`, async ({ page }) => {
+    await catalog(page, { pageSize: 2 })
+    let attempts = 0
+    let releaseMore = () => {}
+    const moreReady = new Promise<void>(resolve => { releaseMore = resolve })
+    await page.route('**/api/**', async route => {
+      const url = new URL(route.request().url())
+      if (url.pathname === (collection === 'titles' ? '/api/shows' : '/api/me/parties') && url.searchParams.get('page') === '2') {
+        attempts++
+        if (attempts === 1) {
+          await moreReady
+          return route.fulfill({ status: 422, json: { message: 'Fixture unavailable' } })
+        }
+      }
+      await route.fallback()
+    })
+    await page.goto('/')
+    if (collection === 'parties') await page.getByRole('tab', { name: 'Parties', exact: true }).click()
+    const cards = page.locator(collection === 'titles' ? '.listing-show-card' : '.listing-party-card')
+    const skeletons = page.locator(collection === 'titles' ? '.listing-show-skeleton' : '.listing-party-skeleton')
+    await expect(cards).toHaveCount(2)
+    await cards.last().scrollIntoViewIfNeeded()
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+    await expect(skeletons).toHaveCount(collection === 'titles' ? 5 : 3)
+    await expect(cards).toHaveCount(2)
+    releaseMore()
+    const error = page.locator('.listing-load-more-error')
+    await expect(error).toHaveText(`Couldn't load more ${collection}.Retry`)
+    await expect(skeletons).toHaveCount(0)
+    await expect(cards).toHaveCount(2)
+    await page.evaluate(() => window.dispatchEvent(new Event('scroll')))
+    expect(attempts).toBe(1)
+    await page.screenshot({ path: test.info().outputPath(`listing-more-${collection}-failed.png`), fullPage: true })
+    await error.getByRole('button', { name: 'Retry', exact: true }).click()
+    await expect(cards).toHaveCount(collection === 'titles' ? 8 : 4)
+    await expect(error).toHaveCount(0)
+    expect(attempts).toBe(2)
+  })
+}
 
 test('movie and series actions create a party with the selected video', async ({ page }) => {
   await catalog(page)

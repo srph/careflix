@@ -142,9 +142,34 @@
 .listing-empty { padding: 36px 0; color: var(--listing-muted); font-size: 16px; }
 .listing-status { padding: 24px; background: #ffffff06; border: 1px solid #ffffff12; border-radius: 12px; color: #b8c0c9; }
 .listing-status button { padding: 6px 12px; color: #fff; border: 1px solid #ffffff40; border-radius: 6px; background: none; }
-.listing-featured-placeholder { height: 440px; margin: 12px 40px 0; }
-.listing-card-placeholder { height: auto; aspect-ratio: 16/9; }
-.listing-show-placeholder { height: auto; aspect-ratio: 16/11; }
+.listing-loading-label { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.listing-placeholder, .listing-party-placeholder { position: relative; }
+.listing-placeholder .ui-skeleton, .listing-show-skeleton .ui-skeleton, .listing-party-skeleton .ui-skeleton {
+  background: linear-gradient(100deg, #ffffff0a 30%, #ffffff17 50%, #ffffff0a 70%) fixed;
+  background-size: 200vw 100%;
+  animation: listing-skeleton-sweep 1.8s linear infinite;
+}
+@keyframes listing-skeleton-sweep { from { background-position: 100vw 0; } to { background-position: -100vw 0; } }
+.listing-placeholder.is-frozen .ui-skeleton { animation: none; background: #ffffff06; }
+.listing-catalog-placeholder.is-frozen { mask-image: linear-gradient(180deg, #000 30%, transparent); }
+.listing-skeleton-copy { display: flex; flex-direction: column; gap: 8px; }
+.listing-skeleton-title { margin: 10px 0 12px; }
+.listing-skeleton-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.listing-skeleton-featured-item { display: flex; flex: 1; flex-direction: column; justify-content: center; gap: 8px; padding: 12px 18px; border-radius: 14px; background: #ffffff04; }
+.listing-party-skeleton { position: relative; min-width: 0; aspect-ratio: 16/9; border-radius: 14px; background: #ffffff05; box-shadow: 0 0 0 1px #ffffff0d; }
+.listing-skeleton-progress { margin-top: 4px; }
+.listing-skeleton-members { display: flex; align-items: center; gap: 10px; }
+.listing-skeleton-members .ui-skeleton:nth-child(2) { margin-left: -14px; }
+.listing-show-skeleton { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.listing-show-skeleton .listing-skeleton-thumbnail { width: 100%; height: auto; aspect-ratio: 16/9; margin-bottom: 4px; }
+.listing-error-overlay { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 20px; text-align: center; background: radial-gradient(closest-side, #090c11e6 45%, #090c1100); }
+.listing-error-overlay b { font-size: 18px; font-weight: 700; }
+.listing-error-overlay > span { color: #b8c0c9; font-size: 13.5px; }
+.listing-error-overlay .ui-button { flex: none; margin-top: 12px; }
+.listing-load-more-error { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; margin-top: 34px; padding-top: 26px; border-top: 1px solid #ffffff12; color: #b8c0c9; }
+.listing-load-more-error .ui-button { height: 36px; }
+.listing-recent-parties-content { padding-bottom: 44px; }
+.listing-body > .listing-recent-parties + * { margin-top: 0; }
 @media (max-width: 1100px) {
   .listing-navigation { gap: 24px; }
   .listing-tabs { gap: 20px; }
@@ -163,7 +188,6 @@
   .listing-home .ui-button { padding: 0 16px; }
   .listing-body { padding: 30px 24px 60px; }
   .listing-show-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .listing-featured-placeholder { margin: 12px 24px 0; }
 }
 @media (max-width: 600px) {
   .listing-navigation { gap: 14px; padding: 14px 20px 10px; }
@@ -196,7 +220,7 @@
   .listing-show-trigger h3 { font-size: 14px; }
   .listing-show-trigger > span { font-size: 11px; }
   .listing-show-preview { display: none; }
-  .listing-featured-placeholder { height: 420px; margin: 12px 20px 0; }
+  .listing-recent-parties-content { padding-bottom: 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .listing-home *, .listing-home *::before, .listing-home *::after { animation: none !important; transition: none !important; }

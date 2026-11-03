@@ -1,9 +1,10 @@
 import PartyCard from './PartyCard'
 import { useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useReducedMotion } from 'motion/react'
+import { PartySkeletonCards } from './ListingStates'
 
-export default function PartySection({ parties, total, recent = false, onSeeAll }: {
-  parties: AppParty[]; total: number; recent?: boolean; onSeeAll?: () => void
+export default function PartySection({ parties, total, recent = false, onSeeAll, isLoadingMore = false }: {
+  parties: AppParty[]; total: number; recent?: boolean; onSeeAll?: () => void; isLoadingMore?: boolean
 }) {
   const grid = useRef<HTMLDivElement>(null)
   const hovered = useRef<HTMLElement | null>(null)
@@ -27,12 +28,14 @@ export default function PartySection({ parties, total, recent = false, onSeeAll 
       return { transform: `translateX(${row.indexOf(other) < column ? -growth / 2 + offset : growth / 2 + offset}px)` }
     }))
   }
-  return <section className="listing-section" aria-label={recent ? 'Recent parties' : 'All parties'}>
+  return <section className="listing-section" aria-label={recent ? 'Recent parties' : 'All parties'} aria-busy={isLoadingMore}>
     <div className="listing-section-heading"><h2>{recent ? 'Recent parties' : 'All parties'}</h2><span>{recent ? Math.min(3, parties.length) : total}</span>
       {recent && <button type="button" onClick={onSeeAll}>See all parties <span aria-hidden="true">→</span></button>}
     </div>
     {parties.length ? <div className="listing-party-grid" ref={grid} onPointerOver={shift} onPointerLeave={() => { hovered.current = null; setStyles([]) }}>
-      {(recent ? parties.slice(0, 3) : parties).map((party, index) => <PartyCard party={party} key={party.id} style={styles[index]} />)}</div>
+      {(recent ? parties.slice(0, 3) : parties).map((party, index) => <PartyCard party={party} key={party.id} style={styles[index]} />)}
+      {isLoadingMore && <PartySkeletonCards />}</div>
       : <p className="listing-empty">Your parties will appear here. Pick a title to start watching together.</p>}
+    {isLoadingMore && <span className="listing-loading-label" role="status">Loading more parties…</span>}
   </section>
 }

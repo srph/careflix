@@ -7,9 +7,10 @@ interface Props {
   isLoading: boolean
   threshold?: number
   onLoadMore: () => void | Promise<unknown>
+  renderError?: (retry: () => void) => ReactNode
 }
 
-export default function InfiniteScroll({ children, itemCount, hasMore, isLoading, threshold = 300, onLoadMore }: Props) {
+export default function InfiniteScroll({ children, itemCount, hasMore, isLoading, threshold = 300, onLoadMore, renderError }: Props) {
   const sentinel = useRef<HTMLDivElement>(null)
   const inFlight = useRef(false)
   const nearEnd = useRef(false)
@@ -55,7 +56,8 @@ export default function InfiniteScroll({ children, itemCount, hasMore, isLoading
     <div aria-busy={isLoading}>
       {children}
       <div ref={sentinel} aria-hidden="true" style={{ height: 1 }} />
-      {error && <div role="alert">Unable to load more. <button type="button" onClick={() => { void load(true) }}>Retry</button></div>}
+      {error && (renderError ? renderError(() => { void load(true) })
+        : <div role="alert">Unable to load more. <button type="button" onClick={() => { void load(true) }}>Retry</button></div>)}
     </div>
   )
 }

@@ -259,6 +259,192 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .dx-swap{animation:dxIn .5s cubic-bezier(.2,.8,.2,1)}
 @keyframes dxIn{from{opacity:0;transform:translateY(14px)}}
 .dx-tag{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:99px;background:rgba(232,54,143,.16);color:#F7A5CC;font:700 9.5px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase}
+
+/* ── shared for E–H: overlay layer, past parties, season dropdown ── */
+.mk.mk-ov{position:absolute;inset:0;z-index:30;min-height:0;background:none;pointer-events:none}
+.mk-ov>*{pointer-events:auto}
+.mk-ov>.hx:not(.on){pointer-events:none}
+.mk .btn{white-space:nowrap}
+.mk .sel{padding:0 13px}
+.mk .ep-row{padding:12px}
+.mk .pp{padding:10px 8px}
+.mk .gx-e{padding:11px 10px}
+.mk .hx-e{padding:9px}
+.pp-h{margin:20px 0 8px}
+.pp-h:first-child{margin-top:0}
+.pp{display:flex;align-items:center;gap:12px;width:100%;padding:10px 8px;border-radius:10px;transition:background .2s}
+.pp:hover{background:rgba(255,255,255,.055)}
+.pp .avs{flex:none;width:72px}
+.pp .tx{flex:1;min-width:0}
+.pp .tx b{display:block;font-size:13.5px;font-weight:600}
+.pp .tx span{font-size:12px;color:var(--n5)}
+.pp .ar{flex:none;color:rgba(255,255,255,.35)}
+.dd{position:relative;display:inline-block}
+.dd-m{position:absolute;top:calc(100% + 6px);left:0;z-index:6;min-width:180px;padding:6px;border-radius:10px;background:#1C2938;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 24px 48px -12px rgba(0,0,0,.85)}
+.dd-m[hidden]{display:none}
+.dd-m button{display:flex;align-items:center;justify-content:space-between;width:100%;height:34px;padding:0 10px;border-radius:6px;font:500 13px 'Work Sans',sans-serif;color:rgba(255,255,255,.72)}
+.dd-m button:hover{background:rgba(255,255,255,.07);color:#fff}
+.dd-m button.on{color:#fff;font-weight:600}
+
+/* ── E: card morph ── */
+.lx-c.ghost .lx-th{visibility:hidden}
+.ex-dim{position:absolute;inset:0;z-index:30;background:rgba(5,7,10,.8);opacity:0;transition:opacity .4s}
+.ex-dim.on{opacity:1}
+.ex-sh{--ez:cubic-bezier(.2,.8,.2,1);position:absolute;z-index:31;overflow:hidden;border-radius:10px;background:#111823;transition:left .5s var(--ez),top .5s var(--ez),width .5s var(--ez),height .5s var(--ez),border-radius .5s var(--ez),box-shadow .5s}
+.ex-sh.open{border-radius:16px;box-shadow:0 60px 120px -30px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.07)}
+.ex-sc{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.ex-cv{position:relative;aspect-ratio:16/9}
+.ex-cv::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#111823 4%,rgba(17,24,35,0) 55%);opacity:0;transition:opacity .4s .1s}
+.ex-sh.open .ex-cv::after{opacity:1}
+.ex-b{position:relative;z-index:2;margin-top:-104px;padding:0 32px 30px;opacity:0;transform:translateY(12px);transition:opacity .2s,transform .2s}
+.ex-sh.open .ex-b{opacity:1;transform:none;transition:opacity .35s .22s,transform .45s .22s cubic-bezier(.2,.8,.2,1)}
+.ex-b h3{font-size:38px;font-weight:700;letter-spacing:-.028em;line-height:1.02}
+.ex-b>.lb{margin-top:10px}
+.ex-act{display:flex;align-items:center;gap:10px;margin-top:18px}
+.ex-cols{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:32px;margin-top:24px}
+.ex-cols p{font-size:14px;line-height:1.62;color:rgba(255,255,255,.78)}
+.ex-b .lx-live{margin-top:22px}
+.ex-eph{display:flex;align-items:center;gap:14px;margin:28px 0 8px}
+.ex-eph h4{font-size:17px;font-weight:600}
+.ex-eph .seg{margin-left:auto}
+.ex-x{position:absolute;top:16px;right:16px;z-index:3;opacity:0;transition:opacity .2s}
+.ex-sh.open .ex-x{opacity:1;transition-delay:.3s}
+
+/* ── F: tabbed sheet with a party band ── */
+.bx.fx{width:960px}
+.fx-hero{position:relative;min-height:400px;display:flex;align-items:flex-end}
+.fx-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#111823 8%,rgba(17,24,35,.55) 46%,rgba(17,24,35,0) 75%),linear-gradient(0deg,rgba(17,24,35,.9),rgba(17,24,35,0) 40%)}
+.fx-hc{position:relative;z-index:2;max-width:480px;padding:40px 36px 30px}
+.fx-hc h3{font-size:40px;font-weight:700;letter-spacing:-.03em;line-height:1.02}
+.fx-hc .lb{margin-top:10px}
+.fx-hc p{margin-top:14px !important;font-size:14px;line-height:1.6;color:rgba(255,255,255,.8)}
+.fx-band{display:flex;align-items:center;gap:12px;min-height:56px;padding:0 36px;background:#16202d;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),inset 0 -1px 0 rgba(255,255,255,.06);font-size:13.5px;color:rgba(255,255,255,.75)}
+.fx-band b{color:#fff;font-weight:600}
+.fx-band .lv{display:inline-flex;align-items:center;gap:7px;font:700 10px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#ff7aa8}
+.fx-band .lv i{width:7px;height:7px;border-radius:50%;background:#ff3d6e;box-shadow:0 0 0 4px rgba(255,61,110,.18)}
+.fx-band .avs .av{border-color:#16202d}
+.fx-band .r{margin-left:auto;color:var(--n5);font-size:12.5px}
+.fx-tabs{display:flex;gap:28px;padding:0 36px;box-shadow:inset 0 -1px 0 rgba(255,255,255,.08)}
+.fx-tabs button{position:relative;padding:17px 0;font-size:14px;font-weight:500;color:rgba(255,255,255,.52);transition:color .2s}
+.fx-tabs button:hover,.fx-tabs button.on{color:#fff}
+.fx-tabs button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--pk)}
+.fx-pane{padding:22px 36px 34px;min-height:320px}
+.fx-ph{display:flex;align-items:center;gap:14px}
+.fx-ph>.lb{margin-left:auto}
+.fx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:24px 14px;margin-top:18px}
+.fx-ep{display:block;width:100%}
+.fx-ep .th{position:relative;display:block;aspect-ratio:16/9;border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.07);transition:box-shadow .2s}
+.fx-ep:hover .th{box-shadow:0 0 0 1px rgba(255,255,255,.32)}
+.fx-ep .th .pl{position:absolute;inset:0;display:grid;place-items:center;background:rgba(9,12,17,.4);opacity:0;transition:opacity .2s}
+.fx-ep:hover .th .pl{opacity:1}
+.fx-ep b{display:block;margin-top:9px;font-size:13.5px;font-weight:600}
+.fx-ep .sy{display:-webkit-box;margin-top:4px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.58);-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fx-ep .d{display:block;margin-top:5px;font:500 11.5px 'Work Sans',sans-serif;color:var(--n5)}
+.fx-about{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:34px}
+.fx-about p{font-size:14px;line-height:1.62;color:rgba(255,255,255,.78)}
+.fx-pp{max-width:560px}
+.bx.fx.f2{width:60%}
+.f2 .fx-band{gap:12px;padding-right:20px}
+.f2 .fx-band .r{margin-left:0;color:var(--n5)}
+.f2 .fx-band .btn{margin-left:auto}
+.btn.wh{background:#fff !important;color:#090c11}
+.btn.wh:hover{transform:translateY(-1px)}
+/* F2b–F2d */
+.f2x .fx-pane{min-height:0}
+.f2x .fx-pp{max-width:none}
+.mk .f2x .pp{display:grid;grid-template-columns:88px minmax(0,1fr) minmax(0,auto) 96px 16px;align-items:center;gap:16px;padding:14px 10px;border-radius:8px;text-align:left}
+.f2x .pp+.pp{box-shadow:0 -1px 0 rgba(255,255,255,.07)}
+.f2x .pp:hover{box-shadow:none;background:rgba(255,255,255,.05)}
+.f2x .pp:hover+.pp{box-shadow:none}
+.f2x .pp .avs{width:auto}
+.f2x .pp .who{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f2x .pp .at{font-size:12.5px;color:rgba(255,255,255,.62);white-space:nowrap}
+.f2x .pp .when{font-size:12.5px;color:var(--n5);text-align:right;white-space:nowrap}
+.f2x .solo{padding-top:26px}
+.f2-rows{display:grid;grid-template-columns:150px minmax(0,1fr)}
+.f2-rows>*{padding:13px 0;font-size:14px;box-shadow:inset 0 -1px 0 rgba(255,255,255,.07)}
+.f2-rows>dt{font:600 10.5px/1.9 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.f2-rows>dd{color:rgba(255,255,255,.88)}
+.f2-sz{display:grid;gap:6px}
+.f2-sz span{display:flex;gap:10px}
+.f2-sz em{font-style:normal;color:var(--n5)}
+.f2-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.07)}
+.f2-stats div{padding:20px 20px 18px;background:#111823}
+.f2-stats b{display:block;font-size:20px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+.f2-stats span{display:block;margin-top:9px;font:600 10.5px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.f2-hf{display:flex;flex-wrap:wrap;gap:10px 26px;margin-top:18px}
+.f2-hf div{font-size:13px;color:rgba(255,255,255,.88)}
+.f2-hf dt{margin-bottom:5px;font:600 10px/1 'Work Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.f2-hf+.bx-act{margin-top:22px}
+.f2-rows dd,.f2-hf dd{margin:0}
+
+/* ── G: split sheet with an episode playlist ── */
+.bx.gx{position:relative;width:1040px}
+.gx-x{position:absolute;top:16px;right:16px;z-index:3}
+.gx-in{display:grid;grid-template-columns:minmax(0,1fr) 340px}
+.gx-l{padding:24px 28px 28px}
+.gx-still{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.07)}
+.gx-tag{position:absolute;left:12px;bottom:12px;z-index:2;display:inline-flex;align-items:center;height:24px;padding:0 9px;border-radius:6px;background:rgba(9,12,17,.72);backdrop-filter:blur(6px);font:700 10.5px/1 'Work Sans',sans-serif;letter-spacing:.08em}
+.gx-l>.lb{margin-top:20px}
+.gx-l h3{margin-top:8px !important;font-size:30px;font-weight:700;letter-spacing:-.022em;line-height:1.08}
+.gx-syn{margin-top:10px !important;font-size:14px;line-height:1.6;color:rgba(255,255,255,.74);max-width:64ch}
+.gx-epb{margin-top:16px;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.05)}
+.gx-epb b{display:block;margin-top:7px;font-size:14px;font-weight:600}
+.gx-epb p{margin-top:4px !important;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.62)}
+.gx-l .bx-act{margin-top:18px}
+.gx-l .lx-meta{margin-top:24px}
+.gx-r{position:relative;background:#0d131c;box-shadow:inset 1px 0 0 rgba(255,255,255,.07)}
+.gx-rin{position:absolute;inset:0;display:flex;flex-direction:column}
+.gx-rh{padding:22px 64px 12px 18px}
+.gx-rh h4{font-size:16px;font-weight:600}
+.gx-rh .seg{margin-top:14px}
+.gx-rh>.lb{display:block;margin-top:12px}
+.gx-list{flex:1;overflow:auto;padding:2px 10px 14px;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.gx-list .pp-h{padding-left:8px}
+.gx-list .lx-live>span:last-of-type{flex:1;min-width:0}
+.gx-e{display:grid;grid-template-columns:24px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;padding:11px 10px;border-radius:8px;transition:background .2s}
+.gx-e:hover{background:rgba(255,255,255,.05)}
+.gx-e.on{background:rgba(255,255,255,.09)}
+.gx-e .n{display:grid;place-items:center;font:600 13px 'Work Sans',sans-serif;color:rgba(255,255,255,.4)}
+.gx-e.on .n{color:var(--pk)}
+.gx-e .t{font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gx-e.on .t{font-weight:600}
+.gx-e .d{display:flex;align-items:center;gap:8px;font:500 12px 'Work Sans',sans-serif;color:var(--n5)}
+.gx-e .avs .av{width:20px;height:20px;font-size:9px;border-width:1.5px;border-color:#0d131c}
+.gx-e .avs .av+.av{margin-left:-7px}
+
+/* ── H: ambient column with a docked bar ── */
+.hx{position:absolute;inset:0;z-index:30;opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.hx.on{opacity:1;pointer-events:auto}
+.hx-bg{position:absolute;inset:0;overflow:hidden}
+.hx-bg .art{filter:blur(64px) saturate(1.15);transform:scale(1.35);opacity:.5}
+.hx-bg::after{content:"";position:absolute;inset:0;background:rgba(9,12,17,.66)}
+.hx-sc{position:absolute;inset:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.hx-tr{position:absolute;top:16px;right:16px;z-index:3;display:flex;gap:8px}
+.hx-col{width:580px;max-width:calc(100% - 32px);margin:40px auto 0;padding-bottom:20px;transform:translateY(16px);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.hx.on .hx-col{transform:none}
+.hx-still{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.8)}
+.hx-col h3{margin-top:22px !important;font-size:30px;font-weight:700;letter-spacing:-.022em;line-height:1.08}
+.hx-col>.lb{margin-top:9px}
+.hx-syn{margin-top:14px !important;font-size:14px;line-height:1.6;color:rgba(255,255,255,.78)}
+.hx-col>.lx-live{margin-top:18px}
+.hx-sech{display:flex;align-items:center;gap:12px;margin:28px 0 10px;padding-top:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.hx-sech h4{font-size:15px;font-weight:600}
+.hx-sech .seg{margin-left:auto}
+.hx-e{display:flex;align-items:center;gap:14px;width:100%;padding:9px;border-radius:12px;transition:background .2s,box-shadow .2s}
+.hx-e:hover{background:rgba(255,255,255,.05)}
+.hx-e.on{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.hx-e .th{position:relative;flex:none;width:112px;aspect-ratio:16/9;border-radius:7px;overflow:hidden}
+.hx-e .tx{flex:1;min-width:0}
+.hx-e .tx b{display:block;font-size:14px;font-weight:600}
+.hx-e .tx .sy{display:block;margin-top:3px;font-size:12.5px;color:rgba(255,255,255,.58);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hx-e .d{flex:none;font:500 12px 'Work Sans',sans-serif;color:var(--n5)}
+.hx-bar{position:sticky;bottom:16px;z-index:4;display:flex;align-items:center;gap:10px;margin-top:26px;padding:8px 8px 8px 18px;border-radius:999px;background:rgba(21,32,43,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 0 0 1px rgba(255,255,255,.09),0 24px 48px -12px rgba(0,0,0,.8)}
+.hx-bar .avs .av{border-color:#15202B}
+.hx-bar .t{flex:1;min-width:0;font-size:13.5px;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hx-bar .t .lb{display:block;margin-bottom:4px;font-size:10px}
+.hx-bar .t b{color:#fff;font-weight:600}
+.hx-bar .btn{flex:none}
 </style>
 </head>
 <body>
@@ -329,12 +515,94 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
     </div>
   </section>
 
+  <section class="var" id="v-e" data-id="E" data-name="Card morph">
+    <div class="var-h"><span class="id">E</span><h2>Card morph</h2></div>
+    <div class="frame"><div class="scroll mk" data-mount="e"></div></div>
+    <div class="notes">
+      <div class="note good">The still grows out of the card you clicked, and shrinks back into it.</div>
+      <div class="note good">B's body with a new entrance — cheap to build on top of B.</div>
+      <div class="note bad">A 16:9 thumb grown to 820px is a 460px cover before any text.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f" data-id="F" data-name="Tabbed sheet with a party band">
+    <div class="var-h"><span class="id">F</span><h2>Tabbed sheet with a party band</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="f"></div></div>
+    <div class="notes">
+      <div class="note good">Who's watching gets its own band above the fold, movie or series.</div>
+      <div class="note good">Four-up episode grid with synopses: a season in two rows.</div>
+      <div class="note bad">Parties and Details sit behind tabs.</div>
+      <div class="note bad">960px — the widest sheet here.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2" data-id="F2" data-name="F, narrower, your room only">
+    <div class="var-h"><span class="id">F2</span><h2>F, narrower, your room only</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="f2"></div></div>
+    <div class="notes">
+      <div class="note good">The band only shows a live room you're already in, with Join right beside it.</div>
+      <div class="note good">One action on the hero: Start Party.</div>
+      <div class="note good">60% wide: the listing shows on both sides.</div>
+      <div class="note bad">The episode grid drops to three across.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2b" data-id="F2b" data-name="F2 with a details table">
+    <div class="var-h"><span class="id">F2b</span><h2>F2 with a details table</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="f2b" data-hist></div></div>
+    <div class="notes">
+      <div class="note good">Label and value rows, with one line per season for a series.</div>
+      <div class="note good">No parties yet: the Parties tab goes away rather than sitting empty.</div>
+      <div class="note bad">A movie's Details is three short rows behind a tab.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2c" data-id="F2c" data-name="F2 with a details stat strip">
+    <div class="var-h"><span class="id">F2c</span><h2>F2 with a details stat strip</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="f2c" data-hist></div></div>
+    <div class="notes">
+      <div class="note good">The numbers read at a glance: 3 seasons, 20 episodes, 16h total.</div>
+      <div class="note bad">Large type for data nobody chooses a title by.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-f2d" data-id="F2d" data-name="F2 with details in the hero">
+    <div class="var-h"><span class="id">F2d</span><h2>F2 with details in the hero</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="f2d" data-hist></div></div>
+    <div class="notes">
+      <div class="note good">No Details tab: facts sit under the synopsis, visible on open.</div>
+      <div class="note good">A movie with no parties is a single hero, no tabs.</div>
+      <div class="note bad">The hero gets taller; Start Party moves down.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-g" data-id="G" data-name="Split sheet with an episode playlist">
+    <div class="var-h"><span class="id">G</span><h2>Split sheet with an episode playlist</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="g"></div></div>
+    <div class="notes">
+      <div class="note good">Picking an episode re-points the button: "Start at E3" in one click.</div>
+      <div class="note good">The live party shows on the exact episode row it's on.</div>
+      <div class="note bad">Rows have no stills; you see one only after selecting.</div>
+      <div class="note bad">For a movie the right column is only party history.</div>
+    </div>
+  </section>
+
+  <section class="var" id="v-h" data-id="H" data-name="Ambient column with a docked bar">
+    <div class="var-h"><span class="id">H</span><h2>Ambient column with a docked bar</h2></div>
+    <div class="frame tall"><div class="scroll mk" data-mount="h"></div></div>
+    <div class="notes">
+      <div class="note good">The action bar stays docked however far you scroll.</div>
+      <div class="note good">One 580px column — the same layout on a phone.</div>
+      <div class="note bad">Blurred art behind the column is the most decorative treatment here.</div>
+    </div>
+  </section>
+
   <section class="further">
     <h2>Further Actions</h2>
     <div class="cards">
-      <div><b>Explore</b> From B, try the sheet opening from the card's own rectangle instead of the centre.</div>
-      <div><b>Remix</b> Give C's drawer B's full-width episode rows and let it widen to 560px.</div>
-      <div><b>Settle</b> Take A if the listing is the thing to protect; take B if the episode list is.</div>
+      <div><b>Explore</b> From F2d, surface your last party's stopping point as a "Pick up" row under the hero.</div>
+      <div><b>Remix</b> Remix F2d: move F2b's per-season lines into the Episodes tab header.</div>
+      <div><b>Settle</b> F2d if Details is glance-only; F2b if the season breakdown matters.</div>
     </div>
   </section>
 </main>
@@ -742,8 +1010,363 @@ function mountD(sc){
   return {open: detail, close: browse};
 }
 
+/* ───── shared for E–H ───── */
+const CHECK = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>`;
+const listing = () => nav() + `<div class="lx-w">${headRow('All titles', SHOWS.length)}${grid()}</div>`;
+const runtime = eps => { const m = Math.round(eps.reduce((a,e) => a + e.d, 0) / 60); return `${Math.floor(m/60)}h ${String(m%60).padStart(2,'0')}m`; };
+const pills = (ss, i) => `<div class="seg">${ss.map((x,k) => `<button class="${k === i ? 'on' : ''}" data-s="${k}">S${k+1}</button>`).join('')}</div>`;
+function liveEp(s){
+  const m = s.live && s.ep && /S(\d+) · E(\d+)/.exec(s.ep);
+  return m ? {si: Number(m[1]) - 1, n: Number(m[2])} : null;
+}
+function pastParties(s){
+  const at = s.type === 'series' ? ['Stopped at S1 · E5','Stopped at S2 · E1','Stopped at S1 · E2'] : ['Stopped 1h 12m in','Finished','Stopped 24m in'];
+  return [[['Joyce','Leo'],'3 days ago'], [['Mira'],'Last week'], [['Nico','Joyce','Mira'],'Oct 12']].map(([who, when], k) => ({who, when, at: at[k]}));
+}
+function partyRows(s, live = true){
+  return `${live && s.live ? `<div class="pp-h lb">Live now</div>${liveRow(s)}` : ''}
+    <div class="pp-h lb">Your parties</div>
+    ${pastParties(s).map(p => `<button class="pp"><span class="avs">${me('sm')}${p.who.map(n => av(n,'sm')).join('')}</span>
+      <span class="tx"><b>${names(['You', ...p.who])}</b><span>${p.at} · ${p.when}</span></span><span class="ar">${CHEV}</span></button>`).join('')}`;
+}
+const dd = (ss, i) => `<div class="dd"><button class="sel" data-dd>${ss[i].t} ${DOWN}</button>
+  <div class="dd-m" hidden>${ss.map((g,k) => `<button data-season="${k}" class="${k === i ? 'on' : ''}">${g.t}${k === i ? CHECK : ''}</button>`).join('')}</div></div>`;
+/* overlays sit on the frame, not the scroller, so they stay put while the listing scrolls */
+function layer(frame){
+  let el = frame.querySelector(':scope>.mk-ov');
+  if(!el){ el = document.createElement('div'); el.className = 'mk mk-ov'; frame.appendChild(el); }
+  return el;
+}
+function overlay(frame, cls){
+  const host = document.createElement('div');
+  host.className = cls;
+  layer(frame).appendChild(host);
+  return host;
+}
+
+/* ───── E: card morph ───── */
+function mountE(sc, frame){
+  sc.innerHTML = listing();
+  let dim = null, sh = null, src = null, cur = null;
+  const rel = el => { const a = el.getBoundingClientRect(), f = frame.getBoundingClientRect(); return {l: a.left - f.left - 1, t: a.top - f.top - 1, w: a.width, h: a.height}; };
+  const put = (el, r) => Object.assign(el.style, {left: r.l + 'px', top: r.t + 'px', width: r.w + 'px', height: r.h + 'px'});
+
+  function body(s){
+    const ss = s.type === 'series' ? seasons(s) : null;
+    return `<div class="ex-cv">${still(s)}</div>
+    <div class="ex-b">
+      <h3>${esc(s.t)}</h3>
+      <div class="lb">${metaL(s)}</div>
+      <div class="ex-act">${actions(s)}</div>
+      ${s.live ? liveRow(s) : ''}
+      <div class="ex-cols"><p>${esc(s.s)}</p>${metaGrid(s)}</div>
+      ${ss ? `<div class="ex-eph"><h4>Episodes</h4>${pills(ss, 0)}</div><div class="bx-list"></div>` : ''}
+    </div>`;
+  }
+  function list(s, i){
+    const el = sh && sh.querySelector('.bx-list');
+    if(!el) return;
+    el.innerHTML = seasons(s)[i].eps.map(e => `<button class="ep-row">
+      <span class="n">${e.n}</span><span class="th">${still(s, e.pat)}</span>
+      <span class="tx"><b>${esc(e.t)}</b><p>${esc(e.s)}</p></span><span class="d">${mins(e.d)}</span></button>`).join('');
+  }
+  function kill(){
+    if(dim) dim.remove();
+    if(sh) sh.remove();
+    dim = sh = null;
+    sc.querySelectorAll('.lx-c.ghost').forEach(c => c.classList.remove('ghost'));
+  }
+  function show(id){
+    kill();
+    const s = byId(id), cardEl = sc.querySelector(`.lx-c[data-id="${id}"]`);
+    src = cardEl.querySelector('.lx-th');
+    dim = document.createElement('div'); dim.className = 'ex-dim';
+    sh = document.createElement('div'); sh.className = 'ex-sh';
+    sh.innerHTML = `<button class="ex-x xbtn">${X}</button><div class="ex-sc">${body(s)}</div>`;
+    layer(frame).append(dim, sh);
+    put(sh, rel(src));
+    cardEl.classList.add('ghost');
+    if(s.type === 'series') list(s, 0);
+    dim.addEventListener('click', hide);
+    sh.addEventListener('click', e => {
+      if(e.target.closest('.ex-x')) return hide();
+      const sb = e.target.closest('.seg button');
+      if(sb && cur){
+        sb.parentNode.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === sb));
+        list(byId(cur), Number(sb.dataset.s));
+      }
+    });
+    void sh.offsetWidth;
+    const fw = frame.clientWidth, fh = frame.clientHeight, w = Math.min(820, fw - 48);
+    requestAnimationFrame(() => {
+      dim.classList.add('on'); sh.classList.add('open');
+      put(sh, {l: (fw - w) / 2, t: 28, w, h: fh - 56});
+    });
+    cur = id;
+  }
+  function hide(){
+    if(!sh) return;
+    const s0 = sh;
+    s0.querySelector('.ex-sc').scrollTop = 0;
+    s0.classList.remove('open'); dim.classList.remove('on');
+    put(s0, rel(src));
+    setTimeout(() => { if(sh === s0) kill(); }, 500);
+    cur = null;
+  }
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) show(c.dataset.id);
+  });
+  return {open: show};
+}
+
+/* ───── F: tabbed sheet with a party band ───── */
+function mountF(sc, frame, v2 = false, dl = null){
+  sc.innerHTML = listing();
+  const host = overlay(frame, 'fx-host');
+  let cur = null, tab = null, si = 0, hist = true;
+  /* F2b–F2d: "No parties yet" drops the live room and the history */
+  const title = id => hist ? byId(id) : {...byId(id), live: null};
+  function facts(s){
+    if(s.type === 'movie') return [['Released', s.y], ['Runtime', s.len], ['Language', 'English']];
+    const ss = seasons(s), eps = ss.flatMap(g => g.eps);
+    return [['Aired', s.y], ['Seasons', ss.length], ['Episodes', eps.length], ['Runtime', runtime(eps)], ['Language', 'English']];
+  }
+  function details(s){
+    if(dl === 'stats') return `<div class="f2-stats">${facts(s).map(([k,v]) => `<div><b>${v}</b><span>${k}</span></div>`).join('')}</div>`;
+    const rows = facts(s).filter(([k]) => !(s.type === 'series' && (k === 'Seasons' || k === 'Episodes')));
+    const sz = s.type === 'series' ? [['Seasons', `<div class="f2-sz">${seasons(s).map(g => `<span>${g.t}<em>${g.eps.length} episodes · ${runtime(g.eps)}</em></span>`).join('')}</div>`]] : [];
+    return `<dl class="f2-rows">${[...rows, ...sz].map(([k,v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`;
+  }
+  function history(s){
+    if(!hist) return '';
+    return `<div class="fx-pp">${pastParties(s).map(p => `<button class="pp"><span class="avs">${me('sm')}${p.who.map(n => av(n,'sm')).join('')}</span>
+      <b class="who">${names(['You', ...p.who])}</b><span class="at">${p.at}</span><span class="when">${p.when}</span><span class="ar">${CHEV}</span></button>`).join('')}</div>`;
+  }
+  const tabsFor = s => dl
+    ? [s.type === 'series' && ['eps','Episodes'], hist && ['parties','Parties'], dl !== 'hero' && ['about','Details']].filter(Boolean)
+    : [s.type === 'series' && ['eps','Episodes'], ['parties','Parties'], ['about','Details']].filter(Boolean);
+
+  function band(s){
+    if(v2) return s.live ? `<div class="fx-band"><span class="lv"><i></i>Live</span>
+      <span class="avs">${me('sm')}${s.live.map(n => av(n,'sm')).join('')}</span>
+      <span>Your room with <b>${names(s.live)}</b> <span class="r">· ${s.ep || s.at}</span></span>
+      <button class="btn sm wh">Join</button></div>` : '';
+    if(!s.live) return `<div class="fx-band"><span>No one is watching this right now.</span><span class="r">Start a party and it shows here for your friends.</span></div>`;
+    const where = s.ep || s.at;
+    return `<div class="fx-band"><span class="lv"><i></i>Live</span>
+      <span class="avs">${s.live.map(n => av(n,'sm')).join('')}</span>
+      <span><b>${names(s.live)}</b> ${s.live.length > 1 ? 'are' : 'is'} watching</span>
+      <span class="r">${where}</span></div>`;
+  }
+  function body(s){
+    const tabs = tabsFor(s);
+    return `<div class="bx-ov"><div class="bx fx${v2 ? ' f2' : ''}${dl ? ' f2x' : ''}">
+      <div class="fx-hero">${still(s)}
+        <button class="bx-x xbtn">${X}</button>
+        <div class="fx-hc">
+          <h3>${esc(s.t)}</h3>
+          <div class="lb">${metaL(s)}</div>
+          <p>${esc(s.s)}</p>
+          ${dl === 'hero' ? `<dl class="f2-hf">${facts(s).map(([k,v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>` : ''}
+          <div class="bx-act">${v2 ? `<button class="btn pk">${PLAY()} Start Party</button>` : actions(s)}</div>
+        </div>
+      </div>
+      ${band(s)}
+      ${tabs.length > 1 || !dl ? `<div class="fx-tabs">${tabs.map(([k,l]) => `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${l}</button>`).join('')}</div>` : ''}
+      ${tabs.length ? `<div class="fx-pane${tabs.length > 1 || !dl ? '' : ' solo'}"></div>` : ''}
+    </div></div>`;
+  }
+  function pane(){
+    const s = title(cur), el = host.querySelector('.fx-pane');
+    if(!el) return;
+    if(tab === 'eps'){
+      const ss = seasons(s), g = ss[si];
+      el.innerHTML = `<div class="fx-ph">${dd(ss, si)}<span class="lb">${g.eps.length} episodes · ${runtime(g.eps)}</span></div>
+        <div class="fx-grid">${g.eps.map((e,k) => `<button class="fx-ep ix-rise" style="--d:${k*24}ms">
+          <span class="th">${still(s, e.pat)}<span class="pl">${PLAY(18)}</span></span>
+          <b>${e.n}. ${esc(e.t)}</b><span class="sy">${esc(e.s)}</span><span class="d">${mins(e.d)}</span></button>`).join('')}</div>`;
+    } else if(tab === 'parties'){
+      el.innerHTML = dl ? history(s) : `<div class="fx-pp">${partyRows(s, false)}</div>`;
+    } else if(dl){
+      el.innerHTML = details(s);
+    } else {
+      el.innerHTML = `<div class="fx-about"><p>${esc(s.s)}</p>${metaGrid(s)}</div>`;
+    }
+  }
+  function show(id, h){
+    if(h !== undefined) hist = h;
+    const s = title(id), tabs = tabsFor(s);
+    cur = id; si = 0;
+    tab = s.type === 'series' ? 'eps' : tabs.some(([k]) => k === 'parties') ? 'parties' : tabs[0] && tabs[0][0];
+    host.innerHTML = body(s);
+    pane();
+    requestAnimationFrame(() => host.querySelector('.bx-ov').classList.add('on'));
+  }
+  function hide(){
+    const ov = host.querySelector('.bx-ov');
+    if(!ov) return;
+    ov.classList.remove('on');
+    setTimeout(() => { if(host.querySelector('.bx-ov') === ov) host.innerHTML = ''; }, 320);
+    cur = null;
+  }
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) show(c.dataset.id);
+  });
+  host.addEventListener('click', e => {
+    const menu = host.querySelector('.dd-m');
+    if(menu && !e.target.closest('.dd')) menu.hidden = true;
+    if(e.target.closest('.bx-x') || e.target.classList.contains('bx-ov')) return hide();
+    const t = e.target.closest('[data-tab]');
+    if(t){
+      tab = t.dataset.tab;
+      host.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('on', b === t));
+      return pane();
+    }
+    if(e.target.closest('[data-dd]')){ menu.hidden = !menu.hidden; return; }
+    const sb = e.target.closest('[data-season]');
+    if(sb){ si = Number(sb.dataset.season); pane(); }
+  });
+  return {open: show};
+}
+
+/* ───── G: split sheet with an episode playlist ───── */
+function mountG(sc, frame){
+  sc.innerHTML = listing();
+  const host = overlay(frame, 'gx-host');
+  let cur = null, si = 0, ei = 0;
+
+  function acts(s, ep){
+    const at = ep ? ` at E${ep.n}` : '';
+    if(s.live) return `<button class="btn pk">${PLAY()} Join ${s.live[0]}’s party</button>
+      <button class="btn ln">Start your own${at}</button><button class="ic" title="Copy link">${LINK}</button>`;
+    return `<button class="btn pk">${PLAY()} Start a party${at}</button>
+      <button class="btn gh">${PLUS} Invite</button><button class="ic" title="Copy link">${LINK}</button>`;
+  }
+  function left(){
+    const s = byId(cur), ep = s.type === 'series' ? seasons(s)[si].eps[ei] : null;
+    host.querySelector('.gx-l').innerHTML = `
+      <div class="gx-still">${still(s, ep ? ep.pat : null)}${ep ? `<span class="gx-tag">S${si+1} · E${ep.n}</span>` : ''}</div>
+      <div class="lb">${metaL(s)}</div>
+      <h3>${esc(s.t)}</h3>
+      <p class="gx-syn">${esc(s.s)}</p>
+      ${ep ? `<div class="gx-epb"><span class="lb">Selected episode</span><b>${ep.n}. ${esc(ep.t)} · ${mins(ep.d)}</b><p>${esc(ep.s)}</p></div>` : ''}
+      <div class="bx-act">${acts(s, ep)}</div>
+      ${ep ? '' : metaGrid(s)}`;
+  }
+  function right(){
+    const s = byId(cur), el = host.querySelector('.gx-rin');
+    if(s.type !== 'series'){
+      el.innerHTML = `<div class="gx-rh"><h4>Parties</h4><span class="lb">${s.live ? s.live.length + ' watching now' : 'No one watching now'}</span></div>
+        <div class="gx-list">${partyRows(s)}</div>`;
+      return;
+    }
+    const ss = seasons(s), g = ss[si], lv = liveEp(s);
+    el.innerHTML = `<div class="gx-rh"><h4>Episodes</h4>${pills(ss, si)}<span class="lb">${g.eps.length} episodes · ${runtime(g.eps)}</span></div>
+      <div class="gx-list">${g.eps.map((e,k) => {
+        const on = k === ei, here = lv && lv.si === si && lv.n === e.n;
+        return `<button class="gx-e ${on ? 'on' : ''}" data-e="${k}">
+          <span class="n">${on ? PLAY(12) : e.n}</span><span class="t">${esc(e.t)}</span>
+          <span class="d">${here ? `<span class="avs">${s.live.map(n => av(n)).join('')}</span>` : ''}${mins(e.d)}</span></button>`;
+      }).join('')}</div>`;
+  }
+  function show(id){
+    const s = byId(id), lv = liveEp(s);
+    cur = id; si = lv ? lv.si : 0; ei = lv ? lv.n - 1 : 0;
+    host.innerHTML = `<div class="bx-ov"><div class="bx gx"><button class="gx-x xbtn">${X}</button>
+      <div class="gx-in"><div class="gx-l"></div><div class="gx-r"><div class="gx-rin"></div></div></div></div></div>`;
+    left(); right();
+    requestAnimationFrame(() => host.querySelector('.bx-ov').classList.add('on'));
+  }
+  function hide(){
+    const ov = host.querySelector('.bx-ov');
+    if(!ov) return;
+    ov.classList.remove('on');
+    setTimeout(() => { if(host.querySelector('.bx-ov') === ov) host.innerHTML = ''; }, 320);
+    cur = null;
+  }
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) show(c.dataset.id);
+  });
+  host.addEventListener('click', e => {
+    if(e.target.closest('.gx-x') || e.target.classList.contains('bx-ov')) return hide();
+    const r = e.target.closest('[data-e]');
+    if(r){ ei = Number(r.dataset.e); left(); right(); return; }
+    const sb = e.target.closest('.seg button');
+    if(sb){ si = Number(sb.dataset.s); ei = 0; left(); right(); }
+  });
+  return {open: show};
+}
+
+/* ───── H: ambient column with a docked bar ───── */
+function mountH(sc, frame){
+  sc.innerHTML = listing();
+  const host = overlay(frame, 'hx');
+  host.innerHTML = `<div class="hx-bg"></div><div class="hx-sc"><div class="hx-col"></div></div>
+    <div class="hx-tr"><button class="ic sm" title="Copy link">${LINK}</button><button class="hx-x xbtn">${X}</button></div>`;
+  const bg = host.querySelector('.hx-bg'), col = host.querySelector('.hx-col'), scr = host.querySelector('.hx-sc');
+  let cur = null, si = 0, ei = 0;
+
+  function bar(){
+    const s = byId(cur);
+    if(s.type === 'series'){
+      const ep = seasons(s)[si].eps[ei];
+      return `<span class="t"><span class="lb">Starting at</span><b>S${si+1} · E${ep.n}</b> · ${esc(ep.t)}</span>
+        <button class="btn sm pk">${PLAY()} Start a party</button>`;
+    }
+    if(s.live) return `<span class="avs">${s.live.map(n => av(n,'sm')).join('')}</span>
+      <span class="t"><b>${names(s.live)}</b> ${s.live.length > 1 ? 'are' : 'is'} ${s.at}</span>
+      <button class="btn sm ln">Start your own</button><button class="btn sm pk">${PLAY()} Join</button>`;
+    return `<span class="t"><span class="lb">Ready when you are</span><b>${s.len}</b></span>
+      <button class="btn sm pk">${PLAY()} Start a party</button>`;
+  }
+  function eps(){
+    const s = byId(cur), el = col.querySelector('.hx-list');
+    if(!el) return;
+    el.innerHTML = seasons(s)[si].eps.map((e,k) => `<button class="hx-e ${k === ei ? 'on' : ''}" data-e="${k}">
+      <span class="th">${still(s, e.pat)}</span>
+      <span class="tx"><b>${e.n}. ${esc(e.t)}</b><span class="sy">${esc(e.s)}</span></span>
+      <span class="d">${mins(e.d)}</span></button>`).join('');
+    col.querySelector('.hx-bar').innerHTML = bar();
+  }
+  function show(id){
+    const s = byId(id), ss = s.type === 'series' ? seasons(s) : null;
+    cur = id; si = 0; ei = 0;
+    bg.innerHTML = still(s);
+    col.innerHTML = `<div class="hx-still">${still(s)}</div>
+      <h3>${esc(s.t)}</h3>
+      <div class="lb">${metaL(s)}</div>
+      <p class="hx-syn">${esc(s.s)}</p>
+      ${ss && s.live ? liveRow(s) : ''}
+      ${ss ? `<div class="hx-sech"><h4>Episodes</h4>${pills(ss, 0)}</div><div class="hx-list"></div>`
+        : `<div class="hx-sech"><h4>Details</h4></div>${metaGrid(s)}<div class="hx-sech"><h4>Your parties</h4></div>${partyRows(s, false).replace('<div class="pp-h lb">Your parties</div>', '')}`}
+      <div class="hx-bar">${bar()}</div>`;
+    scr.scrollTop = 0;
+    if(ss) eps();
+    requestAnimationFrame(() => host.classList.add('on'));
+  }
+  function hide(){ host.classList.remove('on'); cur = null; }
+  sc.addEventListener('click', e => {
+    const c = e.target.closest('.lx-c');
+    if(c) show(c.dataset.id);
+  });
+  host.addEventListener('click', e => {
+    if(e.target.closest('.hx-x') || e.target === scr) return hide();
+    const r = e.target.closest('[data-e]');
+    if(r){ ei = Number(r.dataset.e); return eps(); }
+    const sb = e.target.closest('.seg button');
+    if(sb){
+      sb.parentNode.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === sb));
+      si = Number(sb.dataset.s); ei = 0; eps();
+    }
+  });
+  return {open: show};
+}
+
 /* ───── mount ───── */
-const MOUNTS = {now: mountNow, a: mountA, b: mountB, c: mountC, d: mountD};
+const MOUNTS = {now: mountNow, a: mountA, b: mountB, c: mountC, d: mountD, e: mountE, f: mountF, f2: (sc, fr) => mountF(sc, fr, true), f2b: (sc, fr) => mountF(sc, fr, true, 'rows'), f2c: (sc, fr) => mountF(sc, fr, true, 'stats'), f2d: (sc, fr) => mountF(sc, fr, true, 'hero'), g: mountG, h: mountH};
 const API = {};
 document.querySelectorAll('[data-mount]').forEach(sc => {
   API[sc.dataset.mount] = MOUNTS[sc.dataset.mount](sc, sc.closest('.frame'));
@@ -756,13 +1379,18 @@ document.querySelectorAll('.var').forEach(v => {
   const key = sc.dataset.mount;
   const row = document.createElement('div');
   row.className = 'state';
-  row.innerHTML = `<span>Showing</span><span class="seg"><button aria-pressed="true" data-t="velvet">Movie</button><button aria-pressed="false" data-t="hollow">Series</button></span><span>· or click any card in the listing</span>`;
+  const hasHist = 'hist' in sc.dataset;
+  let t = 'velvet', h = true;
+  row.innerHTML = `<span>Showing</span><span class="seg"><button aria-pressed="true" data-t="velvet">Movie</button><button aria-pressed="false" data-t="hollow">Series</button></span>`
+    + (hasHist ? `<span class="seg"><button aria-pressed="true" data-h="1">Past parties</button><button aria-pressed="false" data-h="0">No parties yet</button></span>` : '')
+    + `<span>· or click any card in the listing</span>`;
   v.querySelector('.frame').before(row);
   row.addEventListener('click', e => {
-    const b = e.target.closest('button[data-t]');
+    const b = e.target.closest('button[data-t],button[data-h]');
     if(!b) return;
-    row.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-    API[key].open(b.dataset.t);
+    b.parentNode.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    if(b.dataset.t) t = b.dataset.t; else h = b.dataset.h === '1';
+    API[key].open(t, hasHist ? h : undefined);
   });
   API[key].open('velvet');
 });

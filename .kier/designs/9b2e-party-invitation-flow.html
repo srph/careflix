@@ -517,6 +517,155 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .t6-info .troom{padding-bottom:10px}
 .t6-acts{display:flex;gap:10px;margin-top:16px}
 .t6-acts .btn{min-width:124px}
+/* A4b / A4c — A4 without the ring: a 48px pill, avatar and Respond inset alike; A4b keeps the expiry as a beam */
+.t4x{width:384px;height:48px;border-radius:24px}
+.stage[data-keys~="focus"] .t4x{width:432px;height:calc(var(--t4xh,420px) + 2px);border-radius:16px}
+.stage[data-keys~="watch"] .t4x{bottom:64px}
+.tl2{display:flex;align-items:center;gap:10px;height:46px;padding:0 7px}
+.tl2 .av{width:32px;height:32px;font-size:13px}
+.tl2 p{min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl2 p b{font-weight:600}
+.tl2 .sp{margin-left:auto}
+.tl2 .btn{height:32px;border-radius:16px;padding:0 16px;line-height:1}
+.tl2 .x{color:var(--n5);font-size:12px;padding:0 9px}
+.tl2 .a-spin{flex:none;margin-right:8px}
+.t4x .t4-body{opacity:0;transition:opacity .3s}
+.stage[data-keys~="focus"] .t4x .t4-body{opacity:1;transition-delay:.2s}
+.t4x .t4-th{margin:0 7px}
+.t4x .t4-room{padding:14px 12px 0}
+.beam{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:1;pointer-events:none;transition:opacity .3s}
+.beam i{display:block;height:100%;background:linear-gradient(90deg,rgba(232,54,143,.12),var(--pk) 80%,#ffd3e9);box-shadow:0 0 10px 1px rgba(232,54,143,.65);transform-origin:left}
+.stage[data-keys~="arrive"] .beam i,.stage[data-keys~="focus"] .beam i{animation:bar 16s linear forwards}
+.stage[data-keys~="answer-exp"] .beam i{transform:scaleX(0)}
+.stage[data-keys~="answer-acc"] .beam,.stage[data-keys~="answer-dec"] .beam,.stage[data-keys~="answer-can"] .beam{opacity:0}
+/* A4b2 — a 40px pill fitted to its line, no beam; the room rides the timeline; stays open when it expires */
+.t4y{width:var(--t4yw,344px);height:40px;border-radius:20px}
+.stage[data-keys~="focus"] .t4y,.stage[data-keys~="answer-exp"] .t4y{width:400px;height:calc(var(--t4yh,420px) + 2px);border-radius:16px}
+.stage[data-keys~="answer-exp"] .t4y{filter:none}
+.stage[data-keys~="watch"] .t4y,.stage[data-keys~="watch"] .t4y-deck{bottom:64px}
+.tl3{display:flex;align-items:center;gap:9px;height:38px;padding:0 7px}
+.tl3 .av{width:24px;height:24px;font-size:10.5px}
+.tl3 p{min-width:0;font-size:13px;letter-spacing:-.005em;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl3 p b{font-weight:600;color:#fff}
+.tl3 .sp{margin-left:auto}
+.tl3 .btn{height:24px;border-radius:12px;padding:0 12px;font-size:12px;line-height:1}
+.tl3 .x{color:var(--n5);font-size:12px;padding:0 8px}
+.tl3 .a-spin{flex:none;width:14px;height:14px;margin-right:5px}
+.t4y-more{flex:none;align-items:center;height:20px;padding:0 7px;border-radius:10px;background:rgba(255,255,255,.08);color:#cbd5e1;font-size:11px;font-weight:600}
+.t4y-tabs{gap:2px}
+.t4y-tabs button{display:flex;align-items:center;gap:6px;height:28px;padding:0 11px 0 3px;border-radius:14px;font-size:12px;font-weight:600;color:var(--n5)}
+.t4y-tabs button.on{background:rgba(255,255,255,.09);color:#fff}
+.t4y-tabs .av{width:22px;height:22px;font-size:9.5px}
+.t4y-body{opacity:0;transition:opacity .3s}
+.stage[data-keys~="focus"] .t4y-body,.stage[data-keys~="answer-exp"] .t4y-body{opacity:1;transition-delay:.2s}
+.t4y-art{margin:2px 7px 0;aspect-ratio:16/9;border-radius:9px;overflow:hidden;container-type:inline-size;transition:filter .4s}
+.t4y-info{padding:13px 13px 0}
+.t4y-info h3{font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.t4y-info .sub{color:var(--n5);margin-top:5px}
+.tlm{padding:18px 13px 0;transition:filter .4s}
+.tlm-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:12px;color:var(--n5);margin-bottom:9px;white-space:nowrap}
+.tlm-row b{font-weight:600;color:#fff}
+.tlm-row .tn{font-variant-numeric:tabular-nums}
+.tlm-track{position:relative;height:20px}
+.tlm-bar,.tlm-seg{position:absolute;left:0;right:0;top:8px;height:4px}
+.tlm-bar{border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.tlm-bar i,.tlm-seg u{position:absolute;left:0;top:0;bottom:0;background:var(--pk);border-radius:2px}
+.tlm-seg{display:flex;gap:3px}
+.tlm-seg i{position:relative;flex:1;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.tlm-seg i.on{background:rgba(255,255,255,.24)}
+.tlm-head{position:absolute;top:0;display:flex;transform:translateX(-50%)}
+.tlm-head .av{width:20px;height:20px;font-size:9px;box-shadow:0 0 0 2px #17222e}
+.tlm-head .av+.av{margin-left:-6px}
+.t4y-acts{gap:8px;padding:18px 8px 8px}
+.t4y-acts .btn{flex:1;border-radius:8px}
+.stage[data-keys~="answer-exp"] .t4y-art,.stage[data-keys~="answer-exp"] .tlm{filter:grayscale(1) brightness(.7)}
+.t4y-deck{position:absolute;left:50%;bottom:20px;z-index:5;width:var(--t4yw,344px);height:40px;transform:translateX(-50%) translateY(170%);opacity:0;
+  transition:transform .55s cubic-bezier(.2,.9,.3,1.12) .06s,opacity .3s,bottom .45s}
+.stage[data-keys~="arrive"] .t4y-deck{transform:translateX(-50%);opacity:1}
+.t4y-deck i{position:absolute;inset:0;border-radius:20px;background:#2a3846;border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 24px -12px rgba(0,0,0,.8)}
+.t4y-deck i:nth-child(1){transform:translateY(-16px) scale(.86);opacity:.55}
+.t4y-deck i:nth-child(2){transform:translateY(-8px) scale(.93);opacity:.9}
+/* A4b2b — A4b2 inside a border beam (libraries.dev/beam, colorful): a conic window spins round the edge
+   over rainbow blobs, a white highlight and a blurred bloom. The beam is the invitation being live: it fades when it lapses */
+@property --ba{syntax:'<angle>';initial-value:0deg;inherits:true}
+@keyframes bspin{to{--ba:360deg}}
+@keyframes bhue{0%,100%{filter:hue-rotate(-30deg) brightness(1.3) saturate(1.2)}50%{filter:hue-rotate(30deg) brightness(1.3) saturate(1.2)}}
+.t4z{border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 26px 54px -16px rgba(0,0,0,.85)}
+.stage[data-keys~="focus"] .t4z,.stage[data-keys~="answer-exp"] .t4z{height:var(--t4yh,420px)}
+.t4z .tl3{height:40px;padding:0 8px}
+.bbeam{--bc:radial-gradient(ellipse 70px 40px at 33% -7.4%,rgb(255,50,100),transparent),radial-gradient(ellipse 60px 35px at 12% -5%,rgb(40,140,255),transparent),
+    radial-gradient(ellipse 40px 70px at 2.1% 68.3%,rgb(50,200,80),transparent),radial-gradient(ellipse 20px 35px at 2.1% 68.3%,rgb(30,185,170),transparent),
+    radial-gradient(ellipse 180px 32px at 74.4% 100%,rgb(100,70,255),transparent),radial-gradient(ellipse 85px 26px at 55% 100%,rgb(40,140,255),transparent),
+    radial-gradient(ellipse 74px 32px at 93.9% 0%,rgb(255,120,40),transparent),radial-gradient(ellipse 26px 42px at 100% 27.1%,rgb(240,50,180),transparent),
+    radial-gradient(ellipse 52px 48px at 100% 27.1%,rgb(180,40,240),transparent);
+  --ring:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  position:absolute;inset:0;z-index:3;border-radius:inherit;pointer-events:none;animation:bspin 1.96s linear infinite;transition:opacity .5s ease}
+.bbeam::after,.bbeam::before,.bbeam i{content:"";position:absolute;inset:0;border-radius:inherit}
+.bbeam::after{padding:1px;opacity:1;animation:bhue 12s ease-in-out infinite;
+  background:conic-gradient(from var(--ba),transparent 0 54%,rgba(255,255,255,.1) 57%,rgba(255,255,255,.3) 60%,rgba(255,255,255,.6) 63%,rgba(255,255,255,.75) 66%,rgba(255,255,255,.6) 69%,rgba(255,255,255,.3) 72%,rgba(255,255,255,.1) 75%,transparent 78%),var(--bc);
+  -webkit-mask:conic-gradient(from var(--ba),transparent 0 30%,rgba(255,255,255,.1) 36%,rgba(255,255,255,.35) 44%,#fff 52% 80%,rgba(255,255,255,.35) 86%,rgba(255,255,255,.1) 92%,transparent 95%),var(--ring);
+  -webkit-mask-composite:source-in,xor;
+  mask:conic-gradient(from var(--ba),transparent 0 30%,rgba(255,255,255,.1) 36%,rgba(255,255,255,.35) 44%,#fff 52% 80%,rgba(255,255,255,.35) 86%,rgba(255,255,255,.1) 92%,transparent 95%),var(--ring);
+  mask-composite:intersect,exclude}
+.bbeam::before{opacity:.36;background:var(--bc);box-shadow:inset 0 0 5px 1px rgba(255,255,255,.3);animation:bhue 12s ease-in-out infinite;
+  -webkit-mask:conic-gradient(from var(--ba),transparent 0 22%,rgba(255,255,255,.12) 28%,rgba(255,255,255,.4) 36%,#fff 46% 82%,rgba(255,255,255,.4) 88%,rgba(255,255,255,.12) 94%,transparent 97%);
+  mask:conic-gradient(from var(--ba),transparent 0 22%,rgba(255,255,255,.12) 28%,rgba(255,255,255,.4) 36%,#fff 46% 82%,rgba(255,255,255,.4) 88%,rgba(255,255,255,.12) 94%,transparent 97%)}
+.bbeam i{padding:1px;opacity:.6;filter:blur(8px) brightness(1.3) saturate(1.2);
+  background:conic-gradient(from var(--ba),transparent 0 58%,rgba(255,255,255,.03) 62%,rgba(255,255,255,.08) 65%,rgba(255,255,255,.2) 67%,rgba(255,255,255,.45) 69%,rgba(255,255,255,.85) 70% 70.5%,rgba(255,255,255,.45) 71.5%,rgba(255,255,255,.2) 73%,rgba(255,255,255,.08) 75%,rgba(255,255,255,.03) 78%,transparent 82%);
+  -webkit-mask:var(--ring);-webkit-mask-composite:xor;mask:var(--ring);mask-composite:exclude}
+@media (prefers-reduced-motion:reduce){.bbeam,.bbeam::after,.bbeam::before{animation:none}}
+.stage[data-keys~="answer"] .bbeam{opacity:0}
+.stage[data-kind="multi"][data-keys~="answer-exp"] .bbeam{opacity:1}
+.stage[data-keys~="answer-exp"] .t4z .t4y-tabs button.on{color:var(--n5)}
+.stage[data-keys~="answer-exp"] .t4z .t4y-tabs button.on .av{filter:grayscale(1) brightness(.7)}
+.stage[data-keys~="answer-exp"] .t4z .t4y-info h3{color:#aab6c1}
+/* A4b2b2–5 — the beam belongs to the pill: opening the card puts it out. Each one answers Accept differently */
+.stage[data-keys~="focus"] .bbeam.bq,.stage[data-keys~="answer-exp"] .bbeam.bq{opacity:0}
+.tlm-head .av.wi{justify-content:center}
+.stage[data-keys~="answer-acc"] .tlm-head .av.wi{animation:popIn .45s cubic-bezier(.2,.9,.3,1.4) .25s both}
+/* b2: the beam comes back, faster, and is the only spinner */
+.stage[data-keys~="answer-acc"] .jb .bbeam{opacity:1;animation-duration:.8s}
+/* b3: the card stays open and counts down three seconds, with Undo */
+.stage[data-keys~="answer-acc"] .t4y.ju{width:400px;height:var(--t4yha,420px);border-radius:16px}
+.stage[data-keys~="watch"][data-keys~="answer-acc"] .t4y.ju{height:var(--t4yhw,460px)}
+.stage[data-keys~="answer-acc"] .ju .t4y-body{opacity:1;transition-delay:0s}
+@property --cd{syntax:'<integer>';initial-value:3;inherits:false}
+@keyframes cd{from{--cd:3}to{--cd:1}}
+@keyframes fillx{from{transform:scaleX(0)}to{transform:none}}
+.t4y-cd{position:relative;overflow:hidden}
+.t4y-cd i{position:absolute;inset:0;background:rgba(255,255,255,.2);transform-origin:left;animation:fillx 3s linear both}
+.t4y-cd span{position:relative}
+.t4y-cd em{font-style:normal;font-variant-numeric:tabular-nums}
+.t4y-cd em::after{counter-reset:cd var(--cd);content:counter(cd);animation:cd 3s steps(3,jump-none) both}
+.t4y-hold{display:flex;align-items:center;gap:8px;margin:14px 13px 0;padding:9px 11px;border-radius:8px;background:rgba(255,255,255,.05);font-size:12px;color:var(--n5)}
+.t4y-hold b{font-weight:600;color:#fff}
+.stage:not([data-keys~="watch"]) .t4y-hold{display:none !important}
+/* b4: the card's artwork lifts out and becomes the room's player */
+.t4g{position:absolute;left:var(--gl,0);top:var(--gt,0);width:var(--gw,386px);height:var(--gh,217px);z-index:7;border-radius:9px;overflow:hidden;opacity:0;pointer-events:none;
+  transition:left .65s cubic-bezier(.2,.8,.2,1),top .65s cubic-bezier(.2,.8,.2,1),width .65s cubic-bezier(.2,.8,.2,1),height .65s cubic-bezier(.2,.8,.2,1),border-radius .65s,opacity .15s}
+.stage[data-keys~="watch"] .t4g{left:var(--gwl,0);top:var(--gwt,0);width:var(--gww,386px);height:var(--gwh,217px)}
+.stage[data-keys~="answer-acc"] .t4g,.stage[data-keys~="watch"][data-keys~="answer-acc"] .t4g{opacity:1;left:0;top:0;width:calc(100% - 232px);height:100%;border-radius:0}
+.t4g .art{position:absolute;inset:0}
+.t4g-side{position:absolute;top:0;right:0;bottom:0;width:232px;z-index:7;background:var(--n2);border-left:1px solid #000;transform:translateX(100%);transition:transform .65s cubic-bezier(.2,.8,.2,1)}
+.stage[data-keys~="answer-acc"] .t4g-side{transform:none}
+.t4g-ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(6,9,13,.45);opacity:0;transition:opacity .4s .45s}
+.stage[data-keys~="answer-acc"] .t4g-ov{opacity:1}
+.t4g-chip{display:flex;align-items:center;gap:10px;height:40px;padding:0 14px 0 8px;border-radius:20px;background:rgba(21,32,43,.92);font-size:13px;color:var(--n5)}
+.t4g-chip b{font-weight:600;color:#fff}
+.t4g-chip .av{width:24px;height:24px;font-size:10.5px;box-shadow:0 0 0 2px #15202b}
+.t4g-chip .av+.av{margin-left:-8px}
+.t4g-chip .a-spin{width:14px;height:14px}
+.stage[data-keys~="answer-acc"] .t4y.jg{width:400px;height:var(--t4yh,420px);border-radius:16px;opacity:0}
+.stage[data-keys~="answer-acc"] .jg .t4y-body{opacity:1;transition-delay:0s}
+/* b5: the pill follows her in, docks over the room's player, beams once, then leaves */
+@keyframes dockout{to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+.t4y.jd{transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),
+  border-radius .45s,bottom .7s cubic-bezier(.2,.8,.2,1),left .7s cubic-bezier(.2,.8,.2,1),filter .4s}
+.stage[data-keys~="after-acc"] .t4y.jd{z-index:9;opacity:1;transform:translateX(-50%);left:calc(50% - 116px);bottom:calc(100% - 60px);width:max-content;
+  animation:dockout .45s ease 3.4s forwards}
+.t4y-stack{align-items:center}
+.t4y-stack .av{box-shadow:0 0 0 2px #15202b}
+.t4y-stack .av+.av{margin-left:-8px}
 </style>
 </head>
 <body>
@@ -579,6 +728,93 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="notes">
     <div class="note good">One line, one ring, one button.</div>
     <div class="note bad">Open, it covers her screen's middle.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b" data-id="A4b" data-name="Pill with a beam countdown">
+  <div class="var-h"><span class="id">A4b</span><h2>Pill with a beam countdown</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b"></div></div>
+  <div class="rail" data-rail="v-a4b"></div>
+  <div class="notes">
+    <div class="note good">The beam drains as the invitation runs out.</div>
+    <div class="note good">Avatar and Respond sit at the same inset.</div>
+    <div class="note bad">A 2px line can read as decoration.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4c" data-id="A4c" data-name="Pill, no countdown">
+  <div class="var-h"><span class="id">A4c</span><h2>Pill, no countdown</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4c"></div></div>
+  <div class="rail" data-rail="v-a4c"></div>
+  <div class="notes">
+    <div class="note good">Calmest line: avatar, sentence, Respond.</div>
+    <div class="note bad">Nothing says the invitation will expire.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b2" data-id="A4b2" data-name="Compact pill, the room on the timeline">
+  <div class="var-h"><span class="id">A4b2</span><h2>Compact pill, the room on the timeline</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b2"></div></div>
+  <div class="rail" data-rail="v-a4b2" data-kinds="movie=Movie|series=Series|multi=3 invites"></div>
+  <div class="notes">
+    <div class="note good">Their avatars mark where the room is.</div>
+    <div class="note good">A series shows the season, one segment per episode.</div>
+    <div class="note bad">Nothing says the invitation will expire.</div>
+    <div class="note bad">Collapsed, three invites show only one title.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b2b" data-id="A4b2b" data-name="Border beam while the invite is live">
+  <div class="var-h"><span class="id">A4b2b</span><h2>Border beam while the invite is live</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b2b"></div></div>
+  <div class="rail" data-rail="v-a4b2b" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The beam going dark is the expiry.</div>
+    <div class="note good">Expired, it says the room plays on without her.</div>
+    <div class="note bad">A rainbow is off-brand next to the pink.</div>
+    <div class="note bad">Constant motion beside her episode.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b2b2" data-id="A4b2b2" data-name="Beam carries the join">
+  <div class="var-h"><span class="id">A4b2b2</span><h2>Beam carries the join</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b2b2"></div></div>
+  <div class="rail" data-rail="v-a4b2b2" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Open, the card is still.</div>
+    <div class="note good">Joining, the beam laps faster; no spinner.</div>
+    <div class="note bad">Joining looks like a fresh invite.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b2b3" data-id="A4b2b3" data-name="Accept counts down, with Undo">
+  <div class="var-h"><span class="id">A4b2b3</span><h2>Accept counts down, with Undo</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b2b3"></div></div>
+  <div class="rail" data-rail="v-a4b2b3" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp data-hold="3400"></div>
+  <div class="notes">
+    <div class="note good">Three seconds to take back a misclick.</div>
+    <div class="note good">Mid-episode, her show says it will wait.</div>
+    <div class="note bad">Every join costs three seconds.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b2b4" data-id="A4b2b4" data-name="The artwork opens into the room">
+  <div class="var-h"><span class="id">A4b2b4</span><h2>The artwork opens into the room</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b2b4"></div></div>
+  <div class="rail" data-rail="v-a4b2b4" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The poster she said yes to becomes the player.</div>
+    <div class="note bad">Big motion over her own episode.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4b2b5" data-id="A4b2b5" data-name="The pill follows her into the room">
+  <div class="var-h"><span class="id">A4b2b5</span><h2>The pill follows her into the room</h2></div>
+  <div class="frame"><div class="mk" data-mount="a4b2b5"></div></div>
+  <div class="rail" data-rail="v-a4b2b5" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The room greets her with the same pill.</div>
+    <div class="note bad">Repeats the room's own "You joined".</div>
   </div>
 </section>
 
@@ -645,9 +881,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from A4 on mobile.</div>
-    <div><b>Remix</b>Remix A5 with two invitations stacked.</div>
-    <div><b>Settle</b>Settle on A4 if one line suffices.</div>
+    <div><b>Explore</b>Explore from A4b2b3 on mobile.</div>
+    <div><b>Remix</b>Remix A4b2b4 with Undo during the grow.</div>
+    <div><b>Settle</b>Settle on A4b2b3 if Undo earns its three seconds.</div>
   </div>
 </section>
 </main>
@@ -870,6 +1106,145 @@ function mountA4(sc){
   autoHeight(sc.querySelector('.stage'), '.t4-in', 't4h');
 }
 
+/* ───── A4b / A4c — A4 without the ring; A4b keeps the expiry as a beam ───── */
+function mountA4x(v, beam){
+  return sc => {
+    const card = `<div class="tcard t4x">${beam ? '<div class="beam"><i></i></div>' : ''}<div class="t4x-in">
+      <div class="tl2">${av('Kier')}
+        <p data-w="arrive focus"><b>Kier</b> invited you to watch <b>${esc(FEAT.t)}</b></p>
+        <p data-w="answer-acc" style="color:var(--g)">Joining Kier's room…</p>
+        <p data-w="answer-dec">Maybe next time</p>
+        <p data-w="answer-exp">This invitation expired</p>
+        <p data-w="answer-can">Kier closed the room</p>
+        <span class="sp"></span>
+        <span class="btn pk sm wi" data-w="arrive">Respond</span>
+        <span class="a-spin" data-w="answer-acc"></span>
+        <span class="btn gh sm wi" data-w="answer-exp answer-can">Dismiss</span>
+        <span class="x" data-w="focus">✕</span>
+      </div>
+      <div class="t4-body">
+        <div class="t4-th">${poster(FEAT)}<div class="shade"></div>
+          <div class="d"><h6 class="sub">Movie · ${FEAT.y} · ${FEAT.len}</h6><h3>${esc(FEAT.t)}</h3></div></div>
+        <div class="t4-room">
+          <div class="troom">${av('Kier','s')}${av('Leo','s')}<span>Kier and Leo are in the room</span><em>41m in</em></div>
+          <div class="b-prog"><i></i><b></b></div>
+        </div>
+        <div class="t4-acts"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+      </div>
+    </div></div>`;
+    sc.innerHTML = shell(v, card);
+    autoHeight(sc.querySelector('.stage'), '.t4x-in', 't4xh');
+  };
+}
+
+/* ───── A4b2 — compact pill, the room on the timeline ───── */
+const INV = {
+  kier: {from:'Kier', room:['Kier','Leo'], show:FEAT, meta:`Movie · ${FEAT.y} · ${FEAT.len}`, at:'41:12', pct:33, left:'1h 23m left'},
+  kierS:{from:'Kier', room:['Kier','Leo'], show:byId('orbit'), meta:'Series · S1 · E7 · Graveyard Shift', ep:{s:1, e:7, of:10}, at:'18:40', pct:42},
+  mira: {from:'Mira', room:['Mira'], show:byId('paper'), meta:`Movie · ${byId('paper').y} · ${byId('paper').len}`, at:'12:30', pct:11, left:'1h 40m left'},
+  nico: {from:'Nico', room:['Nico'], show:byId('under'), meta:'Series · S1 · E2 · Places, Please', ep:{s:1, e:2, of:8}, at:'09:15', pct:21}
+};
+const KINDS = {movie:[INV.kier], series:[INV.kierS], multi:[INV.kier, INV.mira, INV.nico]};
+const who = r => r.length > 1 ? `<b>${r.slice(0,-1).join(', ')} and ${r.at(-1)}</b> are` : `<b>${r[0]}</b> is`;
+const names = r => r.length > 1 ? `${r.slice(0,-1).join(', ')} and ${r.at(-1)}` : r[0];
+const roomAt = v => v.ep ? `E${v.ep.e}, ${v.at}` : v.at;
+function timeline(v, o = {}){
+  let row, track, left;
+  if(v.ep){
+    const frac = (v.ep.e - 1 + v.pct / 100) / v.ep.of;
+    left = `calc((100% - ${(v.ep.of - 1) * 3}px) * ${frac} + ${(v.ep.e - 1) * 3}px)`;
+    row = `<span>${who(v.room)} on <b>E${v.ep.e}</b>, <b class="tn">${v.at}</b> in</span><span>Season ${v.ep.s} · ${v.ep.of} episodes</span>`;
+    track = `<div class="tlm-seg">${Array.from({length:v.ep.of}, (_, i) => i + 1 === v.ep.e ? `<i class="on"><u style="width:${v.pct}%"></u></i>` : '<i></i>').join('')}</div>`;
+  } else {
+    left = v.pct + '%';
+    row = `<span>${who(v.room)} at <b class="tn">${v.at}</b></span><span>${v.left}</span>`;
+    track = `<div class="tlm-bar"><i style="width:${v.pct}%"></i></div>`;
+  }
+  /* once it lapses the room keeps playing; say so instead of where they are */
+  const rows = o.beam
+    ? `<div class="tlm-row wf" data-w="arrive focus">${row}</div>
+       ${o.acc === 'undo' ? `<div class="tlm-row wf" data-w="answer-acc"><span><b>You</b> join at <b class="tn">${roomAt(v)}</b>, next to them</span><span>${v.ep ? `Season ${v.ep.s} · ${v.ep.of} episodes` : v.left}</span></div>` : ''}
+       <div class="tlm-row wf" data-w="answer-exp"><span>${who(v.room)} still watching</span><span>without you</span></div>`
+    : `<div class="tlm-row">${row}</div>`;
+  return `<div class="tlm">${rows}
+    <div class="tlm-track">${track}<span class="tlm-head" style="left:${left}">${v.room.map(n => av(n)).join('')}${o.acc === 'undo' ? `<i class="av wi" data-w="answer-acc" style="--c:${FR.Joyce}">J</i>` : ''}</span></div></div>`;
+}
+/* A4b2b2–5: what Accept does, per fork */
+const JOIN = {
+  beam: v => `<p data-w="answer-acc">Joining <b>${names(v.room)}</b> at <b class="tn">${roomAt(v)}</b></p>`,
+  undo: v => `<p data-w="answer-acc">Joining <b>${v.from}'s</b> room</p>`,
+  dock: v => `<p data-w="answer-acc" style="color:var(--g)">Joining ${v.from}'s room…</p>
+    <span class="t4y-stack wi" data-w="after-acc">${[...v.room, 'Joyce'].map(n => av(n)).join('')}</span>
+    <p data-w="after-acc">You're in with <b>${names(v.room)}</b></p>`
+};
+const JC = {beam:'jb', undo:'ju', grow:'jg', dock:'jd'};
+const PAUSE = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+function inviteCard(list, sel, o = {}){
+  const v = list[sel], multi = list.length > 1;
+  const ep = v.ep ? ` · S${v.ep.s} E${v.ep.e}` : '';
+  return `${multi ? '<div class="t4y-deck"><i></i><i></i></div>' : ''}
+  <div class="tcard t4y${o.beam ? ' t4z' : ''}${o.acc ? ' ' + JC[o.acc] : ''}">${o.beam ? `<div class="bbeam${o.quiet ? ' bq' : ''}"><i></i></div>` : ''}<div class="t4y-in">
+    <div class="tl3">
+      <span class="wi" data-w="${multi ? 'arrive answer-acc answer-dec answer-can' : 'arrive focus answer'}">${av(v.from)}</span>
+      ${multi ? `<div class="t4y-tabs wf" data-w="focus answer-exp">${list.map((x, i) => `<button type="button" class="${i === sel ? 'on' : ''}" data-i="${i}">${av(x.from)}${x.from}</button>`).join('')}</div>`
+        : `<p data-w="focus"><b>${v.from}</b> invited you to watch</p>
+           <p data-w="answer-exp"><b>${v.from}'s</b> invitation expired${o.beam ? ' · just now' : ''}</p>`}
+      <p data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b>${ep}</p>
+      ${JOIN[o.acc] ? JOIN[o.acc](v) : `<p data-w="answer-acc" style="color:var(--g)">Joining ${v.from}'s room…</p>`}
+      <p data-w="answer-dec">Maybe next time</p>
+      <p data-w="answer-can"><b>${v.from}</b> closed the room</p>
+      <span class="sp"></span>
+      ${multi ? `<span class="t4y-more wi" data-w="arrive">+${list.length - 1}</span>` : ''}
+      <span class="btn pk sm wi" data-w="arrive">Respond</span>
+      ${o.acc === 'beam' || o.acc === 'undo' ? '' : '<span class="a-spin" data-w="answer-acc"></span>'}
+      <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+      <span class="x" data-w="focus answer-exp">✕</span>
+    </div>
+    <div class="t4y-body">
+      <div class="t4y-art">${poster(v.show)}</div>
+      <div class="t4y-info"><h3>${esc(v.show.t)}</h3>
+        <h6 class="sub" ${multi ? 'data-w="focus"' : ''}>${v.meta}</h6>
+        ${multi ? `<h6 class="sub" data-w="answer-exp" style="color:var(--y)">${v.from}'s invitation expired</h6>` : ''}</div>
+      ${timeline(v, o)}
+      <div class="t4y-acts wf" data-w="focus"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+      <div class="t4y-acts wf" data-w="answer-exp"><span class="btn gh">Dismiss</span><span class="btn pk">${o.beam ? `Ask ${v.from} to re-invite` : `Ask ${v.from} again`}</span></div>
+      ${o.acc === 'undo' ? `<p class="t4y-hold wf" data-w="answer-acc">${PAUSE}<span><b>${esc(HERS.t)}</b> pauses at <b class="tn">18:04</b> and waits for you</span></p>
+      <div class="t4y-acts wf" data-w="answer-acc"><span class="btn gh">Undo</span><span class="btn pk t4y-cd"><i></i><span>Joining in <em></em></span></span></div>` : ''}
+    </div>
+  </div></div>
+  ${o.acc === 'grow' ? `<div class="t4g">${poster(v.show)}<div class="t4g-ov"><div class="t4g-chip">${v.room.map(n => av(n)).join('')}<span>Taking your seat with <b>${names(v.room)}</b></span><span class="a-spin"></span></div></div></div><div class="t4g-side"></div>` : ''}`;
+}
+/* the collapsed pill is as wide as its own line */
+function fitLine(st, sel, name, border = 1){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '', line = st.querySelector(sel);
+    st.classList.add('measuring');
+    st.dataset.keys = 'arrive acc arrive-acc browse';
+    line.style.width = 'max-content';
+    st.style.setProperty('--' + name, Math.ceil(line.getBoundingClientRect().width) + border * 2 + 'px');
+    line.style.width = '';
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+const mountInvites = (v, o = {}) => sc => {
+  sc.innerHTML = shell(v, '<div class="t4y-host"></div>');
+  const st = sc.querySelector('.stage'), host = st.querySelector('.t4y-host');
+  let sel = 0;
+  st.dataset.kind = 'movie';
+  const render = () => {
+    host.innerHTML = inviteCard(KINDS[st.dataset.kind], sel, o);
+    fitLine(st, '.tl3', 't4yw', o.beam ? 0 : 1);
+    autoHeight(st, '.t4y-in', 't4yh');
+    if(o.acc === 'undo'){ autoHeight(st, '.t4y-in', 't4yha', 'answer acc answer-acc browse'); autoHeight(st, '.t4y-in', 't4yhw', 'answer acc answer-acc watch'); }
+    if(o.acc === 'grow'){ anchor(st, '.t4y-art', 'g', 'focus acc focus-acc browse'); anchor(st, '.t4y-art', 'gw', 'focus acc focus-acc watch'); }
+  };
+  host.addEventListener('click', e => { const b = e.target.closest('.t4y-tabs button'); if(b){ sel = +b.dataset.i; render(); } });
+  st.addEventListener('kind', () => { sel = 0; render(); });
+  render();
+};
+
 /* ───── A5 — Respond opens a bar ───── */
 function mountA5(sc){
   const bar = `<div class="tcard t5">
@@ -1077,7 +1452,9 @@ kst.textContent = KEYS.map(k => `.stage[data-keys~="${k}"] [data-w~="${k}"]{disp
 .stage[data-keys~="${k}"] .wi[data-w~="${k}"]{display:inline-flex}`).join('');
 document.head.append(kst);
 
-const MOUNTS = {now: mountNow, a: mountA, a2: mountA2, a3: mountA3, a4: mountA4, a5: mountA5, a6: mountA6,
+const MOUNTS = {now: mountNow, a: mountA, a2: mountA2, a3: mountA3, a4: mountA4, a4b: mountA4x('a4b', true), a4c: mountA4x('a4c', false), a4b2: mountInvites('a4b2'), a4b2b: mountInvites('a4b2b', {beam:true}),
+  a4b2b2: mountInvites('a4b2b2', {beam:true, quiet:true, acc:'beam'}), a4b2b3: mountInvites('a4b2b3', {beam:true, quiet:true, acc:'undo'}),
+  a4b2b4: mountInvites('a4b2b4', {beam:true, quiet:true, acc:'grow'}), a4b2b5: mountInvites('a4b2b5', {beam:true, quiet:true, acc:'dock'}), a5: mountA5, a6: mountA6,
   b: mountB, c: mountC, d: mountD, e: mountE};
 document.querySelectorAll('[data-mount]').forEach(sc => MOUNTS[sc.dataset.mount](sc));
 
@@ -1087,27 +1464,41 @@ function setKeys(st){
 }
 document.querySelectorAll('[data-rail]').forEach(rail => {
   const stage = document.getElementById(rail.dataset.rail).querySelector('.stage');
+  const kinds = (rail.dataset.kinds || '').split('|').filter(Boolean).map(x => x.split('='));
   rail.innerHTML = `<div class="grp st">${ST.map(s => `<button type="button" data-s="${s.k}">${s.l}</button>`).join('')}</div>
     <div class="grp br">${BR.map(b => `<button type="button" data-b="${b.k}">${b.l}</button>`).join('')}</div>
     <div class="grp cx">${CX.map(c => `<button type="button" data-c="${c.k}">${c.l}</button>`).join('')}</div>
+    ${kinds.length ? `<div class="grp kd">${kinds.map(([k, l]) => `<button type="button" data-k="${k}">${l}</button>`).join('')}</div>` : ''}
     <button type="button" class="play">Play flow</button>
+    ${'demoExp' in rail.dataset ? '<button type="button" class="play exp">Expire while open</button>' : ''}
     <span class="hint">Her screen only — the host is elsewhere.</span>`;
   const sb = [...rail.querySelectorAll('[data-s]')], bb = [...rail.querySelectorAll('[data-b]')], cb = [...rail.querySelectorAll('[data-c]')];
+  const kb = [...rail.querySelectorAll('[data-k]')];
   const play = rail.querySelector('.play');
   let timer = null;
   const sync = () => {
     sb.forEach(x => x.classList.toggle('on', x.dataset.s === stage.dataset.stage));
     bb.forEach(x => x.classList.toggle('on', x.dataset.b === stage.dataset.branch));
     cb.forEach(x => x.classList.toggle('on', x.dataset.c === stage.dataset.ctx));
+    kb.forEach(x => x.classList.toggle('on', x.dataset.k === stage.dataset.kind));
     sb[3].textContent = ANS[stage.dataset.branch];
     setKeys(stage);
   };
   sb.forEach(x => x.addEventListener('click', () => { clearInterval(timer); stage.dataset.stage = x.dataset.s; sync(); }));
   bb.forEach(x => x.addEventListener('click', () => { stage.dataset.branch = x.dataset.b; sync(); }));
   cb.forEach(x => x.addEventListener('click', () => { stage.dataset.ctx = x.dataset.c; sync(); }));
+  kb.forEach(x => x.addEventListener('click', () => { stage.dataset.kind = x.dataset.k; stage.dispatchEvent(new Event('kind')); sync(); }));
   play.addEventListener('click', () => {
     clearInterval(timer); let i = 0; stage.dataset.stage = ST[0].k; sync();
-    timer = setInterval(() => { i++; if(i >= ST.length){ clearInterval(timer); return; } stage.dataset.stage = ST[i].k; sync(); }, REDUCED ? 900 : 1600);
+    /* a rail can hold the answer longer, so a countdown gets to finish */
+    const base = REDUCED ? 900 : 1600, hold = +rail.dataset.hold || base;
+    const next = () => { timer = setTimeout(() => { i++; if(i >= ST.length) return; stage.dataset.stage = ST[i].k; sync(); next(); }, ST[i].k === 'answer' ? hold : base); };
+    next();
+  });
+  /* open it, then let it lapse in place */
+  rail.querySelector('.exp')?.addEventListener('click', () => {
+    clearInterval(timer); stage.dataset.branch = 'exp'; stage.dataset.stage = 'focus'; sync();
+    timer = setInterval(() => { clearInterval(timer); stage.dataset.stage = 'answer'; sync(); }, REDUCED ? 900 : 2200);
   });
   sync();
 });

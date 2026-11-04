@@ -1,4 +1,5 @@
 import './style.css'
+import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
 import * as React from 'react'
 import cx from 'classnames'
 import { useState, useRef, useEffect } from 'react'
@@ -43,6 +44,7 @@ interface Props {
  * @TODO We might not need to use a modal here since it's only an overlay on desktop screens.
  */
 function PlayerModal({ party, ...props }: Props) {
+  const { isExpanded: isIncomingInvitationOpen } = useInvitationOverlay()
   const overlayRef = useRef<HTMLDivElement>(null)
   const media = useMediaMode()
   const [isFullscreen, toggleIsFullsceen] = useFullscreen()
@@ -68,7 +70,7 @@ function PlayerModal({ party, ...props }: Props) {
 
   usePlayerHotkeys({
     isDisabled() {
-      return props.isSeasonSelectionOpen || props.isInvitationOpen || props.isKeyboardInfoOpen
+      return isIncomingInvitationOpen || props.isSeasonSelectionOpen || props.isInvitationOpen || props.isKeyboardInfoOpen
     },
     onFullscreen() {
       toggleIsFullsceen()

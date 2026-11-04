@@ -1,6 +1,7 @@
 import './style.css'
 import * as React from 'react'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
+import UiButton from '~/components/UiButton'
 
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
@@ -107,6 +108,12 @@ const reducer = (state: State, action: Action): State => {
  */
 function AppWatch(props: ReactComponentWrapper) {
   const params = useParams<'partyId'>()
+  // Switching rooms must reset the player, chat, and all room subscriptions together.
+  return <WatchRoom key={params.partyId} partyId={params.partyId}>{props.children}</WatchRoom>
+}
+
+function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
+  const [attempt, retry] = useReducer(value => value + 1, 0)
 
   const [state, dispatch] = useReducer(reducer, {
     party: null,
@@ -119,7 +126,7 @@ function AppWatch(props: ReactComponentWrapper) {
         type: 'data:init'
       })
 
-      const [err, res] = await axios.get(`/api/parties/${params.partyId}`)
+      const [err, res] = await axios.get(`/api/parties/${props.partyId}`)
 
       if (err) {
         return dispatch({
@@ -133,7 +140,7 @@ function AppWatch(props: ReactComponentWrapper) {
       })
     },
     null,
-    []
+    [attempt]
   )
 
   usePusher(
@@ -231,6 +238,13 @@ function AppWatch(props: ReactComponentWrapper) {
 
   if (state.isLoading) {
     return null
+  }
+
+  if (!state.party) {
+    return <div className="watch-room-error" role="alert">
+      <p>We couldn’t load this room. Please try again.</p>
+      <UiButton onClick={retry}>Retry</UiButton>
+    </div>
   }
 
   return (

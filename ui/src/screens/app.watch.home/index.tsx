@@ -1,4 +1,5 @@
 import './style.css'
+import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
 
 import * as React from 'react'
 import cx from 'classnames'
@@ -190,6 +191,7 @@ const reducer = (state: State, action: Action): State => {
  */
 function AppWatchHome(props: ReactComponentWrapper) {
   const context = usePartyContext()
+  const { registerPlayer } = useInvitationOverlay()
 
   useEffect(() => {
     document.body.classList.add("watch-screen-html-body")
@@ -213,6 +215,11 @@ function AppWatchHome(props: ReactComponentWrapper) {
   })
 
   const $video = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    registerPlayer({ partyId: context.party.id, element: $video.current.closest('.watch-screen-video') as HTMLElement })
+    return () => registerPlayer(null)
+  }, [context.party.id, registerPlayer])
 
   const media = useMediaMode()
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
 
 class DoInvitation extends FormRequest
 {
@@ -14,12 +15,10 @@ class DoInvitation extends FormRequest
     public function authorize()
     {
         $invitation = $this->route('invitation');
-        // Really not sure with the expirations for now.
-        return $invitation->action == 'pending' || $invitation->action == null;
+        $isResponse = in_array($this->route()->getActionMethod(), ['accept', 'decline']);
 
-        // @TODO Check if user is recipient/sender
-        // @TODO Make sure accept/decline is not done by sender?
-        // return !$invitation->action && Carbon::now()->lessThan($invitation->expires_at);
+        return $invitation->action === 'pending'
+            && (!$isResponse || Carbon::parse($invitation->expires_at)->isFuture());
     }
 
     /**

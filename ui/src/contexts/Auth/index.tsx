@@ -17,6 +17,7 @@ export interface AuthContext {
   logout: () => void
   updateUserData: (payload: Partial<AppUser>) => void
   shiftInvitations: () => void
+  removeInvitation: (id: AppId) => void
   receiveInvitation: (invitation: AppPartyInvitation) => void
   cancelInvitation: (invitation: AppPartyInvitation) => void
 }
@@ -30,6 +31,7 @@ const Context = createContext<AuthContext>({
   logout: () => {},
   updateUserData: () => {},
   shiftInvitations: () => {},
+  removeInvitation: () => {},
   receiveInvitation: () => {},
   cancelInvitation: () => {}
 })
@@ -123,34 +125,37 @@ function AuthProvider({ children }: ReactComponentWrapper) {
    * Remove the first invitation (called after accepted / declined / expired)
    */
   const shiftInvitations = () => {
-    const update = immer(draft => {
+    setData(current => current && immer(current, draft => {
       draft.invitations.shift()
-    })(data)
-
-    setData(update)
+    }))
   }
 
   /**
    * Push the received invitation
    */
   const receiveInvitation = (invitation: AppPartyInvitation) => {
-    const update = immer(draft => {
-      draft.invitations.push(invitation)
-    })(data)
-
-    setData(update)
+    setData(current => current && immer(current, draft => {
+      if (!draft.invitations) draft.invitations = []
+      if (!draft.invitations.some(item => item.id === invitation.id)) {
+        draft.invitations.push(invitation)
+      }
+    }))
   }
 
   /**
    * Push the received invitation
    */
   const cancelInvitation = (particular: AppPartyInvitation) => {
-    const update = immer(draft => {
+    setData(current => current && immer(current, draft => {
       const invitation = draft.invitations.find(invitation => invitation.id === particular.id)
-      invitation.action = 'cancelled'
-    })(data)
+      if (invitation) invitation.action = 'cancelled'
+    }))
+  }
 
-    setData(update)
+  const removeInvitation = (id: AppId) => {
+    setData(current => current && immer(current, draft => {
+      draft.invitations = draft.invitations.filter(invitation => invitation.id !== id)
+    }))
   }
 
   return (
@@ -164,6 +169,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
         logout,
         updateUserData,
         shiftInvitations,
+        removeInvitation,
         receiveInvitation,
         cancelInvitation
       }}>

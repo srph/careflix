@@ -84,6 +84,7 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await pageA.getByPlaceholder('Search for a friend to invite...').fill(profileB.name)
     await pageA.getByRole('dialog').getByRole('button', { name: 'Invite', exact: true }).click()
     await expect(pageB.getByRole('dialog').getByText(profileA.name, { exact: true })).toBeVisible()
+    await pageB.getByRole('button', { name: 'Respond', exact: true }).click()
     await pageB.getByRole('button', { name: 'Accept', exact: true }).click()
     await expect(pageB).toHaveURL(new RegExp(`/watch/${party.id}$`))
     await mediaReady(pageB)
@@ -178,16 +179,12 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
 
     const nextParty = await api(a.token, '/api/parties', 'POST', { show_video_id: episodes[0].id })
     await api(a.token, `/api/parties/${nextParty.id}/invitations/send`, 'POST', { recipient_id: profileB.id })
+    await pageB.getByRole('button', { name: 'Respond', exact: true }).click()
     await pageB.getByRole('button', { name: 'Accept', exact: true }).click()
     await expect(pageB).toHaveURL(new RegExp(`/watch/${nextParty.id}$`))
-    await test.step('Known baseline defect: switching parties retains the old room until reload', async () => {
-      // Original React 16/Parcel reproduction: party 28 -> a second party.
-      await expect(pageB.locator('video')).toHaveAttribute('src', episodes[1].video_url)
-      expect(subscriptionsB.has(`private-party.${nextParty.id}`)).toBe(false)
-      info.annotations.push({ type: 'baseline-defect', description: 'In-place party switching changes the URL but retains the old room until reload; original route effect has no party-ID dependency.' })
-    })
-    await pageB.reload()
     await expect(pageB.locator('video')).toHaveAttribute('src', episodes[0].video_url)
+    await expect.poll(() => subscriptionsB.has(`private-party.${nextParty.id}`)).toBe(true)
+    await expect.poll(() => subscriptionsB.has(`private-party.${party.id}`)).toBe(false)
     await mediaReady(pageB)
     expect([...errors, ...caughtA, ...caughtB]).toEqual([])
     await pageA.screenshot({ path: info.outputPath('live-watch-party.png') })

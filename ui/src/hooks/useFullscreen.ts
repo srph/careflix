@@ -18,7 +18,7 @@ function useFullscreen(): ReturnValue {
     }
 
     return () => {
-      sf.off('change', handleScreenfullChange)
+      if (sf.enabled) sf.off('change', handleScreenfullChange)
     }
   }, [])
 

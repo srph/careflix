@@ -2,6 +2,7 @@ import './style.css'
 
 import * as React from 'react'
 import InvitationModal from './InvitationModal'
+import { InvitationOverlayProvider } from './InvitationModal/Context'
 import AppHeading from './AppHeading'
 
 import { useCallback } from 'react'
@@ -17,16 +18,16 @@ function App(props: ReactComponentWrapper) {
   usePusher('presence-chat', 'random-event', noop, auth.isGuest)
 
   return (
-    <React.Fragment>
+    <InvitationOverlayProvider>
       {auth.isAuthenticated && (
         <React.Fragment>
           <AppHeading />
-          <InvitationModal />
+          <InvitationModal key={auth.data.id} />
         </React.Fragment>
       )}
       
       {props.children}
-    </React.Fragment>
+    </InvitationOverlayProvider>
   )
 }
 

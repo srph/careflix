@@ -21,6 +21,13 @@ class PartyInvitation extends Model
         'expires_at'
     ];
 
+    // Keep recipient authorization consistent across database drivers.
+    protected $casts = [
+        'party_id' => 'integer',
+        'sender_id' => 'integer',
+        'recipient_id' => 'integer'
+    ];
+
     /**
      * The relationships that will always be eager-loaded
      *
@@ -50,7 +57,14 @@ class PartyInvitation extends Model
      * @return string
      */
     public function getActionAttribute($value) {
-        return $this->action ?? 'pending';
+        return $value ?? 'pending';
+    }
+
+    /**
+     * Invitation deadlines must represent the same instant in every viewer timezone.
+     */
+    public function getExpiresAtAttribute($value) {
+        return \Carbon\Carbon::parse($value, config('app.timezone'))->toIso8601String();
     }
 
     /**

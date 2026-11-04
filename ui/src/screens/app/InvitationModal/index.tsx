@@ -1,257 +1,259 @@
 import './style.css'
-import * as React from 'react'
-import UiModal from '~/components/UiModal'
-import UiButton from '~/components/UiButton'
-import UiAvatar from '~/components/UiAvatar'
+import { Dialog } from '@base-ui/react/dialog'
+import { motion, useReducedMotion } from 'motion/react'
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 import cx from 'classnames'
-
-// import useCountdownTimer from '~/components/CountdownTimer'
-import axios from '~/lib/axios'
-import { useNavigate } from 'react-router'
-import { usePusher } from '~/hooks/usePusher'
-import { useRef, useEffect, useReducer, useMemo } from 'react'
+import UiAvatar from '~/components/UiAvatar'
+import UiPlainButton from '~/components/UiPlainButton'
 import { useAuth } from '~/contexts/Auth'
+import { useNow } from '~/hooks/useNow'
+import { usePusher } from '~/hooks/usePusher'
+import axios from '~/lib/axios'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
+import { clockTime, showMeta } from '~/screens/app.home/Listing/format'
+import { useShowGroupsQuery } from '~/screens/app.home/queries'
+import assetInvitation from '~/assets/audio/invitation.ogg'
+import { useInvitationOverlay } from './Context'
+import { initialState, invitationStatus, reducer } from './state'
 
-import { useNow } from '~/hooks/useNow';
-import { parse, isBefore } from 'date-fns-v1'
-import getFormattedRemainingTime from '~/utils/date/getFormattedRemainingTime'
-
-import asset_invitation from '~/assets/audio/invitation.ogg'
-
-interface State {
-  isAccepting: boolean
-  isDeclining: boolean
-}
-
-type InvitationAction = 'accept' | 'decline'
-
-type Action =
-  | ReducerAction<'action:init', { action: InvitationAction }>
-  | ReducerAction<'action:success', { action: InvitationAction }>
-  | ReducerAction<'action:error', { action: InvitationAction }>
-  | ReducerAction<'reset'>
-
-const init = () => {
-  return {
-    isAccepting: false,
-    isDeclining: false
-  }
-}
-
-const reducer = (state: State, action: Action): State => {
-  const key: string = action.type !== 'reset' && action.payload.action === 'accept' ? 'isAccepting' : 'isDeclining'
-
-  switch (action.type) {
-    case 'action:init': {
-      return {
-        ...state,
-        [key]: true
-      }
-    }
-
-    case 'action:success': {
-      return {
-        ...state,
-        [key]: false
-      }
-    }
-
-    case 'action:error': {
-      return {
-        ...state,
-        [key]: false
-      }
-    }
-
-    case 'reset': {
-      return init()
-    }
-  }
-}
-
-function InvitationModal() {
-  const navigate = useNavigate()
+export default function InvitationModal() {
   const auth = useAuth()
-  const invitation = auth.data.invitations[0]
-  const [state, dispatch] = useReducer(reducer, init())
-
-  usePusher(
-    `private-user.${auth.data.id}`,
-    'invitation.received',
-    (event: { invitation: AppPartyInvitation }) => {
-      auth.receiveInvitation(event.invitation)
-    }
-  )
-
-  usePusher(
-    `private-user.${auth.data.id}`,
-    'invitation.cancelled',
-    (event: { invitation: AppPartyInvitation }) => {
-      auth.cancelInvitation(event.invitation)
-    }
-  )
-
+  const navigate = useNavigate()
+  const location = useLocation()
+  const overlay = useInvitationOverlay()
+  const reducedMotion = useReducedMotion()
+  const now = useNow({ interval: 1000 })
+  const invitations = auth.data.invitations ?? []
+  const [activeId, setActiveId] = useState<AppId | null>(invitations[0]?.id ?? null)
+  const [state, dispatch] = useReducer(reducer, initialState)
+  // Keep the visible invite when it expires; skip stale invites waiting behind it.
+  const current = invitations.find(invite => invite.id === activeId)
+    ?? invitations.find(invite => invitationStatus(invite, now) === 'pending')
+  const invitation = state.joined ?? current
+  const expanded = overlay.isExpanded && state.phase === 'respond' && state.action !== 'accept'
+  const busy = state.action != null || state.phase !== 'respond'
+  const status = invitation ? invitationStatus(invitation, now) : 'answered'
+  const pending = status === 'pending'
+  const queueLength = invitations.filter(invite => invite.id === current?.id || invitationStatus(invite, now) === 'pending').length
   const notificationRef = useRef<HTMLAudioElement>(null)
-
+  const respondRef = useRef<HTMLButtonElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const requestRef = useRef(false)
+  const mounted = useRef(true)
   useEffect(() => {
-    if (invitation != null) {
-      notificationRef.current.play()
-    }
-  }, [invitation])
-
-  useEffect(() => {
-    // @TODO Make a reusable component that does this kasi tangina nito hahahah
-    // <Audio volume={pakyu} />
-    notificationRef.current.volume = 0.1
+    mounted.current = true
+    return () => { mounted.current = false }
   }, [])
+  const lastNotification = useRef<AppId | null>(null)
+  const [dock, setDock] = useState<{ left: number; bottom: number } | null>(null)
 
-  async function handleAccept() {
-    dispatch({
-      type: 'action:init',
-      payload: { action: 'accept' }
-    })
-
-    const [err, res] = await axios.post(`/api/invitations/${invitation.id}/accept`)
-
-    if (err) {
-      return dispatch({
-        type: 'action:error',
-        payload: { action: 'accept' }
-      })
-    }
-
-    dispatch({
-      type: 'action:success',
-      payload: { action: 'accept' }
-    })
-
-    auth.shiftInvitations()
-
-    navigate(`/watch/${res.data.id}`)
-  }
-
-  async function handleDecline() {
-    dispatch({
-      type: 'action:init',
-      payload: { action: 'decline' }
-    })
-
-    const [err, res] = await axios.post(`/api/invitations/${invitation.id}/decline`)
-
-    if (err) {
-      return dispatch({
-        type: 'action:error',
-        payload: { action: 'decline' }
-      })
-    }
-
-    dispatch({
-      type: 'action:success',
-      payload: { action: 'decline' }
-    })
-
-    auth.shiftInvitations()
-  }
-
-  function handleCloseCancelled() {
-    auth.shiftInvitations()
-  }
-
-  const isLoading = (
-    state.isDeclining || state.isAccepting
-  )
-
-  const now = useNow({
-    interval: 1000
+  usePusher(`private-user.${auth.data.id}`, 'invitation.received', (event: { invitation: AppPartyInvitation }) => {
+    auth.receiveInvitation(event.invitation)
+  })
+  usePusher(`private-user.${auth.data.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
+    auth.cancelInvitation(event.invitation)
   })
 
-  const expiration = useMemo(() => {
-    return invitation && parse(invitation.expires_at)
-  }, [invitation && invitation.id])
+  useEffect(() => {
+    setActiveId(current?.id ?? null)
+    if (!current && state.phase === 'respond') {
+      overlay.setExpanded(false)
+      dispatch({ type: 'reset' })
+    }
+  }, [current?.id, state.phase])
 
-  const isInvalid = useMemo(() => {
-    return invitation && (invitation.action === 'cancelled' || isBefore(expiration, now))
-  }, [now])
+  useEffect(() => {
+    if (!current || state.joined || lastNotification.current === current.id) return
+    lastNotification.current = current.id
+    const audio = notificationRef.current
+    audio.volume = 0.1
+    // Browsers can refuse autoplay until the user has interacted with the page.
+    audio.play()?.catch(() => {})
+  }, [current?.id, state.joined])
 
-  return (
-    <React.Fragment>
-      <UiModal isOpen={invitation != null} shouldCloseOnOverlayClick={false}>
-        {invitation != null && (
-          <div className={cx('invitation-modal', { 'is-cancelled': isInvalid })}>
-            <div className="actions">
-              {isInvalid && (
-                <UiButton onClick={handleCloseCancelled} disabled={isLoading}>
-                  Close
-                </UiButton>
-              )}
+  useLayoutEffect(() => {
+    const player = overlay.player
+    if (!state.joined || !player || String(player.partyId) !== String(state.joined.party_id)) {
+      setDock(null)
+      return
+    }
+    const measure = () => {
+      const rect = player.element.getBoundingClientRect()
+      setDock({ left: rect.left + rect.width / 2, bottom: window.innerHeight - rect.top - 60 })
+    }
+    measure()
+    dispatch({ type: 'docked' })
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    observer?.observe(player.element)
+    window.addEventListener('resize', measure)
+    window.addEventListener('scroll', measure, true)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('scroll', measure, true)
+    }
+  }, [state.joined, overlay.player])
 
-              {!isInvalid && (
-                <React.Fragment>
-                  <UiButton onClick={handleDecline} disabled={isLoading}>
-                    {state.isDeclining ? 'Declining...' : 'Decline'}
-                  </UiButton>
+  useEffect(() => {
+    if (state.phase !== 'docked') return
+    const timer = window.setTimeout(() => dispatch({ type: 'reset' }), 3400)
+    return () => window.clearTimeout(timer)
+  }, [state.phase])
 
-                  <UiButton onClick={handleAccept} disabled={isLoading} variant="primary">
-                    {state.isAccepting ? 'Accepting' : 'Accept'}
-                  </UiButton>
-                </React.Fragment>
-              )}
-            </div>
+  useEffect(() => {
+    if (overlay.isExpanded && current) {
+      const frame = requestAnimationFrame(() => closeRef.current?.focus())
+      return () => cancelAnimationFrame(frame)
+    }
+  }, [current?.id])
 
-            <div className="invitation-modal-card">
-              <div className="user">
-                <div className="avatar">
-                  <UiAvatar size="m" user={invitation.sender} />
-                </div>
+  useEffect(() => {
+    if (busy) return
+    if (status === 'expired') overlay.setExpanded(true)
+    if (status === 'withdrawn') overlay.setExpanded(false)
+  }, [current?.id, status, busy])
 
-                <div className="details">
-                  <h2>{invitation.sender.name}</h2>
-                  <div className="subheading">
-                    <h6 className="ui-subheading">Invited you to watch</h6>
+  function collapse() {
+    if (busy) return
+    overlay.setExpanded(false)
+    requestAnimationFrame(() => respondRef.current?.focus())
+  }
+
+  function open() {
+    overlay.setExpanded(true)
+    requestAnimationFrame(() => closeRef.current?.focus())
+  }
+
+  function dismiss() {
+    if (busy || !current) return
+    auth.removeInvitation(current.id)
+    dispatch({ type: 'advance' })
+  }
+
+  async function answer(action: 'accept' | 'decline') {
+    if (!current || requestRef.current || invitationStatus(current, new Date()) !== 'pending') return
+    const target = current
+    requestRef.current = true
+    dispatch({ type: 'request', action })
+    const [error, response] = await axios.post(`/api/invitations/${target.id}/${action}`, {}, { app: { validation: false } })
+    requestRef.current = false
+    if (!mounted.current) return
+    if (error) {
+      dispatch({ type: 'error', message: `Could not ${action} this invitation. Please try again.` })
+      overlay.setExpanded(true)
+      return
+    }
+    auth.removeInvitation(target.id)
+    if (action === 'decline') {
+      dispatch({ type: 'advance' })
+      return
+    }
+    overlay.setExpanded(false)
+    dispatch({ type: 'joined', invitation: { ...target, party: response.data } })
+    navigate(`/watch/${response.data.id}`)
+  }
+
+  const party = invitation?.party
+  const video = party?.video
+  const joining = state.action === 'accept' || state.phase === 'joining'
+  const docked = state.phase === 'docked'
+  const showBeam = (!expanded && pending && !busy) || docked
+  const position = docked && dock ? dock : { left: '50%', bottom: location.pathname.startsWith('/watch/') ? 64 : 20 }
+
+  return <>
+    <Dialog.Root open={Boolean(invitation)} modal={false} disablePointerDismissal onOpenChange={(open, details) => {
+      if (open) return
+      details.cancel()
+      if (expanded) collapse()
+    }}>
+      <Dialog.Portal>
+        <Dialog.Popup className="incoming-invitation-position" initialFocus={false}
+          aria-label="Watch invitation" style={position}>
+          <motion.div layout transition={{ layout: { duration: reducedMotion ? 0 : 0.45, ease: [0.2, 0.8, 0.2, 1] } }}
+            className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-docked': docked })}>
+            <div className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"><i /></div>
+            {invitation && <>
+              <motion.div layout="position" className="invitation-line">
+                {docked ? <span className="invitation-joined-avatars">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</span>
+                  : <UiAvatar user={invitation.sender} size="sm" />}
+                <p aria-live="polite" aria-atomic="true">
+                  {docked ? roomMembers(party).length ? <>You’re in with <b>{roomNames(party)}</b></> : <>You’re in the room</>
+                    : joining ? <>Joining <b>{invitation.sender.name}</b>{video && <> to watch <b>{video.show.title}</b></>}</>
+                    : status === 'expired' ? <><b>{invitation.sender.name}’s</b> invitation expired</>
+                    : status === 'withdrawn' ? <><b>{invitation.sender.name}</b> withdrew the invitation</>
+                    : <><b>{invitation.sender.name}</b> invited you to watch{!expanded && video && <> <b>{video.show.title}</b></>}</>}
+                </p>
+                {expanded && queueLength + state.answered > 1 && <span className="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
+                {joining && <span className="invitation-spinner" aria-label="Joining room" />}
+                {!expanded && !busy && <UiPlainButton ref={respondRef} className={cx('invitation-respond', { 'is-dismiss': !pending })} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
+                {expanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
+              </motion.div>
+              {expanded && <motion.div key={invitation.id} className="invitation-body"
+                initial={{ opacity: reducedMotion ? 1 : 0, x: reducedMotion ? 0 : 32 }} animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
+                  {video && <>
+                    <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
+                    <div className="invitation-info">
+                      <h3>{video.show.title}</h3>
+                      <p className="ui-subheading">{video.show.title_type === 'series' ? `Series · ${getVideoDetails(video)}` : showMeta(video.show)}{video.show.title_type === 'movie' && <> · {durationLabel(video.duration)}</>}</p>
+                    </div>
+                    <RoomTimeline party={party} invalid={!pending} />
+                  </>}
+                  {!video && <p className="invitation-unavailable">The room preview is unavailable. You can still respond to the invitation.</p>}
+                  {state.error && <p role="alert" className="invitation-error">{state.error}</p>}
+                  <div className="invitation-actions">
+                    {pending ? <>
+                      <UiPlainButton onClick={() => answer('decline')} disabled={busy}>{state.action === 'decline' ? 'Declining…' : 'Decline'}</UiPlainButton>
+                      <UiPlainButton className="is-primary" onClick={() => answer('accept')} disabled={busy}>Accept</UiPlainButton>
+                    </> : <UiPlainButton onClick={dismiss} disabled={busy}>Dismiss</UiPlainButton>}
                   </div>
-                </div>
-              </div>
-
-              <div className="thumbnail" style={{ backgroundImage: `url(${invitation.party.video.show.preview_image})` }}>
-                <div className="overlay" />
-                <div className="details">
-                  <div className="tag">
-                    <h6 className="ui-subheading">{getVideoDetails(invitation.party.video)}</h6>
-                  </div>
-                  <h3 className="title">{invitation.party.video.show.title}</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="invitation-modal-expiration">
-              {!isInvalid && (
-                <h6 className="ui-subheading">
-                  Expires in
-                  <span className="invitation-modal-expiration-lowercaps">
-                    &nbsp;{getFormattedRemainingTime(expiration, now)}
-                  </span>
-                </h6>
-              )}
-
-              {isInvalid && (
-                <h6 className="ui-subheading">
-                  <span className="invitation-modal-expiration-warning-icon">
-                    <i className="fa fa-exclamation-circle" />
-                  </span>
-                  Invitation no longer exists
-                </h6>
-              )}
-            </div>
-          </div>
-        )}
-      </UiModal>
-
-      <audio className="invitation-notification-audio" ref={notificationRef}>
-        <source src={asset_invitation} type="audio/ogg" />
-      </audio>
-    </React.Fragment>
-  )
+              </motion.div>}
+            </>}
+          </motion.div>
+        </Dialog.Popup>
+      </Dialog.Portal>
+    </Dialog.Root>
+    <audio className="invitation-notification-audio" ref={notificationRef}><source src={assetInvitation} type="audio/ogg" /></audio>
+  </>
 }
 
-export default InvitationModal
+function roomMembers(party: AppParty) {
+  return party?.members?.filter(member => Number(member.pivot?.is_active) === 1) ?? []
+}
+
+function roomNames(party: AppParty) {
+  const names = roomMembers(party).map(member => member.name)
+  if (!names.length) return 'the room'
+  if (names.length > 2) return `${names[0]} and ${names.length - 1} others`
+  return names.join(' and ')
+}
+
+function durationLabel(seconds: number) {
+  const minutes = Math.max(0, Math.floor(Number(seconds || 0) / 60))
+  return minutes >= 60 ? `${Math.floor(minutes / 60)}h ${minutes % 60}m` : `${minutes}m`
+}
+
+function RoomTimeline({ party, invalid }: { party: AppParty; invalid: boolean }) {
+  const video = party.video
+  const groups = useShowGroupsQuery(video.show)
+  const season = groups.data?.find(group => String(group.id) === String(video.show_group_id))
+  const episodes = season?.videos ?? []
+  const episodeIndex = episodes.findIndex(episode => String(episode.id) === String(video.id))
+  const progress = Math.min(1, Math.max(0, Number(party.current_time) / Number(video.duration || 1)))
+  const segmented = episodeIndex >= 0 && episodes.length > 0
+  const position = segmented ? (episodeIndex + progress) / episodes.length : progress
+  const members = roomMembers(party)
+  return <div className={cx('invitation-timeline', { 'is-invalid': invalid })}>
+    <div className="invitation-timeline-label">
+      <span>{members.length ? <><b>{roomNames(party)}</b> {members.length === 1 ? 'is' : 'are'}</> : 'The room is'} at <b>{segmented && `E${episodeIndex + 1}, `}{clockTime(party.current_time)}</b></span>
+      <span>{segmented ? `${season.title} · ${episodes.length} episodes` : `${durationLabel(Math.max(0, video.duration - party.current_time))} left`}</span>
+    </div>
+    <div className="invitation-timeline-track" role="img" aria-label={`Room snapshot: ${clockTime(party.current_time)} of ${clockTime(video.duration)}`}>
+      {segmented ? <div className="invitation-segments">{episodes.map((episode, index) => <span key={episode.id}><i style={{ width: `${index === episodeIndex ? progress * 100 : 0}%` }} /></span>)}</div>
+        : <div className="invitation-progress"><i style={{ width: `${progress * 100}%` }} /></div>}
+      {members.length > 0 && <div className="invitation-playhead" style={{ left: `${position * 100}%` }}>{members.slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</div>}
+    </div>
+    <p className="invitation-snapshot">Room snapshot</p>
+  </div>
+}

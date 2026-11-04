@@ -84,19 +84,34 @@ to print captured browser exception messages/stacks without HTTP configuration.
 Do not interpret a live scenario's passing result as proof that every existing
 feature works. Its annotated baseline step records that remote episode changes
 remain stale until reload: the original UI and migrated UI both lack a
-`video-changed` listener. In-place party switching also retains the old room until
-reload because the original route effect has no party-ID dependency. The host's
-episode selector and reload recovery are checked independently.
+`video-changed` listener. The host's episode selector and reload recovery are
+checked independently. Incoming invitations now use the A6b5 pill and expanded
+card; the live check opens Respond before accepting and expects a room switch to
+reset the player, chat, and subscriptions without reloading.
 
-The original iPhone-sized WebKit UI also crashes during navigation when
-`screenfull` lacks browser support but its cleanup calls `off()`. The live control
-check records this exception only when the browser lacks the relevant API and the
-specific original error is observed. It verifies reload recovery and still fails
-on unexpected exceptions or HTTP errors. These annotated steps verify migration
-parity; they do not report those existing features as fixed. See `../MIGRATION.md`
+The original iPhone-sized WebKit UI also crashed during navigation when
+`screenfull` lacked browser support but its cleanup called `off()`. The invitation
+work now guards that cleanup. The live control check retains its baseline
+annotation if that specific original error is observed. It verifies reload
+recovery and still fails on unexpected exceptions or HTTP errors. The remote
+episode-change annotation remains a migration baseline limitation. See `../MIGRATION.md`
 for evidence. Unrelated bug fixes remain outside this migration.
 
 The listing explicitly focuses a movie card before opening its details, so the
 dialog restores focus to that card in Safari as well as Chromium and Firefox.
 Existing mobile back-link text is hidden, so that navigation check uses the
 visible icon link.
+
+## Incoming invitations
+
+`invitations.spec.ts` covers the collapsed pill, expanded movie/episode snapshots,
+queue advancement, expiry and withdrawal, request retries, duplicate and concurrent
+Pusher events, reduced motion, keyboard response actions, and joining from another
+room. Its HTTP and WebSocket fixtures run across all five browser targets and do
+not establish live Pusher or media evidence. Screenshots capture the pill, card,
+next invite, and docked confirmation with controlled artwork.
+
+The invitation API checks run with
+`valet php vendor/bin/phpunit --filter InvitationApiTest`. They use isolated SQLite
+and verify expiry, already answered invitations, recipient membership on accept,
+legacy pending actions, and timezone-qualified expiry serialization.

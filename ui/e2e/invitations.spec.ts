@@ -82,7 +82,7 @@ test('pill opens, advances without collapsing, and shows episode segments', asyn
   await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '0')
   await expect(page.getByRole('button', { name: 'Collapse invitation' })).toBeFocused()
   await expect(dialog(page).locator('.invitation-body')).toHaveCSS('opacity', '1')
-  await expect(dialog(page).locator('.invitation-body')).toHaveCSS('transform', 'none')
+  await expect(dialog(page).locator('.invitation-content')).toHaveCSS('transform', 'none')
   await page.screenshot({ path: test.info().outputPath('invitation-next.png') })
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
   await expect(dialog(page).getByRole('heading', { name: 'The Understudies' })).toBeVisible()
@@ -231,4 +231,58 @@ test('expand and collapse animate container height without scaling the contents'
   const bounds = await card.boundingBox()
   expect(bounds.y).toBeGreaterThanOrEqual(0)
   expect(bounds.y + bounds.height).toBeLessThanOrEqual(320)
+})
+
+test('opening fades the preview after a delay while the next invite slides in separately', async ({ page }) => {
+  await setup(page)
+  await page.goto('/')
+  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '1')
+
+  const sample = (transition: 'open' | 'next') => page.evaluate(kind => new Promise<{ elapsed: number; bodyOpacity: number; contentOpacity: number; x: number }[]>(resolve => {
+    const card = document.querySelector<HTMLElement>('.incoming-invitation')!
+    const body = card.querySelector<HTMLElement>('.invitation-body')!
+    const previous = body.firstElementChild
+    const frames = []
+    const observer = new MutationObserver(() => {
+      if (kind === 'open' ? !card.classList.contains('is-expanded') : body.firstElementChild === previous) return
+      observer.disconnect()
+      const started = performance.now()
+      const record = () => {
+        const content = body.firstElementChild as HTMLElement
+        const transform = getComputedStyle(content).transform
+        const matrix = transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transform)
+        frames.push({ elapsed: performance.now() - started, bodyOpacity: Number(getComputedStyle(body).opacity), contentOpacity: Number(getComputedStyle(content).opacity), x: matrix.e })
+        if (performance.now() - started < 650) requestAnimationFrame(record)
+        else resolve(frames)
+      }
+      record()
+    })
+    observer.observe(kind === 'open' ? card : body, kind === 'open' ? { attributes: true, attributeFilter: ['class'] } : { childList: true })
+  }), transition)
+
+  // Both first opening and reopening use the delayed fade, without a slide.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const recording = sample('open')
+    await open(page)
+    const frames = await recording
+    const early = frames.filter(frame => frame.elapsed < 150)
+    expect(early.length).toBeGreaterThan(0)
+    expect(early.every(frame => frame.bodyOpacity < 0.01)).toBe(true)
+    expect(frames.some(frame => frame.elapsed > 200 && frame.elapsed < 500 && frame.bodyOpacity > 0.05 && frame.bodyOpacity < 0.95)).toBe(true)
+    expect(frames.at(-1).bodyOpacity).toBeCloseTo(1, 2)
+    expect(frames.every(frame => Math.abs(frame.x) < 0.01 && frame.contentOpacity === 1)).toBe(true)
+    if (attempt === 0) {
+      await page.getByRole('button', { name: 'Collapse invitation' }).click()
+      await expect(dialog(page).locator('.invitation-body')).toHaveCSS('opacity', '0')
+    }
+  }
+
+  const recording = sample('next')
+  await page.getByRole('button', { name: 'Decline', exact: true }).click()
+  const frames = await recording
+  expect(frames.every(frame => frame.bodyOpacity === 1)).toBe(true)
+  expect(frames.some(frame => frame.x > 1 && frame.contentOpacity < 1)).toBe(true)
+  expect(frames.at(-1).x).toBeCloseTo(0, 2)
+  expect(frames.at(-1).contentOpacity).toBeCloseTo(1, 2)
+  await expect(dialog(page).getByRole('heading', { name: 'Paper Moons' })).toBeVisible()
 })

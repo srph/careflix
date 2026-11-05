@@ -204,9 +204,10 @@ export default function InvitationModal() {
                 {expanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
               </div>
               {/* Keep the preview mounted so the container clips it during collapse. */}
-              <motion.div ref={setBody} key={invitation.id} className="invitation-body" inert={!expanded} aria-hidden={!expanded}
-                initial={expanded && !reducedMotion ? { opacity: 0, x: 32 } : false} animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
+              <div ref={setBody} className="invitation-body" inert={!expanded} aria-hidden={!expanded}>
+                <motion.div key={invitation.id} className="invitation-content"
+                  initial={expanded && !reducedMotion ? { opacity: 0, x: 32 } : false} animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
                   {video && <>
                     <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
                     <div className="invitation-info">
@@ -223,7 +224,8 @@ export default function InvitationModal() {
                       <UiPlainButton className="is-primary" onClick={() => answer('accept')} disabled={busy}>Accept</UiPlainButton>
                     </> : <UiPlainButton onClick={dismiss} disabled={busy}>Dismiss</UiPlainButton>}
                   </div>
-              </motion.div>
+                </motion.div>
+              </div>
             </>}
           </motion.div>
         </Dialog.Popup>

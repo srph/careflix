@@ -107,6 +107,13 @@
   overflow-x: hidden;
   scrollbar-width: thin;
   padding-bottom: 8px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.incoming-invitation.is-expanded .invitation-body {
+  opacity: 1;
+  transition-delay: .2s;
 }
 
 .invitation-artwork {
@@ -401,6 +408,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .invitation-body {
+    transition: none;
+  }
   .incoming-invitation-position {
     transition: none;
   }

@@ -9,19 +9,22 @@ export function invitationStatus(invitation: AppPartyInvitation, now: Date) {
 export interface State {
   action: 'accept' | 'decline' | null
   joined: AppPartyInvitation | null
-  phase: 'respond' | 'joining' | 'docked'
+  declined: AppPartyInvitation | null
+  phase: 'respond' | 'joining' | 'docked' | 'declined' | 'leaving'
   error: string | null
   answered: number
 }
 
-export const initialState: State = { action: null, joined: null, phase: 'respond', error: null, answered: 0 }
+export const initialState: State = { action: null, joined: null, declined: null, phase: 'respond', error: null, answered: 0 }
 
 type Action =
   | { type: 'request'; action: 'accept' | 'decline' }
   | { type: 'error'; message: string }
   | { type: 'advance' }
   | { type: 'joined'; invitation: AppPartyInvitation }
+  | { type: 'declined'; invitation: AppPartyInvitation }
   | { type: 'docked' }
+  | { type: 'leave' }
   | { type: 'reset' }
 
 export function reducer(state: State, action: Action): State {
@@ -30,7 +33,9 @@ export function reducer(state: State, action: Action): State {
     case 'error': return { ...state, action: null, error: action.message }
     case 'advance': return { ...state, action: null, error: null, answered: state.answered + 1 }
     case 'joined': return { ...state, action: null, phase: 'joining', joined: action.invitation }
-    case 'docked': return { ...state, phase: 'docked' }
+    case 'declined': return { ...state, action: null, phase: 'declined', declined: action.invitation }
+    case 'docked': return state.phase === 'joining' ? { ...state, phase: 'docked' } : state
+    case 'leave': return { ...state, phase: 'leaving' }
     case 'reset': return initialState
   }
 }

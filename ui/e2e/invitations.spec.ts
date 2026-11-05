@@ -49,7 +49,10 @@ async function setup(page: Page, invitations = [invite(0), invite(1), invite(2)]
     if (/\/parties\/\d+$/.test(path)) body = parties.find(party => path.endsWith(String(party.id)))
     if (/\/logs$/.test(path)) body = []
     if (/\/invitations\/search$/.test(path)) body = []
-    if (/\/accept$/.test(path)) body = invitations.find(invitation => path.includes(String(invitation.id)))?.party
+    if (/\/accept$/.test(path)) {
+      const accepted = invitations.find(invitation => path.includes(String(invitation.id)))
+      body = { ...accepted?.party, declined_invitation_ids: invitations.filter(invitation => invitation.id !== accepted?.id && invitation.action === 'pending' && new Date(invitation.expires_at).getTime() > Date.now()).map(invitation => invitation.id) }
+    }
     await route.fulfill({ json: body })
   })
   const emit = (event: string, invitation: unknown) => connection.send(JSON.stringify({ event, channel: `private-user.${viewer.id}`, data: JSON.stringify({ invitation }) }))
@@ -92,6 +95,8 @@ test('pill opens, advances without collapsing, and shows episode segments', asyn
   await expect(dialog(page).locator('.incoming-invitation')).not.toHaveClass(/is-expanded/)
   await open(page)
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
+  await expect(dialog(page)).toContainText('Declined Nico’s invitation to watch The Understudies')
+  await expect(dialog(page).locator('.incoming-invitation')).not.toHaveClass(/is-expanded/)
   await expect(dialog(page)).not.toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
@@ -104,12 +109,15 @@ test('expiration stays visible, Dismiss skips stale invites, and cancellation up
   await open(page)
   await page.clock.fastForward(6000)
   await expect(dialog(page)).toContainText('Kier’s invitation expired')
+  await expect(dialog(page).getByRole('heading', { name: 'Velvet Static' })).toHaveCSS('color', 'rgb(170, 182, 193)')
+  await expect(dialog(page).locator('.ui-subheading')).toHaveText('Kier’s invitation expired')
+  await expect(dialog(page).locator('.ui-subheading')).toHaveCSS('color', 'rgb(247, 201, 72)')
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0)
   await expect(page.getByRole('button', { name: /re-invite/i })).toHaveCount(0)
   await page.getByRole('button', { name: 'Dismiss', exact: true }).click()
   await expect(dialog(page).getByRole('heading', { name: 'The Understudies' })).toBeVisible()
   emit('invitation.cancelled', { ...invite(2), action: 'cancelled' })
-  await expect(dialog(page)).toContainText('Nico withdrew the invitation')
+  await expect(dialog(page)).toContainText('Nico cancelled the invitation')
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0)
   await page.getByRole('button', { name: 'Dismiss', exact: true }).click()
   await expect(dialog(page)).not.toBeVisible()
@@ -142,10 +150,33 @@ test('failed actions retry and another invite preserves a request in flight', as
   expect(attempts).toBe(2)
 })
 
-test('accepting from another room loads the new room and docks the confirmation', async ({ page }) => {
+test('the last decline waits for success, shows its confirmation pill, then dismisses', async ({ page }) => {
+  await setup(page, [invite(0)])
+  let release: () => void
+  const held = new Promise<void>(resolve => { release = resolve })
+  await page.route('**/api/invitations/*/decline', async route => {
+    await held
+    await route.fulfill({ json: {} })
+  })
+  await page.goto('/')
+  await open(page)
+  await page.getByRole('button', { name: 'Decline', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Declining…' })).toBeDisabled()
+  await expect(dialog(page)).not.toContainText('Declined Kier')
+  await expect(dialog(page).locator('.incoming-invitation')).toHaveClass(/is-expanded/)
+
+  release!()
+  await expect(dialog(page)).toContainText('Declined Kier’s invitation to watch Velvet Static')
+  await expect.poll(async () => (await dialog(page).locator('.incoming-invitation').boundingBox()).height).toBeCloseTo(40, 0)
+  await expect(page.getByRole('button', { name: 'Respond', exact: true })).toHaveCount(0)
+  await page.screenshot({ path: test.info().outputPath('invitation-declined.png') })
+  await expect(dialog(page)).not.toBeVisible()
+})
+
+test('accepting with multiple invitations clears the declined queue, docks, and fades upward', async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
-  const { subscriptions } = await setup(page, [invite(1)])
+  const { subscriptions } = await setup(page, [invite(1), invite(2)])
   await page.goto(`/watch/${parties[0].id}`)
   await expect(page.locator('video')).toHaveAttribute('src', videos[0].video_url)
   await expect.poll(() => subscriptions.has(`private-party.${parties[0].id}`)).toBe(true)
@@ -160,13 +191,41 @@ test('accepting from another room loads the new room and docks the confirmation'
   await expect.poll(() => subscriptions.has(`private-party.${parties[0].id}`)).toBe(false)
   await expect(dialog(page)).toContainText('You’re in with Mira')
   await expect(dialog(page).locator('.incoming-invitation')).toHaveClass(/is-docked/)
+  const joinedLine = dialog(page).locator('.incoming-invitation > .invitation-line')
+  await expect(joinedLine.getByText('You’re in with Mira')).toBeVisible()
   await expect.poll(async () => {
     const pill = await dialog(page).boundingBox()
     const player = await page.locator('.watch-screen-video').boundingBox()
     return Math.abs(pill.y - player.y - 20)
   }).toBeLessThan(2)
+  const joinedBounds = await joinedLine.boundingBox()
+  const cardBounds = await dialog(page).locator('.incoming-invitation').boundingBox()
+  expect(joinedBounds.y).toBeGreaterThanOrEqual(cardBounds.y)
+  expect(joinedBounds.y + joinedBounds.height).toBeLessThanOrEqual(cardBounds.y + cardBounds.height + 1)
+  const leaving = page.evaluate(() => new Promise<{ opacity: number; y: number; elapsed: number }[]>(resolve => {
+    const popup = document.querySelector<HTMLElement>('.incoming-invitation-position')!
+    const frames = []
+    const observer = new MutationObserver(() => {
+      if (!popup.hasAttribute('data-ending-style')) return
+      observer.disconnect()
+      const started = performance.now()
+      const record = () => {
+        if (!popup.isConnected) { resolve(frames); return }
+        const style = getComputedStyle(popup)
+        frames.push({ opacity: Number(style.opacity), y: new DOMMatrixReadOnly(style.transform).f, elapsed: performance.now() - started })
+        if (performance.now() - started < 550) requestAnimationFrame(record)
+        else resolve(frames)
+      }
+      record()
+    })
+    observer.observe(popup, { attributes: true, attributeFilter: ['data-ending-style'] })
+  }))
   await page.screenshot({ path: test.info().outputPath('invitation-docked.png') })
+  const exitFrames = await leaving
+  expect(exitFrames.some(frame => frame.opacity > 0 && frame.opacity < 1 && frame.y < -1)).toBe(true)
+  expect(exitFrames.some(frame => frame.elapsed > 300 && frame.opacity < 0.3)).toBe(true)
   await expect(dialog(page)).not.toBeVisible({ timeout: 7000 })
+  await expect(page.getByRole('button', { name: 'Respond', exact: true })).toHaveCount(0)
   expect(stateRequests).toHaveLength(0)
   expect(errors).toEqual([])
 })
@@ -182,40 +241,53 @@ test('reduced motion retains queue behavior and disables beam animation', async 
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
 
-test('expand and collapse animate container height without scaling the contents', async ({ page }) => {
-  await setup(page)
+test('expand and collapse animate height, width, and corners without scaling the contents', async ({ page }) => {
+  const short = invite(0)
+  short.party = { ...short.party, video: { ...short.party.video, show: { ...short.party.video.show, title: 'X' } } }
+  await setup(page, [short])
   await page.goto('/')
   const card = dialog(page).locator('.incoming-invitation')
   await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '1')
   const collapsedHeight = (await card.boundingBox()).height
+  const collapsedWidth = (await card.boundingBox()).width
 
-  const sample = () => page.evaluate(() => new Promise<{ height: number; scaleX: number; scaleY: number; avatarHeight: number }[]>(resolve => {
-    const frames = []
-    const started = performance.now()
-    const record = () => {
-      const card = document.querySelector<HTMLElement>('.incoming-invitation')!
-      const avatar = card.querySelector<HTMLElement>('.invitation-line > .ui-avatar')!
-      const transform = getComputedStyle(card).transform
-      const matrix = transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transform)
-      frames.push({ height: card.getBoundingClientRect().height, scaleX: matrix.a, scaleY: matrix.d, avatarHeight: avatar.getBoundingClientRect().height })
-      if (performance.now() - started < 650) requestAnimationFrame(record)
-      else resolve(frames)
-    }
-    requestAnimationFrame(record)
-  }))
+  const sample = (expanded: boolean) => page.evaluate(isExpanded => new Promise<{ height: number; width: number; radius: number; scaleX: number; scaleY: number; avatarHeight: number }[]>(resolve => {
+    const card = document.querySelector<HTMLElement>('.incoming-invitation')!
+    const observer = new MutationObserver(() => {
+      if (card.classList.contains('is-expanded') !== isExpanded) return
+      observer.disconnect()
+      const frames = []
+      const started = performance.now()
+      const record = () => {
+        const avatar = card.querySelector<HTMLElement>('.invitation-line > .ui-avatar')!
+        const transform = getComputedStyle(card).transform
+        const matrix = transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transform)
+        frames.push({ height: card.getBoundingClientRect().height, width: card.getBoundingClientRect().width, radius: parseFloat(getComputedStyle(card).borderTopLeftRadius), scaleX: matrix.a, scaleY: matrix.d, avatarHeight: avatar.getBoundingClientRect().height })
+        if (performance.now() - started < 650) requestAnimationFrame(record)
+        else resolve(frames)
+      }
+      record()
+    })
+    observer.observe(card, { attributes: true, attributeFilter: ['class'] })
+  }), expanded)
 
-  const expanding = sample()
+  const expanding = sample(true)
   await open(page)
   const expandedFrames = await expanding
   const expandedHeight = (await card.boundingBox()).height
+  const expandedWidth = (await card.boundingBox()).width
   expect(expandedHeight).toBeGreaterThan(collapsedHeight + 100)
   expect(expandedFrames.some(frame => frame.height > collapsedHeight + 2 && frame.height < expandedHeight - 2)).toBe(true)
+  expect(expandedFrames.some(frame => frame.width > collapsedWidth + 2 && frame.width < expandedWidth - 2)).toBe(true)
+  expect(expandedFrames.some(frame => frame.radius > 16.1 && frame.radius < 19.9)).toBe(true)
 
-  const collapsing = sample()
+  const collapsing = sample(false)
   await page.getByRole('button', { name: 'Collapse invitation' }).click()
   const collapsedFrames = await collapsing
   await expect.poll(async () => (await card.boundingBox()).height).toBeCloseTo(collapsedHeight, 0)
   expect(collapsedFrames.some(frame => frame.height > collapsedHeight + 2 && frame.height < expandedHeight - 2)).toBe(true)
+  expect(collapsedFrames.some(frame => frame.width > collapsedWidth + 2 && frame.width < expandedWidth - 2)).toBe(true)
+  expect(collapsedFrames.some(frame => frame.radius > 16.1 && frame.radius < 19.9)).toBe(true)
 
   for (const frame of [...expandedFrames, ...collapsedFrames]) {
     expect(frame.scaleX).toBeCloseTo(1, 3)
@@ -226,7 +298,7 @@ test('expand and collapse animate container height without scaling the contents'
   await page.setViewportSize({ width: 390, height: 320 })
   await open(page)
   await page.getByRole('button', { name: 'Accept', exact: true }).scrollIntoViewIfNeeded()
-  await expect(dialog(page).locator('.invitation-line')).toBeInViewport()
+  await expect(card.locator(':scope > .invitation-line')).toBeInViewport()
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toBeInViewport()
   const bounds = await card.boundingBox()
   expect(bounds.y).toBeGreaterThanOrEqual(0)

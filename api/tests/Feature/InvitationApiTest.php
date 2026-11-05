@@ -93,4 +93,60 @@ class InvitationApiTest extends TestCase
         $this->postJson('/api/invitations/' . $invitation->id . '/decline')->assertOk();
         $this->assertSame('declined', $invitation->fresh()->action);
     }
+
+    public function test_accept_declines_only_the_recipients_other_active_invitations()
+    {
+        list($invitation, $party, $recipient) = $this->invitation();
+        $otherParty = Party::create([
+            'show_video_id' => $party->show_video_id, 'is_playing' => false,
+            'is_expired' => false, 'current_time' => 0, 'last_activity_at' => now()
+        ]);
+        $pending = $this->copyInvitation($invitation, ['party_id' => $otherParty->id]);
+        $legacy = $this->copyInvitation($invitation, ['action' => null]);
+        $expired = $this->copyInvitation($invitation, ['expires_at' => Carbon::now()->subMinute()]);
+        $cancelled = $this->copyInvitation($invitation, ['action' => 'cancelled']);
+        $answered = $this->copyInvitation($invitation, ['action' => 'accepted']);
+        $anotherRecipient = $this->copyInvitation($invitation, ['recipient_id' => $invitation->sender_id]);
+
+        $this->postJson('/api/invitations/' . $invitation->id . '/accept')
+            ->assertOk()
+            ->assertJson(['id' => $party->id, 'declined_invitation_ids' => [$pending->id, $legacy->id]]);
+
+        $this->assertSame('accepted', $invitation->fresh()->action);
+        $this->assertSame('declined', $pending->fresh()->action);
+        $this->assertSame('declined', $legacy->fresh()->action);
+        $this->assertSame('pending', $expired->fresh()->action);
+        $this->assertSame('cancelled', $cancelled->fresh()->action);
+        $this->assertSame('accepted', $answered->fresh()->action);
+        $this->assertSame('pending', $anotherRecipient->fresh()->action);
+        $this->assertFalse($recipient->isMemberOfParty($otherParty));
+        foreach ([$pending, $legacy] as $other) {
+            Event::assertDispatched(\App\Events\PartyInvitationDeclined::class, function($event) use ($other) {
+                return $event->invitation->id === $other->id && $event->invitation->action === 'declined';
+            });
+        }
+    }
+
+    public function test_failed_accept_rolls_back_other_declines_and_membership()
+    {
+        list($invitation, $party, $recipient) = $this->invitation();
+        $other = $this->copyInvitation($invitation);
+        // Fail the join log insert in this isolated SQLite database, after actions and membership change.
+        DB::statement('DROP TABLE party_log_activities');
+
+        $this->postJson('/api/invitations/' . $invitation->id . '/accept')->assertStatus(500);
+
+        $this->assertSame('pending', $invitation->fresh()->action);
+        $this->assertSame('pending', $other->fresh()->action);
+        $this->assertFalse($recipient->isMemberOfParty($party));
+        Event::assertNotDispatched(\App\Events\PartyInvitationDeclined::class);
+        Event::assertNotDispatched(\App\Events\PartyInvitationAccepted::class);
+    }
+
+    private function copyInvitation(PartyInvitation $invitation, array $attributes = [])
+    {
+        $copy = $invitation->replicate()->fill($attributes);
+        $copy->save();
+        return $copy;
+    }
 }

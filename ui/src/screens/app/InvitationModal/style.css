@@ -17,17 +17,17 @@
   width: max-content;
   max-width: calc(100vw - 24px);
   border-radius: 20px;
-  overflow: hidden;
+  /* Focused controls must not scroll the shrinking card and hide its header. */
+  overflow: clip;
   color: var(--color-white);
   background: rgba(21,32,43,.97);
   backdrop-filter: blur(14px);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 26px 54px -16px rgba(0,0,0,.85);
+  transition: filter .4s;
 }
 
 .incoming-invitation.is-expanded {
-  width: min(400px, calc(100vw - 24px));
   max-height: calc(100dvh - 96px);
-  border-radius: 16px;
 }
 
 .invitation-line {
@@ -38,7 +38,15 @@
   padding: 0 8px;
 }
 
-.incoming-invitation .invitation-line > .ui-avatar {
+/* Measure the collapsed line independently of the animated container width. */
+.invitation-width-probe {
+  position: absolute;
+  width: max-content;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.incoming-invitation-position .invitation-line > .ui-avatar {
   flex: none;
   width: 24px;
   height: 24px;
@@ -101,7 +109,7 @@
   position: absolute;
   top: 40px;
   left: 0;
-  right: 0;
+  width: min(400px, calc(100vw - 24px));
   max-height: calc(100dvh - 136px);
   overflow-y: auto;
   overflow-x: hidden;
@@ -264,6 +272,18 @@
   filter: grayscale(1) brightness(.7);
 }
 
+.incoming-invitation.is-expired .invitation-info h3 {
+  color: #aab6c1;
+}
+
+.incoming-invitation.is-expired .invitation-info .ui-subheading {
+  color: #f7c948;
+}
+
+.incoming-invitation.is-declined {
+  filter: grayscale(.85) brightness(.85);
+}
+
 .invitation-spinner {
   flex: none;
   width: 14px;
@@ -388,14 +408,14 @@
   flex: none;
 }
 
-.incoming-invitation .invitation-joined-avatars .ui-avatar {
+.incoming-invitation-position .invitation-joined-avatars .ui-avatar {
   width: 24px;
   height: 24px;
   font-size: 10.5px;
   box-shadow: 0 0 0 2px #15202b;
 }
 
-.incoming-invitation .invitation-joined-avatars .ui-avatar + .ui-avatar {
+.incoming-invitation-position .invitation-joined-avatars .ui-avatar + .ui-avatar {
   margin-left: -8px;
 }
 
@@ -407,11 +427,18 @@
   transform: translateX(-50%) translateY(-10px);
 }
 
+.incoming-invitation-position.is-confirmation[data-ending-style] {
+  transition: opacity .45s ease, transform .45s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .invitation-body {
     transition: none;
   }
   .incoming-invitation-position {
+    transition: none;
+  }
+  .incoming-invitation-position.is-confirmation[data-ending-style], .incoming-invitation {
     transition: none;
   }
   .invitation-spinner {

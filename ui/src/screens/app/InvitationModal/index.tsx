@@ -27,12 +27,14 @@ export default function InvitationModal() {
   const reducedMotion = useReducedMotion()
   const now = useNow({ interval: 1000 })
   const invitations = auth.data.invitations ?? []
+  const latestInvitations = useRef(invitations)
+  latestInvitations.current = invitations
   const [activeId, setActiveId] = useState<AppId | null>(invitations[0]?.id ?? null)
   const [state, dispatch] = useReducer(reducer, initialState)
   // Keep the visible invite when it expires; skip stale invites waiting behind it.
   const current = invitations.find(invite => invite.id === activeId)
     ?? invitations.find(invite => invitationStatus(invite, now) === 'pending')
-  const invitation = state.joined ?? current
+  const invitation = state.joined ?? state.declined ?? current
   const expanded = overlay.isExpanded && state.phase === 'respond' && state.action !== 'accept'
   const busy = state.action != null || state.phase !== 'respond'
   const status = invitation ? invitationStatus(invitation, now) : 'answered'
@@ -51,6 +53,28 @@ export default function InvitationModal() {
   const [dock, setDock] = useState<{ left: number; bottom: number } | null>(null)
   const [body, setBody] = useState<HTMLDivElement | null>(null)
   const [bodyHeight, setBodyHeight] = useState(0)
+  const [line, setLine] = useState<HTMLDivElement | null>(null)
+  const [pillWidth, setPillWidth] = useState<number | null>(null)
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth)
+
+  useLayoutEffect(() => {
+    if (!line) {
+      setPillWidth(null)
+      return
+    }
+    const measure = () => {
+      setPillWidth(Math.ceil(line.getBoundingClientRect().width))
+      setViewportWidth(window.innerWidth)
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(line)
+    window.addEventListener('resize', measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [line])
 
   useLayoutEffect(() => {
     if (!body) return
@@ -77,13 +101,13 @@ export default function InvitationModal() {
   }, [current?.id, state.phase])
 
   useEffect(() => {
-    if (!current || state.joined || lastNotification.current === current.id) return
+    if (!current || state.phase !== 'respond' || lastNotification.current === current.id) return
     lastNotification.current = current.id
     const audio = notificationRef.current
     audio.volume = 0.1
     // Browsers can refuse autoplay until the user has interacted with the page.
     audio.play()?.catch(() => {})
-  }, [current?.id, state.joined])
+  }, [current?.id, state.phase])
 
   useLayoutEffect(() => {
     const player = overlay.player
@@ -109,8 +133,8 @@ export default function InvitationModal() {
   }, [state.joined, overlay.player])
 
   useEffect(() => {
-    if (state.phase !== 'docked') return
-    const timer = window.setTimeout(() => dispatch({ type: 'reset' }), 3400)
+    if (state.phase !== 'docked' && state.phase !== 'declined') return
+    const timer = window.setTimeout(() => dispatch({ type: 'leave' }), state.phase === 'docked' ? 3400 : 1600)
     return () => window.clearTimeout(timer)
   }, [state.phase])
 
@@ -159,9 +183,15 @@ export default function InvitationModal() {
     }
     auth.removeInvitation(target.id)
     if (action === 'decline') {
-      dispatch({ type: 'advance' })
+      const hasNext = latestInvitations.current.some(invite => invite.id !== target.id && invitationStatus(invite, new Date()) === 'pending')
+      if (hasNext) dispatch({ type: 'advance' })
+      else {
+        overlay.setExpanded(false)
+        dispatch({ type: 'declined', invitation: { ...target, action: 'declined' } })
+      }
       return
     }
+    for (const id of response.data.declined_invitation_ids ?? []) auth.removeInvitation(id)
     overlay.setExpanded(false)
     dispatch({ type: 'joined', invitation: { ...target, party: response.data } })
     navigate(`/watch/${response.data.id}`)
@@ -170,39 +200,34 @@ export default function InvitationModal() {
   const party = invitation?.party
   const video = party?.video
   const joining = state.action === 'accept' || state.phase === 'joining'
-  const docked = state.phase === 'docked'
+  const docked = Boolean(state.joined) && (state.phase === 'docked' || state.phase === 'leaving')
+  const declined = Boolean(state.declined)
   const showBeam = (!expanded && pending && !busy) || docked
   const position = docked && dock ? dock : { left: '50%', bottom: location.pathname.startsWith('/watch/') ? 64 : 20 }
 
   return <>
-    <Dialog.Root open={Boolean(invitation)} modal={false} disablePointerDismissal onOpenChange={(open, details) => {
+    <Dialog.Root open={Boolean(invitation) && state.phase !== 'leaving'} modal={false} disablePointerDismissal
+      onOpenChangeComplete={open => { if (!open) dispatch({ type: 'reset' }) }} onOpenChange={(open, details) => {
       if (open) return
       details.cancel()
       if (expanded) collapse()
     }}>
       <Dialog.Portal>
-        <Dialog.Popup className="incoming-invitation-position" initialFocus={false}
+        <Dialog.Popup className={cx('incoming-invitation-position', { 'is-confirmation': docked || declined })} initialFocus={false}
           aria-label="Watch invitation" style={position}>
-          <motion.div initial={false} animate={{ height: expanded ? COLLAPSED_HEIGHT + bodyHeight : COLLAPSED_HEIGHT }}
-            transition={{ height: { duration: reducedMotion ? 0 : 0.45, ease: [0.2, 0.8, 0.2, 1] } }}
-            className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-docked': docked })}>
+          {invitation && header(false, true)}
+          {pillWidth !== null && <motion.div initial={false} animate={{
+            height: expanded ? COLLAPSED_HEIGHT + bodyHeight : COLLAPSED_HEIGHT,
+            width: Math.min(expanded ? 400 : pillWidth, viewportWidth - 24),
+            borderRadius: expanded ? 16 : 20,
+          }} transition={{
+            height: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
+            width: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
+            borderRadius: { duration: reducedMotion ? 0 : 0.45 },
+          }} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
             <div className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"><i /></div>
             {invitation && <>
-              <div className="invitation-line">
-                {docked ? <span className="invitation-joined-avatars">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</span>
-                  : <UiAvatar user={invitation.sender} size="sm" />}
-                <p aria-live="polite" aria-atomic="true">
-                  {docked ? roomMembers(party).length ? <>You’re in with <b>{roomNames(party)}</b></> : <>You’re in the room</>
-                    : joining ? <>Joining <b>{invitation.sender.name}</b>{video && <> to watch <b>{video.show.title}</b></>}</>
-                    : status === 'expired' ? <><b>{invitation.sender.name}’s</b> invitation expired</>
-                    : status === 'withdrawn' ? <><b>{invitation.sender.name}</b> withdrew the invitation</>
-                    : <><b>{invitation.sender.name}</b> invited you to watch{!expanded && video && <> <b>{video.show.title}</b></>}</>}
-                </p>
-                {expanded && queueLength + state.answered > 1 && <span className="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
-                {joining && <span className="invitation-spinner" aria-label="Joining room" />}
-                {!expanded && !busy && <UiPlainButton ref={respondRef} className={cx('invitation-respond', { 'is-dismiss': !pending })} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
-                {expanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
-              </div>
+              {header(expanded)}
               {/* Keep the preview mounted so the container clips it during collapse. */}
               <div ref={setBody} className="invitation-body" inert={!expanded} aria-hidden={!expanded}>
                 <motion.div key={invitation.id} className="invitation-content"
@@ -212,7 +237,8 @@ export default function InvitationModal() {
                     <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
                     <div className="invitation-info">
                       <h3>{video.show.title}</h3>
-                      <p className="ui-subheading">{video.show.title_type === 'series' ? `Series · ${getVideoDetails(video)}` : showMeta(video.show)}{video.show.title_type === 'movie' && <> · {durationLabel(video.duration)}</>}</p>
+                      <p className="ui-subheading">{status === 'expired' ? `${invitation.sender.name}’s invitation expired`
+                        : <>{video.show.title_type === 'series' ? `Series · ${getVideoDetails(video)}` : showMeta(video.show)}{video.show.title_type === 'movie' && <> · {durationLabel(video.duration)}</>}</>}</p>
                     </div>
                     <RoomTimeline party={party} invalid={!pending} expanded={expanded} />
                   </>}
@@ -227,12 +253,32 @@ export default function InvitationModal() {
                 </motion.div>
               </div>
             </>}
-          </motion.div>
+          </motion.div>}
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
     <audio className="invitation-notification-audio" ref={notificationRef}><source src={assetInvitation} type="audio/ogg" /></audio>
   </>
+
+  function header(isExpanded: boolean, measurement = false) {
+    return <div ref={measurement ? setLine : undefined} className={cx('invitation-line', { 'invitation-width-probe': measurement })}
+      aria-hidden={measurement || undefined} inert={measurement || undefined}>
+      {docked ? <span className="invitation-joined-avatars">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</span>
+        : <UiAvatar user={invitation.sender} size="sm" />}
+      <p aria-live={measurement ? undefined : 'polite'} aria-atomic="true">
+        {docked ? roomMembers(party).length ? <>You’re in with <b>{roomNames(party)}</b></> : <>You’re in the room</>
+          : declined ? <>Declined <b>{invitation.sender.name}’s</b> invitation{video && <> to watch <b>{video.show.title}</b></>}</>
+          : joining ? <>Joining <b>{invitation.sender.name}</b>{video && <> to watch <b>{video.show.title}</b></>}</>
+          : status === 'expired' ? <><b>{invitation.sender.name}’s</b> invitation expired</>
+          : status === 'withdrawn' ? <><b>{invitation.sender.name}</b> cancelled the invitation</>
+          : <><b>{invitation.sender.name}</b> invited you to watch{!isExpanded && video && <> <b>{video.show.title}</b></>}</>}
+      </p>
+      {isExpanded && queueLength + state.answered > 1 && <span className="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
+      {joining && <span className="invitation-spinner" aria-label={measurement ? undefined : 'Joining room'} />}
+      {!isExpanded && !busy && <UiPlainButton ref={measurement ? undefined : respondRef} className={cx('invitation-respond', { 'is-dismiss': !pending })} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
+      {isExpanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
+    </div>
+  }
 }
 
 function roomMembers(party: AppParty) {

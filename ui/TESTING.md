@@ -107,11 +107,17 @@ visible icon link.
 `invitations.spec.ts` covers the collapsed pill, expanded movie/episode snapshots,
 queue advancement, expiry and withdrawal, request retries, duplicate and concurrent
 Pusher events, reduced motion, keyboard response actions, and joining from another
-room. Its HTTP and WebSocket fixtures run across all five browser targets and do
-not establish live Pusher or media evidence. Screenshots capture the pill, card,
-next invite, and docked confirmation with controlled artwork.
+room. It also samples width, height, corner rounding, and the joined confirmation's
+fade upward, verifies the final declined pill, and checks that acceptance clears
+the invitations declined by the API. Its HTTP and WebSocket fixtures run across
+all five browser targets and do not establish live Pusher or media evidence.
+Screenshots capture the pill, card, next invite, declined confirmation, and docked
+confirmation with controlled artwork.
 
 The invitation API checks run with
 `valet php vendor/bin/phpunit --filter InvitationApiTest`. They use isolated SQLite
 and verify expiry, already answered invitations, recipient membership on accept,
 legacy pending actions, and timezone-qualified expiry serialization.
+Accepting also verifies that only the recipient's other active invitations are
+declined, affected rooms receive decline events, and failed joins roll back both
+the invitation changes and membership.

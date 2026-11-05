@@ -11,6 +11,7 @@ use App\Support\Helper;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Events\PartyInvitationSent;
 use App\Events\UserInvitationReceived;
 use App\Events\UserInvitationCancelled;
@@ -91,39 +92,52 @@ class PartyInvitationsController extends Controller
      */
     public function accept(\App\Http\Requests\DoInvitation $request, PartyInvitation $invitation)
     {
-        $invitation->fill([
-            'action' => 'accepted'
-        ])->save();
+        list($party, $member, $log, $declined) = DB::transaction(function() use ($request, $invitation) {
+            // Serialize accepts for this recipient, including requests already authorized.
+            User::whereKey($request->user()->id)->lockForUpdate()->first();
+            $invitation = $invitation->fresh();
+            abort_unless($invitation->action === 'pending' && Carbon::parse($invitation->expires_at)->isFuture(), 403);
 
-        $party = $invitation->party;
+            $declined = PartyInvitation::where('recipient_id', $request->user()->id)
+                ->where('id', '!=', $invitation->id)
+                ->pending()
+                ->lockForUpdate()
+                ->get();
 
-        $party->members()->attach($request->user()->id, [
-            'is_active' => false
-        ]);
+            $invitation->fill(['action' => 'accepted'])->save();
+            foreach ($declined as $other) {
+                $other->fill(['action' => 'declined'])->save();
+            }
 
-        // `attach()` above doesn't reload a collection, so we're forcing it by
-        // calling `members` as a method instead of a property here. Calling
-        // members->fresh() doesn't include the pivot, so here we are.
-        $member = $party->members()->where('user_id', $request->user()->id)->first();
+            $party = $invitation->party;
+            $party->members()->attach($request->user()->id, ['is_active' => false]);
+            $member = $party->members()->where('user_id', $request->user()->id)->first();
 
-        $activity = \App\PartyActivity::create([
-            'user_id' => $request->user()->id,
-            'party_id' => $party->id,
-            'text' => 'joined the room'
-        ]);
+            $activity = PartyActivity::create([
+                'user_id' => $request->user()->id,
+                'party_id' => $party->id,
+                'text' => 'joined the room'
+            ]);
 
-        $log = $party->logs()->create([
-            'loggable_type' => \App\PartyActivity::class,
-            'loggable_id' => $activity->id
-        ]);
+            $log = $party->logs()->create([
+                'loggable_type' => PartyActivity::class,
+                'loggable_id' => $activity->id
+            ]);
 
+            return [$party, $member, $log, $declined];
+        });
+
+        $invitation->refresh();
         broadcast(
             new PartyInvitationAccepted($party, $invitation, $member)
         )->toOthers();
 
         broadcast(new PartyLogEvent($party, $log));
+        foreach ($declined as $other) {
+            broadcast(new PartyInvitationDeclined($other->party, $other))->toOthers();
+        }
 
-        return $party;
+        return array_merge($party->toArray(), ['declined_invitation_ids' => $declined->modelKeys()]);
     }
 
     /**

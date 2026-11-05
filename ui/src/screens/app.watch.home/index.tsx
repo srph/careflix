@@ -228,6 +228,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
     $video.current.currentTime = state.time
   }, [])
 
+  // Presence refreshes must not rewind playback. Each state event still syncs,
+  // even when its timestamp and play/pause values match the previous event.
   useUpdateEffect(() => {
     dispatch({
       type: 'sync',
@@ -238,7 +240,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
     })
 
     $video.current.currentTime = context.party.current_time
-  }, [context.party])
+  }, [context.playbackRevision])
 
   useUpdateEffect(() => {
     if (state.isPlaying) {

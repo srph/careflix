@@ -5,6 +5,7 @@ import UiButton from '~/components/UiButton'
 
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'
+import usePresence from '~/hooks/usePresence'
 import { useAsyncEffect } from '~/hooks/useAsyncEffect'
 import { useParams } from 'react-router'
 import axios from '~/lib/axios'
@@ -40,12 +41,14 @@ const reducer = (state: State, action: Action): State => {
     case 'data:update': {
       return {
         ...state,
-        party: action.payload.party
+        party: action.payload.party,
+        playbackRevision: state.playbackRevision + 1
       }
     }
 
     case 'data:sync-state': {
       return immer(state, draft => {
+        draft.playbackRevision += 1
         draft.party.current_time = action.payload.state.current_time
         draft.party.is_playing = action.payload.state.is_playing
       })
@@ -87,17 +90,6 @@ const reducer = (state: State, action: Action): State => {
         })
       }
     }
-
-    case 'presence': {
-      return {
-        ...state,
-        party: immer(state.party, draft => {
-          const user = draft.members.find(user => user.id === Number(action.payload.id))
-          if (user == null) return
-          user.pivot.is_active = action.payload.isActive
-        })
-      }
-    }
   }
 
   return state
@@ -117,7 +109,8 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
 
   const [state, dispatch] = useReducer(reducer, {
     party: null,
-    isLoading: true
+    isLoading: true,
+    playbackRevision: 0
   })
 
   useAsyncEffect(
@@ -143,35 +136,17 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
     [attempt]
   )
 
-  usePusher(
-    state.party ? `presence-chat-party.${state.party.id}` : '',
-    'pusher:member_added',
-    (event: PusherPresenceEvent) => {
-      dispatch({
-        type: 'presence',
-        payload: {
-          id: event.id,
-          isActive: true
-        }
-      })
-    },
-    state.party == null
-  )
-
-  usePusher(
-    state.party ? `presence-chat-party.${state.party.id}` : '',
-    'pusher:member_removed',
-    (event: PusherPresenceEvent) => {
-      dispatch({
-        type: 'presence',
-        payload: {
-          id: event.id,
-          isActive: false
-        }
-      })
-    },
-    state.party == null
-  )
+  const activeMembers = usePresence(state.party ? `presence-chat-party.${state.party.id}` : '')
+  const party = useMemo(() => {
+    if (!state.party || !activeMembers) return state.party
+    return {
+      ...state.party,
+      members: state.party.members.map(member => ({
+        ...member,
+        pivot: { ...member.pivot, is_active: activeMembers.has(String(member.id)) }
+      }))
+    }
+  }, [state.party, activeMembers])
 
   usePusher(
     state.party ? `private-party.${state.party.id}` : '',
@@ -228,13 +203,14 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
   const context = useMemo<ContextType>(() => {
     return {
       ...state,
+      party,
       onCancel: handleCancel,
       onInvite: handleInvite,
       onAccept: handleAccept,
       onDecline: handleDecline,
       onChangeVideo: handleChangeVideo
     }
-  }, [state])
+  }, [state, party])
 
   if (state.isLoading) {
     return null

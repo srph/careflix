@@ -12,6 +12,7 @@ import immer from 'immer'
 import { useReducer, useMemo, useEffect } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
 import { usePusher } from '~/hooks/usePusher'
+import usePresence from '~/hooks/usePresence'
 import { useUpdateDebounce } from '~/hooks/useUpdateDebounce'
 import axios from '~/lib/axios'
 import toSearchObject from '~/utils/toSearchObject'
@@ -45,7 +46,6 @@ type Action =
   | ReducerAction<'invitation.cancel:error', { id: AppId }>
   | ReducerAction<'invitation.cancel:success', { id: AppId }>
   | ReducerAction<'modal:toggle', { open: boolean }>
-  | ReducerAction<'presence', { id: AppId; isOnline: boolean }>
 
 const reducer = (state: State, action: Action) => {
   switch (action.type) {
@@ -133,17 +133,6 @@ const reducer = (state: State, action: Action) => {
         })
       }
     }
-
-    case 'presence': {
-      return {
-        ...state,
-        data: immer(state.data, draft => {
-          const user = draft.find(user => user.id === Number(action.payload.id))
-          if (user == null) return
-          user.is_online = action.payload.isOnline
-        })
-      }
-    }
   }
 }
 
@@ -169,25 +158,10 @@ function ChatInvitationModal(props: Props) {
 
   const [state, dispatch] = useReducer(reducer, init)
 
-  usePusher(`presence-chat`, 'pusher:member_added', (event: PusherPresenceEvent) => {
-    dispatch({
-      type: 'presence',
-      payload: {
-        id: event.id,
-        isOnline: true
-      }
-    })
-  })
-
-  usePusher(`presence-chat`, 'pusher:member_removed', (event: PusherPresenceEvent) => {
-    dispatch({
-      type: 'presence',
-      payload: {
-        id: event.id,
-        isOnline: false
-      }
-    })
-  })
+  const onlineMembers = usePresence('presence-chat')
+  const users = useMemo(() => state.data.map(user => onlineMembers
+    ? { ...user, is_online: onlineMembers.has(String(user.id)) }
+    : user), [state.data, onlineMembers])
 
   usePusher(`private-party.${context.party.id}`, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
     context.onInvite(event.invitation)
@@ -353,7 +327,7 @@ function ChatInvitationModal(props: Props) {
         {state.isLoading && <UiLoader />}
 
         <div className="user-list">
-          {state.data.map(user => (
+          {users.map(user => (
             <UserItem
               key={user.id}
               user={user}

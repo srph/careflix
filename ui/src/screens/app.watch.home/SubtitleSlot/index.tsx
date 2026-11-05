@@ -2,8 +2,7 @@ import './style.css'
 
 import * as React from 'react'
 import cx from 'classnames'
-import { useState, useMemo } from 'react'
-import { useAsyncEffect } from '~/hooks/useAsyncEffect'
+import { useEffect, useState } from 'react'
 import axios from '~/lib/axios'
 import { placements, HAS_PLACEMENT_PATTERN } from './constants'
 import { srt2obj, Track } from './utils'
@@ -22,27 +21,29 @@ interface Props {
 function SubtitleSlot(props: Props) {
   const [state, setState] = useState<State>(() => ({ tracks: [] }))
 
-  useAsyncEffect(
-    async () => {
-      if (!props.video.subtitle_url) {
-        return
+  useEffect(() => {
+    let cancelled = false
+    setState({ tracks: [] })
+
+    async function loadSubtitles() {
+      if (!props.video.subtitle_url) return
+
+      try {
+        const [err, res] = await axios.get(`/api/videos/${props.video.id}/subtitle`, {
+          validation: false
+        })
+
+        if (cancelled || err || typeof res?.data?.subtitle !== 'string') return
+
+        setState({ tracks: srt2obj(res.data.subtitle) })
+      } catch {
+        // Missing or malformed subtitles should not interrupt the watch party.
       }
+    }
 
-      const [err, res] = await axios.get(`api/videos/${props.video.id}/subtitle`, {
-        validation: false
-      })
-
-      if (err != null) {
-        return //
-      }
-
-      setState({
-        tracks: srt2obj(res.data.subtitle)
-      })
-    },
-    null,
-    []
-  )
+    void loadSubtitles()
+    return () => { cancelled = true }
+  }, [props.video.id, props.video.subtitle_url])
 
   if (!props.video.subtitle_url) {
     return null

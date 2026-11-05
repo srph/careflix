@@ -1,6 +1,7 @@
 export interface State {
   party: AppParty | null
   isLoading: boolean
+  playbackRevision: number
 }
 
 export interface Handlers {
@@ -22,7 +23,6 @@ export type Action = ReducerAction<'data:init'>
  | ReducerAction<'invitation.cancel', { invitation: AppPartyInvitation }>
  | ReducerAction<'invitation.accept', { invitation: AppPartyInvitation, member: AppPartyMember }>
  | ReducerAction<'invitation.decline', { invitation: AppPartyInvitation }>
- | ReducerAction<'presence', { id: AppId, isActive: boolean }>
 
 export interface RouteParams {
   partyId: string

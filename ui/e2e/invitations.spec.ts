@@ -181,3 +181,54 @@ test('reduced motion retains queue behavior and disables beam animation', async 
   await expect(dialog(page).getByRole('heading', { name: 'Paper Moons' })).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
+
+test('expand and collapse animate container height without scaling the contents', async ({ page }) => {
+  await setup(page)
+  await page.goto('/')
+  const card = dialog(page).locator('.incoming-invitation')
+  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '1')
+  const collapsedHeight = (await card.boundingBox()).height
+
+  const sample = () => page.evaluate(() => new Promise<{ height: number; scaleX: number; scaleY: number; avatarHeight: number }[]>(resolve => {
+    const frames = []
+    const started = performance.now()
+    const record = () => {
+      const card = document.querySelector<HTMLElement>('.incoming-invitation')!
+      const avatar = card.querySelector<HTMLElement>('.invitation-line > .ui-avatar')!
+      const transform = getComputedStyle(card).transform
+      const matrix = transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transform)
+      frames.push({ height: card.getBoundingClientRect().height, scaleX: matrix.a, scaleY: matrix.d, avatarHeight: avatar.getBoundingClientRect().height })
+      if (performance.now() - started < 650) requestAnimationFrame(record)
+      else resolve(frames)
+    }
+    requestAnimationFrame(record)
+  }))
+
+  const expanding = sample()
+  await open(page)
+  const expandedFrames = await expanding
+  const expandedHeight = (await card.boundingBox()).height
+  expect(expandedHeight).toBeGreaterThan(collapsedHeight + 100)
+  expect(expandedFrames.some(frame => frame.height > collapsedHeight + 2 && frame.height < expandedHeight - 2)).toBe(true)
+
+  const collapsing = sample()
+  await page.getByRole('button', { name: 'Collapse invitation' }).click()
+  const collapsedFrames = await collapsing
+  await expect.poll(async () => (await card.boundingBox()).height).toBeCloseTo(collapsedHeight, 0)
+  expect(collapsedFrames.some(frame => frame.height > collapsedHeight + 2 && frame.height < expandedHeight - 2)).toBe(true)
+
+  for (const frame of [...expandedFrames, ...collapsedFrames]) {
+    expect(frame.scaleX).toBeCloseTo(1, 3)
+    expect(frame.scaleY).toBeCloseTo(1, 3)
+    expect(frame.avatarHeight).toBeCloseTo(24, 0)
+  }
+
+  await page.setViewportSize({ width: 390, height: 320 })
+  await open(page)
+  await page.getByRole('button', { name: 'Accept', exact: true }).scrollIntoViewIfNeeded()
+  await expect(dialog(page).locator('.invitation-line')).toBeInViewport()
+  await expect(page.getByRole('button', { name: 'Accept', exact: true })).toBeInViewport()
+  const bounds = await card.boundingBox()
+  expect(bounds.y).toBeGreaterThanOrEqual(0)
+  expect(bounds.y + bounds.height).toBeLessThanOrEqual(320)
+})

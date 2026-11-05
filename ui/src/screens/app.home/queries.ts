@@ -60,12 +60,12 @@ export function useListingSearchQuery(term: string, enabled: boolean) {
   })
 }
 
-export function useShowGroupsQuery(show: AppShow | null) {
+export function useShowGroupsQuery(show: AppShow | null, enabled = true) {
   const { data: user, isAuthenticated } = useAuth()
   return useQuery({
     queryKey: ['listing', user?.id, 'groups', show?.id],
     queryFn: ({ signal }) => get<AppShowGroup[]>(`/api/shows/${show.id}/groups`, undefined, signal),
-    enabled: isAuthenticated && show?.title_type === 'series',
+    enabled: isAuthenticated && enabled && show?.title_type === 'series',
   })
 }
 

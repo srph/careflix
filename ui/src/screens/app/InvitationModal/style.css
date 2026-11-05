@@ -27,10 +27,7 @@
 .incoming-invitation.is-expanded {
   width: min(400px, calc(100vw - 24px));
   max-height: calc(100dvh - 96px);
-  overflow-y: auto;
-  overflow-x: hidden;
   border-radius: 16px;
-  scrollbar-width: thin;
 }
 
 .invitation-line {
@@ -101,7 +98,14 @@
 }
 
 .invitation-body {
-  position: relative;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  max-height: calc(100dvh - 136px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
   padding-bottom: 8px;
 }
 

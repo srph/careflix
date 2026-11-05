@@ -17,6 +17,8 @@ import assetInvitation from '~/assets/audio/invitation.ogg'
 import { useInvitationOverlay } from './Context'
 import { initialState, invitationStatus, reducer } from './state'
 
+const COLLAPSED_HEIGHT = 40
+
 export default function InvitationModal() {
   const auth = useAuth()
   const navigate = useNavigate()
@@ -47,6 +49,17 @@ export default function InvitationModal() {
   }, [])
   const lastNotification = useRef<AppId | null>(null)
   const [dock, setDock] = useState<{ left: number; bottom: number } | null>(null)
+  const [body, setBody] = useState<HTMLDivElement | null>(null)
+  const [bodyHeight, setBodyHeight] = useState(0)
+
+  useLayoutEffect(() => {
+    if (!body) return
+    const measure = () => setBodyHeight(Math.ceil(body.getBoundingClientRect().height))
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(body)
+    return () => observer.disconnect()
+  }, [body, expanded])
 
   usePusher(`private-user.${auth.data.id}`, 'invitation.received', (event: { invitation: AppPartyInvitation }) => {
     auth.receiveInvitation(event.invitation)
@@ -170,11 +183,12 @@ export default function InvitationModal() {
       <Dialog.Portal>
         <Dialog.Popup className="incoming-invitation-position" initialFocus={false}
           aria-label="Watch invitation" style={position}>
-          <motion.div layout transition={{ layout: { duration: reducedMotion ? 0 : 0.45, ease: [0.2, 0.8, 0.2, 1] } }}
+          <motion.div initial={false} animate={{ height: expanded ? COLLAPSED_HEIGHT + bodyHeight : COLLAPSED_HEIGHT }}
+            transition={{ height: { duration: reducedMotion ? 0 : 0.45, ease: [0.2, 0.8, 0.2, 1] } }}
             className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-docked': docked })}>
             <div className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"><i /></div>
             {invitation && <>
-              <motion.div layout="position" className="invitation-line">
+              <div className="invitation-line">
                 {docked ? <span className="invitation-joined-avatars">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</span>
                   : <UiAvatar user={invitation.sender} size="sm" />}
                 <p aria-live="polite" aria-atomic="true">
@@ -188,9 +202,10 @@ export default function InvitationModal() {
                 {joining && <span className="invitation-spinner" aria-label="Joining room" />}
                 {!expanded && !busy && <UiPlainButton ref={respondRef} className={cx('invitation-respond', { 'is-dismiss': !pending })} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
                 {expanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
-              </motion.div>
-              {expanded && <motion.div key={invitation.id} className="invitation-body"
-                initial={{ opacity: reducedMotion ? 1 : 0, x: reducedMotion ? 0 : 32 }} animate={{ opacity: 1, x: 0 }}
+              </div>
+              {/* Keep the preview mounted so the container clips it during collapse. */}
+              <motion.div ref={setBody} key={invitation.id} className="invitation-body" inert={!expanded} aria-hidden={!expanded}
+                initial={expanded && !reducedMotion ? { opacity: 0, x: 32 } : false} animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
                   {video && <>
                     <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
@@ -198,7 +213,7 @@ export default function InvitationModal() {
                       <h3>{video.show.title}</h3>
                       <p className="ui-subheading">{video.show.title_type === 'series' ? `Series · ${getVideoDetails(video)}` : showMeta(video.show)}{video.show.title_type === 'movie' && <> · {durationLabel(video.duration)}</>}</p>
                     </div>
-                    <RoomTimeline party={party} invalid={!pending} />
+                    <RoomTimeline party={party} invalid={!pending} expanded={expanded} />
                   </>}
                   {!video && <p className="invitation-unavailable">The room preview is unavailable. You can still respond to the invitation.</p>}
                   {state.error && <p role="alert" className="invitation-error">{state.error}</p>}
@@ -208,7 +223,7 @@ export default function InvitationModal() {
                       <UiPlainButton className="is-primary" onClick={() => answer('accept')} disabled={busy}>Accept</UiPlainButton>
                     </> : <UiPlainButton onClick={dismiss} disabled={busy}>Dismiss</UiPlainButton>}
                   </div>
-              </motion.div>}
+              </motion.div>
             </>}
           </motion.div>
         </Dialog.Popup>
@@ -234,9 +249,9 @@ function durationLabel(seconds: number) {
   return minutes >= 60 ? `${Math.floor(minutes / 60)}h ${minutes % 60}m` : `${minutes}m`
 }
 
-function RoomTimeline({ party, invalid }: { party: AppParty; invalid: boolean }) {
+function RoomTimeline({ party, invalid, expanded }: { party: AppParty; invalid: boolean; expanded: boolean }) {
   const video = party.video
-  const groups = useShowGroupsQuery(video.show)
+  const groups = useShowGroupsQuery(video.show, expanded)
   const season = groups.data?.find(group => String(group.id) === String(video.show_group_id))
   const episodes = season?.videos ?? []
   const episodeIndex = episodes.findIndex(episode => String(episode.id) === String(video.id))

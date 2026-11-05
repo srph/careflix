@@ -91,6 +91,9 @@ export default function InvitationModal() {
   usePusher(`private-user.${auth.data.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
     auth.cancelInvitation(event.invitation)
   })
+  usePusher(`private-user.${auth.data.id}`, 'invitations.resolved', (event: { invitation_ids: AppId[] }) => {
+    for (const id of event.invitation_ids) auth.removeInvitation(id)
+  })
 
   useEffect(() => {
     setActiveId(current?.id ?? null)
@@ -192,6 +195,7 @@ export default function InvitationModal() {
       return
     }
     for (const id of response.data.declined_invitation_ids ?? []) auth.removeInvitation(id)
+    for (const id of response.data.accepted_invitation_ids ?? []) auth.removeInvitation(id)
     overlay.setExpanded(false)
     dispatch({ type: 'joined', invitation: { ...target, party: response.data } })
     navigate(`/watch/${response.data.id}`)

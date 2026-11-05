@@ -129,6 +129,8 @@ type AppPartyMember = AppUser & {
 
 interface AppParty {
   id: AppId
+  join_code?: string
+  creator?: Pick<AppUser, 'id' | 'name' | 'avatar'> | null
   show_video_id: AppId
   is_playing: boolean
   current_time: number
@@ -138,6 +140,23 @@ interface AppParty {
   last_activity_at: string
   created_at: string
   updated_at: string
+}
+
+interface AppPartyPreview {
+  id: AppId
+  creator: Pick<AppUser, 'id' | 'name' | 'avatar'> | null
+  is_member: boolean
+  is_playing: boolean
+  current_time: number
+  last_activity_at: string
+  video: {
+    title: string
+    duration: number
+    preview_image: string | null
+    show: Pick<AppShow, 'title' | 'title_type'>
+    group: { title: string } | null
+  }
+  members: Array<Pick<AppUser, 'id' | 'name' | 'avatar'> & { pivot: { is_active: boolean } }>
 }
 
 interface AppPartyState {

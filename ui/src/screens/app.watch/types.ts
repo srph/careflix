@@ -23,6 +23,7 @@ export type Action = ReducerAction<'data:init'>
  | ReducerAction<'invitation.cancel', { invitation: AppPartyInvitation }>
  | ReducerAction<'invitation.accept', { invitation: AppPartyInvitation, member: AppPartyMember }>
  | ReducerAction<'invitation.decline', { invitation: AppPartyInvitation }>
+ | ReducerAction<'member.join', { member: AppPartyMember }>
 
 export interface RouteParams {
   partyId: string

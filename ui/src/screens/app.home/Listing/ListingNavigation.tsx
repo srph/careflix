@@ -5,6 +5,7 @@ import UiPlainButton from '~/components/UiPlainButton'
 import { useAuth } from '~/contexts/Auth'
 import { type ListingTab } from '../queries'
 import ListingSearch from './ListingSearch'
+import JoinPartyModal from '../JoinPartyModal'
 
 const tabs: Array<[ListingTab, string]> = [['all', 'All'], ['movie', 'Movies'], ['series', 'Series'], ['parties', 'Parties']]
 
@@ -29,6 +30,7 @@ export default function ListingNavigation({ tab, onTabChange, onShowSelect, part
           document.getElementById(`listing-tab-${tabs[next][0]}`)?.focus()
         }}>{label}</UiPlainButton>)}
     </div>
+    <JoinPartyModal />
     <ListingSearch onShowSelect={onShowSelect} recentParties={parties} />
     <Link to="/settings" className="listing-account" aria-label="Account settings"><UiAvatar user={auth.data} /></Link>
   </nav>

@@ -1,6 +1,7 @@
 import instance from './instance'
 import { AxiosError } from './types'
 import { toast } from '~/components/Toast'
+import axios from 'axios'
 
 export default {
   setup: (): number => {
@@ -12,6 +13,7 @@ export default {
      * axios({ app: { validation: 'An error occured trying to create a contact } })
      */
     return instance.interceptors.response.use(null, (err: AxiosError<{ errors: AppValidationBag }>) => {
+      if (axios.isCancel(err)) return Promise.reject(err)
       if (err.config.method === 'get') {
         return Promise.reject(err)
       }

@@ -12,6 +12,7 @@ interface Props {
   modalClassName?: string
   overlayClassName?: string
   ariaLabel?: string
+  finalFocus?: React.RefObject<HTMLElement | null>
 }
 
 export default function UiModal(props: Props) {
@@ -28,7 +29,7 @@ export default function UiModal(props: Props) {
       <Dialog.Portal>
         <Dialog.Backdrop className={cx('ui-modal-backdrop', props.overlayClassName)} />
         <Dialog.Viewport className={cx('ui-modal-overlay', props.overlayClassName)} style={{ background: 'transparent' }}>
-          <Dialog.Popup className={cx('ui-modal', props.modalClassName)} aria-label={props.ariaLabel ?? 'Dialog'}>
+          <Dialog.Popup className={cx('ui-modal', props.modalClassName)} aria-label={props.ariaLabel ?? 'Dialog'} finalFocus={props.finalFocus}>
             {children}
           </Dialog.Popup>
         </Dialog.Viewport>

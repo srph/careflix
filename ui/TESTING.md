@@ -114,6 +114,14 @@ all five browser targets and do not establish live Pusher or media evidence.
 Screenshots capture the pill, card, next invite, declined confirmation, and docked
 confirmation with controlled artwork.
 
+`party-codes.spec.ts` checks the A2d2b7 Join button and dialog, normalized pasted
+codes, automatic lookup, stale response cancellation, lookup/join retries, preview
+states, focus restoration, repeat submissions, invitation cleanup, duplicate member
+events, and copying the code above chat across the five browser targets. Its
+HTTP/WebSocket fixtures establish interface behavior independently of live Pusher.
+The corresponding isolated API and creator backfill tests run with
+`valet php vendor/bin/phpunit --filter 'PartyCodeApiTest|PartyCodeMigrationTest'`.
+
 The invitation API checks run with
 `valet php vendor/bin/phpunit --filter InvitationApiTest`. They use isolated SQLite
 and verify expiry, already answered invitations, recipient membership on accept,

@@ -6,6 +6,7 @@ import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationModal from '../ChatInvitationModal'
 import ChatWidgetTip from '../ChatWidgetTip'
+import PartyCode from '../PartyCode'
 
 import { usePropRef } from '~/hooks/usePropRef'
 import { useAuth } from '~/contexts/Auth'
@@ -380,6 +381,7 @@ function ChatWidget(props: Props) {
         />
       </div>
 
+      <PartyCode code={props.party.join_code} />
       <div className="watch-screen-chat-messages-container">
         <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
           <ChatWidgetTip />

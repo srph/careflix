@@ -21,6 +21,9 @@ Route::middleware('auth:api')->group(function() {
     Route::get('videos/{video}/subtitle', 'ShowsController@subtitle');
     Route::post('parties', 'PartiesController@store');
 
+    Route::get('party-codes/{code}', 'PartyCodesController@show')->where('code', '[0-9]{6}');
+    Route::post('party-codes/{code}/join', 'PartyCodesController@join')->where('code', '[0-9]{6}');
+
     Route::group(['middleware' => 'party.member'], function() {
         Route::get('parties/{party}', 'PartiesController@show');
         Route::put('parties/{party}/state', 'PartiesController@state');

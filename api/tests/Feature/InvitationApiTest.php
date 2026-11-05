@@ -94,7 +94,7 @@ class InvitationApiTest extends TestCase
         $this->assertSame('declined', $invitation->fresh()->action);
     }
 
-    public function test_accept_declines_only_the_recipients_other_active_invitations()
+    public function test_accept_resolves_same_party_invites_and_declines_other_parties()
     {
         list($invitation, $party, $recipient) = $this->invitation();
         $otherParty = Party::create([
@@ -110,17 +110,17 @@ class InvitationApiTest extends TestCase
 
         $this->postJson('/api/invitations/' . $invitation->id . '/accept')
             ->assertOk()
-            ->assertJson(['id' => $party->id, 'declined_invitation_ids' => [$pending->id, $legacy->id]]);
+            ->assertJson(['id' => $party->id, 'declined_invitation_ids' => [$pending->id], 'accepted_invitation_ids' => [$invitation->id, $legacy->id]]);
 
         $this->assertSame('accepted', $invitation->fresh()->action);
         $this->assertSame('declined', $pending->fresh()->action);
-        $this->assertSame('declined', $legacy->fresh()->action);
+        $this->assertSame('accepted', $legacy->fresh()->action);
         $this->assertSame('pending', $expired->fresh()->action);
         $this->assertSame('cancelled', $cancelled->fresh()->action);
         $this->assertSame('accepted', $answered->fresh()->action);
         $this->assertSame('pending', $anotherRecipient->fresh()->action);
         $this->assertFalse($recipient->isMemberOfParty($otherParty));
-        foreach ([$pending, $legacy] as $other) {
+        foreach ([$pending] as $other) {
             Event::assertDispatched(\App\Events\PartyInvitationDeclined::class, function($event) use ($other) {
                 return $event->invitation->id === $other->id && $event->invitation->action === 'declined';
             });

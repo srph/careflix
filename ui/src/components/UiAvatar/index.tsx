@@ -5,7 +5,7 @@ import { getInitials, getBgFromInitials } from './utils'
 
 interface Props {
   img?: string
-  user?: AppUser
+  user?: Pick<AppUser, 'name' | 'avatar'>
   size?: 'sm' | 'm' | 'l' | 'xl'
 }
 

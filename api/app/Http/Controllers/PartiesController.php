@@ -8,6 +8,7 @@ use App\Events\PartyState;
 use App\PartyActivity;
 use App\Events\PartyVideoChanged;
 use App\Events\PartyLogEvent;
+use Illuminate\Support\Facades\DB;
 
 class PartiesController extends Controller
 {
@@ -21,30 +22,33 @@ class PartiesController extends Controller
     {
         $payload = $request->only(['show_video_id']);
 
-        $party = Party::create([
-            'show_video_id' => $payload['show_video_id'],
-            'is_playing' => false,
-            'is_expired' => false,
-            'current_time' => 0,
-            'last_activity_at' => now()
-        ]);
+        return DB::transaction(function () use ($payload, $request) {
+            $party = Party::createWithCode([
+                'creator_id' => $request->user()->id,
+                'show_video_id' => $payload['show_video_id'],
+                'is_playing' => false,
+                'is_expired' => false,
+                'current_time' => 0,
+                'last_activity_at' => now()
+            ]);
 
-        $party->members()->attach($request->user()->id, [
-            'is_active' => false
-        ]);
+            $party->members()->attach($request->user()->id, [
+                'is_active' => false
+            ]);
 
-        $activity = \App\PartyActivity::create([
-            'user_id' => $request->user()->id,
-            'party_id' => $party->id,
-            'text' => 'created the room'
-        ]);
+            $activity = \App\PartyActivity::create([
+                'user_id' => $request->user()->id,
+                'party_id' => $party->id,
+                'text' => 'created the room'
+            ]);
 
-        $party->logs()->create([
-            'loggable_type' => \App\PartyActivity::class,
-            'loggable_id' => $activity->id
-        ]);
+            $party->logs()->create([
+                'loggable_type' => \App\PartyActivity::class,
+                'loggable_id' => $activity->id
+            ]);
 
-        return $party;
+            return $party->fresh()->load('creator')->makeVisible('join_code');
+        });
     }
 
     /**
@@ -55,7 +59,7 @@ class PartiesController extends Controller
      */
     public function show(Party $party)
     {
-        return $party->load('invitations');
+        return $party->load('invitations', 'creator')->makeVisible('join_code');
     }
 
 
@@ -165,6 +169,6 @@ class PartiesController extends Controller
             new PartyVideoChanged($party, $log)
         )->toOthers();
 
-        return $party;
+        return $party->load('creator')->makeVisible('join_code');
     }
 }

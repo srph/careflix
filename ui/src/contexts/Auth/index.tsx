@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { createContext, useEffect, useState, useContext } from 'react'
+import { createContext, useEffect, useState, useContext, useRef } from 'react'
 import * as cookie from 'cookie-machine'
 import immer from 'immer'
 import axios from '~/lib/axios'
@@ -41,6 +41,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
   const [data, setData] = useState<AppUser | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const removedInvitations = useRef(new Set<string>())
 
   /**
    * Block rendering and load the user data
@@ -107,6 +108,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
   }
 
   const logout = () => {
+    removedInvitations.current.clear()
     toast('You have been logged out.')
     cookie.remove('app_token', { path: '/' })
     setData(null)
@@ -134,6 +136,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
    * Push the received invitation
    */
   const receiveInvitation = (invitation: AppPartyInvitation) => {
+    if (removedInvitations.current.has(String(invitation.id))) return
     setData(current => current && immer(current, draft => {
       if (!draft.invitations) draft.invitations = []
       if (!draft.invitations.some(item => item.id === invitation.id)) {
@@ -153,6 +156,8 @@ function AuthProvider({ children }: ReactComponentWrapper) {
   }
 
   const removeInvitation = (id: AppId) => {
+    // A resolved event can arrive before the original invitation on another tab.
+    removedInvitations.current.add(String(id))
     setData(current => current && immer(current, draft => {
       draft.invitations = draft.invitations.filter(invitation => invitation.id !== id)
     }))

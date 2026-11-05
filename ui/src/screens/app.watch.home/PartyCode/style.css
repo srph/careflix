@@ -1,0 +1,12 @@
+.watch-party-code { position: relative; display: flex; flex: none; align-items: center; gap: 10px; min-height: 40px; margin: 0 16px 14px; padding: 0 6px 0 14px; border-radius: 12px; background: #ffffff0d; }
+.watch-party-code > span:first-child { color: var(--color-black-5); font: 600 10px var(--font-family-subheading); letter-spacing: .08em; text-transform: uppercase; }
+.watch-party-code button { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; margin-left: auto; padding: 0 8px 0 10px; border-radius: 16px; color: var(--color-white); transition: background .2s; }
+.watch-party-code button:hover { background: #ffffff14; }
+.watch-party-code button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.watch-party-code b { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.watch-party-code i { color: var(--color-black-5); font-size: 14px; }
+.watch-party-code .is-copied { color: #65d6ad; }
+.watch-party-code-feedback { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.watch-screen-canopy:has(+ .watch-party-code) { padding-bottom: 10px; border-bottom: 0; }
+.watch-party-code + .watch-screen-chat-messages-container { border-top: 1px solid var(--color-black-1); }
+@media (prefers-reduced-motion: reduce) { .watch-party-code button { transition: none; } }

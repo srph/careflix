@@ -87,3 +87,35 @@ export function useCreatePartyMutation() {
     },
   })
 }
+
+export function usePartyCodeQuery(code: string) {
+  const { data: user, isAuthenticated } = useAuth()
+  return useQuery({
+    queryKey: ['party-code', user?.id, code],
+    queryFn: ({ signal }) => get<AppPartyPreview>(`/api/party-codes/${code}`, undefined, signal),
+    enabled: isAuthenticated && code.length === 6,
+    staleTime: 0,
+    gcTime: 0,
+    retry: false,
+    refetchOnWindowFocus: false,
+  })
+}
+
+export function useJoinPartyMutation() {
+  const auth = useAuth()
+  const client = useQueryClient()
+  const navigate = useNavigate()
+  return useMutation({
+    mutationFn: async (code: string): Promise<AppParty & { accepted_invitation_ids: AppId[]; declined_invitation_ids: AppId[] }> => {
+      const [error, response] = await axios.post(`/api/party-codes/${code}/join`, {}, { app: { validation: false } })
+      if (error) throw error
+      return response.data
+    },
+    onSuccess: party => {
+      for (const id of [...party.accepted_invitation_ids, ...party.declined_invitation_ids]) auth.removeInvitation(id)
+      void client.invalidateQueries({ queryKey: ['listing', auth.data.id, 'parties'] })
+      void client.invalidateQueries({ queryKey: ['listing', auth.data.id, 'search'] })
+      navigate(`/watch/${party.id}`)
+    },
+  })
+}

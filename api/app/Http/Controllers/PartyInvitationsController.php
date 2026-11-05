@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Party;
 use App\PartyInvitation;
-use App\PartyActivity;
 use App\Support\Helper;
 
 use Carbon\Carbon;
@@ -15,10 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\Events\PartyInvitationSent;
 use App\Events\UserInvitationReceived;
 use App\Events\UserInvitationCancelled;
-use App\Events\PartyInvitationAccepted;
 use App\Events\PartyInvitationDeclined;
 use App\Events\PartyInvitationCancelled;
-use App\Events\PartyLogEvent;
 
 class PartyInvitationsController extends Controller
 {
@@ -66,15 +63,19 @@ class PartyInvitationsController extends Controller
     {
         $duration = config('config.party.invitation_duration');
 
-        $invitation = PartyInvitation::create([
-            'party_id' => $party->id,
-            'sender_id' => $request->user()->id,
-            'recipient_id' => $request->get('recipient_id'),
-            'invitation_code' => Helper::generateInvitationCode(),
-            'duration' => $duration,
-            'action' => 'pending',
-            'expires_at' => Carbon::now()->addSeconds($duration)
-        ])->fresh();
+        $invitation = DB::transaction(function () use ($request, $party, $duration) {
+            User::whereKey($request->get('recipient_id'))->lockForUpdate()->firstOrFail();
+            abort_if($party->members()->where('user_id', $request->get('recipient_id'))->exists(), 422, 'This person is already a member of the party.');
+            return PartyInvitation::create([
+                'party_id' => $party->id,
+                'sender_id' => $request->user()->id,
+                'recipient_id' => $request->get('recipient_id'),
+                'invitation_code' => Helper::generateInvitationCode(),
+                'duration' => $duration,
+                'action' => 'pending',
+                'expires_at' => Carbon::now()->addSeconds($duration)
+            ])->fresh();
+        });
 
         $invitation->load('party');
 
@@ -92,52 +93,7 @@ class PartyInvitationsController extends Controller
      */
     public function accept(\App\Http\Requests\DoInvitation $request, PartyInvitation $invitation)
     {
-        list($party, $member, $log, $declined) = DB::transaction(function() use ($request, $invitation) {
-            // Serialize accepts for this recipient, including requests already authorized.
-            User::whereKey($request->user()->id)->lockForUpdate()->first();
-            $invitation = $invitation->fresh();
-            abort_unless($invitation->action === 'pending' && Carbon::parse($invitation->expires_at)->isFuture(), 403);
-
-            $declined = PartyInvitation::where('recipient_id', $request->user()->id)
-                ->where('id', '!=', $invitation->id)
-                ->pending()
-                ->lockForUpdate()
-                ->get();
-
-            $invitation->fill(['action' => 'accepted'])->save();
-            foreach ($declined as $other) {
-                $other->fill(['action' => 'declined'])->save();
-            }
-
-            $party = $invitation->party;
-            $party->members()->attach($request->user()->id, ['is_active' => false]);
-            $member = $party->members()->where('user_id', $request->user()->id)->first();
-
-            $activity = PartyActivity::create([
-                'user_id' => $request->user()->id,
-                'party_id' => $party->id,
-                'text' => 'joined the room'
-            ]);
-
-            $log = $party->logs()->create([
-                'loggable_type' => PartyActivity::class,
-                'loggable_id' => $activity->id
-            ]);
-
-            return [$party, $member, $log, $declined];
-        });
-
-        $invitation->refresh();
-        broadcast(
-            new PartyInvitationAccepted($party, $invitation, $member)
-        )->toOthers();
-
-        broadcast(new PartyLogEvent($party, $log));
-        foreach ($declined as $other) {
-            broadcast(new PartyInvitationDeclined($other->party, $other))->toOthers();
-        }
-
-        return array_merge($party->toArray(), ['declined_invitation_ids' => $declined->modelKeys()]);
+        return app(\App\Support\JoinParty::class)->join($request->user(), $invitation->party, $invitation);
     }
 
     /**
@@ -147,8 +103,7 @@ class PartyInvitationsController extends Controller
      */
     public function decline(\App\Http\Requests\DoInvitation $request, PartyInvitation $invitation)
     {
-        $invitation->action = 'declined';
-        $invitation->save();
+        $invitation = $this->respond($invitation, 'declined');
         $invitation->load('party');
 
         broadcast(new PartyInvitationDeclined($invitation->party, $invitation))->toOthers();
@@ -163,8 +118,7 @@ class PartyInvitationsController extends Controller
      */
     public function cancel(\App\Http\Requests\DoInvitation $request, PartyInvitation $invitation)
     {
-        $invitation->action = 'cancelled';
-        $invitation->save();
+        $invitation = $this->respond($invitation, 'cancelled');
         $invitation->load('party');
 
         broadcast(new PartyInvitationCancelled($invitation->party, $invitation))->toOthers();
@@ -172,5 +126,17 @@ class PartyInvitationsController extends Controller
         broadcast(new UserInvitationCancelled($invitation->party, $invitation))->toOthers();
 
         return $invitation;
+    }
+
+    private function respond(PartyInvitation $invitation, $action)
+    {
+        return DB::transaction(function () use ($invitation, $action) {
+            User::whereKey($invitation->recipient_id)->lockForUpdate()->firstOrFail();
+            $invitation = $invitation->fresh();
+            abort_unless($invitation->action === 'pending', 403);
+            abort_if($action === 'declined' && !Carbon::parse($invitation->expires_at)->isFuture(), 403);
+            $invitation->fill(['action' => $action])->save();
+            return $invitation;
+        });
     }
 }

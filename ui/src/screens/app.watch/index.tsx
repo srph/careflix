@@ -55,6 +55,8 @@ const reducer = (state: State, action: Action): State => {
     }
 
     case 'invitation.send': {
+      if (state.party.members.some(member => String(member.id) === String(action.payload.invitation.recipient.id)) ||
+        state.party.invitations.some(invitation => invitation.id === action.payload.invitation.id)) return state
       return {
         ...state,
         party: immer(state.party, draft => {
@@ -76,8 +78,17 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         party: immer(state.party, draft => {
-          draft.members.push(action.payload.member)
+          if (!draft.members.some(member => String(member.id) === String(action.payload.member.id))) draft.members.push(action.payload.member)
           draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+        })
+      }
+    }
+
+    case 'member.join': {
+      return {
+        ...state,
+        party: immer(state.party, draft => {
+          if (!draft.members.some(member => String(member.id) === String(action.payload.member.id))) draft.members.push(action.payload.member)
         })
       }
     }
@@ -147,6 +158,10 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
       }))
     }
   }, [state.party, activeMembers])
+
+  usePusher(state.party ? `private-party.${state.party.id}` : '', 'member.joined', (event: { member: AppPartyMember }) => {
+    dispatch({ type: 'member.join', payload: { member: event.member } })
+  }, state.party == null)
 
   usePusher(
     state.party ? `private-party.${state.party.id}` : '',

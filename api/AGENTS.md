@@ -30,6 +30,10 @@ Party chat and activity feed are unified through a single polymorphic log:
 
 ### Invitations
 
+- Parties have a unique permanent six-digit `join_code` (a string, including leading zeroes) and nullable `creator_id`. Creation records the signed-in creator; the migration backfills documented creators from the creation activity. Creator attribution grants the same permissions as ordinary membership.
+- Authenticated `GET /api/party-codes/{code}` returns a limited preview; `POST /api/party-codes/{code}/join` joins or reopens the party. Codes are hidden from general party serialization and explicitly included in member room responses.
+- `Support/JoinParty` coordinates code joins and invitation acceptance under a recipient row lock. It creates membership/activity once, accepts active invitations to that party, declines active invitations to other parties, and broadcasts `member.joined` plus `invitations.resolved` for the recipient's other clients.
+
 -   `PartyInvitation` ([app/PartyInvitation.php](app/PartyInvitation.php)) links a `sender` and `recipient` (both `User`) to a `Party`, with an `invitation_code`, `action` (`pending` by default via accessor fallback, or `accepted`/`declined`/`cancelled`), and `expires_at`.
 -   `scopePending()` filters to non-expired invitations still awaiting a response.
 -   Broadcast via `PartyInvitationSent` / `PartyInvitationAccepted` / `PartyInvitationDeclined` / `PartyInvitationCancelled` / `UserInvitationReceived` / `UserInvitationCancelled` events (see `app/Events`).

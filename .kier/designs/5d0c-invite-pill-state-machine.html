@@ -146,7 +146,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 
 .a-spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:var(--g);animation:spin .8s linear infinite}
 
-/* ───────────── A4b2b5 — the invite pill ───────────── */
+/* ───────────── A — the invite pill ───────────── */
 .tcard{position:absolute;left:50%;bottom:20px;z-index:6;background:rgba(21,32,43,.97);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);
   box-shadow:0 26px 54px -16px rgba(0,0,0,.85);overflow:hidden;transform:translateX(-50%) translateY(170%);opacity:0;
   transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),
@@ -247,8 +247,192 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .t4y-stack .av{box-shadow:0 0 0 2px #15202b}
 .t4y-stack .av+.av{margin-left:-8px}
 
+/* ───────────── A2–A8 — several invites at once ───────────── */
+/* one card per canvas; data-sel names the invite on show, and .pg[data-p] pieces belong to one invite each */
+.mv .tl3 .pg{min-width:0}
+.stage[data-keys~="after-dec"] .mv,.stage[data-keys~="after-exp"] .mv,.stage[data-keys~="after-can"] .mv{transform:translateX(-50%);opacity:1;filter:none}
+/* b: the pill takes turns */
+.cy{min-width:0}
+.stage[data-keys~="arrive"] .mv .cy{display:grid}
+.cy-i{grid-area:1/1;display:flex;align-items:center;gap:9px;min-width:0;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
+.cy-dots{align-items:center;gap:4px;margin-right:10px}
+.cy-dots i{width:5px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);transition:background .3s,width .3s}
+.mvb-pgr{align-items:center;color:var(--n5);font-size:12px}
+.mvb-pgr button{display:grid;place-items:center;width:24px;height:24px;border-radius:12px;color:#fff;font-size:14px}
+.mvb-pgr button:hover{background:rgba(255,255,255,.08)}
+.mvb-pgr em{font-style:normal;font-variant-numeric:tabular-nums;min-width:40px;text-align:center}
+/* c: one pill names everyone; open, a list, a row opens the full card */
+.mvc-list{display:flex;flex-direction:column;gap:2px;padding:2px 6px 8px}
+.mvc-row{display:flex;align-items:center;gap:11px;padding:6px;border-radius:10px;transition:background .2s,filter .4s,opacity .4s}
+.mvc-row:hover{background:rgba(255,255,255,.05)}
+.mvc-th{flex:none;width:80px;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size}
+.mvc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.mvc-tx>b{font-size:13.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvc-tx em{display:flex;align-items:center;gap:6px;font-style:normal;font-size:11.5px;color:var(--n5);white-space:nowrap}
+.mvc-tx em b{font-weight:600;color:#fff}
+.mvc-tx .av{width:16px;height:16px;font-size:8px}
+.mvc-bar{position:relative;height:3px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:2px}
+.mvc-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--pk);border-radius:2px}
+.mvc-row .mvc-go{height:24px;border-radius:12px;padding:0 12px}
+.mvc-ex{display:none;padding-right:6px;font-size:11px;font-weight:600;color:var(--y)}
+.mvc-bk{align-items:center;justify-content:center;width:24px;height:24px;border-radius:12px;background:rgba(255,255,255,.08);color:#fff;font-size:14px}
+.stage[data-keys~="focus"] .mvc[data-view="list"],.stage[data-keys~="answer-exp"] .mvc[data-view="list"]{height:var(--t4yl,300px)}
+.mvc[data-view="list"] .dv,.mvc[data-view="detail"] .lv{display:none !important}
+/* d: a pill per invite; the newest wears the beam, opening one tucks the others away */
+.mvd-p{position:absolute;left:50%;bottom:calc(20px + (var(--k) + 1) * 48px);z-index:5;display:flex;align-items:center;gap:9px;height:40px;padding:0 8px;border-radius:20px;white-space:nowrap;
+  background:rgba(21,32,43,.97);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 18px 40px -16px rgba(0,0,0,.8);
+  transform:translateX(-50%) translateY(calc(170% + (var(--k) + 1) * 48px));opacity:0;transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,bottom .45s}
+.stage[data-keys~="arrive"] .mvd-p{transform:translateX(-50%);opacity:1;transition-delay:calc(var(--k) * .07s + .07s)}
+.stage[data-keys~="after-dec"] .mvd-p,.stage[data-keys~="after-exp"] .mvd-p,.stage[data-keys~="after-can"] .mvd-p{transform:translateX(-50%) translateY(48px);opacity:1}
+.stage[data-keys~="watch"] .mvd-p{bottom:calc(64px + (var(--k) + 1) * 48px)}
+.mvd-p .av{width:24px;height:24px;font-size:10.5px}
+.mvd-p p{font-size:13px;letter-spacing:-.005em;color:var(--n5)}
+.mvd-p p b{font-weight:600;color:#fff}
+.mvd-p .btn{margin-left:14px;height:24px;border-radius:12px;padding:0 12px;font-size:12px}
+.stage[data-keys~="after-dec"] .mv.mvd,.stage[data-keys~="after-exp"] .mv.mvd,.stage[data-keys~="after-can"] .mv.mvd{transform:translateX(-50%) translateY(170%);opacity:0}
+/* e: posters side by side; the neighbours peek in from the edges */
+.mve-th{align-items:center}
+.mve-th>span{position:relative;width:43px;height:24px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 2px #15202b;container-type:inline-size}
+.mve-th>span+span{margin-left:-24px}
+.mve-th>span:nth-child(1){z-index:3}.mve-th>span:nth-child(2){z-index:2}
+.mve-vp{margin-top:2px;overflow:hidden}
+.mve-strip{display:flex;gap:8px;padding:0 11%;transform:translateX(calc(var(--s,0) * (-78% - 8px)));transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.mve-c{position:relative;flex:none;width:100%;aspect-ratio:16/9;border-radius:9px;overflow:hidden;container-type:inline-size;transform:scale(.88);opacity:.55;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s,filter .4s}
+.mve-c .av{position:absolute;left:8px;top:8px;width:22px;height:22px;font-size:9.5px;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+
+/* c2: five rooms, friends in the same room share a row; past four rows the list scrolls */
+.mvc-list.sc{max-height:254px;overflow-y:auto;scrollbar-width:none;-webkit-mask:linear-gradient(#000 calc(100% - 26px),transparent);mask:linear-gradient(#000 calc(100% - 26px),transparent)}
+.mvc-list.sc::-webkit-scrollbar{display:none}
+.mvc-tx em .av+.av{margin-left:-9px;box-shadow:0 0 0 2px #17222e}
+.mv .tl3 .t4y-head-st .av+.av{margin-left:-8px}
+.mv .tl3 .t4y-head-st .av{box-shadow:0 0 0 2px #15202b}
+/* f: a queue; answering one puts the next in her hands, in whatever shape the pill is */
+.qb{position:relative;flex:none}
+.qb>b{position:absolute;right:-6px;top:-5px;display:grid;place-items:center;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:#fff;color:#10171E;font-size:9.5px;font-weight:800;box-shadow:0 0 0 2px #15202b}
+.mvf-n{align-items:center;padding-right:4px;color:var(--n5);font-size:12px;font-variant-numeric:tabular-nums}
+.mvf .q-nx{display:none}
+.stage[data-keys~="after-can"] .mvf{width:var(--t4yw2,344px)}
+.stage[data-keys~="answer-dec"] .mvf .q-cur,.stage[data-keys~="after-dec"] .mvf .q-cur,.stage[data-keys~="after-exp"] .mvf .q-cur{display:none}
+.stage[data-keys~="answer-dec"] .mvf .q-nx,.stage[data-keys~="after-dec"] .mvf .q-nx,.stage[data-keys~="after-exp"] .mvf .q-nx{display:block;animation:qin .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes qin{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+.stage[data-keys~="answer-dec"] .mvf,.stage[data-keys~="after-dec"] .mvf,.stage[data-keys~="after-exp"] .mvf{width:400px;height:var(--t4yh,420px);border-radius:16px;filter:none;transform:translateX(-50%);opacity:1}
+.stage[data-keys~="answer-dec"] .mvf .t4y-body,.stage[data-keys~="after-dec"] .mvf .t4y-body,.stage[data-keys~="after-exp"] .mvf .t4y-body{opacity:1}
+.stage[data-keys~="answer-dec"] .mvf .bbeam.bq,.stage[data-keys~="after-dec"] .mvf .bbeam.bq,.stage[data-keys~="after-exp"] .mvf .bbeam.bq{opacity:0}
+.mk .mvf-up{display:flex;align-items:center;gap:10px;width:calc(100% - 16px);margin:0 8px;padding:6px 10px 6px 6px;border-radius:10px;background:rgba(255,255,255,.04);font-size:12px;color:var(--n5);white-space:nowrap}
+.mvf-up:hover{background:rgba(255,255,255,.07)}
+.mvf-up>span:first-child{flex:none;width:43px;height:24px;border-radius:5px;overflow:hidden;container-type:inline-size}
+.mvf-up b{font-weight:600;color:#fff}
+.mvf-up em{margin-left:auto;font-style:normal;font-size:11.5px}
+.mvf .t4y-acts{padding-bottom:10px}
+.mvf .t4y-body,.mvh .t4y-body{padding-bottom:8px}
+/* f2b–e: how the next invite enters once she declines (or one lapses) */
+@keyframes qfade{from{opacity:0}}
+@keyframes qfall{to{opacity:0;transform:translateY(36px) scale(.95)}}
+@keyframes qsettle{from{opacity:0;transform:scale(1.045)}}
+@keyframes qpop{0%{transform:scale(0)}60%{transform:scale(1.18)}100%{transform:none}}
+@keyframes qring{0%{transform:scale(.9);opacity:.75}100%{transform:scale(2.3);opacity:0}}
+@keyframes qslide{from{opacity:0;transform:translateX(-10px)}}
+@keyframes qzoom{from{opacity:0;transform:scale(1.08)}}
+@keyframes qup{from{opacity:0;transform:translateY(10px)}}
+@keyframes qgrow{from{transform:scaleX(0)}}
+@keyframes qglide{from{opacity:0;translate:-36px 0}}
+@keyframes qlap{0%{opacity:0}12%,70%{opacity:1}100%{opacity:0}}
+/* b: Kier's drops away beneath, Mira's settles into its place */
+.stage.mo-fall .mvf .t4y-body{display:grid}
+.stage.mo-fall .mvf .q-cur,.stage.mo-fall .mvf .q-nx{grid-area:1/1;min-width:0}
+.stage.mo-fall[data-keys~="answer-dec"] .mvf .q-cur{display:block;z-index:1;pointer-events:none;animation:qfall .42s cubic-bezier(.4,0,.8,.4) forwards}
+.stage.mo-fall[data-keys~="answer-dec"] .mvf .q-nx,.stage.mo-fall[data-keys~="after-dec"] .mvf .q-nx,.stage.mo-fall[data-keys~="after-exp"] .mvf .q-nx{animation:qsettle .5s cubic-bezier(.2,.8,.2,1) .32s both}
+.stage.mo-fall[data-keys~="answer-dec"] .mvf .qh,.stage.mo-fall[data-keys~="after-dec"] .mvf .qh,.stage.mo-fall[data-keys~="after-exp"] .mvf .qh{animation:qfade .3s ease .32s both}
+/* c: Mira's face arrives first, then what she's watching */
+.mo-face .qh-av .av{position:relative}
+.mo-face .qh-av .av::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px var(--c,#fff);opacity:0;pointer-events:none}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .qh-av .av,.stage.mo-face[data-keys~="after-dec"] .mvf .qh-av .av,.stage.mo-face[data-keys~="after-exp"] .mvf .qh-av .av{animation:qpop .5s cubic-bezier(.2,.9,.3,1.3) both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .qh-av .av::after,.stage.mo-face[data-keys~="after-dec"] .mvf .qh-av .av::after,.stage.mo-face[data-keys~="after-exp"] .mvf .qh-av .av::after{animation:qring .9s ease-out .2s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf p.qh,.stage.mo-face[data-keys~="after-dec"] .mvf p.qh,.stage.mo-face[data-keys~="after-exp"] .mvf p.qh{animation:qslide .35s cubic-bezier(.2,.8,.2,1) .14s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .mvf-n.qh,.stage.mo-face[data-keys~="after-dec"] .mvf .mvf-n.qh,.stage.mo-face[data-keys~="after-exp"] .mvf .mvf-n.qh{animation:qfade .3s ease .3s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .q-nx,.stage.mo-face[data-keys~="after-dec"] .mvf .q-nx,.stage.mo-face[data-keys~="after-exp"] .mvf .q-nx{animation:qfade .4s ease .28s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .q-nx .t4y-art .art,.stage.mo-face[data-keys~="after-dec"] .mvf .q-nx .t4y-art .art,.stage.mo-face[data-keys~="after-exp"] .mvf .q-nx .t4y-art .art{animation:qzoom 1.1s cubic-bezier(.2,.8,.2,1) .28s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .q-nx .tlm-head,.stage.mo-face[data-keys~="after-dec"] .mvf .q-nx .tlm-head,.stage.mo-face[data-keys~="after-exp"] .mvf .q-nx .tlm-head{animation:qpop .45s cubic-bezier(.2,.9,.3,1.3) .75s both}
+/* d: Mira's invite builds in piece by piece; her room glides along the timeline to where they are */
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx{animation:none}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .qh,.stage.mo-build[data-keys~="after-dec"] .mvf .qh,.stage.mo-build[data-keys~="after-exp"] .mvf .qh{animation:qfade .3s ease both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .t4y-art,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .t4y-art,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .t4y-art{animation:qzoom .6s cubic-bezier(.2,.8,.2,1) both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .t4y-info,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .t4y-info,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .t4y-info{animation:qup .45s cubic-bezier(.2,.8,.2,1) .12s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-row,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-row,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-row{animation:qup .45s cubic-bezier(.2,.8,.2,1) .22s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-bar i,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-bar i,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-bar i,.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-seg u,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-seg u,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-seg u{transform-origin:left;animation:qgrow .8s cubic-bezier(.2,.8,.2,1) .3s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-seg,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-seg,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-seg{animation:qfade .4s ease .26s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-head,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-head,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-head{animation:qglide .8s cubic-bezier(.2,.8,.2,1) .3s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .t4y-acts,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .t4y-acts,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .t4y-acts{animation:qup .4s cubic-bezier(.2,.8,.2,1) .4s both}
+/* g: everyone down the side, the room she's looking at beside them */
+.stage[data-keys~="focus"] .mvg,.stage[data-keys~="answer-exp"] .mvg{width:600px}
+.mvg-b{display:grid;grid-template-columns:182px 1fr;align-items:start}
+.mvg-side{display:flex;flex-direction:column;gap:2px;padding:2px 0 8px 7px}
+.mk .mvg-r{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:10px;transition:background .2s,filter .4s,opacity .4s}
+.mvg-r:hover{background:rgba(255,255,255,.04)}
+.mvg-r .av{width:26px;height:26px;font-size:11px}
+.mvg-r>span{min-width:0;display:flex;flex-direction:column;gap:2px}
+.mvg-r b{font-size:12.5px;font-weight:600;color:#fff}
+.mvg-r em{font-style:normal;font-size:11px;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvg-r i.ex{display:none;font-style:normal;font-size:10.5px;font-weight:600;color:var(--y)}
+.mvg .t4y-art{margin-left:4px}
+/* h: the pill stays one invite; the others wait in Parties */
+.gl-nav .sub{display:inline-flex;align-items:center}
+.pbdg{align-items:center;justify-content:center;min-width:15px;height:15px;margin-left:5px;padding:0 4px;border-radius:8px;background:var(--pk);color:#fff;font-size:9.5px;letter-spacing:0;font-style:normal}
+.stage[data-keys~="after"] .pbdg{animation:popIn .45s cubic-bezier(.2,.9,.3,1.4) .3s both}
+.mk .mvh-more{display:flex;align-items:center;gap:9px;width:calc(100% - 16px);margin:0 8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);font-size:12px;color:var(--n5);white-space:nowrap}
+.mvh-more .av{width:20px;height:20px;font-size:9px}
+.mvh-more b{font-weight:600;color:#fff}
+.mvh-more em{margin-left:auto;font-style:normal;color:#fff;font-weight:600}
+.mvh .t4y-acts{padding-bottom:10px}
+.mvh-more .t4y-stack{display:inline-flex}
+/* h2: Open Parties lands on the rooms she's invited to */
+.pp{position:absolute;left:0;right:0;top:46px;bottom:0;z-index:2;background:var(--n1);overflow:hidden;opacity:0;pointer-events:none;transition:opacity .35s}
+.stage.on-pp .pp{opacity:1;pointer-events:auto}
+.stage.on-pp .gl-nav .sub.on{color:var(--n5)}
+.stage.on-pp .gl-nav .sub.pt{color:#fff}
+.stage.on-pp .mv{opacity:0 !important;pointer-events:none}
+.gl-nav .sub{cursor:pointer}
+.pp-list{display:flex;flex-direction:column;gap:10px;padding:0 18px}
+.pp-r{display:flex;align-items:center;gap:16px;padding:10px 14px 10px 10px;border-radius:10px;background:var(--n2)}
+.pp-th{flex:none;width:176px;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size}
+.pp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.pp-tx h3{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.pp-tx em{display:flex;align-items:center;gap:7px;font-style:normal;font-size:12px;color:var(--n5);white-space:nowrap}
+.pp-tx em b{color:#fff;font-weight:600}
+.pp-tx em .av{width:18px;height:18px;font-size:8.5px}
+.pp-tx em .av+.av{margin-left:-11px;box-shadow:0 0 0 2px var(--n2)}
+.pp-tx .mvc-bar{max-width:300px}
+.pp-acts{display:flex;gap:8px}
+.pp-acts .btn{height:30px}
+/* h3: no Parties tab; the rest wait under her avatar */
+.stage.no-pt .gl-nav .sub.pt{display:none}
+.gl-nav .me{cursor:pointer}
+.abdg{align-items:center;justify-content:center;min-width:15px;height:15px;margin:-16px 0 0 -13px;padding:0 4px;border-radius:8px;background:var(--pk);color:#fff;font-size:9.5px;font-weight:700;font-style:normal;box-shadow:0 0 0 2px var(--n1);pointer-events:none}
+.ipop{position:absolute;top:44px;right:12px;z-index:7;width:304px;padding:6px;border-radius:12px;background:rgba(21,32,43,.98);backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 26px 54px -16px rgba(0,0,0,.85);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}
+.stage.on-pop .ipop{opacity:1;transform:none;pointer-events:auto}
+.ipop h6{padding:8px 8px 6px;color:var(--n5)}
+.ipop-r{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:8px}
+.ipop-r:hover{background:rgba(255,255,255,.04)}
+.ipop-r .av{width:26px;height:26px;font-size:11px}
+.ipop-r .av+.av{margin-left:-16px;box-shadow:0 0 0 2px #15202b}
+.ipop-r>span:not(.btn){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ipop-r b{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ipop-r em{font-style:normal;font-size:11px;color:var(--n5);white-space:nowrap}
+.ipop-r .btn{height:24px;border-radius:12px;padding:0 12px;font-size:12px}
+/* h4: the rest wait as a row at the top of her library */
+.ish{animation:popIn .5s cubic-bezier(.2,.8,.2,1) both}
+.ish-who{position:absolute;left:8px;top:8px;display:flex}
+.ish-who .av{width:20px;height:20px;font-size:9px;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+.ish-who .av+.av{margin-left:-6px}
+.ish-c b{bottom:11px}
+.ish-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.16)}
+.ish-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--pk)}
+.stage.w-lib[data-keys~="browse"][data-keys~="after-dec"] .mv,.stage.w-lib[data-keys~="browse"][data-keys~="after-exp"] .mv,
+.stage.w-lib[data-keys~="browse"][data-keys~="after-can"] .mv{transform:translateX(-50%) translateY(170%);opacity:0}
+.stage.w-lib[data-keys~="after-dec"] .mv,.stage.w-lib[data-keys~="after-exp"] .mv,.stage.w-lib[data-keys~="after-can"] .mv{width:var(--t4yw2,300px)}
+
 /* ───────────── State machine (neutral) ───────────── */
-.doc{margin-left:auto;margin-right:auto}
 .var-sm{margin-top:72px}
 .fsm{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px 18px 14px;overflow-x:auto}
 .fsm svg{display:block;width:100%;min-width:960px;height:auto;font-family:inherit}
@@ -284,21 +468,22 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 </style>
 </head>
 <body>
+<nav class="mm" aria-label="Variations"></nav>
 <main class="doc">
 
 <header class="brief">
   <div class="eyebrow">Care.tv · receiving an invitation · from 9b2e-party-invitation-flow.html</div>
   <h1>One pill, from invite to her seat in the room.</h1>
   <div class="cards">
-    <div>A4b2b5 alone, taken from 9b2e for fine-tuning.</div>
+    <div>A is A4b2b5 from 9b2e; A2–A8 handle several invites.</div>
     <div>Every state below is one node in the machine.</div>
   </div>
 </header>
 
-<section class="var" id="v-a4b2b5" data-id="A4b2b5" data-name="The pill follows her into the room">
-  <div class="var-h"><span class="id">A4b2b5</span><h2>The pill follows her into the room</h2></div>
+<section class="var" id="v-a" data-id="A" data-name="The pill follows her into the room">
+  <div class="var-h"><span class="id">A</span><h2>The pill follows her into the room</h2></div>
   <div class="frame"><div class="mk" data-mount="a4b2b5"></div></div>
-  <div class="rail" data-rail="v-a4b2b5" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp></div>
+  <div class="rail" data-rail="v-a" data-kinds="movie=Movie|series=Series|multi=3 invites" data-demo-exp></div>
   <div class="notes">
     <div class="note good">The room greets her with the same pill.</div>
     <div class="note bad">Repeats the room's own "You joined".</div>
@@ -307,24 +492,193 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 
 <section class="var-sm" id="sm">
   <div class="var-h"><span class="id">SM</span><h2>State machine</h2></div>
-  <div class="fsm"><svg viewBox="0 0 1300 430" role="img" aria-label="A4b2b5 state machine"></svg>
+  <div class="fsm"><svg viewBox="0 0 1300 430" role="img" aria-label="A state machine"></svg>
     <div class="sm-key"><span><i class="bm"></i>Beam on</span><span><i class="on"></i>The canvas is here; click a state to go there</span><span><i class="fin"></i>End state</span></div>
+  </div>
+</section>
+
+<section class="var" id="v-a2" data-id="A2" data-name="The pill takes turns">
+  <div class="var-h"><span class="id">A2</span><h2>The pill takes turns</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvb"></div></div>
+  <div class="rail" data-rail="v-a2" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Every title gets a turn, still one line.</div>
+    <div class="note bad">A moving pill beside her episode.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a3" data-id="A3" data-name="One pill names everyone, a list inside">
+  <div class="var-h"><span class="id">A3</span><h2>One pill names everyone, a list inside</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvc"></div></div>
+  <div class="rail" data-rail="v-a3" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Collapsed, it names everyone who asked.</div>
+    <div class="note good">Open, she compares the rooms at a glance.</div>
+    <div class="note bad">One more tap to see the artwork.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a3b" data-id="A3b" data-name="Five rooms, friends in one room share a row">
+  <div class="var-h"><span class="id">A3b</span><h2>Five rooms, friends in one room share a row</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvc2"></div></div>
+  <div class="rail" data-rail="v-a3b" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Kier and Leo send one row, not two.</div>
+    <div class="note good">Names two people and counts the rest.</div>
+    <div class="note bad">Past four rooms she scrolls a list in a pill.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a4" data-id="A4" data-name="A pill for each invite">
+  <div class="var-h"><span class="id">A4</span><h2>A pill for each invite</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvd"></div></div>
+  <div class="rail" data-rail="v-a4" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Every invite is one tap away.</div>
+    <div class="note bad">Three pills stack over her show.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a5" data-id="A5" data-name="Posters side by side">
+  <div class="var-h"><span class="id">A5</span><h2>Posters side by side</h2></div>
+  <div class="frame"><div class="mk" data-mount="mve"></div></div>
+  <div class="rail" data-rail="v-a5" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">She picks by artwork, not by name.</div>
+    <div class="note bad">The peeking posters shrink the one on show.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6" data-id="A6" data-name="Answer one, the next takes its place">
+  <div class="var-h"><span class="id">A6</span><h2>Answer one, the next takes its place</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf"></div></div>
+  <div class="rail" data-rail="v-a6" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Declining one hands her the next.</div>
+    <div class="note good">The card never has to hold more than one.</div>
+    <div class="note bad">She can’t see all three side by side.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6b" data-id="A6b" data-name="Only the invite in front; decline for the next">
+  <div class="var-h"><span class="id">A6b</span><h2>Only the invite in front; decline for the next</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf2"></div></div>
+  <div class="rail" data-rail="v-a6b" data-demo-dec data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Only "1 of 3" says there are more.</div>
+    <div class="note good">Accepting quietly clears the rest.</div>
+    <div class="note bad">The next one just slides in from the right.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6b2" data-id="A6b2" data-name="Kier’s drops away, Mira’s settles in">
+  <div class="var-h"><span class="id">A6b2</span><h2>Kier’s drops away, Mira’s settles in</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf2b"></div></div>
+  <div class="rail" data-rail="v-a6b2" data-demo-dec data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The declined one visibly leaves first.</div>
+    <div class="note bad">A falling card reads like a dismissal.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6b3" data-id="A6b3" data-name="Mira’s face arrives first">
+  <div class="var-h"><span class="id">A6b3</span><h2>Mira’s face arrives first</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf2c"></div></div>
+  <div class="rail" data-rail="v-a6b3" data-demo-dec data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Who’s asking lands before what.</div>
+    <div class="note good">Her room pops onto the timeline last.</div>
+    <div class="note bad">Three beats where one would do.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6b4" data-id="A6b4" data-name="Mira’s invite builds in, her room glides to its spot">
+  <div class="var-h"><span class="id">A6b4</span><h2>Mira’s invite builds in, her room glides to its spot</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf2d"></div></div>
+  <div class="rail" data-rail="v-a6b4" data-demo-dec data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The timeline shows her room is live.</div>
+    <div class="note bad">The busiest of the four.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a6b5" data-id="A6b5" data-name="Mira’s invite slides in, the beam stays out">
+  <div class="var-h"><span class="id">A6b5</span><h2>Mira’s invite slides in, the beam stays out</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf2e"></div></div>
+  <div class="rail" data-rail="v-a6b5" data-demo-dec data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The calmest of the four: one slide, nothing else.</div>
+    <div class="note bad">Nothing says this is a different person’s invite.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a7" data-id="A7" data-name="Everyone down the side, the room beside them">
+  <div class="var-h"><span class="id">A7</span><h2>Everyone down the side, the room beside them</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvg"></div></div>
+  <div class="rail" data-rail="v-a7" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Every inviter and the chosen room at once.</div>
+    <div class="note bad">The widest card yet over her show.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a8" data-id="A8" data-name="One invite in the pill, the rest wait in Parties">
+  <div class="var-h"><span class="id">A8</span><h2>One invite in the pill, the rest wait in Parties</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvh"></div></div>
+  <div class="rail" data-rail="v-a8" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">The pill stays the single invite from A.</div>
+    <div class="note good">Parties already lists rooms she can join.</div>
+    <div class="note bad">Mid-episode, Parties is a screen away.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a8b" data-id="A8b" data-name="Open Parties lands on the rooms she’s invited to">
+  <div class="var-h"><span class="id">A8b</span><h2>Open Parties lands on the rooms she’s invited to</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvh2"></div></div>
+  <div class="rail" data-rail="v-a8b" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Parties opens on invites, never on an empty tab.</div>
+    <div class="note good">Join or Decline each room right there.</div>
+    <div class="note bad">Mid-episode, Open Parties takes her out of her show.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a8c" data-id="A8c" data-name="No Parties tab: they wait under her avatar">
+  <div class="var-h"><span class="id">A8c</span><h2>No Parties tab: they wait under her avatar</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvh3"></div></div>
+  <div class="rail" data-rail="v-a8c" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Needs only rooms, no Parties tab.</div>
+    <div class="note good">Opens over her episode without leaving it.</div>
+    <div class="note bad">A count on her avatar is easy to miss.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a8d" data-id="A8d" data-name="They wait as a row at the top of her library">
+  <div class="var-h"><span class="id">A8d</span><h2>They wait as a row at the top of her library</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvh4"></div></div>
+  <div class="rail" data-rail="v-a8d" data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">Invites sit beside the titles she browses.</div>
+    <div class="note good">Browsing, nothing to open: the row is on screen.</div>
+    <div class="note bad">The row pushes her library down while it lasts.</div>
   </div>
 </section>
 
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from A4b2b5 on mobile.</div>
-    <div><b>Remix</b>Remix A4b2b5: expire as a pill when collapsed.</div>
-    <div><b>Settle</b>Settle on A4b2b5 once every state reads right.</div>
+    <div><b>Explore</b>Explore from A6b3: the same entrance on the collapsed pill.</div>
+    <div><b>Remix</b>Remix A6b3: add A6b4's timeline glide as the last beat.</div>
+    <div><b>Settle</b>Settle on A6b3 as how the next invite enters.</div>
   </div>
 </section>
 </main>
 <script>
 const FILE = '.kier/designs/5d0c-invite-pill-state-machine.html';
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F'};
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F', Ade:'#FB923C', Tess:'#A3E635'};
 const SHOWS = [
   {id:'velvet', t:'Velvet Static', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings'},
   {id:'hollow', t:'Hollow County', y:2023, len:'S2 · E4', c:['#a3e635','#14240a'], p:'stripes'},
@@ -391,14 +745,17 @@ const shell = (v, inner, libOpts) => `<div class="stage" data-v="${v}" data-stag
   </div></div>`;
 
 
-/* ───── A4b2b5 — the invite pill ───── */
+/* ───── A — the invite pill ───── */
 const INV = {
   kier: {from:'Kier', room:['Kier','Leo'], show:FEAT, meta:`Movie · ${FEAT.y} · ${FEAT.len}`, at:'41:12', pct:33, left:'1h 23m left'},
   kierS:{from:'Kier', room:['Kier','Leo'], show:byId('orbit'), meta:'Series · S1 · E7 · Graveyard Shift', ep:{s:1, e:7, of:10}, at:'18:40', pct:42},
   mira: {from:'Mira', room:['Mira'], show:byId('paper'), meta:`Movie · ${byId('paper').y} · ${byId('paper').len}`, at:'12:30', pct:11, left:'1h 40m left'},
   nico: {from:'Nico', room:['Nico'], show:byId('under'), meta:'Series · S1 · E2 · Places, Please', ep:{s:1, e:2, of:8}, at:'09:15', pct:21}
 };
-const KINDS = {movie:[INV.kier], series:[INV.kierS], multi:[INV.kier, INV.mira, INV.nico]};
+INV.kierLeo = {...INV.kier, by:['Kier','Leo']};
+INV.ade = {from:'Ade', room:['Ade'], show:byId('ferry'), meta:`Movie · ${byId('ferry').y} · ${byId('ferry').len}`, at:'1:02:40', pct:62, left:'38m left'};
+INV.tess = {from:'Tess', room:['Tess'], show:byId('orbit'), meta:'Series · S1 · E3 · Short Order', ep:{s:1, e:3, of:10}, at:'02:05', pct:5};
+const KINDS = {movie:[INV.kier], series:[INV.kierS], multi:[INV.kier, INV.mira, INV.nico], five:[INV.kierLeo, INV.mira, INV.nico, INV.ade, INV.tess]};
 const who = r => r.length > 1 ? `<b>${r.slice(0,-1).join(', ')} and ${r.at(-1)}</b> are` : `<b>${r[0]}</b> is`;
 const names = r => r.length > 1 ? `${r.slice(0,-1).join(', ')} and ${r.at(-1)}` : r[0];
 const roomAt = v => v.ep ? `E${v.ep.e}, ${v.at}` : v.at;
@@ -455,11 +812,11 @@ function inviteCard(list, sel){
   </div></div>`;
 }
 /* the collapsed pill is as wide as its own line */
-function fitLine(st, sel, name, border = 1){
+function fitLine(st, sel, name, border = 1, keys = 'arrive acc arrive-acc browse'){
   requestAnimationFrame(() => {
     const keep = st.dataset.keys || '', line = st.querySelector(sel);
     st.classList.add('measuring');
-    st.dataset.keys = 'arrive acc arrive-acc browse';
+    st.dataset.keys = keys;
     line.style.width = 'max-content';
     st.style.setProperty('--' + name, Math.ceil(line.getBoundingClientRect().width) + border * 2 + 'px');
     line.style.width = '';
@@ -497,6 +854,276 @@ function autoHeight(st, sel, name, keys){
   });
 }
 
+/* ───── A2–A8 — several invites at once ───── */
+/* every variant shares one card: data-sel names the invite on show, .pg[data-p] pieces belong to one invite */
+const andB = ns => ns.length > 1 ? `${ns.slice(0, -1).map(n => `<b>${n}</b>`).join(', ')} and <b>${ns.at(-1)}</b>` : `<b>${ns[0]}</b>`;
+/* two friends in one room send one invite between them */
+const byOf = v => v.by || [v.from];
+const avs = (v, max = 3) => byOf(v).slice(0, max).map(n => av(n)).join('');
+const andN = ns => ns.length > 3 ? `<b>${ns[0]}</b>, <b>${ns[1]}</b> and <b>${ns.length - 2} others</b>` : andB(ns);
+const pctOf = v => v.ep ? Math.round((v.ep.e - 1 + v.pct / 100) / v.ep.of * 100) : v.pct;
+const mvCss = document.createElement('style');
+mvCss.textContent = [0, 1, 2, 3, 4].map(i => `.mv:not([data-sel="${i}"]) .pg[data-p="${i}"]{display:none !important}
+.mv[data-sel="${i}"] .cy-i[data-c="${i}"]{opacity:1;transform:none}
+.mv[data-sel="${i}"] .cy-dots i[data-c="${i}"]{width:12px;background:#fff}
+.mv[data-sel="${i}"] .mve-c[data-i="${i}"]{transform:none;opacity:1}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mve-c[data-i="${i}"]{filter:grayscale(1) brightness(.7)}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvc-row[data-i="${i}"]{filter:grayscale(1);opacity:.6}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvc-row[data-i="${i}"] .mvc-go{display:none}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvc-row[data-i="${i}"] .mvc-ex{display:block}
+.mv[data-sel="${i}"] .mvg-r[data-i="${i}"]{background:rgba(255,255,255,.09)}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvg-r[data-i="${i}"]{filter:grayscale(1);opacity:.6}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvg-r[data-i="${i}"] em{display:none}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvg-r[data-i="${i}"] i.ex{display:block}`).join('\n');
+document.head.append(mvCss);
+const each = (list, f) => list.map(f).join('');
+/* the opened header for the invite on show: who, and whether it has lapsed */
+const mvHead = (list, cls = '') => each(list, (v, i) => `
+  <span class="wi pg t4y-head-st ${cls}" data-p="${i}" data-w="focus">${avs(v)}</span>
+  <p class="pg ${cls}" data-p="${i}" data-w="focus">${andB(byOf(v))} invited you to watch</p>
+  <span class="wi pg" data-p="${i}" data-w="answer-exp">${av(v.from)}</span>
+  <p class="pg" data-p="${i}" data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>`);
+/* answered: the pill speaks for the one she chose; afterwards the rest are still waiting */
+const mvAnswer = list => each(list, (v, i) => {
+  const rest = list.filter((_, j) => j !== i).flatMap(byOf);
+  return `
+  <span class="wi pg t4y-head-st" data-p="${i}" data-w="answer-acc answer-dec answer-can">${avs(v)}</span>
+  <p class="pg" data-p="${i}" data-w="answer-acc">Joining ${andB(byOf(v))} to watch <b>${esc(v.show.t)}</b></p>
+  <p class="pg" data-p="${i}" data-w="answer-dec">Declined ${andB(byOf(v))} to watch <b>${esc(v.show.t)}</b></p>
+  <p class="pg" data-p="${i}" data-w="answer-can"><b>${v.from}</b> closed the room</p>
+  <span class="t4y-stack wi pg" data-p="${i}" data-w="after-acc">${[...v.room, 'Joyce'].map(n => av(n)).join('')}</span>
+  <p class="pg" data-p="${i}" data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+  <span class="t4y-stack wi pg" data-p="${i}" data-w="after-dec after-exp after-can">${rest.slice(0, 3).map(n => av(n)).join('')}</span>
+  <p class="pg" data-p="${i}" data-w="after-dec after-exp after-can">${andN(rest)} still invited you</p>`;
+});
+const mvTail = (extra = '') => `<span class="sp"></span>${extra}
+  <span class="btn pk sm wi" data-w="arrive after-dec after-exp after-can">Respond</span>
+  <span class="a-spin" data-w="answer-acc"></span>
+  <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+  <span class="x" data-w="focus answer-exp">✕</span>`;
+const mvPage = (v, i, o = {}) => `<div class="pg ${o.cls || ''}" data-p="${i}">
+  ${o.art === false ? '' : `<div class="t4y-art">${poster(v.show)}</div>`}
+  <div class="t4y-info"><h3>${esc(v.show.t)}</h3>
+    <h6 class="sub" data-w="focus">${v.meta}</h6><h6 class="sub" data-w="answer-exp" style="color:var(--y)">${v.from}'s invitation expired</h6></div>
+  ${timeline(v)}
+  <div class="t4y-acts wf" data-w="focus"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+  <div class="t4y-acts wf" data-w="answer-exp"><span class="btn gh">Dismiss</span><span class="btn pk">Ask ${v.from} to re-invite</span></div>
+</div>`;
+const mvCard = (k, line, body) => `<div class="tcard t4y t4z jd mv mv${k}"><div class="bbeam bq"><i></i></div><div class="t4y-in">
+  <div class="tl3">${line}</div><div class="t4y-body">${body}</div></div></div>`;
+
+const MV = {
+  /* b: collapsed, the pill takes turns; opened, a pager walks through them */
+  b: list => mvCard('b',
+    `<span class="cy" data-w="arrive">${each(list, (v, i) => `<span class="cy-i" data-c="${i}">${av(v.from)}<p><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p></span>`)}</span>
+     ${mvHead(list)}${mvAnswer(list)}
+     ${mvTail(`<span class="cy-dots wi" data-w="arrive">${each(list, (_, i) => `<i data-c="${i}"></i>`)}</span>
+       <span class="mvb-pgr wi" data-w="focus answer-exp"><button type="button" data-d="-1" aria-label="Previous invite">‹</button>${each(list, (_, i) => `<em class="pg" data-p="${i}">${i + 1} of ${list.length}</em>`)}<button type="button" data-d="1" aria-label="Next invite">›</button></span>`)}`,
+    each(list, (v, i) => mvPage(v, i))),
+  /* c: collapsed, one line names everyone; opened, a list of rooms, and a row opens the full card */
+  c: list => { const ppl = list.flatMap(byOf); return mvCard('c',
+    `<span class="t4y-stack wi" data-w="arrive">${ppl.slice(0, 3).map(n => av(n)).join('')}</span>
+     <p data-w="arrive">${andN(ppl)} invited you</p>
+     <button type="button" class="mvc-bk wi dv" data-w="focus" aria-label="All invites">‹</button>
+     <p class="lv" data-w="focus"><b>${list.length} rooms</b> are open for you</p>
+     ${mvHead(list, 'dv')}${mvAnswer(list)}${mvTail()}`,
+    `<div class="mvc-list lv${list.length > 4 ? ' sc' : ''}">${each(list, (v, i) => `<button type="button" class="mvc-row" data-i="${i}">
+       <span class="mvc-th">${poster(v.show)}</span>
+       <span class="mvc-tx"><b>${esc(v.show.t)}</b><em>${avs(v)}<span><b>${names(byOf(v))}</b> · ${v.ep ? `E${v.ep.e}, ` : ''}${v.at} in</span></em>
+         <span class="mvc-bar"><i style="width:${pctOf(v)}%"></i></span></span>
+       <span class="btn pk sm mvc-go">Join</span><span class="mvc-ex">Expired</span></button>`)}</div>
+     ${each(list, (v, i) => mvPage(v, i, {cls:'dv'}))}`); },
+  /* d: a pill per invite, stacked; the newest wears the beam */
+  d: list => mvCard('d',
+    `${each(list, (v, i) => `<span class="wi pg" data-p="${i}" data-w="arrive">${av(v.from)}</span>
+       <p class="pg" data-p="${i}" data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p>`)}
+     ${mvHead(list)}${mvAnswer(list)}${mvTail()}`,
+    each(list, (v, i) => mvPage(v, i))),
+  /* e: collapsed, three posters; opened, the posters sit side by side and the neighbours peek in */
+  e: list => mvCard('e',
+    `<span class="mve-th wi" data-w="arrive">${each(list, v => `<span>${poster(v.show)}</span>`)}</span>
+     <p data-w="arrive"><b>${list.length} invites</b> from ${andB(list.map(v => v.from))}</p>
+     ${mvHead(list)}${mvAnswer(list)}${mvTail()}`,
+    `<div class="mve-vp"><div class="mve-strip">${each(list, (v, i) => `<button type="button" class="mve-c" data-i="${i}">${poster(v.show)}${av(v.from)}</button>`)}</div></div>
+     ${each(list, (v, i) => mvPage(v, i, {art:false}))}`),
+  /* f: a queue; she answers the one in front, and the next takes its place in whatever shape the pill is */
+  /* f2 (mode 'lean'): only the invite in front shows — no next row, no skipping; declining just brings the next one in */
+  f: (list, sel, mode) => {
+    const n = list.length, ix = k => (sel + k) % n, v = list[ix(0)], nx = list[ix(1)], lean = mode === 'lean';
+    const up = k => { const x = list[ix(k)]; return `<button type="button" class="mvf-up" data-to="${ix(k)}"><span>${poster(x.show)}</span><span>Then <b>${x.from}</b> · ${esc(x.show.t)}</span><em>Skip to it ›</em></button>`; };
+    const ACT = 'answer-dec after-dec after-exp';
+    const page = (x, k, role) => `<div class="${role}">
+      <div class="t4y-art">${poster(x.show)}</div>
+      <div class="t4y-info"><h3>${esc(x.show.t)}</h3>
+        ${k ? `<h6 class="sub">${x.meta}</h6>` : `<h6 class="sub" data-w="focus${lean ? ' answer-dec' : ''}">${x.meta}</h6><h6 class="sub" data-w="answer-exp" style="color:var(--y)">${x.from}'s invitation expired</h6>`}</div>
+      ${k ? timeline(x).replace('data-w="arrive focus"', `data-w="${ACT}"`) : lean ? timeline(x).replace('data-w="arrive focus"', 'data-w="arrive focus answer-dec"') : timeline(x)}
+      <div class="t4y-acts wf" data-w="${k ? ACT : lean ? 'focus answer-dec' : 'focus'}"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+      ${k ? '' : `<div class="t4y-acts wf" data-w="answer-exp"><span class="btn gh">Dismiss</span><span class="btn pk">Ask ${x.from} to re-invite</span></div>`}
+      ${lean ? '' : up(k + 1)}</div>`;
+    return mvCard('f',
+      `${lean ? `<span class="wi" data-w="arrive">${av(v.from)}</span>` : `<span class="qb wi" data-w="arrive">${av(v.from)}<b>${n}</b></span>`}
+       <p data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p>
+       <span class="wi" data-w="focus answer-exp answer-acc answer-can">${av(v.from)}</span>
+       <p data-w="focus"><b>${v.from}</b> invited you to watch</p>
+       <p data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>
+       <p data-w="answer-acc">Joining <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="answer-can"><b>${v.from}</b> closed the room</p>
+       <span class="t4y-stack wi" data-w="after-acc">${[...v.room, 'Joyce'].map(x => av(x)).join('')}</span>
+       <p data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+       <span class="wi qh qh-av" data-w="${ACT}">${av(nx.from)}</span>
+       ${lean ? `<p class="qh" data-w="${ACT}"><b>${nx.from}</b> invited you to watch</p>`
+         : `<p data-w="answer-dec">Declined <b>${v.from}</b> · next, <b>${nx.from}</b></p>
+       <p data-w="after-dec after-exp"><b>${nx.from}</b> invited you to watch</p>`}
+       ${lean ? `<span class="wi" data-w="after-can">${av(nx.from)}</span>` : `<span class="qb wi" data-w="after-can">${av(nx.from)}<b>${n - 1}</b></span>`}
+       <p data-w="after-can"><b>${nx.from}</b> invited you to watch <b>${esc(nx.show.t)}</b></p>
+       <span class="sp"></span>
+       <span class="mvf-n wi" data-w="focus answer-exp">${ix(0) + 1} of ${n}</span>
+       <span class="mvf-n wi qh" data-w="${ACT}">${ix(1) + 1} of ${n}</span>
+       <span class="btn pk sm wi" data-w="arrive after-can">Respond</span>
+       <span class="a-spin" data-w="answer-acc"></span>
+       <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+       <span class="x" data-w="focus answer-exp ${ACT}">✕</span>`,
+      page(v, 0, 'q-cur') + page(nx, 1, 'q-nx'));
+  },
+  /* g: everyone down the side, the room she's looking at beside them */
+  g: list => mvCard('g',
+    `<span class="t4y-stack wi" data-w="arrive">${each(list, v => av(v.from))}</span>
+     <p data-w="arrive"><b>${list[0].from}</b> and <b>${list.length - 1} others</b> invited you</p>
+     <p data-w="focus"><b>${list.length} rooms</b> are open for you</p>
+     ${each(list, (v, i) => `<span class="wi pg" data-p="${i}" data-w="answer-exp">${av(v.from)}</span>
+       <p class="pg" data-p="${i}" data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>`)}
+     ${mvAnswer(list)}${mvTail()}`,
+    `<div class="mvg-b"><div class="mvg-side">${each(list, (v, i) => `<button type="button" class="mvg-r" data-i="${i}">${av(v.from)}<span><b>${v.from}</b><em>${esc(v.show.t)}</em><i class="ex">Expired</i></span></button>`)}</div>
+     <div class="mvg-main">${each(list, (v, i) => mvPage(v, i))}</div></div>`),
+  /* h: the pill stays one invite; the others wait in Parties */
+  h: (list, sel, w = 'parties') => {
+    const v = list[0], ppl = list.slice(1).flatMap(byOf), W = WAIT[w];
+    return mvCard('h',
+      `<span class="wi" data-w="arrive focus answer-exp answer-acc answer-dec answer-can">${av(v.from)}</span>
+       <p data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="focus"><b>${v.from}</b> invited you to watch</p>
+       <p data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>
+       <p data-w="answer-acc">Joining <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="answer-dec">Declined <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="answer-can"><b>${v.from}</b> closed the room</p>
+       <span class="t4y-stack wi" data-w="after-acc">${[...v.room, 'Joyce'].map(x => av(x)).join('')}</span>
+       <p data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+       <span class="t4y-stack wi" data-w="after-dec after-exp after-can">${ppl.slice(0, 3).map(x => av(x)).join('')}</span>
+       <p data-w="after-dec after-exp after-can"><b>${list.length - 1} more invites</b> ${W.after}</p>
+       <span class="sp"></span>
+       <span class="btn pk sm wi" data-w="arrive">Respond</span>
+       ${W.btn ? `<span class="btn gh sm wi h-go" data-w="after-dec after-exp after-can">${W.btn}</span>` : ''}
+       <span class="a-spin" data-w="answer-acc"></span>
+       <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+       <span class="x" data-w="focus answer-exp">✕</span>`,
+      `${mvPage(v, 0)}<button type="button" class="mvh-more h-go"><span class="t4y-stack">${ppl.slice(0, 3).map(x => av(x)).join('')}</span><span>${andB(ppl)} invited you too</span><em>${W.more}</em></button>`);
+  }
+};
+/* h and its forks: the pill holds one invite; what changes is where the rest wait */
+const WAIT = {
+  parties: {after:'wait in Parties', btn:'Open Parties', more:'Parties ›'},
+  avatar: {after:'are waiting for you', btn:'Show', more:'See them ›'},
+  library: {after:'are in your library', btn:'', more:'In your library ›'}
+};
+const whereAt = v => `${v.ep ? `E${v.ep.e}, ` : ''}${v.at} in`;
+const railTo = (sc, g, k) => sc.closest('.var').querySelector(`.rail [data-${g}="${k}"]`).click();
+/* h2: Parties is a real page, and the rooms she's invited to lead it */
+const partiesPage = (st, sc, list) => {
+  [...st.querySelectorAll('.gl-nav .sub')].forEach(x => x.textContent.startsWith('Parties') && x.classList.add('pt'));
+  st.querySelector('.bg-lib').insertAdjacentHTML('beforeend', `<div class="pp"><h6 class="sub gl-h">Invited you</h6><div class="pp-list">${each(list, (v, i) => `
+    <div class="pp-r${i ? '' : ' wf'}"${i ? '' : ' data-w="arrive focus"'}><span class="pp-th">${poster(v.show)}</span>
+      <div class="pp-tx"><h3>${esc(v.show.t)}</h3><em>${avs(v)}<span><b>${names(byOf(v))}</b> invited you · ${whereAt(v)}</span></em><span class="mvc-bar"><i style="width:${pctOf(v)}%"></i></span></div>
+      <div class="pp-acts"><span class="btn gh">Decline</span><span class="btn pk">Join</span></div></div>`)}</div></div>`);
+  st.addEventListener('click', e => {
+    const nav = e.target.closest('.gl-nav .sub');
+    if(e.target.closest('.h-go') || nav?.classList.contains('pt')){ if(st.dataset.ctx === 'watch') railTo(sc, 'c', 'browse'); st.classList.add('on-pp'); }
+    else if(nav) st.classList.remove('on-pp');
+  });
+  new MutationObserver(() => st.classList.remove('on-pp')).observe(st, {attributes:true, attributeFilter:['data-stage']});
+};
+/* h3: no Parties tab; her avatar counts the invites and opens them over whatever she's on */
+const avatarMenu = (st, sc, list) => {
+  st.classList.add('no-pt');
+  [...st.querySelectorAll('.gl-nav .sub')].forEach(x => x.textContent.startsWith('Parties') && x.classList.add('pt'));
+  st.querySelector('.gl-nav .me').insertAdjacentHTML('afterend', `<i class="abdg wi" data-w="arrive focus answer">${list.length}</i><i class="abdg wi" data-w="after-dec after-exp after-can">${list.length - 1}</i>`);
+  st.querySelector('.sh').insertAdjacentHTML('beforeend', `<div class="ipop"><h6 class="sub">Invites</h6>${each(list, (v, i) => `
+    <div class="ipop-r${i ? '' : ' wf'}"${i ? '' : ' data-w="arrive focus"'}>${avs(v, 2)}<span><b>${esc(v.show.t)}</b><em>${names(byOf(v))} · ${whereAt(v)}</em></span><span class="btn pk">Join</span></div>`)}</div>`);
+  st.addEventListener('click', e => {
+    if(e.target.closest('.h-go, .gl-nav .me')) st.classList.toggle('on-pop');
+    else if(!e.target.closest('.ipop')) st.classList.remove('on-pop');
+  });
+  new MutationObserver(() => st.classList.remove('on-pop')).observe(st, {attributes:true, attributeFilter:['data-stage']});
+};
+/* h4: the rest wait as a row at the top of her library; mid-episode the pill points there */
+const shelf = list => ({top: `<div class="ish" data-w="arrive focus answer after-dec after-exp after-can"><h6 class="sub gl-h">Rooms you're invited to</h6><div class="gl-grid">${each(list, (v, i) => `
+  <div class="gl-c ish-c"${i ? '' : ' data-w="arrive focus answer"'}>${poster(v.show)}<div class="shade"></div><span class="ish-who">${avs(v)}</span><b>${esc(v.show.t)}</b><span class="ish-bar"><i style="width:${pctOf(v)}%"></i></span></div>`)}</div></div>`});
+const libraryRow = (st, sc) => {
+  st.classList.add('w-lib');
+  /* closing the card shows her the row it points at */
+  st.addEventListener('click', e => { if(e.target.closest('.h-go')) railTo(sc, 's', 'arrive'); });
+};
+/* d's other invites: their own pills above the newest */
+const mvOthers = (list, sel) => list.map((v, i) => ({v, i})).filter(x => x.i !== sel).map((x, k) =>
+  `<div class="mvd-p" data-i="${x.i}" style="--k:${k}">${av(x.v.from)}<p><b>${x.v.from}</b> invited you to watch <b>${esc(x.v.show.t)}</b></p><button type="button" class="btn pk sm">Respond</button></div>`).join('');
+/* c is two cards in one: the list and the full card are measured separately */
+function measureViews(st, card){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '', view = card.dataset.view, inn = card.querySelector('.t4y-in');
+    st.classList.add('measuring');
+    st.dataset.keys = 'focus acc focus-acc browse';
+    [['list', 't4yl'], ['detail', 't4yh']].forEach(([v, name]) => { card.dataset.view = v; void st.offsetWidth; st.style.setProperty('--' + name, inn.scrollHeight + 'px'); });
+    card.dataset.view = view;
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+const mountMulti = (k, list = KINDS.multi, o = {}) => sc => {
+  sc.innerHTML = shell('mv' + k, '<div class="t4y-host"></div>', o.lib);
+  const st = sc.querySelector('.stage'), host = st.querySelector('.t4y-host');
+  let sel = 0, view = 'list';
+  st.dataset.kind = 'multi';
+  const card = () => host.querySelector('.mv');
+  const pick = i => { sel = (i + list.length) % list.length; card().dataset.sel = sel; card().style.setProperty('--s', sel); };
+  const render = () => {
+    host.innerHTML = MV[k](list, sel, o.mode) + (k === 'd' ? mvOthers(list, sel) : '');
+    card().dataset.view = view;
+    pick(sel);
+    fitLine(st, '.mv .tl3', 't4yw', 0);
+    if(k === 'f') fitLine(st, '.mv .tl3', 't4yw2', 0, 'after can after-can browse');
+    if(o.mode === 'library') fitLine(st, '.mv .tl3', 't4yw2', 0, 'after dec after-dec watch');
+    if(k === 'c') measureViews(st, card()); else autoHeight(st, '.mv .t4y-in', 't4yh');
+  };
+  host.addEventListener('click', e => {
+    const t = e.target;
+    if(t.closest('[data-d]')) pick(sel + +t.closest('[data-d]').dataset.d);
+    else if(t.closest('.mvc-row')){ pick(+t.closest('.mvc-row').dataset.i); view = card().dataset.view = 'detail'; }
+    else if(t.closest('.mvc-bk')) view = card().dataset.view = 'list';
+    else if(t.closest('.mve-c')) pick(+t.closest('.mve-c').dataset.i);
+    else if(t.closest('.mvg-r')) pick(+t.closest('.mvg-r').dataset.i);
+    else if(t.closest('.mvf-up')){
+      sel = +t.closest('.mvf-up').dataset.to; render();
+      if(st.dataset.stage !== 'focus') setTimeout(() => sc.closest('.var').querySelector('.rail [data-s="focus"]').click(), 80);
+    }
+    else if(t.closest('.mvd-p .btn')){
+      sel = +t.closest('.mvd-p').dataset.i; render();
+      /* her Respond opens that one: the rail goes to Opens once the new pill is measured */
+      setTimeout(() => sc.closest('.var').querySelector('.rail [data-s="focus"]').click(), 80);
+    }
+  });
+  /* h: Parties in her nav counts every invite still live */
+  if(k === 'h' && (o.mode || 'parties') === 'parties') [...st.querySelectorAll('.gl-nav .sub')].find(x => x.textContent === 'Parties')
+    .insertAdjacentHTML('beforeend', `<i class="pbdg wi" data-w="arrive focus answer">${list.length}</i><i class="pbdg wi" data-w="after-dec after-exp after-can">${list.length - 1}</i>`);
+  if(o.cls) st.classList.add(o.cls);
+  o.setup?.(st, sc, list);
+  /* b only turns while it is a pill; opening holds the one on show */
+  if(k === 'b') setInterval(() => { if(st.dataset.stage === 'arrive') pick(sel + 1); }, REDUCED ? 4500 : 3000);
+  /* closing the card puts c back on its list */
+  if(k === 'c') new MutationObserver(() => { if(st.dataset.stage !== 'focus' && st.dataset.stage !== 'answer'){ view = 'list'; if(card()) card().dataset.view = 'list'; } })
+    .observe(st, {attributes:true, attributeFilter:['data-stage']});
+  render();
+};
+
 /* ───── Stage rails ───── */
 const ST = [{k:'idle',l:'Idle'},{k:'arrive',l:'Arrives'},{k:'focus',l:'Opens'},{k:'answer',l:'Answers'},{k:'after',l:'After'}];
 const BR = [{k:'acc',l:'Joins'},{k:'dec',l:'Declines'},{k:'exp',l:'Expires'},{k:'can',l:'Host cancels'}];
@@ -513,7 +1140,13 @@ kst.textContent = KEYS.map(k => `.stage[data-keys~="${k}"] [data-w~="${k}"]{disp
 .stage[data-keys~="${k}"] .wi[data-w~="${k}"]{display:inline-flex}`).join('');
 document.head.append(kst);
 
-const MOUNTS = {a4b2b5: mountInvite};
+const MOUNTS = {a4b2b5: mountInvite, mvb: mountMulti('b'), mvc: mountMulti('c'), mvd: mountMulti('d'), mve: mountMulti('e'),
+  mvc2: mountMulti('c', KINDS.five), mvf: mountMulti('f'), mvf2: mountMulti('f', KINDS.multi, {mode:'lean'}),
+  mvf2b: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-fall'}), mvf2c: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-face'}),
+  mvf2d: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-build'}), mvf2e: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-beam'}), mvg: mountMulti('g'), mvh: mountMulti('h'),
+  mvh2: mountMulti('h', KINDS.multi, {mode:'parties', setup:partiesPage}),
+  mvh3: mountMulti('h', KINDS.multi, {mode:'avatar', setup:avatarMenu}),
+  mvh4: mountMulti('h', KINDS.multi, {mode:'library', lib:shelf(KINDS.multi), setup:libraryRow})};
 document.querySelectorAll('[data-mount]').forEach(sc => MOUNTS[sc.dataset.mount](sc));
 
 function setKeys(st){
@@ -528,6 +1161,7 @@ document.querySelectorAll('[data-rail]').forEach(rail => {
     <div class="grp cx">${CX.map(c => `<button type="button" data-c="${c.k}">${c.l}</button>`).join('')}</div>
     ${kinds.length ? `<div class="grp kd">${kinds.map(([k, l]) => `<button type="button" data-k="${k}">${l}</button>`).join('')}</div>` : ''}
     <button type="button" class="play">Play flow</button>
+    ${'demoDec' in rail.dataset ? '<button type="button" class="play dec">Decline while open</button>' : ''}
     ${'demoExp' in rail.dataset ? '<button type="button" class="play exp">Expire while open</button>' : ''}
     <span class="hint">Her screen only — the host is elsewhere.</span>`;
   const sb = [...rail.querySelectorAll('[data-s]')], bb = [...rail.querySelectorAll('[data-b]')], cb = [...rail.querySelectorAll('[data-c]')];
@@ -554,6 +1188,10 @@ document.querySelectorAll('[data-rail]').forEach(rail => {
     next();
   });
   /* open it, then let it lapse in place */
+  rail.querySelector('.dec')?.addEventListener('click', () => {
+    clearInterval(timer); stage.dataset.branch = 'dec'; stage.dataset.stage = 'focus'; sync();
+    timer = setInterval(() => { clearInterval(timer); stage.dataset.stage = 'answer'; sync(); }, REDUCED ? 700 : 1200);
+  });
   rail.querySelector('.exp')?.addEventListener('click', () => {
     clearInterval(timer); stage.dataset.branch = 'exp'; stage.dataset.stage = 'focus'; sync();
     timer = setInterval(() => { clearInterval(timer); stage.dataset.stage = 'answer'; sync(); }, REDUCED ? 900 : 2200);
@@ -610,7 +1248,7 @@ const nodeFor = (s, b) => s === 'answer' ? ANSWER[b] : s === 'after' ? (b === 'a
       <text class="n" x="${n.x + 14}" y="${n.y + 23}">${n.n}</text>
       <text class="s" x="${n.x + 14}" y="${n.y + 40}">${n.s}</text>
       <text class="k" x="${n.x + 14}" y="${n.y + 55}">${n.k}</text></g>`).join('')}`;
-  const stage = document.querySelector('#v-a4b2b5 .stage'), rail = document.querySelector('[data-rail="v-a4b2b5"]');
+  const stage = document.querySelector('#v-a .stage'), rail = document.querySelector('[data-rail="v-a"]');
   const boxes = [...svg.querySelectorAll('.box')], eds = [...svg.querySelectorAll('.ed')];
   let cur = null, settle = null;
   const mark = (id, from) => {
@@ -675,6 +1313,16 @@ document.querySelectorAll('.var').forEach(sec => {
 });
 document.addEventListener('click', e => { if(!e.target.closest('.pick-menu')) closeAll(); });
 document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAll(); });
+/* ───── Minimap ───── */
+const mm = document.querySelector('.mm'), secs = [...document.querySelectorAll('.var')];
+mm.innerHTML = secs.map(s => `<a href="#${s.id}" data-for="${s.id}"><i></i><span><b>${s.dataset.id}</b>${esc(s.dataset.name)}</span></a>`).join('');
+mm.addEventListener('click', e => { const a = e.target.closest('a'); if(!a) return; e.preventDefault(); document.getElementById(a.dataset.for).scrollIntoView({behavior:'smooth', block:'start'}); });
+function syncMM(){
+  let cur = secs[0];
+  secs.forEach(s => { if(s.getBoundingClientRect().top <= innerHeight * .35) cur = s; });
+  mm.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.for === cur.id));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
 </script>
 </body>
 </html>

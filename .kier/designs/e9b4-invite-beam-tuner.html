@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invite Beam Tuner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+@media (max-width:600px){.brief h1{font-size:32px}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.cards code{font:12.5px ui-monospace,Menlo,monospace}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.var-h .tuned{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.05em;text-transform:uppercase;color:var(--mut);border:1px dashed var(--line);border-radius:6px;padding:5px 7px}
+.var-h .tuned[hidden]{display:none}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;overflow-wrap:anywhere}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600;flex:none}
+.frame{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:1px;height:300px;margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.caps{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:8px;font-size:12.5px;color:var(--mut)}
+.caps span{padding:0 4px}
+@media (max-width:900px){.frame{grid-template-columns:1fr;height:auto}.frame>.panel{height:260px}.caps{display:none}}
+/* tuner */
+.tune{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px 12px}
+.tgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:4px 22px}
+.tg h4{margin:0 0 6px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.tg{padding:4px 0 8px}
+.row{display:grid;grid-template-columns:82px 1fr 52px;align-items:center;gap:10px;height:28px;font-size:13px}
+.row output{font:12px ui-monospace,Menlo,monospace;text-align:right;color:var(--mut);font-variant-numeric:tabular-nums}
+.row input[type=range]{width:100%;accent-color:var(--ink);margin:0}
+.seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:2px}
+.seg button{font:500 12px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:6px;padding:5px 10px;cursor:pointer}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.row.wide{grid-template-columns:82px 1fr}
+.pals{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.pals button{display:flex;align-items:center;gap:6px;font:500 12px/1 inherit;font-family:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 8px 5px 5px;cursor:pointer}
+.pals button i{display:block;width:30px;height:12px;border-radius:6px}
+.pals button.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.cust{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12.5px;color:var(--mut)}
+.cust[hidden]{display:none}
+.cust input{width:30px;height:22px;border:1px solid var(--line);border-radius:6px;padding:0;background:none;cursor:pointer}
+.tact{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;padding-top:12px;border-top:1px solid var(--line)}
+.tact button{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.tact button:hover{border-color:var(--mut)}
+.tact button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tact .st{font-size:12.5px;color:var(--mut);margin-left:auto}
+.tact .st.ok{color:var(--good);font-weight:600}
+.tout{margin-top:10px}
+.tout[hidden]{display:none}
+.tout textarea{width:100%;height:150px;font:11.5px/1.45 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+/* minimap */
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:220px}
+.mm a.on span{color:var(--ink)}
+@media (max-width:600px){.mm{display:none}}
+
+/* ───────────── Mockup (Care.tv look) ───────────── */
+.panel{position:relative;overflow:hidden;background:#10171E;font-family:'halyard-display','Outfit',sans-serif;color:#fff;-webkit-font-smoothing:antialiased;font-size:13px;line-height:1.4}
+.panel *{box-sizing:border-box}
+.sk{display:block;border-radius:3px;background:#1C2938}
+/* library skeleton */
+.lib-nav{display:flex;align-items:center;gap:14px;height:46px;padding:0 18px}
+.lib-nav .sk{height:8px}
+.lib-nav .me{margin-left:auto;width:24px;height:24px;border-radius:50%}
+.lib-h{width:80px;height:7px;margin:12px 18px 10px}
+.lib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 18px}
+.lib-grid .sk{aspect-ratio:16/9;border-radius:6px}
+/* room skeleton */
+.room{display:grid;grid-template-columns:1fr 150px;height:100%}
+.room-vid{position:relative;background:#06090d}
+.room-vid .still{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.9),transparent 45%),#141d26}
+.room-ctl{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;gap:10px}
+.room-ctl .sk{width:14px;height:14px;border-radius:3px;background:#2a3744}
+.room-ctl .seek{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.room-ctl .seek i{position:absolute;inset:0 64% 0 0;border-radius:3px;background:#E8368F}
+.room-chat{background:#15202B;border-left:1px solid #000;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;padding:12px}
+.room-chat .m{display:flex;gap:8px;align-items:flex-start}
+.room-chat .m .sk:first-child{flex:none;width:20px;height:20px;border-radius:50%}
+.room-chat .m div{flex:1;display:flex;flex-direction:column;gap:5px}
+.room-chat .m div .sk{height:6px}
+.room-chat .inp{height:30px;border-radius:4px}
+/* the pill — mirrors .incoming-invitation + .invitation-line */
+.pill{position:absolute;left:50%;transform:translateX(-50%);width:max-content;border-radius:20px;overflow:clip;background:rgba(21,32,43,.97);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 26px 54px -16px rgba(0,0,0,.85)}
+.pill.pend{bottom:20px}
+.pill.dock{left:calc(50% - 75px);top:20px}
+@media (max-width:900px){.pill.dock{left:calc(50% - 75px)}}
+.line{display:flex;align-items:center;gap:9px;min-height:40px;padding:0 8px}
+.line p{margin:0;font-size:13px;color:#8899A6;white-space:nowrap}
+.line b{color:#fff;font-weight:600}
+.respond{flex:none;min-height:24px;padding:0 12px;border-radius:12px;background:#E8368F;color:#fff;font:600 12px/24px inherit;font-family:inherit;border:0;cursor:pointer}
+.av{display:inline-grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:var(--c);color:#10171E;font-weight:700;font-size:10.5px}
+.avs{display:flex;flex:none}
+.avs .av{box-shadow:0 0 0 2px #15202b}
+.avs .av+.av{margin-left:-8px}
+
+/* ───────────── The beam — same layers as .invitation-beam, driven by custom properties ───────────── */
+@property --ang{syntax:'<angle>';initial-value:0deg;inherits:true}
+@keyframes bspin{to{--ang:360deg}}
+@keyframes bhue{
+  0%,100%{filter:hue-rotate(calc(var(--hue) * -1)) brightness(var(--br)) saturate(var(--sat))}
+  50%{filter:hue-rotate(var(--hue)) brightness(var(--br)) saturate(var(--sat))}
+}
+.beam{--ring:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);position:absolute;inset:0;z-index:3;border-radius:inherit;pointer-events:none;animation:bspin var(--dur) linear infinite var(--dirn)}
+.beam::after,.beam::before,.beam i{content:"";position:absolute;inset:0;border-radius:inherit}
+.beam::after{padding:var(--w);animation:bhue var(--hp) ease-in-out infinite;
+  background:conic-gradient(from var(--ang),var(--hlg)),var(--bc);
+  -webkit-mask:conic-gradient(from var(--ang),var(--ma)),var(--ring);-webkit-mask-composite:source-in,xor;
+  mask:conic-gradient(from var(--ang),var(--ma)),var(--ring);mask-composite:intersect,exclude}
+.beam::before{opacity:var(--glow);background:var(--bc);box-shadow:inset 0 0 5px 1px rgba(255,255,255,.3);animation:bhue var(--hp) ease-in-out infinite;
+  -webkit-mask:conic-gradient(from var(--ang),var(--mb));mask:conic-gradient(from var(--ang),var(--mb))}
+.beam i{padding:var(--w);opacity:var(--bloom);filter:blur(var(--blur)) brightness(var(--br)) saturate(var(--sat));
+  background:conic-gradient(from var(--ang),var(--blg));
+  -webkit-mask:var(--ring);-webkit-mask-composite:xor;mask:var(--ring);mask-composite:exclude}
+.frame.paused .beam,.frame.paused .beam::before,.frame.paused .beam::after,
+.frame[data-off] .beam,.frame[data-off] .beam::before,.frame[data-off] .beam::after{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.beam,.beam::after,.beam::before{animation:none}}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+<header class="brief">
+  <div class="eyebrow">e9b4 · Invite toast · border beam · follows 9b2e A4b2b</div>
+  <h1>Tune the invite toast's border beam</h1>
+  <div class="cards">
+    <div>Only the two beam states: an invite waiting, and joined + docked.</div>
+    <div>Every slider drives a real layer of <code>.invitation-beam</code>.</div>
+    <div>Copy CSS swaps the beam block in <code>InvitationModal/style.css</code>.</div>
+    <div>Each canvas is a preset; tune any of them, Reset returns it.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="Rainbow, as shipped" data-preset="now">
+  <div class="var-h"><span class="id">Now</span><h2>Rainbow, as shipped</h2></div>
+  <div class="notes">
+    <div class="note good">Unmistakably live, without a word of copy.</div>
+    <div class="note bad">Rainbow competes with the pink Respond button.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="Brand pink" data-preset="a">
+  <div class="var-h"><span class="id">A</span><h2>Brand pink</h2></div>
+  <div class="notes">
+    <div class="note good">Beam and Respond read as one accent.</div>
+    <div class="note bad">The head blurs into the button as it passes the right end.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Hairline white" data-preset="b">
+  <div class="var-h"><span class="id">B</span><h2>Hairline white</h2></div>
+  <div class="notes">
+    <div class="note good">Quietest; nothing decorative about it.</div>
+    <div class="note bad">Easy to miss over a bright film still.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c" data-id="C" data-name="Comet" data-preset="c">
+  <div class="var-h"><span class="id">C</span><h2>Comet</h2></div>
+  <div class="notes">
+    <div class="note good">One sharp head; catches the eye on arrival.</div>
+    <div class="note bad">Fast spin nags if the invite sits for minutes.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d" data-id="D" data-name="Slow halo" data-preset="d">
+  <div class="var-h"><span class="id">D</span><h2>Slow halo</h2></div>
+  <div class="notes">
+    <div class="note good">Near-full ring breathes instead of chasing.</div>
+    <div class="note bad">Reads as a glowing border more than as live.</div>
+  </div>
+</section>
+
+<section class="var" id="v-e" data-id="E" data-name="Care.tv trio" data-preset="e">
+  <div class="var-h"><span class="id">E</span><h2>Care.tv trio</h2></div>
+  <div class="notes">
+    <div class="note good">Only the app's pink, yellow and green.</div>
+    <div class="note bad">Yellow is the expired-state colour.</div>
+  </div>
+</section>
+
+<section class="var" id="v-f" data-id="F" data-name="Twin trails" data-preset="f">
+  <div class="var-h"><span class="id">F</span><h2>Twin trails</h2></div>
+  <div class="notes">
+    <div class="note good">Two short arcs keep both ends of the pill lit.</div>
+    <div class="note bad">Symmetry edges toward loading spinner.</div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from B: quiet beams that run only for the first few seconds.</div>
+    <div><b>Remix</b>Remix E: drop yellow so the beam can't read as expired.</div>
+    <div><b>Settle</b>Settle on A to trade the rainbow for brand pink.</div>
+  </div>
+</section>
+</main>
+
+<script>
+const FILE = '.kier/designs/e9b4-invite-beam-tuner.html';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ───── Beam model ───── */
+// Blob layout copied from --bc in style.css; palettes only swap the colours.
+const GEO = [[70,40,'33% -7.4%'],[60,35,'12% -5%'],[40,70,'2.1% 68.3%'],[20,35,'2.1% 68.3%'],[180,32,'74.4% 100%'],[85,26,'55% 100%'],[74,32,'93.9% 0%'],[26,42,'100% 27.1%'],[52,48,'100% 27.1%']];
+const PALS = {
+  rainbow:['255,50,100','40,140,255','50,200,80','30,185,170','100,70,255','40,140,255','255,120,40','240,50,180','180,40,240'],
+  pink:['255,70,150','232,54,143','255,120,180','200,40,120','190,60,200','232,54,143','255,140,190','240,50,180','170,50,220'],
+  mono:['255,255,255','210,222,232','255,255,255','190,205,218','255,255,255','220,230,238','255,255,255','200,214,226','255,255,255'],
+  trio:['232,54,143','247,201,72','101,214,173','101,214,173','232,54,143','247,201,72','247,201,72','232,54,143','232,54,143'],
+  ocean:['60,160,255','40,200,220','90,110,255','40,220,190','110,80,255','40,160,255','70,200,255','140,90,255','90,60,240'],
+  sunset:['255,90,90','255,160,60','255,200,80','255,120,60','232,54,143','255,150,60','255,110,40','240,60,140','255,80,120'],
+};
+const PAL_NAMES = {rainbow:'Rainbow',pink:'Pink',mono:'White',trio:'Trio',ocean:'Ocean',sunset:'Sunset',custom:'Custom'};
+const BASE = {dur:1.96,dir:'cw',n:1,len:65,fe:.57,w:1,hl:1,hw:24,glow:.36,bloom:.6,blur:8,br:1.3,sat:1.2,hue:30,hp:12,pal:'rainbow',c1:'#E8368F',c2:'#65D6AD'};
+const PRESETS = {
+  now:{},
+  a:{dur:2.4,len:60,hl:.9,glow:.3,bloom:.5,sat:1.1,hue:12,pal:'pink'},
+  b:{dur:3.2,len:38,fe:.7,hl:.8,glow:.12,bloom:.25,blur:6,br:1.1,sat:1,hue:0,pal:'mono'},
+  c:{dur:1.3,len:28,fe:.45,hl:1.3,hw:14,glow:.25,bloom:.9,blur:10,br:1.4,sat:1.3,pal:'rainbow'},
+  d:{dur:5.5,len:85,fe:.85,hl:.5,hw:30,glow:.5,bloom:.35,blur:12,br:1.2,hue:40,hp:16,pal:'ocean'},
+  e:{dur:2.2,len:60,glow:.32,bloom:.55,sat:1.15,hue:0,pal:'trio'},
+  f:{dur:3,n:2,len:34,fe:.55,hl:.9,hw:12,glow:.28,bloom:.5,pal:'sunset'},
+};
+const preset = k => ({...BASE, ...PRESETS[k]});
+
+const f2 = v => String(+(+v).toFixed(2));
+const hexRgb = h => { const n = parseInt(h.slice(1),16); return `${n>>16&255},${n>>8&255},${n&255}`; };
+function colours(s){
+  if(s.pal !== 'custom') return PALS[s.pal];
+  const a = hexRgb(s.c1), b = hexRgb(s.c2);
+  return GEO.map((_,i) => i % 2 ? b : a);
+}
+const bcOf = s => colours(s).map((c,i) => `radial-gradient(ellipse ${GEO[i][0]}px ${GEO[i][1]}px at ${GEO[i][2]},rgb(${c}),transparent)`).join(',');
+
+// Builds the four conic stop lists. The defaults land within a fraction of a percent of the shipped stops.
+function stops(pts, n){
+  let last = 0;
+  const clean = pts.map(([p,a]) => { p = Math.min(99.9, Math.max(last, p)); last = p; return [p, Math.min(1, Math.max(0, a))]; });
+  const out = ['transparent 0%'];
+  for(let k = 0; k < n; k++) for(const [p,a] of clean) out.push(`${a >= 1 ? '#fff' : a <= 0 ? 'transparent' : `rgba(255,255,255,${f2(a)})`} ${f2((k*100 + p)/n)}%`);
+  out.push('transparent 100%');
+  return out.join(',');
+}
+function layers(s){
+  const L = s.len, sc = L/65;
+  const E = Math.max(Math.min(95, 100 - 2*sc - .5), L + 8*sc + .2);
+  const tf = L*s.fe*.6, hf = L*s.fe*.4, ts = E - L, ss = ts + tf, se = E - hf;
+  const ma = [[ts,0],[ts+tf*.27,.1],[ts+tf*.64,.35],[ss,1],[se,1],[se+hf*.4,.35],[se+hf*.8,.1],[E,0]];
+  const bts = ts - 8*sc, bss = ss - 6*sc, bse = se + 2*sc, bE = E + 2*sc, bt = bss - bts, bh = bE - bse;
+  const mb = [[bts,0],[bts+bt*.25,.12],[bts+bt*.58,.4],[bss,1],[bse,1],[bse+bh*.4,.4],[bse+bh*.8,.12],[bE,0]];
+  const c = (ss + se)/2, h = s.hw/2, k = s.hw/24;
+  const hlg = [[-1,0],[-.75,.1],[-.5,.3],[-.25,.6],[0,.75],[.25,.6],[.5,.3],[.75,.1],[1,0]].map(([o,a]) => [c + o*h, a*s.hl]);
+  const bc = c + 4.25*k;
+  const blg = [[-12.25,0],[-8.25,.03],[-5.25,.08],[-3.25,.2],[-1.25,.45],[-.25,.85],[.25,.85],[1.25,.45],[2.75,.2],[4.75,.08],[7.75,.03],[11.75,0]].map(([o,a]) => [bc + o*k, a]);
+  return {ma:stops(ma,s.n), mb:stops(mb,s.n), hlg:stops(hlg,s.n), blg:stops(blg,s.n)};
+}
+function applyBeam(frame, s){
+  const l = layers(s), st = frame.style;
+  st.setProperty('--bc', bcOf(s)); st.setProperty('--ma', l.ma); st.setProperty('--mb', l.mb); st.setProperty('--hlg', l.hlg); st.setProperty('--blg', l.blg);
+  st.setProperty('--dur', s.dur + 's'); st.setProperty('--dirn', s.dir === 'ccw' ? 'reverse' : 'normal');
+  st.setProperty('--w', s.w + 'px'); st.setProperty('--glow', s.glow); st.setProperty('--bloom', s.bloom); st.setProperty('--blur', s.blur + 'px');
+  st.setProperty('--br', s.br); st.setProperty('--sat', s.sat); st.setProperty('--hue', s.hue + 'deg'); st.setProperty('--hp', s.hp + 's');
+}
+function valuesText(s){
+  return `speed ${f2(s.dur)}s ${s.dir}, ${s.n} beam${s.n>1?'s':''}, arc ${s.len}%, feather ${f2(s.fe)}, width ${f2(s.w)}px, streak ${f2(s.hl)} × ${s.hw}%, glow ${f2(s.glow)}, bloom ${f2(s.bloom)} blur ${s.blur}px, intensity ${f2(s.br)}, saturation ${f2(s.sat)}, hue drift ±${s.hue}° over ${s.hp}s, palette ${PAL_NAMES[s.pal]}${s.pal==='custom'?` ${s.c1}/${s.c2}`:''}`;
+}
+function cssText(s){
+  const l = layers(s), spin = `invitation-beam-spin ${f2(s.dur)}s linear infinite${s.dir === 'ccw' ? ' reverse' : ''}`;
+  const hue = `invitation-beam-hue ${s.hp}s ease-in-out infinite`, fx = `brightness(${f2(s.br)}) saturate(${f2(s.sat)})`;
+  return `/* invite beam — ${valuesText(s)} */
+@property --invitation-beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: true;
+}
+
+@keyframes invitation-beam-spin {
+  to {
+    --invitation-beam-angle: 360deg;
+  }
+}
+
+@keyframes invitation-beam-hue {
+  0%,100% {
+    filter: hue-rotate(${-s.hue}deg) ${fx};
+  }
+  50% {
+    filter: hue-rotate(${s.hue}deg) ${fx};
+  }
+}
+
+.invitation-beam {
+  --bc: ${bcOf(s)};
+  --ring: linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: ${spin};
+  transition: opacity .5s ease;
+}
+
+.invitation-beam::after,.invitation-beam::before,.invitation-beam i {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.invitation-beam::after {
+  padding: ${f2(s.w)}px;
+  opacity: 1;
+  animation: ${hue};
+  background: conic-gradient(from var(--invitation-beam-angle),${l.hlg}),var(--bc);
+  -webkit-mask: conic-gradient(from var(--invitation-beam-angle),${l.ma}),var(--ring);
+  -webkit-mask-composite: source-in,xor;
+  mask: conic-gradient(from var(--invitation-beam-angle),${l.ma}),var(--ring);
+  mask-composite: intersect,exclude;
+}
+
+.invitation-beam::before {
+  opacity: ${f2(s.glow)};
+  background: var(--bc);
+  box-shadow: inset 0 0 5px 1px rgba(255,255,255,.3);
+  animation: ${hue};
+  -webkit-mask: conic-gradient(from var(--invitation-beam-angle),${l.mb});
+  mask: conic-gradient(from var(--invitation-beam-angle),${l.mb});
+}
+
+.invitation-beam i {
+  padding: ${f2(s.w)}px;
+  opacity: ${f2(s.bloom)};
+  filter: blur(${s.blur}px) ${fx};
+  background: conic-gradient(from var(--invitation-beam-angle),${l.blg});
+  -webkit-mask: var(--ring);
+  -webkit-mask-composite: xor;
+  mask: var(--ring);
+  mask-composite: exclude;
+}
+`;
+}
+
+/* ───── Clipboard ───── */
+function legacyCopy(text){
+  const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0'; document.body.append(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch(e){} ta.remove(); return ok;
+}
+function copyText(text){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, () => legacyCopy(text));
+  return Promise.resolve(legacyCopy(text));
+}
+
+/* ───── Canvases + tuners ───── */
+const PEND = `<div class="lib-nav"><span class="sk" style="width:58px;height:12px"></span><span class="sk" style="width:40px"></span><span class="sk" style="width:46px"></span><span class="sk me"></span></div>
+  <span class="sk lib-h"></span><div class="lib-grid">${'<span class="sk"></span>'.repeat(6)}</div>
+  <div class="pill pend"><div class="beam" aria-hidden="true"><i></i></div><div class="line"><span class="av" style="--c:#F7C948">J</span><p><b>Joyce</b> invited you to watch <b>Past Lives</b></p><button class="respond" type="button">Respond</button></div></div>`;
+const DOCK = `<div class="room"><div class="room-vid"><div class="still"></div><div class="room-ctl"><span class="sk"></span><div class="seek"><i></i></div><span class="sk"></span><span class="sk"></span></div></div>
+  <div class="room-chat">${[[60,40],[80,55],[50,70]].map(([a,b]) => `<div class="m"><span class="sk"></span><div><span class="sk" style="width:${a}%"></span><span class="sk" style="width:${b}%"></span></div></div>`).join('')}<span class="sk inp"></span></div></div>
+  <div class="pill dock"><div class="beam" aria-hidden="true"><i></i></div><div class="line"><span class="avs"><span class="av" style="--c:#F7C948">J</span><span class="av" style="--c:#9EB8FF">K</span></span><p>You’re in with <b>Joyce</b></p></div></div>`;
+
+const SLIDERS = {
+  motion:[['dur','Speed',.6,8,.05,v=>f2(v)+'s']],
+  shape:[['len','Arc',15,85,1,v=>v+'%'],['fe','Feather',.2,1,.01,f2],['w','Width',.5,3,.5,v=>f2(v)+'px']],
+  light:[['hl','Streak',0,1.6,.05,f2],['hw','Streak len',6,40,1,v=>v+'%'],['glow','Inner glow',0,1,.01,f2],['bloom','Bloom',0,1.2,.05,f2],['blur','Bloom blur',0,20,1,v=>v+'px'],['br','Intensity',.6,2,.05,f2],['sat','Saturation',0,2,.05,f2]],
+  color:[['hue','Hue drift',0,90,1,v=>'±'+v+'°'],['hp','Drift time',4,30,1,v=>v+'s']],
+};
+const range = ([k,label,min,max,step]) => `<label class="row"><span>${label}</span><input type="range" data-k="${k}" min="${min}" max="${max}" step="${step}"><output data-o="${k}"></output></label>`;
+const seg = (k,label,opts) => `<div class="row wide"><span>${label}</span><span class="seg" data-seg="${k}">${opts.map(([v,t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</span></div>`;
+const swatch = p => `linear-gradient(90deg,${[0,1,2,4,6,8].map(i => `rgb(${PALS[p][i]})`).join(',')})`;
+
+const frames = [];
+document.querySelectorAll('.var').forEach(sec => {
+  const key = sec.dataset.preset;
+  let s = preset(key);
+  const h = sec.querySelector('.var-h');
+  const badge = document.createElement('span'); badge.className = 'tuned'; badge.textContent = 'Tuned'; badge.hidden = true; h.append(badge);
+  const frame = document.createElement('div'); frame.className = 'frame';
+  frame.innerHTML = `<div class="panel">${PEND}</div><div class="panel">${DOCK}</div>`;
+  const caps = document.createElement('div'); caps.className = 'caps'; caps.innerHTML = '<span>Invite waiting · collapsed</span><span>Joined · docked on the player</span>';
+  const tune = document.createElement('div'); tune.className = 'tune';
+  tune.innerHTML = `<div class="tgs">
+      <div class="tg"><h4>Motion</h4>${SLIDERS.motion.map(range).join('')}${seg('dir','Direction',[['cw','Clockwise'],['ccw','Counter']])}${seg('n','Beams',[[1,'1'],[2,'2'],[3,'3']])}</div>
+      <div class="tg"><h4>Shape</h4>${SLIDERS.shape.map(range).join('')}</div>
+      <div class="tg"><h4>Light</h4>${SLIDERS.light.map(range).join('')}</div>
+      <div class="tg"><h4>Colour</h4><div class="pals">${Object.keys(PAL_NAMES).map(p => `<button type="button" data-pal="${p}"><i style="background:${p === 'custom' ? 'conic-gradient(#E8368F,#65D6AD,#9EB8FF,#E8368F)' : swatch(p)}"></i>${PAL_NAMES[p]}</button>`).join('')}</div>
+        <div class="cust" hidden>Colours <input type="color" data-c="c1"><input type="color" data-c="c2"></div>
+        <div style="margin-top:8px">${SLIDERS.color.map(range).join('')}</div></div>
+    </div>
+    <div class="tact"><button type="button" data-act="reset">Reset</button><button type="button" data-act="pause">Pause</button><button type="button" data-act="css">Copy CSS</button><button type="button" data-act="vals">Copy values</button><span class="st">Copy CSS replaces <code>@property --invitation-beam-angle</code> → <code>.invitation-beam i</code></span></div>
+    <div class="tout" hidden><textarea readonly></textarea></div>`;
+  h.after(frame); frame.after(caps); caps.after(tune);
+  frames.push(frame);
+
+  const st = tune.querySelector('.st'), out = tune.querySelector('.tout'), ta = out.querySelector('textarea'), cust = tune.querySelector('.cust');
+  const isTuned = () => JSON.stringify(s) !== JSON.stringify(preset(key));
+  function sync(){
+    tune.querySelectorAll('input[type=range]').forEach(inp => { inp.value = s[inp.dataset.k]; });
+    Object.values(SLIDERS).flat().forEach(([k,,,,,fmt]) => { tune.querySelector(`[data-o="${k}"]`).textContent = fmt(s[k]); });
+    tune.querySelectorAll('[data-seg]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', String(s[g.dataset.seg]) === b.dataset.v)));
+    tune.querySelectorAll('[data-pal]').forEach(b => b.classList.toggle('on', b.dataset.pal === s.pal));
+    cust.hidden = s.pal !== 'custom';
+    tune.querySelectorAll('[data-c]').forEach(inp => { inp.value = s[inp.dataset.c]; });
+    badge.hidden = !isTuned();
+    applyBeam(frame, s);
+  }
+  tune.addEventListener('input', e => {
+    const t = e.target;
+    if(t.dataset.k) s[t.dataset.k] = +t.value;
+    if(t.dataset.c) s[t.dataset.c] = t.value;
+    sync();
+  });
+  tune.addEventListener('click', async e => {
+    const b = e.target.closest('button'); if(!b) return;
+    const g = b.closest('[data-seg]');
+    if(g){ const k = g.dataset.seg; s[k] = k === 'n' ? +b.dataset.v : b.dataset.v; return sync(); }
+    if(b.dataset.pal){ s.pal = b.dataset.pal; return sync(); }
+    const act = b.dataset.act;
+    if(act === 'reset'){ s = preset(key); out.hidden = true; st.className = 'st'; st.textContent = 'Back to the preset'; return sync(); }
+    if(act === 'pause'){ const on = frame.classList.toggle('paused'); b.classList.toggle('on', on); b.textContent = on ? 'Play' : 'Pause'; return; }
+    if(act === 'css' || act === 'vals'){
+      const text = act === 'css' ? cssText(s) : `Use this border beam for the invite toast: ${valuesText(s)} (from ${sec.dataset.id} in ${FILE})`;
+      const ok = await copyText(text);
+      st.className = ok ? 'st ok' : 'st';
+      st.textContent = ok ? (act === 'css' ? 'Copied CSS' : 'Copied values') : 'Clipboard blocked — copy from the box';
+      out.hidden = ok; if(!ok){ ta.value = text; ta.focus(); ta.select(); }
+    }
+  });
+  sec._state = () => s; sec._tuned = isTuned;
+  sync();
+});
+
+// Pause beams on canvases that are off screen.
+const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting) delete en.target.dataset.off; else en.target.dataset.off = ''; }), {rootMargin:'100px'});
+frames.forEach(f => io.observe(f));
+
+/* ───── Pick menus ───── */
+const tunedNote = sec => sec._tuned && sec._tuned() ? ` (tuned: ${valuesText(sec._state())})` : '';
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:sec => `Explore from ${sec.dataset.id} in ${FILE}${tunedNote(sec)}`},
+  {label:'Remix this', hint:'Fork it and apply your changes.', make:sec => `Remix ${sec.dataset.id} in ${FILE}${tunedNote(sec)}:`},
+  {label:'Settle on this', hint:'Stop exploring; build from this one.', make:sec => `Settle on ${sec.dataset.id} in ${FILE}${tunedNote(sec)}`}
+];
+const pickers = [];
+function closeAll(){ pickers.forEach(p => { p.menu.hidden = true; p.btn.setAttribute('aria-expanded','false'); }); }
+document.querySelectorAll('.var').forEach(sec => {
+  const h = sec.querySelector('.var-h');
+  const btn = document.createElement('button'); btn.className = 'pick-btn'; btn.type = 'button'; btn.textContent = 'Pick ▾';
+  btn.setAttribute('aria-haspopup','menu'); btn.setAttribute('aria-expanded','false'); h.append(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.setAttribute('role','menu'); menu.hidden = true;
+  menu.innerHTML = VERBS.map((v,i) => `<button type="button" role="menuitem" data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  h.after(menu); menu.after(out);
+  pickers.push({btn, menu});
+  btn.addEventListener('click', e => { e.stopPropagation(); const willOpen = menu.hidden; closeAll(); menu.hidden = !willOpen; btn.setAttribute('aria-expanded', String(willOpen)); if(willOpen) menu.querySelector('button').focus(); });
+  menu.addEventListener('click', async e => {
+    e.stopPropagation(); const b = e.target.closest('button'); if(!b) return;
+    const text = VERBS[b.dataset.i].make(sec); closeAll(); btn.focus();
+    const ok = await copyText(text); out.hidden = false;
+    if(ok){ out.innerHTML = '<code></code><span class="ok">Copied</span>'; out.querySelector('code').textContent = text; }
+    else { out.innerHTML = '<span>Copy this prompt</span><input readonly>'; const f = out.querySelector('input'); f.value = text; f.focus(); f.select(); }
+  });
+});
+document.addEventListener('click', e => { if(!e.target.closest('.pick-menu')) closeAll(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAll(); });
+
+/* ───── Minimap ───── */
+const mm = document.querySelector('.mm'), secs = [...document.querySelectorAll('.var')];
+mm.innerHTML = secs.map(s => `<a href="#${s.id}" data-for="${s.id}"><i></i><span><b>${s.dataset.id}</b>${esc(s.dataset.name)}</span></a>`).join('');
+mm.addEventListener('click', e => { const a = e.target.closest('a'); if(!a) return; e.preventDefault(); document.getElementById(a.dataset.for).scrollIntoView({behavior:'smooth', block:'start'}); });
+function syncMM(){
+  let cur = secs[0];
+  secs.forEach(s => { if(s.getBoundingClientRect().top <= innerHeight * .35) cur = s; });
+  mm.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.for === cur.id));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+if(secs.length < 2) mm.remove();
+</script>
+</body>
+</html>

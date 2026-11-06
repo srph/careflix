@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invite Queue States</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Syne:wght@700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.frame{position:relative;height:clamp(560px,calc(100vh - 190px),740px);margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#10171E;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+/* stage rail (neutral) */
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail .grp{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 11px;cursor:pointer;white-space:nowrap}
+.rail .grp button.on{background:var(--ink);color:var(--bg)}
+.rail .grp.br button.on{background:var(--bad);color:#fff}
+.rail .grp.br button[data-b="acc"].on{background:var(--good)}
+.rail .play{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+.rail .hint{font-size:13px;color:var(--mut);margin-left:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+/* minimap */
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:220px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup base (Care.tv look) ───────────── */
+@property --p{syntax:'<number>';initial-value:100;inherits:false}
+.mk{--pk:#E8368F;--y:#F7C948;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);height:100%;position:relative;-webkit-font-smoothing:antialiased;font-size:13px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h1,.mk h2,.mk h3,.mk h4,.mk h5,.mk h6,.mk p{margin:0}
+.sub{font-family:'Work Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.art{position:relative;width:100%;height:100%;overflow:hidden}
+.art::after{content:"";position:absolute;inset:0;opacity:.26;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.art-t{position:absolute;left:7%;right:7%;bottom:8%;color:#fff;line-height:.92;text-shadow:0 2px 16px rgba(0,0,0,.45);font-family:'Syne',sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(9px,9cqi,56px)}
+.av{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:12px;font-style:normal;flex:none}
+.av.s{width:22px;height:22px;font-size:10px}
+.av.l{width:46px;height:46px;font-size:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;padding:0 15px;border-radius:4px;background:var(--n3);color:#fff;font-weight:600;font-size:13px;white-space:nowrap}
+.btn.pk{background:var(--pk)}
+.btn.gh{background:rgba(255,255,255,.08)}
+.btn.lg{height:44px;font-size:15px;border-radius:6px;padding:0 26px}
+.btn.sm{height:28px;font-size:12px;padding:0 12px}
+/* ── her screen (shared across every canvas) ── */
+.stage{position:relative;height:100%}
+.sh{position:absolute;inset:0;overflow:hidden}
+.bgs{position:absolute;inset:0;transition:filter .45s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.bg{position:absolute;inset:0;opacity:0;transition:opacity .4s}
+.stage[data-keys~="browse"] .bg-lib,.stage[data-keys~="watch"] .bg-play{opacity:1}
+/* library */
+.gl{height:100%;display:flex;flex-direction:column;overflow:hidden}
+.gl-nav{flex:none;display:flex;align-items:center;gap:16px;height:46px;padding:0 18px}
+.gl-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em}
+.gl-logo i{color:var(--pk);font-style:normal}
+.gl-nav .sub{color:var(--n5)}
+.gl-nav .sub.on{color:#fff}
+.gl-nav .me{margin-left:auto}
+.gl-grid{padding:0 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gl-c{position:relative;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size}
+.gl-c .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.85),transparent 55%)}
+.gl-c b{position:absolute;left:9px;right:9px;bottom:7px;font-size:12px;font-weight:600}
+.gl-h{padding:16px 18px 9px;color:var(--n5)}
+/* her own player */
+.pl{height:100%;display:flex;flex-direction:column;background:#06090d}
+.pl-top{flex:none;display:flex;align-items:center;gap:12px;height:46px;padding:0 18px;color:#fff}
+.pl-top .bk{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.1);font-size:13px}
+.pl-top b{font-size:13px;font-weight:600;display:block}
+.pl-top em{font-style:normal;font-size:11px;color:var(--n5)}
+.pl-vid{position:relative;flex:1;min-height:0;container-type:inline-size}
+.pl-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.9),transparent 42%)}
+.ctl{position:absolute;left:0;right:0;bottom:0;padding:0 18px 14px;display:flex;align-items:center;gap:12px}
+.ctl .ic{display:inline-grid;place-items:center;width:22px;height:22px;opacity:.9}
+.ctl .t{font-size:11px;color:#cfd8e0;font-variant-numeric:tabular-nums}
+.seek{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.seek i{position:absolute;inset:0 68% 0 0;background:var(--pk);border-radius:3px}
+.seek i::after{content:"";position:absolute;right:-4px;top:-3px;width:9px;height:9px;border-radius:50%;background:#fff}
+/* the party she lands in */
+.party{position:absolute;inset:0;z-index:8;opacity:0;pointer-events:none;transition:opacity .5s}
+.stage[data-keys~="after-acc"] .party{opacity:1}
+.hp{display:grid;grid-template-columns:1fr 232px;height:100%}
+.hp-chat{display:flex;flex-direction:column;background:var(--n2);border-left:1px solid #000;min-height:0}
+.hp-ch{flex:none;display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06)}
+.hp-ch .sub{color:var(--n5)}
+.hp-ch .mem{margin-left:auto;display:flex;gap:-4px}
+.hp-ch .mem .av{margin-left:-6px;box-shadow:0 0 0 2px var(--n2)}
+.hp-msgs{flex:1;min-height:0;padding:12px 14px;display:flex;flex-direction:column;gap:10px;justify-content:flex-end}
+.msg{display:flex;gap:9px;align-items:flex-start}
+.msg b{font-weight:600;font-size:11.5px;display:block}
+.msg p{font-size:12px;color:#c7d2dc}
+.msg.sys{justify-content:center;align-items:center;font-size:11px;color:var(--n5);gap:6px}
+.stage[data-keys~="after-acc"] .msg.sys{animation:popIn .5s cubic-bezier(.2,.9,.3,1.4) .35s both}
+.hp-inp{flex:none;margin:12px 14px;height:34px;border-radius:4px;background:var(--n3);display:flex;align-items:center;padding:0 12px;color:var(--n5);font-size:12px}
+@keyframes popIn{from{opacity:0;transform:translateY(7px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes drain{from{--p:100}to{--p:0}}
+@keyframes bar{to{transform:scaleX(0)}}
+@keyframes ripple{0%{transform:scale(1);opacity:.5}100%{transform:scale(2.2);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes nudge{0%,100%{transform:none}30%{transform:translateX(-5px)}60%{transform:translateX(5px)}}
+.mk [data-w]{display:none}
+.stage.measuring *{transition:none !important;animation:none !important}
+
+.a-spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:var(--g);animation:spin .8s linear infinite}
+
+/* ───────────── A — the invite pill ───────────── */
+.tcard{position:absolute;left:50%;bottom:20px;z-index:6;background:rgba(21,32,43,.97);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 26px 54px -16px rgba(0,0,0,.85);overflow:hidden;transform:translateX(-50%) translateY(170%);opacity:0;
+  transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),
+  border-radius .45s,bottom .45s,filter .4s}
+.stage[data-keys~="arrive"] .tcard,.stage[data-keys~="focus"] .tcard,.stage[data-keys~="answer"] .tcard{transform:translateX(-50%);opacity:1}
+.stage[data-keys~="answer-acc"] .tcard{filter:none}
+.stage[data-keys~="answer-dec"] .tcard,.stage[data-keys~="answer-exp"] .tcard,.stage[data-keys~="answer-can"] .tcard{filter:grayscale(.85) brightness(.85)}
+/* A4b2 — a 40px pill fitted to its line, no beam; the room rides the timeline; stays open when it expires */
+.t4y{width:var(--t4yw,344px);height:40px;border-radius:20px}
+.stage[data-keys~="focus"] .t4y,.stage[data-keys~="answer-exp"] .t4y{width:400px;height:calc(var(--t4yh,420px) + 2px);border-radius:16px}
+.stage[data-keys~="answer-exp"] .t4y{filter:none}
+.stage[data-keys~="watch"] .t4y,.stage[data-keys~="watch"] .t4y-deck{bottom:64px}
+.tl3{display:flex;align-items:center;gap:9px;height:38px;padding:0 7px}
+.tl3 .av{width:24px;height:24px;font-size:10.5px}
+.tl3 p{min-width:0;font-size:13px;letter-spacing:-.005em;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl3 p b{font-weight:600;color:#fff}
+.tl3 .sp{margin-left:auto}
+.tl3 .btn{height:24px;border-radius:12px;padding:0 12px;font-size:12px;line-height:1}
+.tl3 .x{color:var(--n5);font-size:12px;padding:0 8px}
+.tl3 .a-spin{flex:none;width:14px;height:14px;margin-right:5px}
+.t4y-more{flex:none;align-items:center;height:20px;padding:0 7px;border-radius:10px;background:rgba(255,255,255,.08);color:#cbd5e1;font-size:11px;font-weight:600}
+.t4y-tabs{gap:2px}
+.t4y-tabs button{display:flex;align-items:center;gap:6px;height:28px;padding:0 11px 0 3px;border-radius:14px;font-size:12px;font-weight:600;color:var(--n5)}
+.t4y-tabs button.on{background:rgba(255,255,255,.09);color:#fff}
+.t4y-tabs .av{width:22px;height:22px;font-size:9.5px}
+.t4y-body{opacity:0;transition:opacity .3s}
+.stage[data-keys~="focus"] .t4y-body,.stage[data-keys~="answer-exp"] .t4y-body{opacity:1;transition-delay:.2s}
+.t4y-art{margin:2px 7px 0;aspect-ratio:16/9;border-radius:9px;overflow:hidden;container-type:inline-size;transition:filter .4s}
+.t4y-info{padding:13px 13px 0}
+.t4y-info h3{font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.t4y-info .sub{color:var(--n5);margin-top:5px}
+.tlm{padding:18px 13px 0;transition:filter .4s}
+.tlm-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px;font-size:12px;color:var(--n5);margin-bottom:9px;white-space:nowrap}
+.tlm-row b{font-weight:600;color:#fff}
+.tlm-row .tn{font-variant-numeric:tabular-nums}
+.tlm-track{position:relative;height:20px}
+.tlm-bar,.tlm-seg{position:absolute;left:0;right:0;top:8px;height:4px}
+.tlm-bar{border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.tlm-bar i,.tlm-seg u{position:absolute;left:0;top:0;bottom:0;background:var(--pk);border-radius:2px}
+.tlm-seg{display:flex;gap:3px}
+.tlm-seg i{position:relative;flex:1;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden}
+.tlm-seg i.on{background:rgba(255,255,255,.24)}
+.tlm-head{position:absolute;top:0;display:flex;transform:translateX(-50%)}
+.tlm-head .av{width:20px;height:20px;font-size:9px;box-shadow:0 0 0 2px #17222e}
+.tlm-head .av+.av{margin-left:-6px}
+.t4y-acts{gap:8px;padding:18px 8px 8px}
+.t4y-acts .btn{flex:1;border-radius:8px}
+.stage[data-keys~="answer-exp"] .t4y-art,.stage[data-keys~="answer-exp"] .tlm{filter:grayscale(1) brightness(.7)}
+.t4y-deck{position:absolute;left:50%;bottom:20px;z-index:5;width:var(--t4yw,344px);height:40px;transform:translateX(-50%) translateY(170%);opacity:0;
+  transition:transform .55s cubic-bezier(.2,.9,.3,1.12) .06s,opacity .3s,bottom .45s}
+.stage[data-keys~="arrive"] .t4y-deck{transform:translateX(-50%);opacity:1}
+.t4y-deck i{position:absolute;inset:0;border-radius:20px;background:#2a3846;border:1px solid rgba(255,255,255,.12);box-shadow:0 10px 24px -12px rgba(0,0,0,.8)}
+.t4y-deck i:nth-child(1){transform:translateY(-16px) scale(.86);opacity:.55}
+.t4y-deck i:nth-child(2){transform:translateY(-8px) scale(.93);opacity:.9}
+/* A4b2b — A4b2 inside a border beam (libraries.dev/beam, colorful): a conic window spins round the edge
+   over rainbow blobs, a white highlight and a blurred bloom. The beam is the invitation being live: it fades when it lapses */
+@property --ba{syntax:'<angle>';initial-value:0deg;inherits:true}
+@keyframes bspin{to{--ba:360deg}}
+@keyframes bhue{0%,100%{filter:hue-rotate(-30deg) brightness(1.3) saturate(1.2)}50%{filter:hue-rotate(30deg) brightness(1.3) saturate(1.2)}}
+.t4z{border:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 26px 54px -16px rgba(0,0,0,.85)}
+.stage[data-keys~="focus"] .t4z,.stage[data-keys~="answer-exp"] .t4z{height:var(--t4yh,420px)}
+.t4z .tl3{height:40px;padding:0 8px}
+.bbeam{--bc:radial-gradient(ellipse 70px 40px at 33% -7.4%,rgb(255,50,100),transparent),radial-gradient(ellipse 60px 35px at 12% -5%,rgb(40,140,255),transparent),
+    radial-gradient(ellipse 40px 70px at 2.1% 68.3%,rgb(50,200,80),transparent),radial-gradient(ellipse 20px 35px at 2.1% 68.3%,rgb(30,185,170),transparent),
+    radial-gradient(ellipse 180px 32px at 74.4% 100%,rgb(100,70,255),transparent),radial-gradient(ellipse 85px 26px at 55% 100%,rgb(40,140,255),transparent),
+    radial-gradient(ellipse 74px 32px at 93.9% 0%,rgb(255,120,40),transparent),radial-gradient(ellipse 26px 42px at 100% 27.1%,rgb(240,50,180),transparent),
+    radial-gradient(ellipse 52px 48px at 100% 27.1%,rgb(180,40,240),transparent);
+  --ring:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  position:absolute;inset:0;z-index:3;border-radius:inherit;pointer-events:none;animation:bspin 1.96s linear infinite;transition:opacity .5s ease}
+.bbeam::after,.bbeam::before,.bbeam i{content:"";position:absolute;inset:0;border-radius:inherit}
+.bbeam::after{padding:1px;opacity:1;animation:bhue 12s ease-in-out infinite;
+  background:conic-gradient(from var(--ba),transparent 0 54%,rgba(255,255,255,.1) 57%,rgba(255,255,255,.3) 60%,rgba(255,255,255,.6) 63%,rgba(255,255,255,.75) 66%,rgba(255,255,255,.6) 69%,rgba(255,255,255,.3) 72%,rgba(255,255,255,.1) 75%,transparent 78%),var(--bc);
+  -webkit-mask:conic-gradient(from var(--ba),transparent 0 30%,rgba(255,255,255,.1) 36%,rgba(255,255,255,.35) 44%,#fff 52% 80%,rgba(255,255,255,.35) 86%,rgba(255,255,255,.1) 92%,transparent 95%),var(--ring);
+  -webkit-mask-composite:source-in,xor;
+  mask:conic-gradient(from var(--ba),transparent 0 30%,rgba(255,255,255,.1) 36%,rgba(255,255,255,.35) 44%,#fff 52% 80%,rgba(255,255,255,.35) 86%,rgba(255,255,255,.1) 92%,transparent 95%),var(--ring);
+  mask-composite:intersect,exclude}
+.bbeam::before{opacity:.36;background:var(--bc);box-shadow:inset 0 0 5px 1px rgba(255,255,255,.3);animation:bhue 12s ease-in-out infinite;
+  -webkit-mask:conic-gradient(from var(--ba),transparent 0 22%,rgba(255,255,255,.12) 28%,rgba(255,255,255,.4) 36%,#fff 46% 82%,rgba(255,255,255,.4) 88%,rgba(255,255,255,.12) 94%,transparent 97%);
+  mask:conic-gradient(from var(--ba),transparent 0 22%,rgba(255,255,255,.12) 28%,rgba(255,255,255,.4) 36%,#fff 46% 82%,rgba(255,255,255,.4) 88%,rgba(255,255,255,.12) 94%,transparent 97%)}
+.bbeam i{padding:1px;opacity:.6;filter:blur(8px) brightness(1.3) saturate(1.2);
+  background:conic-gradient(from var(--ba),transparent 0 58%,rgba(255,255,255,.03) 62%,rgba(255,255,255,.08) 65%,rgba(255,255,255,.2) 67%,rgba(255,255,255,.45) 69%,rgba(255,255,255,.85) 70% 70.5%,rgba(255,255,255,.45) 71.5%,rgba(255,255,255,.2) 73%,rgba(255,255,255,.08) 75%,rgba(255,255,255,.03) 78%,transparent 82%);
+  -webkit-mask:var(--ring);-webkit-mask-composite:xor;mask:var(--ring);mask-composite:exclude}
+@media (prefers-reduced-motion:reduce){.bbeam,.bbeam::after,.bbeam::before{animation:none}}
+.stage[data-keys~="answer"] .bbeam{opacity:0}
+.stage[data-kind="multi"][data-keys~="answer-exp"] .bbeam{opacity:1}
+.stage[data-keys~="answer-exp"] .t4z .t4y-tabs button.on{color:var(--n5)}
+.stage[data-keys~="answer-exp"] .t4z .t4y-tabs button.on .av{filter:grayscale(1) brightness(.7)}
+.stage[data-keys~="answer-exp"] .t4z .t4y-info h3{color:#aab6c1}
+/* the beam belongs to the pill: opening the card puts it out */
+.stage[data-keys~="focus"] .bbeam.bq,.stage[data-keys~="answer-exp"] .bbeam.bq{opacity:0}
+/* b5: the pill follows her in, docks over the room's player, beams once, then leaves */
+@keyframes dockout{to{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+.t4y.jd{transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,width .5s cubic-bezier(.2,.8,.2,1),height .5s cubic-bezier(.2,.8,.2,1),
+  border-radius .45s,bottom .7s cubic-bezier(.2,.8,.2,1),left .7s cubic-bezier(.2,.8,.2,1),filter .4s}
+.stage[data-keys~="after-acc"] .t4y.jd{z-index:9;opacity:1;transform:translateX(-50%);left:calc(50% - 116px);bottom:calc(100% - 60px);width:max-content;
+  animation:dockout .45s ease 3.4s forwards}
+.t4y-stack{align-items:center}
+.t4y-stack .av{box-shadow:0 0 0 2px #15202b}
+.t4y-stack .av+.av{margin-left:-8px}
+
+/* ───────────── A2–A8 — several invites at once ───────────── */
+/* one card per canvas; data-sel names the invite on show, and .pg[data-p] pieces belong to one invite each */
+.mv .tl3 .pg{min-width:0}
+.stage[data-keys~="after-dec"] .mv,.stage[data-keys~="after-exp"] .mv,.stage[data-keys~="after-can"] .mv{transform:translateX(-50%);opacity:1;filter:none}
+/* b: the pill takes turns */
+.cy{min-width:0}
+.stage[data-keys~="arrive"] .mv .cy{display:grid}
+.cy-i{grid-area:1/1;display:flex;align-items:center;gap:9px;min-width:0;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .45s cubic-bezier(.2,.8,.2,1)}
+.cy-dots{align-items:center;gap:4px;margin-right:10px}
+.cy-dots i{width:5px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);transition:background .3s,width .3s}
+.mvb-pgr{align-items:center;color:var(--n5);font-size:12px}
+.mvb-pgr button{display:grid;place-items:center;width:24px;height:24px;border-radius:12px;color:#fff;font-size:14px}
+.mvb-pgr button:hover{background:rgba(255,255,255,.08)}
+.mvb-pgr em{font-style:normal;font-variant-numeric:tabular-nums;min-width:40px;text-align:center}
+/* c: one pill names everyone; open, a list, a row opens the full card */
+.mvc-list{display:flex;flex-direction:column;gap:2px;padding:2px 6px 8px}
+.mvc-row{display:flex;align-items:center;gap:11px;padding:6px;border-radius:10px;transition:background .2s,filter .4s,opacity .4s}
+.mvc-row:hover{background:rgba(255,255,255,.05)}
+.mvc-th{flex:none;width:80px;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size}
+.mvc-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.mvc-tx>b{font-size:13.5px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvc-tx em{display:flex;align-items:center;gap:6px;font-style:normal;font-size:11.5px;color:var(--n5);white-space:nowrap}
+.mvc-tx em b{font-weight:600;color:#fff}
+.mvc-tx .av{width:16px;height:16px;font-size:8px}
+.mvc-bar{position:relative;height:3px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:2px}
+.mvc-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--pk);border-radius:2px}
+.mvc-row .mvc-go{height:24px;border-radius:12px;padding:0 12px}
+.mvc-ex{display:none;padding-right:6px;font-size:11px;font-weight:600;color:var(--y)}
+.mvc-bk{align-items:center;justify-content:center;width:24px;height:24px;border-radius:12px;background:rgba(255,255,255,.08);color:#fff;font-size:14px}
+.stage[data-keys~="focus"] .mvc[data-view="list"],.stage[data-keys~="answer-exp"] .mvc[data-view="list"]{height:var(--t4yl,300px)}
+.mvc[data-view="list"] .dv,.mvc[data-view="detail"] .lv{display:none !important}
+/* d: a pill per invite; the newest wears the beam, opening one tucks the others away */
+.mvd-p{position:absolute;left:50%;bottom:calc(20px + (var(--k) + 1) * 48px);z-index:5;display:flex;align-items:center;gap:9px;height:40px;padding:0 8px;border-radius:20px;white-space:nowrap;
+  background:rgba(21,32,43,.97);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 18px 40px -16px rgba(0,0,0,.8);
+  transform:translateX(-50%) translateY(calc(170% + (var(--k) + 1) * 48px));opacity:0;transition:transform .55s cubic-bezier(.2,.9,.3,1.12),opacity .3s,bottom .45s}
+.stage[data-keys~="arrive"] .mvd-p{transform:translateX(-50%);opacity:1;transition-delay:calc(var(--k) * .07s + .07s)}
+.stage[data-keys~="after-dec"] .mvd-p,.stage[data-keys~="after-exp"] .mvd-p,.stage[data-keys~="after-can"] .mvd-p{transform:translateX(-50%) translateY(48px);opacity:1}
+.stage[data-keys~="watch"] .mvd-p{bottom:calc(64px + (var(--k) + 1) * 48px)}
+.mvd-p .av{width:24px;height:24px;font-size:10.5px}
+.mvd-p p{font-size:13px;letter-spacing:-.005em;color:var(--n5)}
+.mvd-p p b{font-weight:600;color:#fff}
+.mvd-p .btn{margin-left:14px;height:24px;border-radius:12px;padding:0 12px;font-size:12px}
+.stage[data-keys~="after-dec"] .mv.mvd,.stage[data-keys~="after-exp"] .mv.mvd,.stage[data-keys~="after-can"] .mv.mvd{transform:translateX(-50%) translateY(170%);opacity:0}
+/* e: posters side by side; the neighbours peek in from the edges */
+.mve-th{align-items:center}
+.mve-th>span{position:relative;width:43px;height:24px;border-radius:5px;overflow:hidden;box-shadow:0 0 0 2px #15202b;container-type:inline-size}
+.mve-th>span+span{margin-left:-24px}
+.mve-th>span:nth-child(1){z-index:3}.mve-th>span:nth-child(2){z-index:2}
+.mve-vp{margin-top:2px;overflow:hidden}
+.mve-strip{display:flex;gap:8px;padding:0 11%;transform:translateX(calc(var(--s,0) * (-78% - 8px)));transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.mve-c{position:relative;flex:none;width:100%;aspect-ratio:16/9;border-radius:9px;overflow:hidden;container-type:inline-size;transform:scale(.88);opacity:.55;transition:transform .45s cubic-bezier(.2,.8,.2,1),opacity .45s,filter .4s}
+.mve-c .av{position:absolute;left:8px;top:8px;width:22px;height:22px;font-size:9.5px;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+
+/* c2: five rooms, friends in the same room share a row; past four rows the list scrolls */
+.mvc-list.sc{max-height:254px;overflow-y:auto;scrollbar-width:none;-webkit-mask:linear-gradient(#000 calc(100% - 26px),transparent);mask:linear-gradient(#000 calc(100% - 26px),transparent)}
+.mvc-list.sc::-webkit-scrollbar{display:none}
+.mvc-tx em .av+.av{margin-left:-9px;box-shadow:0 0 0 2px #17222e}
+.mv .tl3 .t4y-head-st .av+.av{margin-left:-8px}
+.mv .tl3 .t4y-head-st .av{box-shadow:0 0 0 2px #15202b}
+/* f: a queue; answering one puts the next in her hands, in whatever shape the pill is */
+.qb{position:relative;flex:none}
+.qb>b{position:absolute;right:-6px;top:-5px;display:grid;place-items:center;min-width:15px;height:15px;padding:0 4px;border-radius:8px;background:#fff;color:#10171E;font-size:9.5px;font-weight:800;box-shadow:0 0 0 2px #15202b}
+.mvf-n{align-items:center;padding-right:4px;color:var(--n5);font-size:12px;font-variant-numeric:tabular-nums}
+.mvf .q-nx{display:none}
+.stage[data-keys~="after-can"] .mvf{width:var(--t4yw2,344px)}
+.stage[data-keys~="answer-dec"] .mvf .q-cur,.stage[data-keys~="after-dec"] .mvf .q-cur,.stage[data-keys~="after-exp"] .mvf .q-cur{display:none}
+.stage[data-keys~="answer-dec"] .mvf .q-nx,.stage[data-keys~="after-dec"] .mvf .q-nx,.stage[data-keys~="after-exp"] .mvf .q-nx{display:block;animation:qin .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes qin{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:none}}
+.stage[data-keys~="answer-dec"] .mvf,.stage[data-keys~="after-dec"] .mvf,.stage[data-keys~="after-exp"] .mvf{width:400px;height:var(--t4yh,420px);border-radius:16px;filter:none;transform:translateX(-50%);opacity:1}
+.stage[data-keys~="answer-dec"] .mvf .t4y-body,.stage[data-keys~="after-dec"] .mvf .t4y-body,.stage[data-keys~="after-exp"] .mvf .t4y-body{opacity:1}
+.stage[data-keys~="answer-dec"] .mvf .bbeam.bq,.stage[data-keys~="after-dec"] .mvf .bbeam.bq,.stage[data-keys~="after-exp"] .mvf .bbeam.bq{opacity:0}
+.mk .mvf-up{display:flex;align-items:center;gap:10px;width:calc(100% - 16px);margin:0 8px;padding:6px 10px 6px 6px;border-radius:10px;background:rgba(255,255,255,.04);font-size:12px;color:var(--n5);white-space:nowrap}
+.mvf-up:hover{background:rgba(255,255,255,.07)}
+.mvf-up>span:first-child{flex:none;width:43px;height:24px;border-radius:5px;overflow:hidden;container-type:inline-size}
+.mvf-up b{font-weight:600;color:#fff}
+.mvf-up em{margin-left:auto;font-style:normal;font-size:11.5px}
+.mvf .t4y-acts{padding-bottom:10px}
+.mvf .t4y-body,.mvh .t4y-body{padding-bottom:8px}
+/* f2b–e: how the next invite enters once she declines (or one lapses) */
+@keyframes qfade{from{opacity:0}}
+@keyframes qfall{to{opacity:0;transform:translateY(36px) scale(.95)}}
+@keyframes qsettle{from{opacity:0;transform:scale(1.045)}}
+@keyframes qpop{0%{transform:scale(0)}60%{transform:scale(1.18)}100%{transform:none}}
+@keyframes qring{0%{transform:scale(.9);opacity:.75}100%{transform:scale(2.3);opacity:0}}
+@keyframes qslide{from{opacity:0;transform:translateX(-10px)}}
+@keyframes qzoom{from{opacity:0;transform:scale(1.08)}}
+@keyframes qup{from{opacity:0;transform:translateY(10px)}}
+@keyframes qgrow{from{transform:scaleX(0)}}
+@keyframes qglide{from{opacity:0;translate:-36px 0}}
+@keyframes qlap{0%{opacity:0}12%,70%{opacity:1}100%{opacity:0}}
+/* b: Kier's drops away beneath, Mira's settles into its place */
+.stage.mo-fall .mvf .t4y-body{display:grid}
+.stage.mo-fall .mvf .q-cur,.stage.mo-fall .mvf .q-nx{grid-area:1/1;min-width:0}
+.stage.mo-fall[data-keys~="answer-dec"] .mvf .q-cur{display:block;z-index:1;pointer-events:none;animation:qfall .42s cubic-bezier(.4,0,.8,.4) forwards}
+.stage.mo-fall[data-keys~="answer-dec"] .mvf .q-nx,.stage.mo-fall[data-keys~="after-dec"] .mvf .q-nx,.stage.mo-fall[data-keys~="after-exp"] .mvf .q-nx{animation:qsettle .5s cubic-bezier(.2,.8,.2,1) .32s both}
+.stage.mo-fall[data-keys~="answer-dec"] .mvf .qh,.stage.mo-fall[data-keys~="after-dec"] .mvf .qh,.stage.mo-fall[data-keys~="after-exp"] .mvf .qh{animation:qfade .3s ease .32s both}
+/* c: Mira's face arrives first, then what she's watching */
+.mo-face .qh-av .av{position:relative}
+.mo-face .qh-av .av::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 2px var(--c,#fff);opacity:0;pointer-events:none}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .qh-av .av,.stage.mo-face[data-keys~="after-dec"] .mvf .qh-av .av,.stage.mo-face[data-keys~="after-exp"] .mvf .qh-av .av{animation:qpop .5s cubic-bezier(.2,.9,.3,1.3) both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .qh-av .av::after,.stage.mo-face[data-keys~="after-dec"] .mvf .qh-av .av::after,.stage.mo-face[data-keys~="after-exp"] .mvf .qh-av .av::after{animation:qring .9s ease-out .2s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf p.qh,.stage.mo-face[data-keys~="after-dec"] .mvf p.qh,.stage.mo-face[data-keys~="after-exp"] .mvf p.qh{animation:qslide .35s cubic-bezier(.2,.8,.2,1) .14s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .mvf-n.qh,.stage.mo-face[data-keys~="after-dec"] .mvf .mvf-n.qh,.stage.mo-face[data-keys~="after-exp"] .mvf .mvf-n.qh{animation:qfade .3s ease .3s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .q-nx,.stage.mo-face[data-keys~="after-dec"] .mvf .q-nx,.stage.mo-face[data-keys~="after-exp"] .mvf .q-nx{animation:qfade .4s ease .28s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .q-nx .t4y-art .art,.stage.mo-face[data-keys~="after-dec"] .mvf .q-nx .t4y-art .art,.stage.mo-face[data-keys~="after-exp"] .mvf .q-nx .t4y-art .art{animation:qzoom 1.1s cubic-bezier(.2,.8,.2,1) .28s both}
+.stage.mo-face[data-keys~="answer-dec"] .mvf .q-nx .tlm-head,.stage.mo-face[data-keys~="after-dec"] .mvf .q-nx .tlm-head,.stage.mo-face[data-keys~="after-exp"] .mvf .q-nx .tlm-head{animation:qpop .45s cubic-bezier(.2,.9,.3,1.3) .75s both}
+/* d: Mira's invite builds in piece by piece; her room glides along the timeline to where they are */
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx{animation:none}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .qh,.stage.mo-build[data-keys~="after-dec"] .mvf .qh,.stage.mo-build[data-keys~="after-exp"] .mvf .qh{animation:qfade .3s ease both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .t4y-art,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .t4y-art,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .t4y-art{animation:qzoom .6s cubic-bezier(.2,.8,.2,1) both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .t4y-info,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .t4y-info,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .t4y-info{animation:qup .45s cubic-bezier(.2,.8,.2,1) .12s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-row,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-row,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-row{animation:qup .45s cubic-bezier(.2,.8,.2,1) .22s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-bar i,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-bar i,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-bar i,.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-seg u,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-seg u,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-seg u{transform-origin:left;animation:qgrow .8s cubic-bezier(.2,.8,.2,1) .3s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-seg,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-seg,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-seg{animation:qfade .4s ease .26s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .tlm-head,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .tlm-head,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .tlm-head{animation:qglide .8s cubic-bezier(.2,.8,.2,1) .3s both}
+.stage.mo-build[data-keys~="answer-dec"] .mvf .q-nx .t4y-acts,.stage.mo-build[data-keys~="after-dec"] .mvf .q-nx .t4y-acts,.stage.mo-build[data-keys~="after-exp"] .mvf .q-nx .t4y-acts{animation:qup .4s cubic-bezier(.2,.8,.2,1) .4s both}
+/* g: everyone down the side, the room she's looking at beside them */
+.stage[data-keys~="focus"] .mvg,.stage[data-keys~="answer-exp"] .mvg{width:600px}
+.mvg-b{display:grid;grid-template-columns:182px 1fr;align-items:start}
+.mvg-side{display:flex;flex-direction:column;gap:2px;padding:2px 0 8px 7px}
+.mk .mvg-r{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:10px;transition:background .2s,filter .4s,opacity .4s}
+.mvg-r:hover{background:rgba(255,255,255,.04)}
+.mvg-r .av{width:26px;height:26px;font-size:11px}
+.mvg-r>span{min-width:0;display:flex;flex-direction:column;gap:2px}
+.mvg-r b{font-size:12.5px;font-weight:600;color:#fff}
+.mvg-r em{font-style:normal;font-size:11px;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvg-r i.ex{display:none;font-style:normal;font-size:10.5px;font-weight:600;color:var(--y)}
+.mvg .t4y-art{margin-left:4px}
+/* h: the pill stays one invite; the others wait in Parties */
+.gl-nav .sub{display:inline-flex;align-items:center}
+.pbdg{align-items:center;justify-content:center;min-width:15px;height:15px;margin-left:5px;padding:0 4px;border-radius:8px;background:var(--pk);color:#fff;font-size:9.5px;letter-spacing:0;font-style:normal}
+.stage[data-keys~="after"] .pbdg{animation:popIn .45s cubic-bezier(.2,.9,.3,1.4) .3s both}
+.mk .mvh-more{display:flex;align-items:center;gap:9px;width:calc(100% - 16px);margin:0 8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.04);font-size:12px;color:var(--n5);white-space:nowrap}
+.mvh-more .av{width:20px;height:20px;font-size:9px}
+.mvh-more b{font-weight:600;color:#fff}
+.mvh-more em{margin-left:auto;font-style:normal;color:#fff;font-weight:600}
+.mvh .t4y-acts{padding-bottom:10px}
+.mvh-more .t4y-stack{display:inline-flex}
+/* h2: Open Parties lands on the rooms she's invited to */
+.pp{position:absolute;left:0;right:0;top:46px;bottom:0;z-index:2;background:var(--n1);overflow:hidden;opacity:0;pointer-events:none;transition:opacity .35s}
+.stage.on-pp .pp{opacity:1;pointer-events:auto}
+.stage.on-pp .gl-nav .sub.on{color:var(--n5)}
+.stage.on-pp .gl-nav .sub.pt{color:#fff}
+.stage.on-pp .mv{opacity:0 !important;pointer-events:none}
+.gl-nav .sub{cursor:pointer}
+.pp-list{display:flex;flex-direction:column;gap:10px;padding:0 18px}
+.pp-r{display:flex;align-items:center;gap:16px;padding:10px 14px 10px 10px;border-radius:10px;background:var(--n2)}
+.pp-th{flex:none;width:176px;aspect-ratio:16/9;border-radius:6px;overflow:hidden;container-type:inline-size}
+.pp-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px}
+.pp-tx h3{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.pp-tx em{display:flex;align-items:center;gap:7px;font-style:normal;font-size:12px;color:var(--n5);white-space:nowrap}
+.pp-tx em b{color:#fff;font-weight:600}
+.pp-tx em .av{width:18px;height:18px;font-size:8.5px}
+.pp-tx em .av+.av{margin-left:-11px;box-shadow:0 0 0 2px var(--n2)}
+.pp-tx .mvc-bar{max-width:300px}
+.pp-acts{display:flex;gap:8px}
+.pp-acts .btn{height:30px}
+/* h3: no Parties tab; the rest wait under her avatar */
+.stage.no-pt .gl-nav .sub.pt{display:none}
+.gl-nav .me{cursor:pointer}
+.abdg{align-items:center;justify-content:center;min-width:15px;height:15px;margin:-16px 0 0 -13px;padding:0 4px;border-radius:8px;background:var(--pk);color:#fff;font-size:9.5px;font-weight:700;font-style:normal;box-shadow:0 0 0 2px var(--n1);pointer-events:none}
+.ipop{position:absolute;top:44px;right:12px;z-index:7;width:304px;padding:6px;border-radius:12px;background:rgba(21,32,43,.98);backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 26px 54px -16px rgba(0,0,0,.85);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .25s,transform .3s cubic-bezier(.2,.8,.2,1)}
+.stage.on-pop .ipop{opacity:1;transform:none;pointer-events:auto}
+.ipop h6{padding:8px 8px 6px;color:var(--n5)}
+.ipop-r{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:8px}
+.ipop-r:hover{background:rgba(255,255,255,.04)}
+.ipop-r .av{width:26px;height:26px;font-size:11px}
+.ipop-r .av+.av{margin-left:-16px;box-shadow:0 0 0 2px #15202b}
+.ipop-r>span:not(.btn){flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ipop-r b{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ipop-r em{font-style:normal;font-size:11px;color:var(--n5);white-space:nowrap}
+.ipop-r .btn{height:24px;border-radius:12px;padding:0 12px;font-size:12px}
+/* h4: the rest wait as a row at the top of her library */
+.ish{animation:popIn .5s cubic-bezier(.2,.8,.2,1) both}
+.ish-who{position:absolute;left:8px;top:8px;display:flex}
+.ish-who .av{width:20px;height:20px;font-size:9px;box-shadow:0 0 0 2px rgba(0,0,0,.35)}
+.ish-who .av+.av{margin-left:-6px}
+.ish-c b{bottom:11px}
+.ish-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.16)}
+.ish-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--pk)}
+.stage.w-lib[data-keys~="browse"][data-keys~="after-dec"] .mv,.stage.w-lib[data-keys~="browse"][data-keys~="after-exp"] .mv,
+.stage.w-lib[data-keys~="browse"][data-keys~="after-can"] .mv{transform:translateX(-50%) translateY(170%);opacity:0}
+.stage.w-lib[data-keys~="after-dec"] .mv,.stage.w-lib[data-keys~="after-exp"] .mv,.stage.w-lib[data-keys~="after-can"] .mv{width:var(--t4yw2,300px)}
+
+/* ───────────── State machine (neutral) ───────────── */
+.var-sm{margin-top:72px}
+.fsm{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px 18px 14px;overflow-x:auto}
+.fsm svg{display:block;width:100%;min-width:960px;height:auto;font-family:inherit}
+.fsm .box rect{fill:var(--bg);stroke:var(--line);stroke-width:1.5}
+.fsm .box.beam rect.edge{stroke:url(#rainbow);stroke-width:2.5}
+.fsm .box.fin rect.ring{fill:none;stroke:var(--mut);stroke-width:1.2}
+.fsm .box text{fill:var(--ink)}
+.fsm .box .n{font-size:14px;font-weight:600}
+.fsm .box .s{font-size:12px;fill:var(--mut)}
+.fsm .box .k{font:11px ui-monospace,Menlo,monospace;fill:var(--mut)}
+.fsm .box{cursor:pointer}
+.fsm .box:hover rect.edge{stroke:var(--mut)}
+.fsm .box.beam:hover rect.edge{stroke:url(#rainbow)}
+.fsm .box.on rect.edge{fill:var(--ink);stroke:var(--ink)}
+.fsm .box.beam.on rect.edge{stroke:url(#rainbow)}
+.fsm .box.on text,.fsm .box.on .s,.fsm .box.on .k{fill:var(--bg)}
+.fsm .box:focus-visible{outline:none}
+.fsm .box:focus-visible rect.edge{stroke:var(--ink);stroke-width:2.5}
+.fsm .sup{fill:none;stroke:var(--mut);stroke-width:1;stroke-dasharray:4 4}
+.fsm .sup-l{font:600 11px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;fill:var(--mut)}
+.fsm .ed path{fill:none;stroke:var(--mut);stroke-width:1.4;opacity:.7}
+.fsm .ed.on path{stroke:var(--ink);stroke-width:2.2;opacity:1}
+.fsm .ed rect{fill:var(--card)}
+.fsm .ed text{font-size:11.5px;fill:var(--mut);text-anchor:middle;dominant-baseline:central}
+.fsm .ed.on text{fill:var(--ink);font-weight:600}
+.fsm .init{fill:var(--ink)}
+.sm-key{display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font-size:13px;color:var(--mut)}
+.sm-key span{display:inline-flex;align-items:center;gap:8px}
+.sm-key i{display:inline-block;width:22px;height:14px;border-radius:5px;border:1.5px solid var(--line)}
+.sm-key i.bm{border:2.5px solid transparent;background:linear-gradient(var(--bg),var(--bg)) padding-box,linear-gradient(90deg,#ff3264,#ff7828,#32c850,#288cff,#b428f0) border-box}
+.sm-key i.on{background:var(--ink);border-color:var(--ink)}
+.sm-key i.fin{box-shadow:0 0 0 2px var(--card),0 0 0 3.2px var(--mut)}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+<header class="brief">
+  <div class="eyebrow">Care.tv · receiving an invitation · from 5d0c-invite-pill-state-machine.html</div>
+  <h1>Three invites, one in front, decline for the next.</h1>
+  <div class="cards">
+    <div>A6b5 from 5d0c: the next invite slides in, no beam.</div>
+    <div>Accepting one drops the rest.</div>
+    <div>Every state below is one node in the machine.</div>
+  </div>
+</header>
+
+<section class="var" id="v-a6b5" data-id="A6b5" data-name="Mira’s invite slides in, the beam stays out">
+  <div class="var-h"><span class="id">A6b5</span><h2>Mira’s invite slides in, the beam stays out</h2></div>
+  <div class="frame"><div class="mk" data-mount="mvf2e"></div></div>
+  <div class="rail" data-rail="v-a6b5" data-demo-dec data-demo-exp></div>
+  <div class="notes">
+    <div class="note good">One slide, nothing else: declining stays small.</div>
+    <div class="note good">The count beside ✕ says how many are left.</div>
+    <div class="note bad">Nothing marks that a different person is asking.</div>
+  </div>
+</section>
+
+<section class="var-sm" id="sm">
+  <div class="var-h"><span class="id">SM</span><h2>A6b5 state machine</h2></div>
+  <div class="fsm"><svg viewBox="0 0 1300 516" role="img" aria-label="State machine for A6b5"></svg>
+    <div class="sm-key"><span><i class="bm"></i>Beam on</span><span><i class="on"></i>The canvas is here; click a state to go there</span><span><i class="fin"></i>End state</span><span>Mira’s invite follows the same rules as Kier’s</span></div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from A6b5: what she sees when the last invite is declined.</div>
+    <div><b>Remix</b>Remix A6b5: let Mira’s invite lapse while it’s in front.</div>
+    <div><b>Settle</b>Settle on A6b5 as the queue for several invites.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/b7e1-invite-queue-state-machine.html';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F', Ade:'#FB923C', Tess:'#A3E635'};
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings'},
+  {id:'hollow', t:'Hollow County', y:2023, len:'S2 · E4', c:['#a3e635','#14240a'], p:'stripes'},
+  {id:'paper', t:'Paper Moons', y:2024, len:'1h 52m', c:['#ff7a59','#3b0d4c'], p:'sun'},
+  {id:'orbit', t:'Orbit Diner', y:2024, len:'S1 · E7', c:['#f7c948','#7a1f4d'], p:'dots'},
+  {id:'ferry', t:'Night Ferry', y:2023, len:'1h 41m', c:['#1fd1f9','#0b1b3f'], p:'stripes'},
+  {id:'under', t:'The Understudies', y:2025, len:'S1 · E2', c:['#c084fc','#2a0e5c'], p:'split'}
+];
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'sun': return `radial-gradient(circle at 68% 36%, ${a} 0 17%, ${a}00 17.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+    default: return `radial-gradient(55% 45% at 22% 28%, ${a}dd, ${a}00 70%), linear-gradient(160deg, ${b}, #06060b 80%)`;
+  }
+}
+const poster = (s, o = {}) => `<div class="art" style="background:${art(s)}">${o.title ? `<b class="art-t">${esc(s.t)}</b>` : ''}</div>`;
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const FEAT = byId('velvet'), HERS = {...byId('hollow'), c:['#b6f04a','#2a4a16']};
+const ICON = {
+  play:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  vol:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4z"/></svg>',
+  full:'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>'
+};
+const ctl = (a,b,p) => `<div class="ctl"><span class="ic">${ICON.play}</span><span class="t">${a}</span><div class="seek"><i style="right:${p}"></i></div><span class="t">${b}</span><span class="ic">${ICON.vol}</span><span class="ic">${ICON.full}</span></div>`;
+
+/* ───── her screen ───── */
+const tile = s => `<div class="gl-c">${poster(s)}<div class="shade"></div><b>${esc(s.t)}</b></div>`;
+const library = (o = {}) => `<div class="gl">
+  <div class="gl-nav"><span class="gl-logo">care<i>.</i>tv</span><span class="sub on">All</span><span class="sub">Movies</span><span class="sub">Series</span><span class="sub">Parties</span>${av('Joyce','s me')}</div>
+  ${o.top || ''}
+  <h6 class="sub gl-h">Keep watching</h6>
+  <div class="gl-grid">${SHOWS.slice(0,4).map(tile).join('')}</div>
+  <h6 class="sub gl-h">Because you watched Hollow County</h6>
+  <div class="gl-grid">${[...SHOWS].reverse().slice(0,4).map(tile).join('')}</div>
+  <h6 class="sub gl-h">New this week</h6>
+  <div class="gl-grid">${[SHOWS[3],SHOWS[0],SHOWS[5],SHOWS[1]].map(tile).join('')}</div>
+</div>`;
+const herShow = () => `<div class="pl">
+  <div class="pl-top"><span class="bk">←</span><div><b>${esc(HERS.t)}</b><em>S2 · E4 · The Radio Guy</em></div></div>
+  <div class="pl-vid">${poster(HERS,{title:1})}<div class="pl-ov"></div>${ctl('18:04','52:10','64%')}</div>
+</div>`;
+const party = () => `<div class="party"><div class="hp">
+  <div class="pl"><div class="pl-vid">${poster(FEAT)}<div class="pl-ov"></div>${ctl('41:12','2:04:00','68%')}</div></div>
+  <div class="hp-chat">
+    <div class="hp-ch"><h5 class="sub">Room</h5><span class="mem">${av('Kier','s')}${av('Leo','s')}${av('Joyce','s')}</span></div>
+    <div class="hp-msgs">
+      <div class="msg">${av('Leo','s')}<div><b>Leo</b><p>wait go back, that was the radio guy</p></div></div>
+      <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>told you. ok pausing</p></div></div>
+      <div class="msg sys">${av('Joyce','s')} You joined the room</div>
+      <div class="msg">${av('Kier','s')}<div><b>Kier</b><p>JOYCE. we waited 41 minutes</p></div></div>
+    </div>
+    <div class="hp-inp">Say something…</div>
+  </div></div></div>`;
+const shell = (v, inner, libOpts) => `<div class="stage" data-v="${v}" data-stage="idle" data-branch="acc" data-ctx="browse">
+  <div class="sh">
+    <div class="bgs"><div class="bg bg-lib">${library(libOpts)}</div><div class="bg bg-play">${herShow()}</div></div>
+    ${inner}${party()}
+  </div></div>`;
+
+
+/* ───── A — the invite pill ───── */
+const INV = {
+  kier: {from:'Kier', room:['Kier','Leo'], show:FEAT, meta:`Movie · ${FEAT.y} · ${FEAT.len}`, at:'41:12', pct:33, left:'1h 23m left'},
+  kierS:{from:'Kier', room:['Kier','Leo'], show:byId('orbit'), meta:'Series · S1 · E7 · Graveyard Shift', ep:{s:1, e:7, of:10}, at:'18:40', pct:42},
+  mira: {from:'Mira', room:['Mira'], show:byId('paper'), meta:`Movie · ${byId('paper').y} · ${byId('paper').len}`, at:'12:30', pct:11, left:'1h 40m left'},
+  nico: {from:'Nico', room:['Nico'], show:byId('under'), meta:'Series · S1 · E2 · Places, Please', ep:{s:1, e:2, of:8}, at:'09:15', pct:21}
+};
+INV.kierLeo = {...INV.kier, by:['Kier','Leo']};
+INV.ade = {from:'Ade', room:['Ade'], show:byId('ferry'), meta:`Movie · ${byId('ferry').y} · ${byId('ferry').len}`, at:'1:02:40', pct:62, left:'38m left'};
+INV.tess = {from:'Tess', room:['Tess'], show:byId('orbit'), meta:'Series · S1 · E3 · Short Order', ep:{s:1, e:3, of:10}, at:'02:05', pct:5};
+const KINDS = {movie:[INV.kier], series:[INV.kierS], multi:[INV.kier, INV.mira, INV.nico], five:[INV.kierLeo, INV.mira, INV.nico, INV.ade, INV.tess]};
+const who = r => r.length > 1 ? `<b>${r.slice(0,-1).join(', ')} and ${r.at(-1)}</b> are` : `<b>${r[0]}</b> is`;
+const names = r => r.length > 1 ? `${r.slice(0,-1).join(', ')} and ${r.at(-1)}` : r[0];
+const roomAt = v => v.ep ? `E${v.ep.e}, ${v.at}` : v.at;
+function timeline(v){
+  let row, track, left;
+  if(v.ep){
+    const frac = (v.ep.e - 1 + v.pct / 100) / v.ep.of;
+    left = `calc((100% - ${(v.ep.of - 1) * 3}px) * ${frac} + ${(v.ep.e - 1) * 3}px)`;
+    row = `<span>${who(v.room)} on <b>E${v.ep.e}</b>, <b class="tn">${v.at}</b> in</span><span>Season ${v.ep.s} · ${v.ep.of} episodes</span>`;
+    track = `<div class="tlm-seg">${Array.from({length:v.ep.of}, (_, i) => i + 1 === v.ep.e ? `<i class="on"><u style="width:${v.pct}%"></u></i>` : '<i></i>').join('')}</div>`;
+  } else {
+    left = v.pct + '%';
+    row = `<span>${who(v.room)} at <b class="tn">${v.at}</b></span><span>${v.left}</span>`;
+    track = `<div class="tlm-bar"><i style="width:${v.pct}%"></i></div>`;
+  }
+  /* once it lapses the room keeps playing; say so instead of where they are */
+  return `<div class="tlm">
+    <div class="tlm-row wf" data-w="arrive focus">${row}</div>
+    <div class="tlm-row wf" data-w="answer-exp"><span>${who(v.room)} still watching</span><span>without you</span></div>
+    <div class="tlm-track">${track}<span class="tlm-head" style="left:${left}">${v.room.map(n => av(n)).join('')}</span></div></div>`;
+}
+function inviteCard(list, sel){
+  const v = list[sel], multi = list.length > 1;
+  const ep = v.ep ? ` · S${v.ep.s} E${v.ep.e}` : '';
+  return `${multi ? '<div class="t4y-deck"><i></i><i></i></div>' : ''}
+  <div class="tcard t4y t4z jd"><div class="bbeam bq"><i></i></div><div class="t4y-in">
+    <div class="tl3">
+      <span class="wi" data-w="${multi ? 'arrive answer-acc answer-dec answer-can' : 'arrive focus answer'}">${av(v.from)}</span>
+      ${multi ? `<div class="t4y-tabs wf" data-w="focus answer-exp">${list.map((x, i) => `<button type="button" class="${i === sel ? 'on' : ''}" data-i="${i}">${av(x.from)}${x.from}</button>`).join('')}</div>`
+        : `<p data-w="focus"><b>${v.from}</b> invited you to watch</p>
+           <p data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>`}
+      <p data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b>${ep}</p>
+      <p data-w="answer-acc">Joining <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+      <span class="t4y-stack wi" data-w="after-acc">${[...v.room, 'Joyce'].map(n => av(n)).join('')}</span>
+      <p data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+      <p data-w="answer-dec">Declined <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+      <p data-w="answer-can"><b>${v.from}</b> closed the room</p>
+      <span class="sp"></span>
+      ${multi ? `<span class="t4y-more wi" data-w="arrive">+${list.length - 1}</span>` : ''}
+      <span class="btn pk sm wi" data-w="arrive">Respond</span>
+      <span class="a-spin" data-w="answer-acc"></span>
+      <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+      <span class="x" data-w="focus answer-exp">✕</span>
+    </div>
+    <div class="t4y-body">
+      <div class="t4y-art">${poster(v.show)}</div>
+      <div class="t4y-info"><h3>${esc(v.show.t)}</h3>
+        <h6 class="sub" ${multi ? 'data-w="focus"' : ''}>${v.meta}</h6>
+        ${multi ? `<h6 class="sub" data-w="answer-exp" style="color:var(--y)">${v.from}'s invitation expired</h6>` : ''}</div>
+      ${timeline(v)}
+      <div class="t4y-acts wf" data-w="focus"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+      <div class="t4y-acts wf" data-w="answer-exp"><span class="btn gh">Dismiss</span><span class="btn pk">Ask ${v.from} to re-invite</span></div>
+    </div>
+  </div></div>`;
+}
+/* the collapsed pill is as wide as its own line */
+function fitLine(st, sel, name, border = 1, keys = 'arrive acc arrive-acc browse'){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '', line = st.querySelector(sel);
+    st.classList.add('measuring');
+    st.dataset.keys = keys;
+    line.style.width = 'max-content';
+    st.style.setProperty('--' + name, Math.ceil(line.getBoundingClientRect().width) + border * 2 + 'px');
+    line.style.width = '';
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+const mountInvite = sc => {
+  sc.innerHTML = shell('a4b2b5', '<div class="t4y-host"></div>');
+  const st = sc.querySelector('.stage'), host = st.querySelector('.t4y-host');
+  let sel = 0;
+  st.dataset.kind = 'movie';
+  const render = () => {
+    host.innerHTML = inviteCard(KINDS[st.dataset.kind], sel);
+    fitLine(st, '.tl3', 't4yw', 0);
+    autoHeight(st, '.t4y-in', 't4yh');
+  };
+  host.addEventListener('click', e => { const b = e.target.closest('.t4y-tabs button'); if(b){ sel = +b.dataset.i; render(); } });
+  st.addEventListener('kind', () => { sel = 0; render(); });
+  render();
+};
+
+/* a card that grows to fit its own content is measured once, with motion off */
+function autoHeight(st, sel, name, keys){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '';
+    st.classList.add('measuring');
+    st.dataset.keys = keys || 'focus acc focus-acc browse';
+    void st.offsetWidth;
+    st.style.setProperty('--' + name, st.querySelector(sel).scrollHeight + 'px');
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+
+/* ───── A2–A8 — several invites at once ───── */
+/* every variant shares one card: data-sel names the invite on show, .pg[data-p] pieces belong to one invite */
+const andB = ns => ns.length > 1 ? `${ns.slice(0, -1).map(n => `<b>${n}</b>`).join(', ')} and <b>${ns.at(-1)}</b>` : `<b>${ns[0]}</b>`;
+/* two friends in one room send one invite between them */
+const byOf = v => v.by || [v.from];
+const avs = (v, max = 3) => byOf(v).slice(0, max).map(n => av(n)).join('');
+const andN = ns => ns.length > 3 ? `<b>${ns[0]}</b>, <b>${ns[1]}</b> and <b>${ns.length - 2} others</b>` : andB(ns);
+const pctOf = v => v.ep ? Math.round((v.ep.e - 1 + v.pct / 100) / v.ep.of * 100) : v.pct;
+const mvCss = document.createElement('style');
+mvCss.textContent = [0, 1, 2, 3, 4].map(i => `.mv:not([data-sel="${i}"]) .pg[data-p="${i}"]{display:none !important}
+.mv[data-sel="${i}"] .cy-i[data-c="${i}"]{opacity:1;transform:none}
+.mv[data-sel="${i}"] .cy-dots i[data-c="${i}"]{width:12px;background:#fff}
+.mv[data-sel="${i}"] .mve-c[data-i="${i}"]{transform:none;opacity:1}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mve-c[data-i="${i}"]{filter:grayscale(1) brightness(.7)}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvc-row[data-i="${i}"]{filter:grayscale(1);opacity:.6}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvc-row[data-i="${i}"] .mvc-go{display:none}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvc-row[data-i="${i}"] .mvc-ex{display:block}
+.mv[data-sel="${i}"] .mvg-r[data-i="${i}"]{background:rgba(255,255,255,.09)}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvg-r[data-i="${i}"]{filter:grayscale(1);opacity:.6}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvg-r[data-i="${i}"] em{display:none}
+.stage[data-keys~="answer-exp"] .mv[data-sel="${i}"] .mvg-r[data-i="${i}"] i.ex{display:block}`).join('\n');
+document.head.append(mvCss);
+const each = (list, f) => list.map(f).join('');
+/* the opened header for the invite on show: who, and whether it has lapsed */
+const mvHead = (list, cls = '') => each(list, (v, i) => `
+  <span class="wi pg t4y-head-st ${cls}" data-p="${i}" data-w="focus">${avs(v)}</span>
+  <p class="pg ${cls}" data-p="${i}" data-w="focus">${andB(byOf(v))} invited you to watch</p>
+  <span class="wi pg" data-p="${i}" data-w="answer-exp">${av(v.from)}</span>
+  <p class="pg" data-p="${i}" data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>`);
+/* answered: the pill speaks for the one she chose; afterwards the rest are still waiting */
+const mvAnswer = list => each(list, (v, i) => {
+  const rest = list.filter((_, j) => j !== i).flatMap(byOf);
+  return `
+  <span class="wi pg t4y-head-st" data-p="${i}" data-w="answer-acc answer-dec answer-can">${avs(v)}</span>
+  <p class="pg" data-p="${i}" data-w="answer-acc">Joining ${andB(byOf(v))} to watch <b>${esc(v.show.t)}</b></p>
+  <p class="pg" data-p="${i}" data-w="answer-dec">Declined ${andB(byOf(v))} to watch <b>${esc(v.show.t)}</b></p>
+  <p class="pg" data-p="${i}" data-w="answer-can"><b>${v.from}</b> closed the room</p>
+  <span class="t4y-stack wi pg" data-p="${i}" data-w="after-acc">${[...v.room, 'Joyce'].map(n => av(n)).join('')}</span>
+  <p class="pg" data-p="${i}" data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+  <span class="t4y-stack wi pg" data-p="${i}" data-w="after-dec after-exp after-can">${rest.slice(0, 3).map(n => av(n)).join('')}</span>
+  <p class="pg" data-p="${i}" data-w="after-dec after-exp after-can">${andN(rest)} still invited you</p>`;
+});
+const mvTail = (extra = '') => `<span class="sp"></span>${extra}
+  <span class="btn pk sm wi" data-w="arrive after-dec after-exp after-can">Respond</span>
+  <span class="a-spin" data-w="answer-acc"></span>
+  <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+  <span class="x" data-w="focus answer-exp">✕</span>`;
+const mvPage = (v, i, o = {}) => `<div class="pg ${o.cls || ''}" data-p="${i}">
+  ${o.art === false ? '' : `<div class="t4y-art">${poster(v.show)}</div>`}
+  <div class="t4y-info"><h3>${esc(v.show.t)}</h3>
+    <h6 class="sub" data-w="focus">${v.meta}</h6><h6 class="sub" data-w="answer-exp" style="color:var(--y)">${v.from}'s invitation expired</h6></div>
+  ${timeline(v)}
+  <div class="t4y-acts wf" data-w="focus"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+  <div class="t4y-acts wf" data-w="answer-exp"><span class="btn gh">Dismiss</span><span class="btn pk">Ask ${v.from} to re-invite</span></div>
+</div>`;
+const mvCard = (k, line, body) => `<div class="tcard t4y t4z jd mv mv${k}"><div class="bbeam bq"><i></i></div><div class="t4y-in">
+  <div class="tl3">${line}</div><div class="t4y-body">${body}</div></div></div>`;
+
+const MV = {
+  /* b: collapsed, the pill takes turns; opened, a pager walks through them */
+  b: list => mvCard('b',
+    `<span class="cy" data-w="arrive">${each(list, (v, i) => `<span class="cy-i" data-c="${i}">${av(v.from)}<p><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p></span>`)}</span>
+     ${mvHead(list)}${mvAnswer(list)}
+     ${mvTail(`<span class="cy-dots wi" data-w="arrive">${each(list, (_, i) => `<i data-c="${i}"></i>`)}</span>
+       <span class="mvb-pgr wi" data-w="focus answer-exp"><button type="button" data-d="-1" aria-label="Previous invite">‹</button>${each(list, (_, i) => `<em class="pg" data-p="${i}">${i + 1} of ${list.length}</em>`)}<button type="button" data-d="1" aria-label="Next invite">›</button></span>`)}`,
+    each(list, (v, i) => mvPage(v, i))),
+  /* c: collapsed, one line names everyone; opened, a list of rooms, and a row opens the full card */
+  c: list => { const ppl = list.flatMap(byOf); return mvCard('c',
+    `<span class="t4y-stack wi" data-w="arrive">${ppl.slice(0, 3).map(n => av(n)).join('')}</span>
+     <p data-w="arrive">${andN(ppl)} invited you</p>
+     <button type="button" class="mvc-bk wi dv" data-w="focus" aria-label="All invites">‹</button>
+     <p class="lv" data-w="focus"><b>${list.length} rooms</b> are open for you</p>
+     ${mvHead(list, 'dv')}${mvAnswer(list)}${mvTail()}`,
+    `<div class="mvc-list lv${list.length > 4 ? ' sc' : ''}">${each(list, (v, i) => `<button type="button" class="mvc-row" data-i="${i}">
+       <span class="mvc-th">${poster(v.show)}</span>
+       <span class="mvc-tx"><b>${esc(v.show.t)}</b><em>${avs(v)}<span><b>${names(byOf(v))}</b> · ${v.ep ? `E${v.ep.e}, ` : ''}${v.at} in</span></em>
+         <span class="mvc-bar"><i style="width:${pctOf(v)}%"></i></span></span>
+       <span class="btn pk sm mvc-go">Join</span><span class="mvc-ex">Expired</span></button>`)}</div>
+     ${each(list, (v, i) => mvPage(v, i, {cls:'dv'}))}`); },
+  /* d: a pill per invite, stacked; the newest wears the beam */
+  d: list => mvCard('d',
+    `${each(list, (v, i) => `<span class="wi pg" data-p="${i}" data-w="arrive">${av(v.from)}</span>
+       <p class="pg" data-p="${i}" data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p>`)}
+     ${mvHead(list)}${mvAnswer(list)}${mvTail()}`,
+    each(list, (v, i) => mvPage(v, i))),
+  /* e: collapsed, three posters; opened, the posters sit side by side and the neighbours peek in */
+  e: list => mvCard('e',
+    `<span class="mve-th wi" data-w="arrive">${each(list, v => `<span>${poster(v.show)}</span>`)}</span>
+     <p data-w="arrive"><b>${list.length} invites</b> from ${andB(list.map(v => v.from))}</p>
+     ${mvHead(list)}${mvAnswer(list)}${mvTail()}`,
+    `<div class="mve-vp"><div class="mve-strip">${each(list, (v, i) => `<button type="button" class="mve-c" data-i="${i}">${poster(v.show)}${av(v.from)}</button>`)}</div></div>
+     ${each(list, (v, i) => mvPage(v, i, {art:false}))}`),
+  /* f: a queue; she answers the one in front, and the next takes its place in whatever shape the pill is */
+  /* f2 (mode 'lean'): only the invite in front shows — no next row, no skipping; declining just brings the next one in */
+  f: (list, sel, mode) => {
+    const n = list.length, ix = k => (sel + k) % n, v = list[ix(0)], nx = list[ix(1)], lean = mode === 'lean';
+    const up = k => { const x = list[ix(k)]; return `<button type="button" class="mvf-up" data-to="${ix(k)}"><span>${poster(x.show)}</span><span>Then <b>${x.from}</b> · ${esc(x.show.t)}</span><em>Skip to it ›</em></button>`; };
+    const ACT = 'answer-dec after-dec after-exp';
+    const page = (x, k, role) => `<div class="${role}">
+      <div class="t4y-art">${poster(x.show)}</div>
+      <div class="t4y-info"><h3>${esc(x.show.t)}</h3>
+        ${k ? `<h6 class="sub">${x.meta}</h6>` : `<h6 class="sub" data-w="focus${lean ? ' answer-dec' : ''}">${x.meta}</h6><h6 class="sub" data-w="answer-exp" style="color:var(--y)">${x.from}'s invitation expired</h6>`}</div>
+      ${k ? timeline(x).replace('data-w="arrive focus"', `data-w="${ACT}"`) : lean ? timeline(x).replace('data-w="arrive focus"', 'data-w="arrive focus answer-dec"') : timeline(x)}
+      <div class="t4y-acts wf" data-w="${k ? ACT : lean ? 'focus answer-dec' : 'focus'}"><span class="btn gh">Decline</span><span class="btn pk">Accept</span></div>
+      ${k ? '' : `<div class="t4y-acts wf" data-w="answer-exp"><span class="btn gh">Dismiss</span><span class="btn pk">Ask ${x.from} to re-invite</span></div>`}
+      ${lean ? '' : up(k + 1)}</div>`;
+    return mvCard('f',
+      `${lean ? `<span class="wi" data-w="arrive">${av(v.from)}</span>` : `<span class="qb wi" data-w="arrive">${av(v.from)}<b>${n}</b></span>`}
+       <p data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p>
+       <span class="wi" data-w="focus answer-exp answer-acc answer-can">${av(v.from)}</span>
+       <p data-w="focus"><b>${v.from}</b> invited you to watch</p>
+       <p data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>
+       <p data-w="answer-acc">Joining <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="answer-can"><b>${v.from}</b> closed the room</p>
+       <span class="t4y-stack wi" data-w="after-acc">${[...v.room, 'Joyce'].map(x => av(x)).join('')}</span>
+       <p data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+       <span class="wi qh qh-av" data-w="${ACT}">${av(nx.from)}</span>
+       ${lean ? `<p class="qh" data-w="${ACT}"><b>${nx.from}</b> invited you to watch</p>`
+         : `<p data-w="answer-dec">Declined <b>${v.from}</b> · next, <b>${nx.from}</b></p>
+       <p data-w="after-dec after-exp"><b>${nx.from}</b> invited you to watch</p>`}
+       ${lean ? `<span class="wi" data-w="after-can">${av(nx.from)}</span>` : `<span class="qb wi" data-w="after-can">${av(nx.from)}<b>${n - 1}</b></span>`}
+       <p data-w="after-can"><b>${nx.from}</b> invited you to watch <b>${esc(nx.show.t)}</b></p>
+       <span class="sp"></span>
+       <span class="mvf-n wi" data-w="focus answer-exp">${ix(0) + 1} of ${n}</span>
+       <span class="mvf-n wi qh" data-w="${ACT}">${ix(1) + 1} of ${n}</span>
+       <span class="btn pk sm wi" data-w="arrive after-can">Respond</span>
+       <span class="a-spin" data-w="answer-acc"></span>
+       <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+       <span class="x" data-w="focus answer-exp ${ACT}">✕</span>`,
+      page(v, 0, 'q-cur') + page(nx, 1, 'q-nx'));
+  },
+  /* g: everyone down the side, the room she's looking at beside them */
+  g: list => mvCard('g',
+    `<span class="t4y-stack wi" data-w="arrive">${each(list, v => av(v.from))}</span>
+     <p data-w="arrive"><b>${list[0].from}</b> and <b>${list.length - 1} others</b> invited you</p>
+     <p data-w="focus"><b>${list.length} rooms</b> are open for you</p>
+     ${each(list, (v, i) => `<span class="wi pg" data-p="${i}" data-w="answer-exp">${av(v.from)}</span>
+       <p class="pg" data-p="${i}" data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>`)}
+     ${mvAnswer(list)}${mvTail()}`,
+    `<div class="mvg-b"><div class="mvg-side">${each(list, (v, i) => `<button type="button" class="mvg-r" data-i="${i}">${av(v.from)}<span><b>${v.from}</b><em>${esc(v.show.t)}</em><i class="ex">Expired</i></span></button>`)}</div>
+     <div class="mvg-main">${each(list, (v, i) => mvPage(v, i))}</div></div>`),
+  /* h: the pill stays one invite; the others wait in Parties */
+  h: (list, sel, w = 'parties') => {
+    const v = list[0], ppl = list.slice(1).flatMap(byOf), W = WAIT[w];
+    return mvCard('h',
+      `<span class="wi" data-w="arrive focus answer-exp answer-acc answer-dec answer-can">${av(v.from)}</span>
+       <p data-w="arrive"><b>${v.from}</b> invited you to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="focus"><b>${v.from}</b> invited you to watch</p>
+       <p data-w="answer-exp"><b>${v.from}'s</b> invitation expired · just now</p>
+       <p data-w="answer-acc">Joining <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="answer-dec">Declined <b>${v.from}</b> to watch <b>${esc(v.show.t)}</b></p>
+       <p data-w="answer-can"><b>${v.from}</b> closed the room</p>
+       <span class="t4y-stack wi" data-w="after-acc">${[...v.room, 'Joyce'].map(x => av(x)).join('')}</span>
+       <p data-w="after-acc">You're in with <b>${names(v.room)}</b></p>
+       <span class="t4y-stack wi" data-w="after-dec after-exp after-can">${ppl.slice(0, 3).map(x => av(x)).join('')}</span>
+       <p data-w="after-dec after-exp after-can"><b>${list.length - 1} more invites</b> ${W.after}</p>
+       <span class="sp"></span>
+       <span class="btn pk sm wi" data-w="arrive">Respond</span>
+       ${W.btn ? `<span class="btn gh sm wi h-go" data-w="after-dec after-exp after-can">${W.btn}</span>` : ''}
+       <span class="a-spin" data-w="answer-acc"></span>
+       <span class="btn gh sm wi" data-w="answer-can">Dismiss</span>
+       <span class="x" data-w="focus answer-exp">✕</span>`,
+      `${mvPage(v, 0)}<button type="button" class="mvh-more h-go"><span class="t4y-stack">${ppl.slice(0, 3).map(x => av(x)).join('')}</span><span>${andB(ppl)} invited you too</span><em>${W.more}</em></button>`);
+  }
+};
+/* h and its forks: the pill holds one invite; what changes is where the rest wait */
+const WAIT = {
+  parties: {after:'wait in Parties', btn:'Open Parties', more:'Parties ›'},
+  avatar: {after:'are waiting for you', btn:'Show', more:'See them ›'},
+  library: {after:'are in your library', btn:'', more:'In your library ›'}
+};
+const whereAt = v => `${v.ep ? `E${v.ep.e}, ` : ''}${v.at} in`;
+const railTo = (sc, g, k) => sc.closest('.var').querySelector(`.rail [data-${g}="${k}"]`).click();
+/* h2: Parties is a real page, and the rooms she's invited to lead it */
+const partiesPage = (st, sc, list) => {
+  [...st.querySelectorAll('.gl-nav .sub')].forEach(x => x.textContent.startsWith('Parties') && x.classList.add('pt'));
+  st.querySelector('.bg-lib').insertAdjacentHTML('beforeend', `<div class="pp"><h6 class="sub gl-h">Invited you</h6><div class="pp-list">${each(list, (v, i) => `
+    <div class="pp-r${i ? '' : ' wf'}"${i ? '' : ' data-w="arrive focus"'}><span class="pp-th">${poster(v.show)}</span>
+      <div class="pp-tx"><h3>${esc(v.show.t)}</h3><em>${avs(v)}<span><b>${names(byOf(v))}</b> invited you · ${whereAt(v)}</span></em><span class="mvc-bar"><i style="width:${pctOf(v)}%"></i></span></div>
+      <div class="pp-acts"><span class="btn gh">Decline</span><span class="btn pk">Join</span></div></div>`)}</div></div>`);
+  st.addEventListener('click', e => {
+    const nav = e.target.closest('.gl-nav .sub');
+    if(e.target.closest('.h-go') || nav?.classList.contains('pt')){ if(st.dataset.ctx === 'watch') railTo(sc, 'c', 'browse'); st.classList.add('on-pp'); }
+    else if(nav) st.classList.remove('on-pp');
+  });
+  new MutationObserver(() => st.classList.remove('on-pp')).observe(st, {attributes:true, attributeFilter:['data-stage']});
+};
+/* h3: no Parties tab; her avatar counts the invites and opens them over whatever she's on */
+const avatarMenu = (st, sc, list) => {
+  st.classList.add('no-pt');
+  [...st.querySelectorAll('.gl-nav .sub')].forEach(x => x.textContent.startsWith('Parties') && x.classList.add('pt'));
+  st.querySelector('.gl-nav .me').insertAdjacentHTML('afterend', `<i class="abdg wi" data-w="arrive focus answer">${list.length}</i><i class="abdg wi" data-w="after-dec after-exp after-can">${list.length - 1}</i>`);
+  st.querySelector('.sh').insertAdjacentHTML('beforeend', `<div class="ipop"><h6 class="sub">Invites</h6>${each(list, (v, i) => `
+    <div class="ipop-r${i ? '' : ' wf'}"${i ? '' : ' data-w="arrive focus"'}>${avs(v, 2)}<span><b>${esc(v.show.t)}</b><em>${names(byOf(v))} · ${whereAt(v)}</em></span><span class="btn pk">Join</span></div>`)}</div>`);
+  st.addEventListener('click', e => {
+    if(e.target.closest('.h-go, .gl-nav .me')) st.classList.toggle('on-pop');
+    else if(!e.target.closest('.ipop')) st.classList.remove('on-pop');
+  });
+  new MutationObserver(() => st.classList.remove('on-pop')).observe(st, {attributes:true, attributeFilter:['data-stage']});
+};
+/* h4: the rest wait as a row at the top of her library; mid-episode the pill points there */
+const shelf = list => ({top: `<div class="ish" data-w="arrive focus answer after-dec after-exp after-can"><h6 class="sub gl-h">Rooms you're invited to</h6><div class="gl-grid">${each(list, (v, i) => `
+  <div class="gl-c ish-c"${i ? '' : ' data-w="arrive focus answer"'}>${poster(v.show)}<div class="shade"></div><span class="ish-who">${avs(v)}</span><b>${esc(v.show.t)}</b><span class="ish-bar"><i style="width:${pctOf(v)}%"></i></span></div>`)}</div></div>`});
+const libraryRow = (st, sc) => {
+  st.classList.add('w-lib');
+  /* closing the card shows her the row it points at */
+  st.addEventListener('click', e => { if(e.target.closest('.h-go')) railTo(sc, 's', 'arrive'); });
+};
+/* d's other invites: their own pills above the newest */
+const mvOthers = (list, sel) => list.map((v, i) => ({v, i})).filter(x => x.i !== sel).map((x, k) =>
+  `<div class="mvd-p" data-i="${x.i}" style="--k:${k}">${av(x.v.from)}<p><b>${x.v.from}</b> invited you to watch <b>${esc(x.v.show.t)}</b></p><button type="button" class="btn pk sm">Respond</button></div>`).join('');
+/* c is two cards in one: the list and the full card are measured separately */
+function measureViews(st, card){
+  requestAnimationFrame(() => {
+    const keep = st.dataset.keys || '', view = card.dataset.view, inn = card.querySelector('.t4y-in');
+    st.classList.add('measuring');
+    st.dataset.keys = 'focus acc focus-acc browse';
+    [['list', 't4yl'], ['detail', 't4yh']].forEach(([v, name]) => { card.dataset.view = v; void st.offsetWidth; st.style.setProperty('--' + name, inn.scrollHeight + 'px'); });
+    card.dataset.view = view;
+    st.dataset.keys = keep;
+    void st.offsetWidth;
+    st.classList.remove('measuring');
+  });
+}
+const mountMulti = (k, list = KINDS.multi, o = {}) => sc => {
+  sc.innerHTML = shell('mv' + k, '<div class="t4y-host"></div>', o.lib);
+  const st = sc.querySelector('.stage'), host = st.querySelector('.t4y-host');
+  let sel = 0, view = 'list';
+  st.dataset.kind = 'multi';
+  const card = () => host.querySelector('.mv');
+  const pick = i => { sel = (i + list.length) % list.length; card().dataset.sel = sel; card().style.setProperty('--s', sel); };
+  const render = () => {
+    host.innerHTML = MV[k](list, sel, o.mode) + (k === 'd' ? mvOthers(list, sel) : '');
+    card().dataset.view = view;
+    pick(sel);
+    fitLine(st, '.mv .tl3', 't4yw', 0);
+    if(k === 'f') fitLine(st, '.mv .tl3', 't4yw2', 0, 'after can after-can browse');
+    if(o.mode === 'library') fitLine(st, '.mv .tl3', 't4yw2', 0, 'after dec after-dec watch');
+    if(k === 'c') measureViews(st, card()); else autoHeight(st, '.mv .t4y-in', 't4yh');
+  };
+  host.addEventListener('click', e => {
+    const t = e.target;
+    if(t.closest('[data-d]')) pick(sel + +t.closest('[data-d]').dataset.d);
+    else if(t.closest('.mvc-row')){ pick(+t.closest('.mvc-row').dataset.i); view = card().dataset.view = 'detail'; }
+    else if(t.closest('.mvc-bk')) view = card().dataset.view = 'list';
+    else if(t.closest('.mve-c')) pick(+t.closest('.mve-c').dataset.i);
+    else if(t.closest('.mvg-r')) pick(+t.closest('.mvg-r').dataset.i);
+    else if(t.closest('.mvf-up')){
+      sel = +t.closest('.mvf-up').dataset.to; render();
+      if(st.dataset.stage !== 'focus') setTimeout(() => sc.closest('.var').querySelector('.rail [data-s="focus"]').click(), 80);
+    }
+    else if(t.closest('.mvd-p .btn')){
+      sel = +t.closest('.mvd-p').dataset.i; render();
+      /* her Respond opens that one: the rail goes to Opens once the new pill is measured */
+      setTimeout(() => sc.closest('.var').querySelector('.rail [data-s="focus"]').click(), 80);
+    }
+  });
+  /* h: Parties in her nav counts every invite still live */
+  if(k === 'h' && (o.mode || 'parties') === 'parties') [...st.querySelectorAll('.gl-nav .sub')].find(x => x.textContent === 'Parties')
+    .insertAdjacentHTML('beforeend', `<i class="pbdg wi" data-w="arrive focus answer">${list.length}</i><i class="pbdg wi" data-w="after-dec after-exp after-can">${list.length - 1}</i>`);
+  if(o.cls) st.classList.add(o.cls);
+  o.setup?.(st, sc, list);
+  /* b only turns while it is a pill; opening holds the one on show */
+  if(k === 'b') setInterval(() => { if(st.dataset.stage === 'arrive') pick(sel + 1); }, REDUCED ? 4500 : 3000);
+  /* closing the card puts c back on its list */
+  if(k === 'c') new MutationObserver(() => { if(st.dataset.stage !== 'focus' && st.dataset.stage !== 'answer'){ view = 'list'; if(card()) card().dataset.view = 'list'; } })
+    .observe(st, {attributes:true, attributeFilter:['data-stage']});
+  render();
+};
+
+/* ───── Stage rails ───── */
+const ST = [{k:'idle',l:'Idle'},{k:'arrive',l:'Arrives'},{k:'focus',l:'Opens'},{k:'answer',l:'Answers'},{k:'after',l:'After'}];
+const BR = [{k:'acc',l:'Joins'},{k:'dec',l:'Declines'},{k:'exp',l:'Expires'},{k:'can',l:'Host cancels'}];
+const ANS = {acc:'Accepts', dec:'Declines', exp:'Expires', can:'Withdrawn'};
+const CX = [{k:'browse',l:'Browsing'},{k:'watch',l:'Mid-episode'}];
+
+/* stage-conditional display: keys are matched token-for-token */
+const KEYS = [];
+ST.forEach(s => { KEYS.push(s.k); BR.forEach(b => KEYS.push(s.k + '-' + b.k)); });
+BR.forEach(b => KEYS.push(b.k)); CX.forEach(c => KEYS.push(c.k));
+const kst = document.createElement('style');
+kst.textContent = KEYS.map(k => `.stage[data-keys~="${k}"] [data-w~="${k}"]{display:block}
+.stage[data-keys~="${k}"] .wf[data-w~="${k}"]{display:flex}
+.stage[data-keys~="${k}"] .wi[data-w~="${k}"]{display:inline-flex}`).join('');
+document.head.append(kst);
+
+const MOUNTS = {a4b2b5: mountInvite, mvb: mountMulti('b'), mvc: mountMulti('c'), mvd: mountMulti('d'), mve: mountMulti('e'),
+  mvc2: mountMulti('c', KINDS.five), mvf: mountMulti('f'), mvf2: mountMulti('f', KINDS.multi, {mode:'lean'}),
+  mvf2b: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-fall'}), mvf2c: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-face'}),
+  mvf2d: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-build'}), mvf2e: mountMulti('f', KINDS.multi, {mode:'lean', cls:'mo-beam'}), mvg: mountMulti('g'), mvh: mountMulti('h'),
+  mvh2: mountMulti('h', KINDS.multi, {mode:'parties', setup:partiesPage}),
+  mvh3: mountMulti('h', KINDS.multi, {mode:'avatar', setup:avatarMenu}),
+  mvh4: mountMulti('h', KINDS.multi, {mode:'library', lib:shelf(KINDS.multi), setup:libraryRow})};
+document.querySelectorAll('[data-mount]').forEach(sc => MOUNTS[sc.dataset.mount](sc));
+
+function setKeys(st){
+  const s = st.dataset.stage, b = st.dataset.branch, c = st.dataset.ctx;
+  st.dataset.keys = `${s} ${b} ${s}-${b} ${c}`;
+}
+document.querySelectorAll('[data-rail]').forEach(rail => {
+  const stage = document.getElementById(rail.dataset.rail).querySelector('.stage');
+  const kinds = (rail.dataset.kinds || '').split('|').filter(Boolean).map(x => x.split('='));
+  rail.innerHTML = `<div class="grp st">${ST.map(s => `<button type="button" data-s="${s.k}">${s.l}</button>`).join('')}</div>
+    <div class="grp br">${BR.map(b => `<button type="button" data-b="${b.k}">${b.l}</button>`).join('')}</div>
+    <div class="grp cx">${CX.map(c => `<button type="button" data-c="${c.k}">${c.l}</button>`).join('')}</div>
+    ${kinds.length ? `<div class="grp kd">${kinds.map(([k, l]) => `<button type="button" data-k="${k}">${l}</button>`).join('')}</div>` : ''}
+    <button type="button" class="play">Play flow</button>
+    ${'demoDec' in rail.dataset ? '<button type="button" class="play dec">Decline while open</button>' : ''}
+    ${'demoExp' in rail.dataset ? '<button type="button" class="play exp">Expire while open</button>' : ''}
+    <span class="hint">Her screen only — the host is elsewhere.</span>`;
+  const sb = [...rail.querySelectorAll('[data-s]')], bb = [...rail.querySelectorAll('[data-b]')], cb = [...rail.querySelectorAll('[data-c]')];
+  const kb = [...rail.querySelectorAll('[data-k]')];
+  const play = rail.querySelector('.play');
+  let timer = null;
+  const sync = () => {
+    sb.forEach(x => x.classList.toggle('on', x.dataset.s === stage.dataset.stage));
+    bb.forEach(x => x.classList.toggle('on', x.dataset.b === stage.dataset.branch));
+    cb.forEach(x => x.classList.toggle('on', x.dataset.c === stage.dataset.ctx));
+    kb.forEach(x => x.classList.toggle('on', x.dataset.k === stage.dataset.kind));
+    sb[3].textContent = ANS[stage.dataset.branch];
+    setKeys(stage);
+  };
+  sb.forEach(x => x.addEventListener('click', () => { clearInterval(timer); stage.dataset.stage = x.dataset.s; sync(); }));
+  bb.forEach(x => x.addEventListener('click', () => { stage.dataset.branch = x.dataset.b; sync(); }));
+  cb.forEach(x => x.addEventListener('click', () => { stage.dataset.ctx = x.dataset.c; sync(); }));
+  kb.forEach(x => x.addEventListener('click', () => { stage.dataset.kind = x.dataset.k; stage.dispatchEvent(new Event('kind')); sync(); }));
+  play.addEventListener('click', () => {
+    clearInterval(timer); let i = 0; stage.dataset.stage = ST[0].k; sync();
+    /* a rail can hold the answer longer, so a countdown gets to finish */
+    const base = REDUCED ? 900 : 1600, hold = +rail.dataset.hold || base;
+    const next = () => { timer = setTimeout(() => { i++; if(i >= ST.length) return; stage.dataset.stage = ST[i].k; sync(); next(); }, ST[i].k === 'answer' ? hold : base); };
+    next();
+  });
+  /* open it, then let it lapse in place */
+  rail.querySelector('.dec')?.addEventListener('click', () => {
+    clearInterval(timer); stage.dataset.branch = 'dec'; stage.dataset.stage = 'focus'; sync();
+    timer = setInterval(() => { clearInterval(timer); stage.dataset.stage = 'answer'; sync(); }, REDUCED ? 700 : 1200);
+  });
+  rail.querySelector('.exp')?.addEventListener('click', () => {
+    clearInterval(timer); stage.dataset.branch = 'exp'; stage.dataset.stage = 'focus'; sync();
+    timer = setInterval(() => { clearInterval(timer); stage.dataset.stage = 'answer'; sync(); }, REDUCED ? 900 : 2200);
+  });
+  sync();
+});
+
+
+/* ───── State machine — every node is one canvas state; clicking it drives the rail ───── */
+const NODES = [
+  {id:'idle', x:36, y:170, w:100, n:'Idle', s:'Nothing shown', k:'idle'},
+  {id:'arrive', x:214, y:170, w:150, n:'Arrives', s:'Pill · Kier', k:'arrive', beam:1},
+  {id:'focus', x:440, y:170, w:150, n:'Opens', s:'Card · 1 of 3', k:'focus'},
+  {id:'joining', x:710, y:30, w:170, n:'Joining', s:'Pill · the rest drop', k:'answer-acc'},
+  {id:'docked', x:980, y:30, w:150, n:'Docked', s:'Pill over the player', k:'after-acc', beam:1},
+  {id:'inroom', x:1170, y:30, w:110, n:'In the room', s:'Pill gone', k:'+3.4s', fin:1},
+  {id:'next', x:980, y:176, w:180, n:'Next invite', s:'Card · 2 of 3 · slides in', k:'answer-dec · after-dec'},
+  {id:'expired', x:710, y:290, w:150, n:'Expired', s:'Card · greyed', k:'answer-exp'},
+  {id:'withdrawn', x:710, y:400, w:150, n:'Withdrawn', s:'Pill · Dismiss', k:'answer-can'},
+  {id:'nextpill', x:980, y:400, w:180, n:'Next pill', s:'Pill · Mira', k:'after-can', beam:1},
+  {id:'gone', x:1192, y:290, w:96, n:'Gone', s:'Queue empty', k:'idle', fin:1}
+];
+const EDGES = [
+  {f:['idle'], t:'arrive', d:'M136,202 H212', l:'Invited', lx:175, ly:186},
+  {f:['arrive'], t:'focus', d:'M364,190 H438', l:'Respond', lx:401, ly:176},
+  {f:['focus'], t:'arrive', d:'M440,220 H366', l:'✕', lx:403, ly:233},
+  {f:['focus'], t:'joining', d:'M590,186 C650,186 650,62 708,62', l:'Accept', lx:650, ly:124},
+  {f:['focus'], t:'next', d:'M590,212 H978', l:'Decline', lx:785, ly:212},
+  {f:['arrive','focus'], t:'expired', d:'M620,322 H708', l:'Time runs out', lx:664, ly:306},
+  {f:['arrive','focus'], t:'withdrawn', d:'M402,334 C402,410 620,432 708,432', l:'Kier closes the room', lx:548, ly:414},
+  {f:['joining'], t:'docked', d:'M880,62 H978', l:'Room loads', lx:929, ly:62},
+  {f:['docked'], t:'inroom', d:'M1130,62 H1168', l:'3.4s', lx:1149, ly:46},
+  {f:['expired'], t:'next', d:'M860,322 C925,322 925,230 978,230', l:'Dismiss', lx:912, ly:276},
+  {f:['withdrawn'], t:'nextpill', d:'M860,432 H978', l:'Dismiss', lx:919, ly:432},
+  {f:['next'], t:'joining', d:'M978,186 C900,186 870,140 830,96', l:'Accept · the rest drop', lx:889, ly:157},
+  {f:['next'], t:'next', d:'M1060,176 C1060,132 1130,132 1130,174', l:'Decline, more waiting', lx:1095, ly:134},
+  {f:['next'], t:'gone', d:'M1160,226 C1180,226 1180,322 1190,322', l:'None left', lx:1180, ly:266},
+  {f:['next'], t:'nextpill', d:'M1010,240 V398', l:'✕', lx:1010, ly:330},
+  {f:['nextpill'], t:'next', d:'M1120,398 V242', l:'Respond', lx:1120, ly:330}
+];
+const TO = {idle:['idle'], arrive:['arrive'], focus:['focus'], joining:['answer','acc'], docked:['after','acc'], inroom:['after','acc'],
+  next:['answer','dec'], expired:['answer','exp'], withdrawn:['answer','can'], nextpill:['after','can'], gone:['idle']};
+const ANSWER = {acc:'joining', dec:'next', exp:'expired', can:'withdrawn'};
+const AFTER = {acc:'docked', dec:'next', exp:'next', can:'nextpill'};
+/* the canvas stops at Mira; Gone is the queue running dry, shown as nothing at all */
+let toGone = false;
+const nodeFor = (s, b) => s === 'answer' ? ANSWER[b] : s === 'after' ? AFTER[b] : s === 'idle' && toGone ? 'gone' : s;
+(() => {
+  const svg = document.querySelector('.fsm svg'), ns = 'http://www.w3.org/2000/svg';
+  const label = (e, i) => { const w = e.l.length * 6.4 + 14; return `<rect x="${e.lx - w / 2}" y="${e.ly - 10}" width="${w}" height="20" rx="6"/><text x="${e.lx}" y="${e.ly}">${esc(e.l)}</text>`; };
+  svg.innerHTML = `<defs>
+      <linearGradient id="rainbow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff3264"/><stop offset=".25" stop-color="#ff7828"/><stop offset=".5" stop-color="#32c850"/><stop offset=".75" stop-color="#288cff"/><stop offset="1" stop-color="#b428f0"/></linearGradient>
+      <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--mut)"/></marker>
+      <marker id="ar-on" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="var(--ink)"/></marker>
+    </defs>
+    <rect class="sup" x="186" y="116" width="434" height="218" rx="16"/><text class="sup-l" x="204" y="140">Kier’s invite · 1 of 3</text>
+    <rect class="sup" x="962" y="112" width="216" height="392" rx="16"/><text class="sup-l" x="980" y="490">Mira’s invite · 2 of 3</text>
+    <circle class="init" cx="18" cy="202" r="6"/><path d="M24,202 H34" stroke="var(--ink)" stroke-width="1.4" marker-end="url(#ar-on)"/>
+    ${EDGES.map((e, i) => `<g class="ed" data-i="${i}"><path d="${e.d}" marker-end="url(#ar)"/>${label(e)}</g>`).join('')}
+    ${NODES.map(n => `<g class="box${n.beam ? ' beam' : ''}${n.fin ? ' fin' : ''}" data-n="${n.id}" tabindex="0" role="button" aria-label="${n.n}">
+      ${n.fin ? `<rect class="ring" x="${n.x - 4}" y="${n.y - 4}" width="${n.w + 8}" height="72" rx="15"/>` : ''}
+      <rect class="edge" x="${n.x}" y="${n.y}" width="${n.w}" height="64" rx="12"/>
+      <text class="n" x="${n.x + 14}" y="${n.y + 23}">${n.n}</text>
+      <text class="s" x="${n.x + 14}" y="${n.y + 40}">${n.s}</text>
+      <text class="k" x="${n.x + 14}" y="${n.y + 55}">${n.k}</text></g>`).join('')}`;
+  const stage = document.querySelector('#v-a6b5 .stage'), rail = document.querySelector('[data-rail="v-a6b5"]');
+  const boxes = [...svg.querySelectorAll('.box')], eds = [...svg.querySelectorAll('.ed')];
+  let cur = null, settle = null;
+  const mark = (id, from) => {
+    boxes.forEach(b => b.classList.toggle('on', b.dataset.n === id));
+    eds.forEach(g => { const e = EDGES[g.dataset.i]; const on = !!from && e.t === id && e.f.includes(from); g.classList.toggle('on', on); g.querySelector('path').setAttribute('marker-end', on ? 'url(#ar-on)' : 'url(#ar)'); });
+    cur = id;
+  };
+  const follow = () => {
+    clearTimeout(settle);
+    if(stage.dataset.stage !== 'idle') toGone = false;
+    const id = nodeFor(stage.dataset.stage, stage.dataset.branch);
+    if(id !== cur) mark(id, cur);
+    /* the dock fades out at 3.4s (+.45s), leaving her in the room */
+    if(id === 'docked') settle = setTimeout(() => mark('inroom', 'docked'), REDUCED ? 900 : 3850);
+  };
+  new MutationObserver(follow).observe(stage, {attributes:true, attributeFilter:['data-keys']});
+  const go = id => {
+    const [s, b] = TO[id];
+    toGone = id === 'gone';
+    const br = b;
+    if(br) rail.querySelector(`[data-b="${br}"]`).click();
+    rail.querySelector(`[data-s="${s}"]`).click();
+  };
+  boxes.forEach(b => {
+    b.addEventListener('click', () => go(b.dataset.n));
+    b.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(b.dataset.n); } });
+  });
+  follow();
+})();
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:(id) => `Explore from ${id} in ${FILE}`},
+  {label:'Remix this', hint:'Fork it and apply your changes.', make:(id) => `Remix ${id} in ${FILE}:`},
+  {label:'Settle on this', hint:'Stop exploring; build from this one.', make:(id) => `Settle on ${id} in ${FILE}`}
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded','false'); } }); }
+function copyText(text){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, () => legacyCopy(text));
+  return Promise.resolve(legacyCopy(text));
+}
+function legacyCopy(text){
+  const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0'; document.body.append(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch(e){} ta.remove(); return ok;
+}
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, h = sec.querySelector('.var-h');
+  const btn = document.createElement('button'); btn.className = 'pick-btn'; btn.type = 'button'; btn.textContent = 'Pick ▾';
+  btn.setAttribute('aria-haspopup','menu'); btn.setAttribute('aria-expanded','false'); h.append(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.setAttribute('role','menu'); menu.hidden = true;
+  menu.innerHTML = VERBS.map((v,i) => `<button type="button" role="menuitem" data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  h.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', e => { e.stopPropagation(); const willOpen = menu.hidden; closeAll(); menu.hidden = !willOpen; btn.setAttribute('aria-expanded', String(willOpen)); if(willOpen) menu.querySelector('button').focus(); });
+  menu.addEventListener('click', async e => {
+    e.stopPropagation(); const b = e.target.closest('button'); if(!b) return;
+    const text = VERBS[b.dataset.i].make(id); closeAll(); btn.focus();
+    const ok = await copyText(text); out.hidden = false;
+    if(ok){ out.innerHTML = `<code></code><span class="ok">Copied</span>`; out.querySelector('code').textContent = text; }
+    else { out.innerHTML = `<span>Copy this prompt</span><input readonly>`; const f = out.querySelector('input'); f.value = text; f.focus(); f.select(); }
+  });
+});
+document.addEventListener('click', e => { if(!e.target.closest('.pick-menu')) closeAll(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAll(); });
+/* ───── Minimap ───── */
+const mm = document.querySelector('.mm'), secs = [...document.querySelectorAll('.var')];
+mm.innerHTML = secs.map(s => `<a href="#${s.id}" data-for="${s.id}"><i></i><span><b>${s.dataset.id}</b>${esc(s.dataset.name)}</span></a>`).join('');
+mm.addEventListener('click', e => { const a = e.target.closest('a'); if(!a) return; e.preventDefault(); document.getElementById(a.dataset.for).scrollIntoView({behavior:'smooth', block:'start'}); });
+function syncMM(){
+  let cur = secs[0];
+  secs.forEach(s => { if(s.getBoundingClientRect().top <= innerHeight * .35) cur = s; });
+  mm.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.for === cur.id));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+/* one canvas, no minimap */
+if(secs.length < 2) mm.remove();
+</script>
+</body>
+</html>

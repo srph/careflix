@@ -1,0 +1,1269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Care.tv Room Codes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Syne:wght@800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.frame{position:relative;height:clamp(600px,calc(100vh - 190px),760px);margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#090c11;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail .steps{display:flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .steps button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 12px;cursor:pointer}
+.rail .steps button.on{background:var(--ink);color:var(--bg)}
+.rail .play{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+.rail .hint{font-size:13px;color:var(--mut);margin-left:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:260px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup base (Care.tv look) ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;--bad:#ff6b81;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:#090c11;height:100%;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h1,.mk h2,.mk h3,.mk h4,.mk p,.mk ul,.mk ol{margin:0;padding:0}
+.mk li{list-style:none}
+.mk svg{width:18px;height:18px;flex:none;display:block}
+.mk .sub{font:600 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--n5)}
+.mk .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.mk .nsp{flex:1}
+.av{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:13px;font-style:normal;flex:none}
+.av.s{width:22px;height:22px;font-size:10px}
+.av.l{width:34px;height:34px}
+.avs{display:flex}
+.avs .av{box-shadow:0 0 0 2px var(--ring,#15202B)}
+.avs .av+.av{margin-left:-8px}
+.mk .ub{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 20px;border-radius:24px;background:#ffffff1c;font:700 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;transition:filter .2s,opacity .2s}
+.mk .ub:hover{filter:brightness(1.15)}
+.mk .ub.pk{background:var(--pk)}
+.mk .ub.full{width:100%}
+.mk .ub svg{width:15px;height:15px}
+.mk .x{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:var(--n5);transition:background .2s,color .2s}
+.mk .x:hover{background:#ffffff14;color:#fff}
+.mk .x svg{width:16px;height:16px}
+.spin{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid #ffffff33;border-top-color:#fff;animation:spin .7s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.live{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:99px;background:#10171ed9;font:700 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--pk)}
+
+/* layers */
+.L{position:absolute;inset:0;display:flex;flex-direction:column;transition:opacity .4s ease,visibility 0s}
+.mk:not([data-k~=home]) .lh,.mk:not([data-k~=room]) .rm{opacity:0;visibility:hidden;transition:opacity .4s ease,visibility 0s .4s}
+.scrim{position:absolute;inset:0;z-index:10;background:rgba(0,0,0,.7);opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
+.mk[data-k~=dlg] .scrim{opacity:1;visibility:visible;transition:opacity .25s}
+.mk[data-v=c] .scrim{display:none}
+
+/* nav (ListingNavigation) */
+.nv{flex:none;display:flex;align-items:center;gap:30px;height:72px;padding:0 32px;background:rgba(9,12,17,.95);position:relative;z-index:12}
+.lg{font:700 20px 'Work Sans',sans-serif}
+.lg::first-letter{color:var(--pk)}
+.tb{display:flex;gap:24px}
+.tb button{position:relative;padding:10px 0;color:#929296;font-size:15px;font-weight:700}
+.tb button.on{color:#fff}
+.tb button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--pk)}
+.nv .nsp{margin-right:-18px}
+.sr{display:flex;align-items:center;gap:10px;width:240px;height:42px;padding:0 12px 0 14px;color:#969a9e;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:12px;font-size:13px}
+.sr span{flex:1}
+.sr kbd{padding:2px 5px;border:1px solid #424448;border-radius:4px;font-size:11px;font-family:inherit}
+.sr svg{width:16px;height:16px}
+.jw{position:relative;margin-right:-18px}
+.mk .jb{display:flex;align-items:center;gap:8px;height:42px;padding:0 16px 0 14px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08) !important;color:#e6e9ec;font-size:13px;font-weight:700;transition:background .2s,border-color .2s,transform .15s}
+.mk .jb:hover,.mk[data-k~=dlg] .jb{background:#111820;border-color:rgba(255,255,255,.35) !important}
+.mk .jb.press{transform:scale(.96)}
+.jb svg{width:16px;height:16px}
+/* A2d2b2–A2d2b6: Join button treatments (.is-* classes force a state for the strips) */
+.mk .jb:is(.is-press,:active){transform:scale(.96)}
+.mk .jb:focus-visible,.mk .jb.is-focus{outline:2px solid #fff;outline-offset:3px}
+.mk .jb.jx{border:1px solid transparent !important;background:none}
+.mk .jb.jx:hover{border-color:transparent !important}
+/* dots: the button carries the shape of the code */
+.mk .jb.j-dots{gap:11px;padding:0 15px 0 17px;border-radius:21px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.08) !important}
+.jdots{display:flex;align-items:center;gap:3px}
+.jdots i{width:5px;height:5px;border-radius:50%;background:#ffffff3d;transition:background .18s calc(var(--i) * 45ms),transform .18s calc(var(--i) * 45ms)}
+.jdots i:nth-child(4){margin-left:5px}
+.mk .jb.j-dots:is(:hover,.is-hover){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.08) !important}
+.mk .jb.j-dots:is(:hover,.is-hover) .jdots i{background:#fff;transform:translateY(-1px)}
+.mk[data-k~=dlg] .jb.j-dots,.mk .jb.j-dots.is-open{background:rgba(255,255,255,.12)}
+.mk[data-k~=dlg] .jb.j-dots .jdots i,.mk .jb.j-dots.is-open .jdots i{background:var(--pk)}
+/* dock: Join is the end of the Search field */
+.sr.dock{width:304px;padding-right:4px}
+.sr .jb span{flex:none}
+.jsep{width:1px;height:20px;background:#ffffff1f;flex:none}
+.mk .jb.j-dock{height:34px;gap:7px;padding:0 12px 0 10px;border-radius:9px;color:#e6e9ec}
+.jb.j-dock svg{width:14px;height:14px;color:var(--n5);transition:color .2s}
+.mk .jb.j-dock:is(:hover,.is-hover){background:#ffffff14}
+.mk .jb.j-dock:is(:hover,.is-hover) svg{color:#fff}
+.mk[data-k~=dlg] .jb.j-dock,.mk .jb.j-dock.is-open{background:#ffffff1f}
+.mk[data-k~=dlg] .jb.j-dock svg,.mk .jb.j-dock.is-open svg{color:var(--pk)}
+/* key: quiet text, one pink key */
+.mk .jb.j-key{gap:10px;padding:0 16px 0 6px;border-radius:21px}
+.jkey{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#e8368f26;color:var(--pk);transition:background .2s,color .2s}
+.jkey svg{width:14px;height:14px}
+.mk .jb.j-key:is(:hover,.is-hover){background:#ffffff0f}
+.mk[data-k~=dlg] .jb.j-key,.mk .jb.j-key.is-open{background:#ffffff0f}
+.mk[data-k~=dlg] .jb.j-key .jkey,.mk .jb.j-key.is-open .jkey{background:var(--pk);color:#fff}
+/* square: an icon key the size of Search's height, label on hover */
+.mk .jb.j-sq{position:relative;width:42px;padding:0;justify-content:center;border-radius:12px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.08) !important}
+.mk .jb.j-sq:is(:hover,.is-hover){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.08) !important}
+.mk[data-k~=dlg] .jb.j-sq,.mk .jb.j-sq.is-open{background:#111820;border-color:rgba(255,255,255,.35) !important}
+.jtip{position:absolute;top:calc(100% + 8px);left:50%;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 10px;border-radius:8px;background:var(--n3);box-shadow:0 10px 30px -10px #000;font-size:12px;font-weight:600;white-space:nowrap;color:#fff;opacity:0;transform:translate(-50%,-4px);transition:opacity .15s,transform .15s;pointer-events:none}
+.jtip kbd{padding:1px 5px;border:1px solid #ffffff33;border-radius:4px;font:600 11px inherit;font-family:inherit;color:#b1bcc7}
+.mk .jb.j-sq:is(:hover,.is-hover) .jtip{opacity:1;transform:translate(-50%,0);transition-delay:.25s}
+.mk .jb.j-sq.is-hover .jtip{transition-delay:0s}
+.mk .jb.j-sq.is-press .jtip{opacity:0}
+.mk.jtile:has(.j-sq){column-gap:64px}
+.mk[data-k~=dlg] .jb.j-sq .jtip{opacity:0}
+/* beam: the invite pill's border light, only on hover and while open */
+@property --jba{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes jbspin{to{--jba:360deg}}
+.mk .jb.j-beam{position:relative;isolation:isolate;gap:8px;padding:0 18px 0 15px;border-radius:21px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.08) !important}
+.jb.j-beam svg{width:14px;height:14px;color:var(--n5)}
+.jb.j-beam::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--jba),transparent 0 62%,#c084fc 74%,#e8368f 84%,#fff 88%,transparent 96%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .35s;animation:jbspin 2.2s linear infinite;pointer-events:none}
+.mk .jb.j-beam:is(:hover,.is-hover){background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.08) !important}
+.mk .jb.j-beam:is(:hover,.is-hover)::before,.mk[data-k~=dlg] .jb.j-beam::before,.mk .jb.j-beam.is-open::before{opacity:1}
+.mk .jb.j-beam:is(:hover,.is-hover) svg,.mk[data-k~=dlg] .jb.j-beam svg,.mk .jb.j-beam.is-open svg{color:#fff}
+/* A2d2b7–A2d2b12: the app's pink .ub button, remixed for the nav */
+.mk .jb.jub{height:42px;gap:8px;padding:0 19px 0 16px;border-radius:21px;font:700 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:background .2s,border-color .2s,color .2s,box-shadow .2s,filter .2s,transform .15s}
+.jb.jub svg{width:14px;height:14px;transition:color .2s}
+/* pk: the dialog's pink pill, as is */
+.mk .jb.j-pk{background:var(--pk);color:#fff}
+.mk .jb.j-pk:is(:hover,.is-hover){background:var(--pk);filter:brightness(1.12)}
+.mk[data-k~=dlg] .jb.j-pk,.mk .jb.j-pk.is-open{box-shadow:0 0 0 4px #e8368f40}
+/* tint: pink at low strength, solid only while open */
+.mk .jb.j-tint{background:#e8368f26;color:#ff9fcb}
+.jb.j-tint svg{color:var(--pk)}
+.mk .jb.j-tint:is(:hover,.is-hover){background:#e8368f3d}
+.mk[data-k~=dlg] .jb.j-tint,.mk .jb.j-tint.is-open{background:var(--pk);color:#fff}
+.mk[data-k~=dlg] .jb.j-tint svg,.mk .jb.j-tint.is-open svg{color:#fff}
+/* ring: pink hairline, fills on hover */
+.mk .jb.j-ring{border:1px solid #e8368fa6 !important;color:#fff}
+.jb.j-ring svg{color:var(--pk)}
+.mk .jb.j-ring:is(:hover,.is-hover){background:#e8368f24;border-color:var(--pk) !important}
+.mk[data-k~=dlg] .jb.j-ring,.mk .jb.j-ring.is-open{background:var(--pk);border-color:var(--pk) !important}
+.mk[data-k~=dlg] .jb.j-ring svg,.mk .jb.j-ring.is-open svg{color:#fff}
+/* white: ink on white, like a player's Play button */
+.mk .jb.j-white{background:#fff;color:#090c11}
+.jb.j-white svg{color:var(--pk)}
+.mk .jb.j-white:is(:hover,.is-hover){background:#e9edf1}
+.mk[data-k~=dlg] .jb.j-white,.mk .jb.j-white.is-open{background:#fff;box-shadow:0 0 0 4px #ffffff2e}
+/* cap: ink pill with a pink cap */
+.mk .jb.j-cap{padding:0 18px 0 6px;gap:10px;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.08) !important;color:#fff}
+.jcap{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--pk);color:#fff;transition:box-shadow .2s,transform .2s}
+.mk .jb.j-cap:is(:hover,.is-hover){background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.08) !important}
+.mk .jb.j-cap:is(:hover,.is-hover) .jcap{transform:rotate(-8deg)}
+.mk[data-k~=dlg] .jb.j-cap,.mk .jb.j-cap.is-open{background:rgba(255,255,255,.12)}
+.mk[data-k~=dlg] .jb.j-cap .jcap,.mk .jb.j-cap.is-open .jcap{box-shadow:0 0 0 4px #e8368f40}
+/* pkdots: the pink pill carrying the code's six dots */
+.mk .jb.j-pkdots{gap:11px;padding:0 17px 0 19px;background:var(--pk);color:#fff}
+.j-pkdots .jdots i{background:#ffffff6b}
+.mk .jb.j-pkdots:is(:hover,.is-hover){background:var(--pk);filter:brightness(1.1)}
+.mk .jb.j-pkdots:is(:hover,.is-hover) .jdots i,.mk[data-k~=dlg] .jb.j-pkdots .jdots i,.mk .jb.j-pkdots.is-open .jdots i{background:#fff;transform:translateY(-1px)}
+.mk[data-k~=dlg] .jb.j-pkdots,.mk .jb.j-pkdots.is-open{box-shadow:0 0 0 4px #e8368f40}
+/* state strips */
+.mk.jtile{height:auto;display:flex;flex-wrap:wrap;gap:22px 34px;align-items:flex-start;padding:20px 24px 44px;margin-top:10px;border-radius:14px;background:#090c11;border:1px solid var(--line)}
+.jtile figure{margin:0;display:grid;gap:10px;justify-items:start}
+.jtile figcaption{font-size:12px;color:var(--n5)}
+
+/* listing */
+.ls{flex:1;min-height:0;overflow:hidden}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;height:330px;margin:10px 32px 0}
+.hs{position:relative;border-radius:20px;overflow:hidden;border:1px solid #ffffff0f}
+.hsh{position:absolute;inset:0;background:linear-gradient(90deg,#090c11b3,transparent),linear-gradient(0deg,#090c11eb,#090c1110 95%)}
+.hc{position:absolute;left:34px;bottom:30px;max-width:460px}
+.meta{font:600 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#ffffffc7}
+.hc h1{font-size:54px;font-weight:800;line-height:.98;letter-spacing:-.025em;margin:12px 0 10px}
+.hc p{color:#ffffffcc;font-size:14.5px;margin-bottom:18px}
+.ha{display:flex;gap:10px}
+.hl{display:flex;flex-direction:column;gap:6px}
+.hl li{position:relative;flex:1;display:flex;align-items:center;padding:0 18px;border-radius:14px;background:#ffffff04;overflow:hidden}
+.hl li.on{background:#ffffff12}
+.hl li i{position:absolute;right:0;top:50%;width:64%;aspect-ratio:16/9;transform:translateY(-50%);opacity:.26;mask-image:linear-gradient(90deg,transparent,#0007 42%,#000)}
+.hl li.on i{opacity:.52}
+.hl span{position:relative}
+.hl b{display:block;font-size:15px}
+.hl small{font-size:12px;color:var(--n5)}
+.shd{display:flex;align-items:baseline;gap:10px;margin:30px 32px 16px}
+.shd h2{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.shd span{color:var(--n5);font:600 12px 'Work Sans',sans-serif}
+.pgd{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0 32px}
+.pc{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px #ffffff12}
+.pc .sh{position:absolute;inset:0;background:linear-gradient(0deg,#0a0e14f5 18%,#0a0e1414 95%)}
+.pc .bd{position:absolute;top:10px;left:10px}
+.pc .tx{position:absolute;left:16px;right:16px;bottom:14px}
+.pc .tx b{display:block;font-size:17px}
+.pc .tx small{font-size:12px;color:#b9c3cc}
+.pc .pr{height:3px;border-radius:3px;background:#ffffff2a;margin-top:9px;overflow:hidden}
+.pc .pr i{display:block;height:100%;background:var(--pk)}
+
+/* room (watch screen + ChatWidget) */
+.rm{flex-direction:row;background:#000}
+.vd{position:relative;flex:1;min-width:0}
+.vsh{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.85),transparent 30%),linear-gradient(180deg,rgba(6,9,13,.6),transparent 22%)}
+.vt{position:absolute;left:20px;top:18px;display:flex;align-items:center;gap:12px;font-size:15px}
+.vc{position:absolute;left:20px;right:20px;bottom:18px;display:flex;align-items:center;gap:14px}
+.vc .tm{font-size:12px;color:#c7d3dd}
+.sk{flex:1;height:4px;border-radius:4px;background:#ffffff33;position:relative}
+.sk i{position:absolute;left:0;top:0;bottom:0;background:var(--pk);border-radius:4px}
+.sk i::after{content:"";position:absolute;right:-6px;top:-4px;width:12px;height:12px;border-radius:50%;background:#fff}
+.cw{width:310px;flex:none;display:flex;flex-direction:column;background:var(--n2);position:relative}
+.cp{flex:none;display:flex;align-items:center;gap:10px;padding:16px;background:var(--n2);border-bottom:1px solid var(--n1)}
+.mk .inv{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--n5);color:#fff;margin-left:auto;flex:none}
+.inv svg{width:16px;height:16px}
+.ms{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;padding-bottom:6px}
+.act{display:flex;justify-content:center;padding:10px 16px}
+.act>span{display:flex;align-items:center;gap:8px;padding:8px;background:var(--n1);border-radius:4px;font:600 11px 'Work Sans',sans-serif;letter-spacing:1px;text-transform:uppercase;color:#d5dde4}
+.grp{display:flex;gap:12px;padding:10px 16px;align-items:flex-end}
+.grp .nm{font-size:12px;color:var(--n5);margin:0 0 4px 6px}
+.grp .bb{display:table;padding:6px 10px;background:var(--n4);border-radius:18px;margin-bottom:4px;font-size:13.5px}
+.cbar{flex:none;padding:16px;border-top:1px solid var(--n1);display:flex;gap:10px;align-items:center}
+.cbar .ta{flex:1;height:38px;border-radius:20px;background:var(--n3);padding:0 14px;display:flex;align-items:center;color:var(--n5);font-size:13px}
+.cbar .sd{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--n4)}
+.cbar .sd svg{width:15px;height:15px}
+.copy-t{display:inline-flex;align-items:center;gap:7px}
+.copied-t{display:none;align-items:center;gap:6px}
+.copied .copy-t{display:none}
+.copied .copied-t{display:inline-flex}
+
+/* shared code cells */
+.cbox{position:relative}
+.cells{display:flex;align-items:center;gap:8px}
+.cell{display:grid;place-items:center;width:50px;height:60px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid #ffffff1f;font-size:25px;font-weight:600;font-variant-numeric:tabular-nums;transition:border-color .15s,background .15s,transform .15s}
+.cell.fill{border-color:#ffffff45;background:rgba(255,255,255,.09)}
+.cell.cur{border-color:#fff;box-shadow:0 0 0 3px #ffffff1f}
+.cell.cur::after{content:"";width:2px;height:24px;background:#fff;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.cells .sep{width:10px;height:2px;border-radius:2px;background:#ffffff40;margin:0 2px}
+.mk[data-k~=wrong] .cell{border-color:var(--bad);background:#ff6b8114}
+.mk[data-k~=found] .cell{border-color:#65d6ad66}
+.mk[data-k~=check] .cell{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{border-color:#ffffff22}}
+.shk .cells{animation:shake .38s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+.cbox input{position:absolute;inset:0;width:100%;opacity:0;font-size:16px;cursor:text;border:0;caret-color:transparent}
+.cells.sm{justify-content:space-between}
+.cells.sm .cell{width:45px;height:50px;font-size:20px;border-radius:10px}
+.cells.sm .cell.cur::after{height:20px}
+
+/* shared status lines */
+.st>*{display:none;align-items:center;gap:8px}
+.mk[data-k~=open] .st .s-open,.mk[data-k~=check] .st .s-check,.mk[data-k~=wrong] .st .s-wrong,.mk[data-k~=found] .st .s-found{display:flex}
+.st{font-size:13px;color:var(--n5);min-height:20px}
+.st .s-wrong{color:var(--bad)}
+.st .s-wrong b{color:#fff;font-weight:600}
+.st .s-found{color:var(--g)}
+.mk:not([data-k~=found]) [data-act=join]{opacity:.38;pointer-events:none}
+.jg{display:none}
+.mk[data-k~=joining] [data-act=join] .jl{display:none}
+.mk[data-k~=joining] [data-act=join] .jg{display:inline-flex;align-items:center;gap:8px}
+
+/* dialog shell */
+.dlg{position:absolute;left:50%;top:96px;z-index:11;transform:translate(-50%,10px) scale(.985);opacity:0;visibility:hidden;background:var(--n2);border:1px solid #ffffff1a;border-radius:18px;box-shadow:0 30px 80px -20px #000;transition:opacity .22s,transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}
+.mk[data-k~=dlg] .dlg{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .22s,transform .3s cubic-bezier(.2,.8,.2,1)}
+.dh{display:flex;align-items:center;gap:10px}
+.dh h3{font-size:20px;font-weight:700;letter-spacing:-.01em;flex:1}
+.dsub{font-size:14px;color:#b1bcc7;margin-top:6px}
+.df{display:flex;justify-content:flex-end;gap:10px}
+
+/* ── A: six boxes, the room unfolds below ── */
+.da{width:440px;padding:22px 24px 24px}
+.da .cbox{margin-top:22px}
+.da .st{margin-top:14px}
+.unf{display:grid;grid-template-rows:0fr;transition:grid-template-rows .42s cubic-bezier(.2,.8,.2,1)}
+.unf>div{overflow:hidden;min-height:0}
+.mk[data-k~=found] .unf{grid-template-rows:1fr}
+.pva{display:flex;gap:14px;align-items:center;margin-top:16px;padding:12px;border-radius:14px;background:#ffffff0a;border:1px solid #ffffff10;opacity:0;transform:translateY(-6px);transition:opacity .3s .12s,transform .35s .12s}
+.mk[data-k~=found] .pva{opacity:1;transform:none}
+:is(.pva,.pvm) .th{position:relative;width:132px;aspect-ratio:16/9;border-radius:9px;flex:none;overflow:hidden}
+:is(.pva,.pvm) .th .live{position:absolute;left:6px;bottom:6px;padding:3px 7px;font-size:9px}
+:is(.pva,.pvm) b{display:block;font-size:16px}
+:is(.pva,.pvm) small{display:block;font-size:12.5px;color:#b1bcc7;margin-top:1px}
+:is(.pva,.pvm) .wh{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:#d5dde4;--ring:#1d2834}
+.da .df{margin-top:22px}
+/* A2: found first, then the preview takes its place */
+.mk[data-seq] .da .st{height:20px;overflow:hidden;transition:height .35s cubic-bezier(.2,.8,.2,1),margin-top .35s cubic-bezier(.2,.8,.2,1),opacity .2s}
+.mk[data-seq] .da .st .s-found{animation:rise .25s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}}
+.mk[data-seq][data-k~=shown] .da .st{height:0;min-height:0;margin-top:0;opacity:0}
+.mk[data-seq]:not([data-k~=shown]) .unf{grid-template-rows:0fr}
+.mk[data-seq]:not([data-k~=shown]) .pva{opacity:0;transform:translateY(-6px)}
+.mk[data-seq][data-k~=shown] .pva{transition-delay:.08s}
+/* A2d2–A2d4: preview entrances */
+.pvm{display:flex;gap:14px;align-items:center;opacity:0;transition:opacity .3s}
+.mk[data-k~=shown] .pvm{opacity:1}
+/* A2d2: the space opens empty, then the card fades in — no nudge, nothing cut */
+.mk[data-an=fade] .pva{transform:scale(.97);transform-origin:50% 0;transition:opacity .28s,transform .4s cubic-bezier(.2,.8,.2,1)}
+.mk[data-an=fade]:not([data-k~=shown]) .pva{transform:scale(.97)}
+.mk[data-an=fade][data-k~=shown] .pva{transform:none;transition-delay:.34s}
+/* A2d3: the found line is the card's shell and grows into it */
+.mo{margin-top:7px;padding:7px 0;border-radius:14px;border:1px solid transparent;transition:background .3s,border-color .3s,padding .38s cubic-bezier(.2,.8,.2,1)}
+.mk[data-an=morph] .da .st{margin-top:0}
+.mk[data-an=morph][data-k~=found] .mo{background:#ffffff0a;border-color:#ffffff10;padding:7px 12px}
+.mk[data-an=morph][data-k~=shown] .mo{padding:12px}
+.mk[data-an=morph][data-k~=shown] .pvm{transition-delay:.2s}
+/* A2d4: a fixed slot — status and card trade places, the dialog never moves */
+.slot{position:relative;margin-top:16px;height:100px;border-radius:14px;background:#ffffff06}
+.mk[data-an=slot] .da .slot .st{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:0 16px;height:auto;min-height:0;text-align:center;transition:opacity .2s}
+.mk[data-an=slot][data-k~=shown] .da .slot .st{opacity:0}
+.slot .pvm{position:absolute;inset:0;padding:12px;border-radius:14px;background:#ffffff0a;border:1px solid #ffffff10;transform:scale(.985);transition:opacity .3s,transform .4s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.mk[data-k~=shown] .slot .pvm{transform:none;transition-delay:.12s}
+/* A2d2b: party states */
+:is(.pva,.pvm) .th .pg{position:absolute;left:0;right:0;bottom:0;height:3px;background:#ffffff2e}
+:is(.pva,.pvm) .th .pg i{display:block;height:100%;background:var(--pk)}
+.av.away{background:color-mix(in srgb,var(--c) 42%,#15202B);color:#10171Ecc}
+.allst{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:12px;margin-top:12px}
+.allst figure{margin:0}
+.allst figcaption{font-size:13px;color:var(--mut);margin:0 0 6px 2px}
+.mk.tile{height:auto;padding:16px;border-radius:14px;background:var(--n2);border:1px solid var(--line)}
+.mk.tile .pva{margin-top:0}
+.mk.tile .df{margin-top:14px}
+.pstrip{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.pstrip>span{font-size:13px;color:var(--mut)}
+/* A2 canopy: the code on one line */
+.cline{flex:none;display:flex;align-items:center;gap:10px;height:40px;padding:0 10px 0 16px;background:var(--n1);border-bottom:1px solid #000;font-size:13px;color:#b1bcc7}
+.cline b{color:#fff;font-size:14px;font-weight:700}
+.cline .sub{font-size:10px}
+.cline svg{width:14px;height:14px;color:var(--n5)}
+.mk .clc{margin-left:auto;display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:14px;font-size:12.5px;font-weight:600;color:#fff;transition:background .2s}
+.mk .clc:hover{background:#ffffff14}
+.mk .clc svg{color:currentColor}
+.clc .copied-t{color:var(--g)}
+/* A2c/A2d canopy: label left, code + icon right as one copy button */
+.cpw{flex:none;border-bottom:1px solid var(--n1)}
+.cpw .cp{border-bottom:0}
+.cl2{display:flex;align-items:center;gap:10px;height:36px;padding:0 8px 0 16px}
+.cl2 .sub{font-size:10px}
+.mk .clc2{margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 8px 0 10px;border-radius:14px;color:#fff;transition:background .2s}
+.mk .clc2:hover{background:#ffffff14}
+.clc2 b{font-size:14px;font-weight:700}
+.clc2 svg{width:14px;height:14px}
+.clc2 .copy-t{display:inline-flex;color:var(--n5);transition:color .2s}
+.clc2:hover .copy-t{color:#fff}
+.clc2 .copied-t{color:var(--g)}
+.clc2.copied .copy-t{display:none}
+.cpw.fl .cp{padding-bottom:4px}
+.cpw.fl .cl2{margin-bottom:8px}
+.cpw.wl .cp{padding-bottom:10px}
+.cpw.wl .cl2{height:40px;margin:0 16px 14px;padding:0 6px 0 14px;border-radius:12px;background:#ffffff0d}
+/* A canopy chip */
+.mk .cchip{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 10px 0 9px;margin-left:auto;border-radius:16px;background:var(--n3);border:1px solid #ffffff14 !important;font-size:13.5px;font-weight:600;transition:background .2s}
+.mk .cchip:hover{background:var(--n4)}
+.cchip svg{width:14px;height:14px;color:var(--n5)}
+.cchip .copied-t{color:var(--g);gap:6px}
+.mk .cchip+.inv{margin-left:0}
+
+/* ── B: one field, then a second step ── */
+.db{width:440px;overflow:hidden;transition:opacity .22s,transform .3s cubic-bezier(.2,.8,.2,1),visibility 0s .3s,height .4s cubic-bezier(.2,.8,.2,1)}
+.mk[data-k~=dlg] .db{transition:opacity .22s,transform .3s cubic-bezier(.2,.8,.2,1),height .4s cubic-bezier(.2,.8,.2,1)}
+.trk{display:grid;grid-template-columns:100% 100%;align-items:start;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.mk[data-k~=found] .trk{transform:translateX(-100%)}
+.p1{padding:22px 24px 24px}
+.lab{display:block;margin:20px 0 8px}
+.fld{position:relative}
+.fld input{width:100%;height:62px;padding:0 18px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid #ffffff24;color:#fff;font:600 28px 'halyard-display','Outfit',sans-serif;letter-spacing:.14em;font-variant-numeric:tabular-nums;outline:none;transition:border-color .15s,box-shadow .15s}
+.fld input::placeholder{color:#ffffff30}
+.fld input:focus{border-color:#ffffffaa;box-shadow:0 0 0 3px #ffffff1a}
+.mk[data-k~=wrong] .fld input{border-color:var(--bad)}
+.fld .spin{position:absolute;right:18px;top:24px;display:none}
+.mk[data-k~=check] .fld .spin{display:block}
+.shk .fld{animation:shake .38s}
+.p1 .st{margin-top:10px}
+.p1 .ub{margin-top:20px}
+.p2{padding:0 0 22px}
+.bst{position:relative;aspect-ratio:16/9;overflow:hidden}
+.bst .bk{position:absolute;left:14px;top:14px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#10171ecc}
+.bst .live{position:absolute;right:14px;top:16px}
+.bst .gr{position:absolute;inset:0;background:linear-gradient(0deg,var(--n2) 4%,#15202b00 60%)}
+.bst .tx{position:absolute;left:24px;right:24px;bottom:12px}
+.bst h3{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-top:6px}
+.bwho{display:flex;flex-direction:column;gap:2px;margin:10px 14px 0}
+.bwho li{display:flex;align-items:center;gap:12px;padding:7px 10px;border-radius:10px;font-size:14px;font-weight:600}
+.bwho li small{margin-left:auto;font-size:12px;color:var(--n5);font-weight:500}
+.p2 .df{margin:16px 24px 0}
+/* B canopy strip */
+.cstrip{flex:none;display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--n1);border-bottom:1px solid #000}
+.cstrip b{display:block;font-size:20px;font-weight:700;margin-top:2px}
+.cstrip p{font-size:11.5px;color:var(--n5);margin-top:1px}
+.cstrip .ub{margin-left:auto;height:34px;padding:0 14px}
+.cstrip .ub .copied-t{color:var(--g)}
+
+/* ── C: a dropdown under Join, like Search ── */
+.pop{position:absolute;left:0;top:calc(100% + 10px);width:372px;padding:14px;border-radius:16px;background:#15202bf5;border:1px solid #ffffff24;box-shadow:0 25px 60px -15px #000;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .22s,visibility 0s .22s;z-index:20}
+.mk[data-k~=dlg] .pop{opacity:1;visibility:visible;transform:none;transition:opacity .18s,transform .22s}
+.poh{display:flex;align-items:center;padding:2px 4px 12px}
+.poh kbd{margin-left:auto;padding:2px 5px;border:1px solid #424448;border-radius:4px;font:11px inherit;font-family:inherit;color:#969a9e}
+.pop .cbox{padding:0 4px}
+.pop .cells{gap:7px}
+.pres{margin-top:12px;border-top:1px solid #ffffff14;padding-top:8px}
+.pres>*{display:none}
+.mk[data-k~=open] .pres .r-open,.mk[data-k~=check] .pres .r-check,.mk[data-k~=wrong] .pres .r-wrong,.mk[data-k~=found] .pres .r-found{display:flex}
+.pres p{padding:10px 8px;font-size:13px;color:#b1bcc7;gap:6px}
+.pres .r-wrong{color:var(--bad)}
+.pres .r-wrong b{color:#fff;font-weight:600}
+.mk .prow{width:100%;align-items:center;gap:12px;padding:8px;border-radius:10px;background:#ffffff18;opacity:1 !important;pointer-events:auto !important}
+.mk .prow:hover{background:#ffffff22}
+.prow .th{width:72px;height:40px;border-radius:7px;flex:none}
+.prow span{min-width:0}
+.prow b{display:block;font-size:14px}
+.prow small{display:block;font-size:12px;color:#a4aab3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .rt{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:#d5dde4;flex:none}
+.prow kbd{padding:1px 5px;border:1px solid #ffffff40;border-radius:4px;font:11px inherit;font-family:inherit}
+.mk[data-k~=joining] .prow .rt .k{display:none}
+.prow .rt .spin{display:none}
+.mk[data-k~=joining] .prow .rt .spin{display:block}
+.skl{align-items:center;gap:12px;padding:8px}
+.skl i{display:block;border-radius:7px;background:#ffffff12;animation:pulse2 1.2s ease-in-out infinite}
+@keyframes pulse2{50%{opacity:.45}}
+/* C canopy: the room's name, code beneath */
+.cti{min-width:0}
+.cti b{display:block;font-size:15px}
+.mk .ccode{display:inline-flex;align-items:center;gap:6px;margin-top:1px;font-size:13px;color:var(--n5);font-weight:600;transition:color .2s}
+.ccode:hover{color:#fff}
+.ccode svg{width:13px;height:13px;opacity:0;transition:opacity .2s}
+.ccode:hover svg{opacity:1}
+.ccode .copied-t{color:var(--g)}
+.cp.c2 .avs{margin-left:auto}
+.mk .cp.c2 .inv{margin-left:0}
+.cp.c2{--ring:var(--n2)}
+.cp.c2 .avs .av+.av{margin-left:-5px}
+
+/* ── D: split dialog, the room fills the right ── */
+.dd{width:760px;display:grid;grid-template-columns:350px 1fr;overflow:hidden}
+.dl{padding:24px 26px 24px;display:flex;flex-direction:column}
+.dl .cbox{margin-top:24px}
+.dl .cell{width:44px;height:56px}
+.dl .cells{gap:7px}
+.dl .st{margin-top:14px}
+.dl .df{margin-top:auto;padding-top:26px}
+.dr{position:relative;background:var(--n1);border-left:1px solid #ffffff10;padding:18px}
+.dr>.ph,.dr>.dw{position:absolute;inset:18px;transition:opacity .35s}
+.dr>.dfd{position:relative;transition:opacity .35s}
+.ph,.dw{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px}
+.ph .fr{width:100%;aspect-ratio:16/9;border-radius:12px;border:1px solid #ffffff14;background:repeating-linear-gradient(135deg,#ffffff05 0 10px,transparent 10px 20px)}
+.ph p,.dw p{font-size:13px;color:var(--n5);max-width:260px}
+.dw b{font-size:16px}
+.mk:not([data-k~=open]):not([data-k~=check]) .ph{opacity:0}
+.mk[data-k~=check] .ph .fr{animation:pulse2 1.2s ease-in-out infinite}
+.mk:not([data-k~=wrong]) .dw{opacity:0}
+.mk:not([data-k~=found]) .dfd{opacity:0;pointer-events:none}
+.dfd .stl{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;transform:scale(.97);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.mk[data-k~=found] .dfd .stl{transform:none}
+.dfd .stl .live{position:absolute;left:10px;top:10px}
+.dfd .meta{display:block;margin-top:14px}
+.dfd h3{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:4px}
+.tl{margin-top:16px}
+.tlb{position:relative;height:4px;border-radius:4px;background:#ffffff22}
+.tlb>i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--pk)}
+.tlb .avs{position:absolute;top:50%;transform:translate(-50%,-50%);--ring:var(--n1)}
+.tlt{display:flex;justify-content:space-between;margin-top:12px;font-size:12px;color:var(--n5)}
+.dfd .wh{font-size:13px;color:#d5dde4;margin-top:6px}
+/* D canopy: a room-info card you can tuck away */
+.cinfo{flex:none;display:grid;grid-template-rows:1fr;transition:grid-template-rows .35s cubic-bezier(.2,.8,.2,1);border-bottom:1px solid var(--n1)}
+.cinfo>div{overflow:hidden;min-height:0}
+.cinfo .in{padding:14px 16px 16px;background:var(--n1)}
+.cih{display:flex;align-items:center}
+.cih .x{width:26px;height:26px;margin:-4px -6px -4px auto}
+.cinfo b{display:block;font-size:30px;font-weight:700;margin-top:6px}
+.cinfo p{font-size:12.5px;color:#b1bcc7;margin:4px 0 12px}
+.cinfo .ub{height:36px}
+.cinfo .ub .copied-t{color:var(--g)}
+.mk.tucked .cinfo{grid-template-rows:0fr;border-bottom-color:transparent}
+.dmini{opacity:0;pointer-events:none;transform:scale(.9);transition:opacity .25s,transform .25s}
+.mk.tucked .dmini{opacity:1;pointer-events:auto;transform:none}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+<header class="brief">
+  <div class="eyebrow">Care.tv · room codes · follows .kier/designs/4f7a-watch-party-join-code.html</div>
+  <h1>Anyone who knows a room's code can walk in.</h1>
+  <div class="cards">
+    <div>Six digits, never expire.</div>
+    <div>Join sits left of Search.</div>
+    <div>See the room before you're in it.</div>
+    <div>The code lives at the top of the chat.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="No way in without an invite">
+  <div class="var-h"><span class="id">Now</span><h2>No way in without an invite</h2></div>
+  <div class="frame"><div class="mk" data-v="now"></div></div>
+  <div class="rail" data-for="now"></div>
+  <div class="notes">
+    <div class="note good">Invite is one tap from the chat.</div>
+    <div class="note bad">Only the host can let you in.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="Six boxes, the room unfolds below">
+  <div class="var-h"><span class="id">A</span><h2>Six boxes, the room unfolds below</h2></div>
+  <div class="frame"><div class="mk" data-v="a"></div></div>
+  <div class="rail" data-for="a"></div>
+  <div class="notes">
+    <div class="note good">Same boxes as every sign-in code.</div>
+    <div class="note good">Preview without a second screen.</div>
+    <div class="note good">Code chip sits beside the faces.</div>
+    <div class="note bad">Dialog grows as the room unfolds.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2" data-id="A2" data-name="Found first, then the room; code on one line">
+  <div class="var-h"><span class="id">A2</span><h2>Found first, then the room; code on one line</h2></div>
+  <div class="frame"><div class="mk" data-v="a2" data-seq="1"></div></div>
+  <div class="rail" data-for="a2"></div>
+  <div class="notes">
+    <div class="note good">One thing changes at a time.</div>
+    <div class="note good">B's strip at 40px — chat keeps its height.</div>
+    <div class="note bad">Preview waits ~1s after the last digit.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2b" data-id="A2b" data-name="A2, the code line reads as a sentence">
+  <div class="var-h"><span class="id">A2b</span><h2>A2, the code line reads as a sentence</h2></div>
+  <div class="frame"><div class="mk" data-v="a2b" data-seq="1"></div></div>
+  <div class="rail" data-for="a2b"></div>
+  <div class="notes">
+    <div class="note good">Says what the code is for.</div>
+    <div class="note bad">The digits are harder to spot.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2c" data-id="A2c" data-name="A2, code sits flush in the canopy">
+  <div class="var-h"><span class="id">A2c</span><h2>A2, code sits flush in the canopy</h2></div>
+  <div class="frame"><div class="mk" data-v="a2c" data-seq="1"></div></div>
+  <div class="rail" data-for="a2c"></div>
+  <div class="notes">
+    <div class="note good">One surface with the faces — no band.</div>
+    <div class="note good">The code is the button; tap the digits.</div>
+    <div class="note bad">Easy to miss on a first visit.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d" data-id="A2d" data-name="A2, code in a soft inset well">
+  <div class="var-h"><span class="id">A2d</span><h2>A2, code in a soft inset well</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d" data-seq="1"></div></div>
+  <div class="rail" data-for="a2d"></div>
+  <div class="notes">
+    <div class="note good">Same lift as the Search field.</div>
+    <div class="note good">Reads as one thing you can copy.</div>
+    <div class="note bad">Adds 10px over A2c.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2" data-id="A2d2" data-name="A2d, the space opens, then the card fades in">
+  <div class="var-h"><span class="id">A2d2</span><h2>A2d, the space opens, then the card fades in</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2"></div>
+  <div class="notes">
+    <div class="note good">The card arrives whole, never cut.</div>
+    <div class="note bad">A beat of empty space first.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b" data-id="A2d2b" data-name="A2d2 as a watch party, in every state">
+  <div class="var-h"><span class="id">A2d2b</span><h2>A2d2 as a watch party, in every state</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b"></div>
+  <div class="rail pstrip" data-ps-for="a2d2b"><span>Preview as</span><div class="steps"></div></div>
+  <div class="allst" data-all-for="a2d2b"></div>
+  <div class="notes">
+    <div class="note good">Uses the listing's own words: watching now, last watched.</div>
+    <div class="note good">The pink bar shows where the party left off.</div>
+    <div class="note bad">An empty party still says Join, then you're alone.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b2" data-id="A2d2b2" data-name="Join carries the shape of the code">
+  <div class="var-h"><span class="id">A2d2b2</span><h2>Join carries the shape of the code</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b2" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b2"></div>
+  <div class="mk jtile" data-jst-for="a2d2b2"></div>
+  <div class="notes">
+    <div class="note good">Six dots say “code” before you click.</div>
+    <div class="note good">Dots light up on hover, pink while open.</div>
+    <div class="note bad">Dots could read as a loading state.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b3" data-id="A2d2b3" data-name="Join docks into the Search field">
+  <div class="var-h"><span class="id">A2d2b3</span><h2>Join docks into the Search field</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b3" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b3"></div>
+  <div class="mk jtile" data-jst-for="a2d2b3"></div>
+  <div class="notes">
+    <div class="note good">One control: find a title or join a party.</div>
+    <div class="note good">Frees a slot in the nav.</div>
+    <div class="note bad">Search gets 64px wider.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b4" data-id="A2d2b4" data-name="Quiet text with one pink key">
+  <div class="var-h"><span class="id">A2d2b4</span><h2>Quiet text with one pink key</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b4" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b4"></div>
+  <div class="mk jtile" data-jst-for="a2d2b4"></div>
+  <div class="notes">
+    <div class="note good">Calmest in the nav; nothing boxed.</div>
+    <div class="note good">The pink key is the only accent.</div>
+    <div class="note bad">Without a box it is easy to skip.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b5" data-id="A2d2b5" data-name="A square key beside Search">
+  <div class="var-h"><span class="id">A2d2b5</span><h2>A square key beside Search</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b5" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b5"></div>
+  <div class="mk jtile" data-jst-for="a2d2b5"></div>
+  <div class="notes">
+    <div class="note good">Smallest footprint, matches Search exactly.</div>
+    <div class="note good">Tooltip names it and offers J.</div>
+    <div class="note bad"># alone needs the tooltip to make sense.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b6" data-id="A2d2b6" data-name="The invite pill's beam, only on hover">
+  <div class="var-h"><span class="id">A2d2b6</span><h2>The invite pill's beam, only on hover</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b6" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b6"></div>
+  <div class="mk jtile" data-jst-for="a2d2b6"></div>
+  <div class="notes">
+    <div class="note good">Same beam as invitations: one family.</div>
+    <div class="note good">Still at rest, alive on hover and while open.</div>
+    <div class="note bad">The most decorated of the five.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b7" data-id="A2d2b7" data-name="The dialog’s pink pill, in the nav">
+  <div class="var-h"><span class="id">A2d2b7</span><h2>The dialog’s pink pill, in the nav</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b7" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b7"></div>
+  <div class="mk jtile" data-jst-for="a2d2b7"></div>
+  <div class="notes">
+    <div class="note good">Same button you press to get in.</div>
+    <div class="note good">Unmissable; the nav has one call to action.</div>
+    <div class="note bad">Loudest thing on the page, every visit.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b8" data-id="A2d2b8" data-name="Pink tint, solid while open">
+  <div class="var-h"><span class="id">A2d2b8</span><h2>Pink tint, solid while open</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b8" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b8"></div>
+  <div class="mk jtile" data-jst-for="a2d2b8"></div>
+  <div class="notes">
+    <div class="note good">Brand colour without shouting.</div>
+    <div class="note good">Turns solid pink only while the dialog is up.</div>
+    <div class="note bad">Pink text at 11px is a little soft.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b9" data-id="A2d2b9" data-name="Pink hairline, fills on hover">
+  <div class="var-h"><span class="id">A2d2b9</span><h2>Pink hairline, fills on hover</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b9" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b9"></div>
+  <div class="mk jtile" data-jst-for="a2d2b9"></div>
+  <div class="notes">
+    <div class="note good">Light at rest, clearly pink on hover.</div>
+    <div class="note bad">Outline buttons appear nowhere else in Care.tv.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b10" data-id="A2d2b10" data-name="White pill, like Play">
+  <div class="var-h"><span class="id">A2d2b10</span><h2>White pill, like Play</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b10" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b10"></div>
+  <div class="mk jtile" data-jst-for="a2d2b10"></div>
+  <div class="notes">
+    <div class="note good">Reads as a primary action, not an ad.</div>
+    <div class="note good">Pink stays as a small # accent.</div>
+    <div class="note bad">Competes with the hero’s own buttons.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b11" data-id="A2d2b11" data-name="Ink pill with a pink cap">
+  <div class="var-h"><span class="id">A2d2b11</span><h2>Ink pill with a pink cap</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b11" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b11"></div>
+  <div class="mk jtile" data-jst-for="a2d2b11"></div>
+  <div class="notes">
+    <div class="note good">The .ub look with one pink circle.</div>
+    <div class="note good">Cap tilts on hover; rings while open.</div>
+    <div class="note bad">Two shapes where one would do.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d2b12" data-id="A2d2b12" data-name="Pink pill carrying the code dots">
+  <div class="var-h"><span class="id">A2d2b12</span><h2>Pink pill carrying the code dots</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d2b12" data-seq="1" data-an="fade"></div></div>
+  <div class="rail" data-for="a2d2b12"></div>
+  <div class="mk jtile" data-jst-for="a2d2b12"></div>
+  <div class="notes">
+    <div class="note good">A2d2b2’s meaning in the brand colour.</div>
+    <div class="note good">Dots fill white on hover and while open.</div>
+    <div class="note bad">Busier than a plain pink Join.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d3" data-id="A2d3" data-name="A2d, the found line grows into the card">
+  <div class="var-h"><span class="id">A2d3</span><h2>A2d, the found line grows into the card</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d3" data-seq="1" data-an="morph"></div></div>
+  <div class="rail" data-for="a2d3"></div>
+  <div class="notes">
+    <div class="note good">One shape: line becomes card.</div>
+    <div class="note good">Found and preview read as one moment.</div>
+    <div class="note bad">The text shifts 12px as the shell lights up.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a2d4" data-id="A2d4" data-name="A2d, a fixed slot where status and card swap">
+  <div class="var-h"><span class="id">A2d4</span><h2>A2d, a fixed slot where status and card swap</h2></div>
+  <div class="frame"><div class="mk" data-v="a2d4" data-seq="1" data-an="slot"></div></div>
+  <div class="rail" data-for="a2d4"></div>
+  <div class="notes">
+    <div class="note good">The dialog never changes height.</div>
+    <div class="note good">Join stays put under your cursor.</div>
+    <div class="note bad">Tall empty slot before you type.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="One field, then the room as step two">
+  <div class="var-h"><span class="id">B</span><h2>One field, then the room as step two</h2></div>
+  <div class="frame"><div class="mk" data-v="b"></div></div>
+  <div class="rail" data-for="b"></div>
+  <div class="notes">
+    <div class="note good">One field takes a pasted “482 913”.</div>
+    <div class="note good">Biggest preview: the still is the card.</div>
+    <div class="note bad">Two screens to get in.</div>
+    <div class="note bad">Code strip pushes chat down.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c" data-id="C" data-name="A dropdown under Join, like Search">
+  <div class="var-h"><span class="id">C</span><h2>A dropdown under Join, like Search</h2></div>
+  <div class="frame"><div class="mk" data-v="c"></div></div>
+  <div class="rail" data-for="c"></div>
+  <div class="notes">
+    <div class="note good">No modal — the listing stays put.</div>
+    <div class="note good">The room reads like a search result.</div>
+    <div class="note good">Room gets a name; code is its subtitle.</div>
+    <div class="note bad">Smallest preview of the four.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d" data-id="D" data-name="Split dialog, the room fills the right">
+  <div class="var-h"><span class="id">D</span><h2>Split dialog, the room fills the right</h2></div>
+  <div class="frame"><div class="mk" data-v="d"></div></div>
+  <div class="rail" data-for="d"></div>
+  <div class="notes">
+    <div class="note good">Shows where they are in the film.</div>
+    <div class="note good">Room info is loud, then tucks into a chip.</div>
+    <div class="note bad">Right half is blank until the code matches.</div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from A — the code in the player's top bar too, for fullscreen.</div>
+    <div><b>Remix</b>Remix C: give the result row D's timeline with faces.</div>
+    <div><b>Settle</b>Settle on A2d2b12 if pink plus the six dots feels like Care.tv’s own Join.</div>
+  </div>
+</section>
+</main>
+
+<script>
+const FILE = '.kier/designs/8a3c-room-join-code.html';
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Kier:'#E8368F'};
+const ROOM = {code:'482913', who:['Kier','Leo','Mira']};
+const WHO = ['Kier','Leo','Mira','Joyce'];
+const fmt = c => c.length > 3 ? c.slice(0,3) + ' ' + c.slice(3) : c;
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', y:2025, len:'2h 04m', c:['#e8368f','#1b0f3a'], p:'rings'},
+  {id:'hollow', t:'Hollow County', y:2023, len:'S2 · E4', c:['#a3e635','#14240a'], p:'stripes'},
+  {id:'paper',  t:'Paper Moons',   y:2024, len:'1h 52m', c:['#ff7a59','#3b0d4c'], p:'sun'},
+  {id:'orbit',  t:'Orbit Diner',   y:2024, len:'S1 · E7', c:['#f7c948','#7a1f4d'], p:'dots'},
+  {id:'ferry',  t:'Night Ferry',   y:2023, len:'1h 41m', c:['#1fd1f9','#0b1b3f'], p:'stripes'},
+  {id:'under',  t:'The Understudies', y:2025, len:'S1 · E2', c:['#c084fc','#2a0e5c'], p:'split'}
+];
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'sun': return `radial-gradient(circle at 68% 34%, ${a} 0 16%, ${a}00 16.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+  }
+}
+const bg = id => `background:${art(byId(id))}`;
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const avs = (ns, cls = '') => `<div class="avs">${ns.map(n => av(n, cls)).join('')}</div>`;
+const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const I = {
+  join: svg('<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>'),
+  search: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+  hash: svg('<path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/>'),
+  copy: svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  check: svg('<path d="M20 6 9 17l-5-5"/>'),
+  x: svg('<path d="M18 6 6 18M6 6l12 12"/>'),
+  uplus: svg('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>'),
+  back: svg('<path d="m15 18-6-6 6-6"/>'),
+  up: svg('<path d="M12 19V5M5 12l7-7 7 7"/>'),
+  pause: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`,
+  play: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>`
+};
+const cells = (sm = '') => `<div class="cells ${sm}">${[0,1,2,3,4,5].map(i => `${i === 3 ? '<span class="sep"></span>' : ''}<span class="cell"></span>`).join('')}</div>`;
+const codeBox = sm => `<div class="cbox">${cells(sm)}<input class="ci" inputmode="numeric" autocomplete="off" maxlength="6" aria-label="Room code"></div>`;
+const copyLabel = (a, b = 'Copied') => `<span class="copy-t">${a}</span><span class="copied-t">${I.check}${b}</span>`;
+const joinLabel = (t = 'Join room') => `<span class="jl">${t}</span><span class="jg"><i class="spin"></i>Joining</span>`;
+
+/* ───────────── Screens ───────────── */
+const JBV = {a2d2b2:'dots', a2d2b3:'dock', a2d2b4:'key', a2d2b5:'sq', a2d2b6:'beam', a2d2b7:'pk', a2d2b8:'tint', a2d2b9:'ring', a2d2b10:'white', a2d2b11:'cap', a2d2b12:'pkdots'};
+function joinBtn(k, st = ''){
+  const b = (cls, inner, aria = '') => `<button class="jb jx j-${k} ${st}" data-act="open"${aria}>${inner}</button>`;
+  if(k === 'dots') return b('', `<span>Join</span><span class="jdots">${[0,1,2,3,4,5].map(i => `<i style="--i:${i}"></i>`).join('')}</span>`);
+  if(k === 'dock') return b('', `${I.hash}<span>Join</span>`);
+  if(k === 'key') return b('', `<i class="jkey">${I.hash}</i><span>Join</span>`);
+  if(k === 'sq') return b('', `${I.hash}<span class="jtip">Join with a code <kbd>J</kbd></span>`, ' aria-label="Join with a code"');
+  if(k === 'beam') return b('', `${I.hash}<span>Join</span>`);
+  const u = inner => `<button class="jb jx jub j-${k} ${st}" data-act="open">${inner}</button>`;
+  if(['pk','tint','ring','white'].includes(k)) return u(`${I.hash}<span>Join</span>`);
+  if(k === 'cap') return u(`<i class="jcap">${I.hash}</i><span>Join</span>`);
+  if(k === 'pkdots') return u(`<span>Join</span><span class="jdots">${[0,1,2,3,4,5].map(i => `<i style="--i:${i}"></i>`).join('')}</span>`);
+  return `<button class="jb" data-act="open">${I.join}<span>Join</span></button>`;
+}
+const searchBox = (k, st = '') => k === 'dock'
+  ? `<div class="sr dock jw">${I.search}<span>Search titles</span><kbd>/</kbd><i class="jsep"></i>${joinBtn('dock', st)}</div>`
+  : `<div class="sr">${I.search}<span>Search titles</span><kbd>/</kbd></div>`;
+function nav(v, pop = ''){
+  return `<header class="nv">
+    <div class="lg">Care.tv</div>
+    <div class="tb">${['All','Movies','Series','Parties'].map((t, i) => `<button class="${i ? '' : 'on'}">${t}</button>`).join('')}</div>
+    <div class="nsp"></div>
+    ${v === 'now' || JBV[v] === 'dock' ? '' : `<div class="jw">${joinBtn(JBV[v])}${pop}</div>`}
+    ${searchBox(JBV[v])}
+    ${av('Joyce','l')}
+  </header>`;
+}
+function listing(){
+  const party = (id, who, at, pct) => `<div class="pc" style="${bg(id)}"><div class="sh"></div><span class="bd live">Live</span>
+    <div class="tx"><b>${byId(id).t}</b><small>${who} · ${at}</small><div class="pr"><i style="width:${pct}%"></i></div></div></div>`;
+  return `<div class="ls">
+    <div class="hero">
+      <div class="hs" style="${bg('paper')}"><div class="hsh"></div>
+        <div class="hc"><span class="meta">Movie · 2024 · 1h 52m</span><h1>Paper Moons</h1>
+          <p>Two sisters run a paper lantern shop that only opens after midnight.</p>
+          <div class="ha"><span class="ub pk">${I.play}Start party</span><span class="ub">Details</span></div></div>
+      </div>
+      <ol class="hl">${['paper','hollow','ferry','under'].map((id, i) => `<li class="${i ? '' : 'on'}"><i style="${bg(id)}"></i><span><b>${byId(id).t}</b><small>${byId(id).y} · ${byId(id).len}</small></span></li>`).join('')}</ol>
+    </div>
+    <div class="shd"><h2>Recent parties</h2><span>3</span></div>
+    <div class="pgd">${party('orbit','Nico, Leo','S1 · E7 · 12:40',30)}${party('hollow','Mira','S2 · E4 · 31:02',62)}${party('ferry','Leo','1:02:10',74)}</div>
+  </div>`;
+}
+const act = (n, t) => `<div class="act"><span>${av(n,'s')}${t}</span></div>`;
+const grp = (n, lines) => `<div class="grp">${av(n)}<div><div class="nm">${n}</div>${lines.map(l => `<span class="bb">${l}</span>`).join('')}</div></div>`;
+function room(v){
+  return `<div class="L rm">
+    <div class="vd" style="${bg('velvet')}"><div class="vsh"></div>
+      <div class="vt">${I.back}<b>Velvet Static</b></div>
+      <div class="vc">${I.pause}<span class="tm num">41:12</span><div class="sk"><i style="width:33%"></i></div><span class="tm num">2:04:00</span></div>
+    </div>
+    <aside class="cw">
+      ${CANOPY[v]()}
+      <div class="ms">
+        ${act('Kier','Kier started Velvet Static')}
+        ${grp('Leo',['that static scene though'])}
+        ${grp('Mira',['wait whose voice is that','is it hers??'])}
+        ${act('Joyce', v === 'now' ? 'Joyce joined' : 'Joyce joined with the code')}
+      </div>
+      <div class="cbar"><div class="ta">Send a message…</div><button class="sd">${I.up}</button></div>
+    </aside>
+  </div>`;
+}
+
+/* ───────────── Canopies (top of the room's sidebar) ───────────── */
+const inv = `<button class="inv" aria-label="Invite">${I.uplus}</button>`;
+const CANOPY = {
+  now: () => `<div class="cp">${avs(WHO)}${inv}</div>`,
+  a: () => `<div class="cp">${avs(WHO)}<button class="cchip" data-act="copy" title="Copy room code">${copyLabel(`${I.hash}<span class="num">482 913</span>${I.copy}`)}</button>${inv}</div>`,
+  b: () => `<div class="cp">${avs(WHO)}${inv}</div>
+    <div class="cstrip"><div><span class="sub">Room code</span><b class="num">482 913</b><p>Anyone with this code can join.</p></div>
+      <button class="ub" data-act="copy">${copyLabel(`${I.copy}Copy`)}</button></div>`,
+  c: () => `<div class="cp c2"><div class="cti"><b>Kier's room</b><button class="ccode" data-act="copy" title="Copy room code">${copyLabel(`<span class="num">482 913</span>${I.copy}`, 'Code copied')}</button></div>${avs(WHO,'s')}${inv}</div>`,
+  d: () => `<div class="cp">${avs(WHO)}<button class="cchip dmini" data-act="copy" title="Copy room code">${copyLabel(`${I.hash}<span class="num">482 913</span>`)}</button>${inv}</div>
+    <div class="cinfo"><div><div class="in">
+      <div class="cih"><span class="sub">Room code</span><button class="x" data-act="tuck" aria-label="Tuck away">${I.x}</button></div>
+      <b class="num">482 913</b>
+      <p>Anyone with this code can join. It never changes.</p>
+      <button class="ub full" data-act="copy">${copyLabel(`${I.copy}Copy code`)}</button>
+    </div></div></div>`,
+  a2: () => `<div class="cp">${avs(WHO)}${inv}</div>
+    <div class="cline"><span class="sub">Room code</span><b class="num">482 913</b>
+      <button class="clc" data-act="copy">${copyLabel(`${I.copy}Copy`)}</button></div>`,
+  a2b: () => `<div class="cp">${avs(WHO)}${inv}</div>
+    <div class="cline">${I.hash}<span>Anyone with <b class="num">482 913</b> can join</span>
+      <button class="clc" data-act="copy">${copyLabel('Copy')}</button></div>`,
+  a2c: () => cline2('fl'),
+  a2d: () => cline2('wl')
+};
+CANOPY.a2d2 = CANOPY.a2d3 = CANOPY.a2d4 = CANOPY.a2d;
+CANOPY.a2d2b = () => cline2('wl', 'Party code');
+Object.keys(JBV).forEach(k => CANOPY[k] = CANOPY.a2d2b);
+function cline2(k, label = 'Room code'){
+  return `<div class="cpw ${k}"><div class="cp">${avs(WHO)}${inv}</div>
+    <div class="cl2"><span class="sub">${label}</span>
+      <button class="clc2" data-act="copy" title="Copy room code" aria-label="Copy room code 482 913"><b class="num">482 913</b><span class="copy-t">${I.copy}</span><span class="copied-t">${I.check}</span></button></div></div>`;
+}
+
+/* ───────────── Dialogs ───────────── */
+const TR = {title:'Join a room', hint:'Anyone in the room can find it above their chat.', check:'Looking for the room…', none:'No room uses', found:"Found Kier's room", join:'Join room'};
+const TP = {title:'Join a watch party', hint:'Anyone in the watch party can find it above their chat.', check:'Looking for the watch party…', none:'No watch party uses', found:"Found Kier's watch party", join:'Join party'};
+const status = (open, wrongTail = 'Check it and try again.', T = TR) => `<div class="st">
+  <span class="s-open">${open}</span>
+  <span class="s-check"><i class="spin"></i>${T.check}</span>
+  <span class="s-wrong"><span>${T.none} <b class="cv"></b>. ${wrongTail}</span></span>
+  <span class="s-found">${I.check}${T.found}</span>
+</div>`;
+const pvIn = sub => `<div class="th" style="${bg('velvet')}"><span class="live">41:12</span></div>
+  <div><b>Velvet Static</b><small>${sub}</small>
+    <div class="wh">${avs(ROOM.who,'s')}Kier, Leo and Mira</div></div>`;
+function previewArea(sub, an, T = TR, inner = pvIn(sub)){
+  const st = status(T.hint, undefined, T);
+  if(an === 'morph') return `<div class="mo">${st}<div class="unf"><div><div class="pvm">${inner}</div></div></div></div>`;
+  if(an === 'slot') return `<div class="slot">${st}<div class="pvm">${inner}</div></div>`;
+  return `${st}<div class="unf"><div><div class="pva">${inner}</div></div></div>`;
+}
+/* A2d2b: what the preview says for each kind of watch party (parties never end; one video, playing or paused, people in or not) */
+const PST = {
+  live:   {lab:'Watching now', show:'velvet', t:'Velvet Static', line:'Watching now · 41:12 of 2:04:00', prog:33, who:[['Kier',1],['Leo',1],['Mira',1]], whoT:'Kier, Leo and Mira are here'},
+  paused: {lab:'Paused', show:'velvet', t:'Velvet Static', line:'Paused at 1:12:40 of 2:04:00', prog:58, who:[['Kier',1],['Leo',1],['Mira',0]], whoT:'Kier and Leo are here'},
+  fresh:  {lab:'Not started', show:'ferry', t:'Night Ferry', line:"Hasn't started yet", prog:0, who:[['Kier',1]], whoT:'Kier is waiting'},
+  series: {lab:'Series episode', show:'hollow', t:'Hollow County', line:'S2 E4 · The Long Night', prog:21, who:[['Kier',1],['Leo',1]], whoT:'Kier and Leo are here'},
+  idle:   {lab:"Nobody's here", show:'paper', t:'Paper Moons', line:'Last watched 5 months ago', prog:55, who:[['Kier',0],['Leo',0],['Mira',0]], whoT:"No one's here right now"},
+  member: {lab:'Already a member', show:'velvet', t:'Velvet Static', line:"You're already in this party", prog:33, who:[['Kier',1],['Leo',1],['Joyce',0]], whoT:'Kier and Leo are here', cta:'Open party'}
+};
+const pvState = s => `<div class="th" style="${bg(s.show)}">${s.prog ? `<i class="pg"><i style="width:${s.prog}%"></i></i>` : ''}</div>
+  <div><b>${s.t}</b><small>${s.line}</small>
+    <div class="wh"><div class="avs">${s.who.map(([n, on]) => av(n, on ? 's' : 's away')).join('')}</div>${s.whoT}</div></div>`;
+function setPState(mk, k){
+  const s = PST[k]; mk._ps = k;
+  mk.querySelector('.pva').innerHTML = pvState(s);
+  mk.querySelector('.da [data-act=join] .jl').textContent = s.cta || TP.join;
+  const strip = document.querySelector(`[data-ps-for="${mk.dataset.v}"]`);
+  strip.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.ps === k));
+}
+const DIALOG = {
+  a: (sub = "Kier's room · Playing", an, T = TR, inner) => `<div class="dlg da" role="dialog" aria-label="${T.title}">
+    <div class="dh"><h3>${T.title}</h3><button class="x" data-act="close" aria-label="Close">${I.x}</button></div>
+    <p class="dsub">Enter the 6-digit code someone shared with you.</p>
+    ${codeBox()}
+    ${previewArea(sub, an, T, inner)}
+    <div class="df"><button class="ub" data-act="close">Cancel</button><button class="ub pk" data-act="join">${joinLabel(T.join)}</button></div>
+  </div>`,
+  b: () => `<div class="dlg db" role="dialog" aria-label="Join a room"><div class="trk">
+    <section class="p1">
+      <div class="dh"><h3>Join a room</h3><button class="x" data-act="close" aria-label="Close">${I.x}</button></div>
+      <label class="lab sub">Room code</label>
+      <div class="fld"><input class="bi" placeholder="000 000" inputmode="numeric" autocomplete="off" maxlength="7" aria-label="Room code"><i class="spin"></i></div>
+      ${status('Six digits. Paste it with or without the space.', '')}
+      <button class="ub pk full" data-act="cont">Continue</button>
+    </section>
+    <section class="p2">
+      <div class="bst" style="${bg('velvet')}"><div class="gr"></div>
+        <button class="bk" data-act="back" aria-label="Back">${I.back}</button><span class="live">Playing · 41:12</span>
+        <div class="tx"><span class="meta">Kier's room</span><h3>Velvet Static</h3></div></div>
+      <ul class="bwho">
+        <li>${av('Kier')}Kier<small>Started the room</small></li>
+        <li>${av('Leo')}Leo<small>Watching</small></li>
+        <li>${av('Mira')}Mira<small>Watching</small></li>
+      </ul>
+      <div class="df"><button class="ub" data-act="back">Back</button><button class="ub pk" data-act="join">${joinLabel()}</button></div>
+    </section>
+  </div></div>`,
+  c: () => `<div class="pop" role="dialog" aria-label="Join with a code">
+    <div class="poh"><span class="sub">Join with a code</span><kbd>esc</kbd></div>
+    ${codeBox('sm')}
+    <div class="pres">
+      <p class="r-open">Ask anyone in the room — it's above their chat.</p>
+      <div class="r-check skl"><i style="width:72px;height:40px"></i><span style="flex:1"><i style="width:60%;height:10px"></i><i style="width:85%;height:8px;margin-top:8px"></i></span></div>
+      <p class="r-wrong"><span>No room uses <b class="cv"></b>. Check it and try again.</span></p>
+      <button class="r-found prow" data-act="join"><i class="th" style="${bg('velvet')}"></i>
+        <span><b>Kier's room</b><small>Velvet Static · 41:12 · 3 watching</small></span>
+        <span class="rt"><span class="k">Join <kbd>↵</kbd></span><i class="spin"></i></span></button>
+    </div>
+  </div>`,
+  d: () => `<div class="dlg dd" role="dialog" aria-label="Join a room">
+    <div class="dl">
+      <div class="dh"><h3>Join a room</h3><button class="x" data-act="close" aria-label="Close">${I.x}</button></div>
+      <p class="dsub">Got a code from a friend? Type it in.</p>
+      ${codeBox()}
+      ${status('The room shows up on the right.')}
+      <div class="df"><button class="ub" data-act="close">Cancel</button><button class="ub pk" data-act="join">${joinLabel()}</button></div>
+    </div>
+    <div class="dr">
+      <div class="ph"><div class="fr"></div><p>Who's there and what's playing will show here.</p></div>
+      <div class="dw"><b>No room with that code</b><p>Codes are six digits and never change. Ask whoever sent it.</p></div>
+      <div class="dfd">
+        <div class="stl" style="${bg('velvet')}"><span class="live">Playing</span></div>
+        <span class="meta">Kier's room</span><h3>Velvet Static</h3>
+        <div class="tl"><div class="tlb"><i style="width:33%"></i><span class="avs" style="left:33%">${ROOM.who.map(n => av(n,'s')).join('')}</span></div>
+          <div class="tlt"><span class="num">41:12</span><span class="num">2:04:00</span></div></div>
+        <p class="wh">Kier, Leo and Mira are watching.</p>
+      </div>
+    </div>
+  </div>`
+};
+
+DIALOG.a2 = DIALOG.a2b = () => DIALOG.a();
+DIALOG.a2c = DIALOG.a2d = () => DIALOG.a('Playing');
+DIALOG.a2d2 = () => DIALOG.a('Playing', 'fade');
+DIALOG.a2d3 = () => DIALOG.a('Playing', 'morph');
+DIALOG.a2d4 = () => DIALOG.a('Playing', 'slot');
+DIALOG.a2d2b = () => DIALOG.a('', 'fade', TP, pvState(PST.live));
+Object.keys(JBV).forEach(k => DIALOG[k] = DIALOG.a2d2b);
+
+/* ───────────── State ───────────── */
+const KEYS = {home:'home', open:'home dlg open', check:'home dlg check', found:'home dlg found', shown:'home dlg found shown', wrong:'home dlg wrong', joining:'home dlg found shown joining', room:'room'};
+const STEPS = [['Home','home',''], ['Enter code','open','48'], ['Preview','found',ROOM.code], ['Wrong code','wrong','482193'], ['In the room','room',ROOM.code]];
+const STEP_OF = {home:0, open:1, check:1, found:2, shown:2, joining:2, wrong:3, room:4};
+const later = (mk, ms, fn) => mk._t.push(setTimeout(fn, ms));
+const clearT = mk => { mk._t.forEach(clearTimeout); mk._t = []; };
+
+function render(mk){
+  const st = mk._st;
+  mk.dataset.k = KEYS[st.stage];
+  mk.querySelectorAll('.cells').forEach(w => w.querySelectorAll('.cell').forEach((c, i) => {
+    c.textContent = st.code[i] || '';
+    c.classList.toggle('fill', i < st.code.length);
+    c.classList.toggle('cur', st.stage === 'open' && i === st.code.length);
+  }));
+  mk.querySelectorAll('.cv').forEach(n => n.textContent = fmt(st.code));
+  mk.querySelectorAll('input.ci').forEach(i => { if(i.value !== st.code) i.value = st.code; });
+  mk.querySelectorAll('input.bi').forEach(i => { const w = fmt(st.code); if(i.value.replace(/\D/g,'') !== st.code) i.value = w; });
+  if(mk.dataset.v === 'b') sizeB(mk);
+  const rail = document.querySelector(`[data-for="${mk.dataset.v}"]`);
+  const idx = mk.dataset.v === 'now' ? (st.stage === 'room' ? 1 : 0) : STEP_OF[st.stage];
+  rail.querySelectorAll('.steps button').forEach((b, j) => b.classList.toggle('on', j === idx));
+}
+function sizeB(mk){
+  const d = mk.querySelector('.db');
+  const sec = mk.querySelector(KEYS[mk._st.stage].includes('found') ? '.p2' : '.p1');
+  d.style.height = sec.offsetHeight + 2 + 'px';
+}
+function go(mk, stage, code){
+  const st = mk._st;
+  if(code != null) st.code = code;
+  st.stage = stage;
+  if(stage !== 'room') mk.classList.remove('tucked');
+  render(mk);
+  if(stage === 'wrong') shake(mk);
+  if(stage === 'found' && mk.dataset.seq) later(mk, 850, () => go(mk, 'shown'));
+}
+function shake(mk){ mk.classList.remove('shk'); void mk.offsetWidth; mk.classList.add('shk'); }
+function focusInput(mk){ const i = mk.querySelector('input.ci, input.bi'); if(i) setTimeout(() => i.focus({preventScroll:true}), 60); }
+function check(mk, code, keep){
+  if(!keep) clearT(mk);
+  go(mk, 'check', code);
+  later(mk, 650, () => go(mk, code === ROOM.code ? 'found' : 'wrong'));
+}
+function setCode(mk, d){
+  clearT(mk);
+  if(d.length < 6) return go(mk, 'open', d);
+  if(mk.dataset.v === 'b' && mk._st.code === d && mk._st.stage !== 'open') return;
+  check(mk, d);
+}
+function join(mk, keep){
+  if(!['found','shown'].includes(mk._st.stage)) return;
+  if(!keep) clearT(mk);
+  go(mk, 'joining');
+  later(mk, 900, () => go(mk, 'room'));
+}
+function play(mk){
+  clearT(mk);
+  go(mk, 'home', '');
+  const jb = mk.querySelector('.jb');
+  let t = 600;
+  later(mk, t, () => jb.classList.add('press'));
+  later(mk, t += 180, () => { jb.classList.remove('press'); go(mk, 'open', ''); });
+  t += 500;
+  for(let i = 1; i <= 6; i++){
+    const c = ROOM.code.slice(0, i);
+    later(mk, t, () => i < 6 ? go(mk, 'open', c) : check(mk, c, true));
+    t += 160;
+  }
+  later(mk, t + 650 + (mk.dataset.seq ? 2500 : 1700), () => join(mk, true));
+}
+
+/* ───────────── Mount ───────────── */
+function mountStates(mk){
+  const v = mk.dataset.v, strip = document.querySelector(`[data-ps-for="${v}"] .steps`);
+  strip.innerHTML = Object.entries(PST).map(([k, s]) => `<button data-ps="${k}">${s.lab}</button>`).join('');
+  strip.querySelectorAll('button').forEach(b => b.onclick = () => { clearT(mk); setPState(mk, b.dataset.ps); go(mk, 'shown', ROOM.code); });
+  document.querySelector(`[data-all-for="${v}"]`).innerHTML = Object.values(PST).map(s => `<figure><figcaption>${s.lab}</figcaption>
+    <div class="mk tile" data-k="home dlg found shown"><div class="pva">${pvState(s)}</div>
+      <div class="df"><button class="ub pk" tabindex="-1">${s.cta || TP.join}</button></div></div></figure>`).join('');
+  setPState(mk, 'live');
+}
+document.querySelectorAll('.mk[data-v]').forEach(mk => {
+  const v = mk.dataset.v;
+  mk._st = {stage:'home', code:''}; mk._t = [];
+  mk.innerHTML = `<div class="L lh">${nav(v, v === 'c' ? DIALOG.c() : '')}${listing()}</div>${room(v)}<div class="scrim" data-act="close"></div>${DIALOG[v] && v !== 'c' ? DIALOG[v]() : ''}`;
+  const rail = document.querySelector(`[data-for="${v}"]`);
+  if(v === 'now'){
+    rail.innerHTML = `<div class="steps"><button>Home</button><button>Room</button></div><span class="hint">Today: the room's chat has avatars and Invite, nothing else</span>`;
+    rail.querySelectorAll('.steps button').forEach((b, j) => b.onclick = () => go(mk, j ? 'room' : 'home', ''));
+  } else {
+    rail.innerHTML = `<div class="steps">${STEPS.map(s => `<button>${s[0]}</button>`).join('')}</div><button class="play">▶ Play flow</button><span class="hint">Type any 6 digits — 482 913 is Kier's room</span>`;
+    rail.querySelectorAll('.steps button').forEach((b, j) => b.onclick = () => {
+      clearT(mk);
+      const [, stage, code] = STEPS[j];
+      go(mk, stage, code);
+      if(stage === 'open' || stage === 'wrong') focusInput(mk);
+    });
+    rail.querySelector('.play').onclick = () => play(mk);
+  }
+  if(document.querySelector(`[data-ps-for="${v}"]`)) mountStates(mk);
+  if(v.startsWith('a2d2b')) rail.querySelector('.hint').textContent = "Type any 6 digits — 482 913 is Kier's watch party";
+  const jst = document.querySelector(`[data-jst-for="${v}"]`);
+  if(jst) jst.innerHTML = [['Rest',''],['Hover','is-hover'],['Pressed','is-hover is-press'],['Focus','is-focus'],['Open','is-open']]
+    .map(([l, c]) => `<figure><figcaption>${l}</figcaption>${JBV[v] === 'dock' ? searchBox('dock', c) : joinBtn(JBV[v], c)}</figure>`).join('');
+  mk.addEventListener('input', e => {
+    const t = e.target;
+    if(!t.matches('input.ci, input.bi')) return;
+    setCode(mk, t.value.replace(/\D/g, '').slice(0, 6));
+  });
+  mk.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && mk.dataset.k.includes('dlg')){ clearT(mk); go(mk, 'home', ''); e.stopPropagation(); }
+    if(e.key === 'Enter' && e.target.matches('input')){
+      e.preventDefault();
+      if(['found','shown'].includes(mk._st.stage)) join(mk);
+      else if(mk._st.code.length === 6) check(mk, mk._st.code);
+    }
+  });
+  mk.addEventListener('click', e => {
+    const a = e.target.closest('[data-act]');
+    if(!a){
+      if(v === 'c' && mk.dataset.k.includes('dlg') && !e.target.closest('.pop')){ clearT(mk); go(mk, 'home', ''); }
+      return;
+    }
+    const k = a.dataset.act;
+    if(a.closest('.jtile')) return;
+    if(k === 'open'){ clearT(mk); if(mk.dataset.k.includes('dlg') && v === 'c') return go(mk, 'home', ''); go(mk, 'open', ''); focusInput(mk); }
+    if(k === 'close'){ clearT(mk); go(mk, 'home', ''); }
+    if(k === 'join') join(mk);
+    if(k === 'cont'){ if(mk._st.code.length === 6) check(mk, mk._st.code); else { shake(mk); focusInput(mk); } }
+    if(k === 'back'){ clearT(mk); go(mk, 'open'); focusInput(mk); }
+    if(k === 'tuck') mk.classList.add('tucked');
+    if(k === 'copy'){
+      try { navigator.clipboard.writeText('482913').catch(() => {}); } catch(_) {}
+      a.classList.add('copied');
+      clearTimeout(a._c); a._c = setTimeout(() => a.classList.remove('copied'), 1600);
+      if(v === 'd' && a.classList.contains('ub')) setTimeout(() => mk.classList.add('tucked'), 900);
+    }
+  });
+  render(mk);
+});
+
+/* ── Pick menus ── */
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:id => `Explore from ${id} in ${FILE}`},
+  {label:'Remix this',        hint:'Fork it and apply changes.',        make:id => `Remix ${id} in ${FILE}:`},
+  {label:'Settle on this',    hint:'This is the direction from here.',  make:id => `Settle on ${id} in ${FILE}`}
+];
+let openMenu = null;
+function closeMenu(){ if(openMenu){ openMenu.menu.hidden = true; openMenu.btn.setAttribute('aria-expanded','false'); openMenu = null; } }
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-expanded','false'); btn.setAttribute('aria-haspopup','menu');
+  head.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role','menu');
+  menu.innerHTML = VERBS.map((v, i) => `<button role="menuitem" data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  head.after(menu); menu.after(out);
+  btn.onclick = () => { const was = openMenu && openMenu.menu === menu; closeMenu(); if(!was){ menu.hidden = false; btn.setAttribute('aria-expanded','true'); openMenu = {menu, btn}; menu.querySelector('button').focus(); } };
+  menu.querySelectorAll('button').forEach(b => b.onclick = async () => {
+    const prompt = VERBS[+b.dataset.i].make(id);
+    closeMenu();
+    out.hidden = false;
+    try {
+      await navigator.clipboard.writeText(prompt);
+      out.innerHTML = `<span class="ok">Copied</span><code>${esc(prompt)}</code>`;
+    } catch(e) {
+      out.innerHTML = `<span>Copy this</span><input readonly value="${esc(prompt)}">`;
+      out.querySelector('input').select();
+    }
+  });
+});
+document.addEventListener('click', e => { if(openMenu && !e.target.closest('.pick-menu') && !e.target.closest('.pick-btn')) closeMenu(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && openMenu){ const b = openMenu.btn; closeMenu(); b.focus(); } });
+
+/* ── Minimap ── */
+const secs = [...document.querySelectorAll('.var')];
+const mm = document.querySelector('.mm');
+mm.innerHTML = secs.map(s => `<a href="#${s.id}"><i></i><span><b>${s.dataset.id}</b>${s.dataset.name}</span></a>`).join('');
+const links = [...mm.querySelectorAll('a')];
+function syncMap(){
+  let best = 0, bd = Infinity;
+  secs.forEach((s, i) => { const d = Math.abs(s.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((l, i) => l.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMap, {passive:true});
+addEventListener('resize', syncMap);
+syncMap();
+</script>
+</body>
+</html>

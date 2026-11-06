@@ -10,7 +10,7 @@
   isolation: isolate;
   color: #fff;
   background: #0e1318;
-  font-family: 'Outfit', var(--font-family);
+  font-family: var(--font-family);
 }
 .login-brand { position: absolute; z-index: 2; top: 36px; left: 44px; color: #e8368f; font-size: 27px; font-weight: 700; letter-spacing: -.04em; text-decoration: none; }
 .login-message { z-index: 2; grid-row: 2; width: 100%; padding: 0 24px; text-align: center; }

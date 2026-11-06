@@ -32,6 +32,11 @@ test('guest home and login show the Discord splash', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
     await expect(page.getByRole('textbox')).toHaveCount(0)
     await expect(page).toHaveTitle('Watch together - Care.tv')
+    const fonts = await page.locator('.login-splash').evaluate(element => ({
+      splash: getComputedStyle(element).fontFamily,
+      app: getComputedStyle(document.body).fontFamily,
+    }))
+    expect(fonts.splash).toBe(fonts.app)
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   }
   await page.waitForTimeout(2500) // Capture the falling reactions after they enter the viewport.

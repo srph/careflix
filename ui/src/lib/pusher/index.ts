@@ -22,6 +22,7 @@ pusher.set = function(auth: AuthContext) {
 }
 
 pusher.unset = function() {
+  instance?.disconnect()
   instance = null
 }
 

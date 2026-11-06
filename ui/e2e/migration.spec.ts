@@ -25,13 +25,17 @@ async function authenticatedCatalog(page: Page, restoreSession = true) {
   })
 }
 
-test('guest home links to login', async ({ page }) => {
-  await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'Build the hype!' })).toBeVisible()
-  await page.getByRole('link', { name: 'Sign In', exact: true }).click()
-  await expect(page).toHaveURL(/\/login$/)
-  await expect(page.getByRole('heading', { name: 'Watch. Together.' })).toBeVisible()
-  await expect(page).toHaveTitle('Welcome back - Care.tv')
+test('guest home and login show the Discord splash', async ({ page }) => {
+  for (const path of ['/', '/login']) {
+    await page.goto(path)
+    await expect(page.getByRole('heading', { name: 'Bring popcorn. Bring feelings.' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
+    await expect(page.getByRole('textbox')).toHaveCount(0)
+    await expect(page).toHaveTitle('Watch together - Care.tv')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  }
+  await page.waitForTimeout(2500) // Capture the falling reactions after they enter the viewport.
+  await page.screenshot({ path: test.info().outputPath('discord-splash.png'), fullPage: true })
 })
 
 test('private settings redirect a guest to login', async ({ page }) => {
@@ -39,19 +43,25 @@ test('private settings redirect a guest to login', async ({ page }) => {
   await expect(page).toHaveURL(/\/login$/)
 })
 
-test('registration retains the access code in the URL', async ({ page }) => {
-  await page.goto('/register?request_access_code=MIGRATION-TEST')
-  await expect(page.locator('input[name="request_access_code"]')).toHaveValue('MIGRATION-TEST')
+test('legacy registration redirects to Discord login', async ({ page }) => {
+  await page.goto('/register')
+  await expect(page).toHaveURL(/\/login$/)
+  await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
 })
 
-test('invalid login displays feedback and allows another attempt', async ({ page }) => {
-  await page.route('**/oauth/token', route => route.fulfill({ status: 400, json: { error: 'invalid_grant' } }))
-  await page.goto('/login')
-  await page.locator('input[name="email"]').fill('migration@example.test')
-  await page.locator('input[name="password"]').fill('invalid-password')
-  await page.getByRole('button', { name: 'Login', exact: true }).click()
-  await expect(page.getByText('Invalid email/password combination.')).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Login', exact: true })).toBeEnabled()
+test('cancelled Discord login allows another attempt with a browser challenge', async ({ page }) => {
+  await page.route('**/auth/discord?**', route => route.fulfill({ contentType: 'text/html', body: 'Discord authorization fixture' }))
+  await page.goto('/auth/callback?error=cancelled')
+  await expect(page.getByRole('alert')).toContainText('Discord didn’t connect.')
+  await page.getByRole('button', { name: 'Try again with Discord' }).click()
+  await expect(page).toHaveURL(/\/auth\/discord\?challenge=[a-f0-9]{64}$/)
+  const validChallenge = await page.evaluate(async () => {
+    const verifier = sessionStorage.getItem('discord_verifier')!
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))
+    const expected = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('')
+    return new URL(location.href).searchParams.get('challenge') === expected
+  })
+  expect(validChallenge).toBe(true)
 })
 
 test('authenticated catalog opens and dismisses a movie dialog', async ({ page }) => {
@@ -103,58 +113,102 @@ test('authenticated settings preserve the heading and back navigation', async ({
   await expect(page).toHaveURL(/\/settings$/)
 })
 
-test('login restores the session after reload and logout clears it', async ({ page }) => {
+const viewer = { id: 90001, name: 'Migration Viewer', email: 'migration@example.test', avatar: image, invitations: [], is_online: true }
+const session = () => ({ requires_request_access: false, access_token: 'migration-smoke-token', expires_at: new Date(Date.now() + 86400000).toISOString(), user: viewer })
+
+async function discordCallback(page: Page) {
+  await page.addInitScript(() => sessionStorage.setItem('discord_verifier', 'b'.repeat(64)))
+  await page.goto('/auth/callback?code=' + 'a'.repeat(64))
+}
+
+test('Discord login restores after reload and logout revokes and clears the session', async ({ page }) => {
   await authenticatedCatalog(page, false)
-  await page.route('**/oauth/token', route => route.fulfill({ json: { access_token: 'migration-smoke-token' } }))
-  await page.goto('/login')
-  await page.locator('input[name="email"]').fill('migration@example.test')
-  await page.locator('input[name="password"]').fill('fixture-password')
-  await page.getByRole('button', { name: 'Login', exact: true }).click()
+  await page.route('**/api/auth/discord/exchange', route => route.fulfill({ json: session() }))
+  await discordCallback(page)
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
   await page.reload()
   await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
   await page.goto('/login')
   await expect(page).toHaveURL(/\/$/)
+  const revoked = page.waitForRequest(request => new URL(request.url()).pathname === '/api/logout' && request.method() === 'POST')
   await page.goto('/logout')
+  expect((await revoked).headers().authorization).toBe('Bearer migration-smoke-token')
   await expect(page).toHaveURL(/\/login$/)
   expect((await page.context().cookies()).find(cookie => cookie.name === 'app_token')).toBeUndefined()
   await page.goto('/settings')
   await expect(page).toHaveURL(/\/login$/)
 })
 
-test('nested settings routes preserve titles, direct entry and browser history', async ({ page }) => {
+test('settings remove password controls and retain account navigation', async ({ page }) => {
   await authenticatedCatalog(page)
   await page.goto('/settings')
-  await page.getByRole('link', { name: 'Update password' }).click()
-  await expect(page).toHaveURL(/\/settings\/password$/)
-  await expect(page).toHaveTitle('Change Password - Care.tv')
-  await page.reload()
-  await expect(page.locator('.ui-navigation')).toContainText('Change Password')
+  await expect(page.getByRole('link', { name: 'Update password' })).toHaveCount(0)
+  await page.goto('/settings/password')
+  await expect(page).toHaveURL(/\/settings$/)
+  await page.getByRole('link', { name: /Account settings/ }).click()
+  await expect(page).toHaveURL(/\/settings\/profile$/)
+  await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(viewer.name)
+  await expect(page.getByRole('textbox', { name: 'Email', exact: true })).toHaveValue(viewer.email)
   await page.goBack()
   await expect(page).toHaveURL(/\/settings$/)
-  await page.goForward()
-  await expect(page).toHaveURL(/\/settings\/password$/)
   await page.goto('/settings/faq')
   await expect(page).toHaveTitle('FAQ - Care.tv')
   await page.goto('/download')
   await expect(page).toHaveTitle('Download The App - Care.tv')
 })
 
-test('registration submits its access code and signs the new user in', async ({ page }) => {
+test('request access persists across reloads and only grants a session after the correct code', async ({ page }) => {
   await authenticatedCatalog(page, false)
-  await page.route('**/oauth/token', route => route.fulfill({ json: { access_token: 'migration-smoke-token' } }))
-  await page.goto('/register?request_access_code=MIGRATION-TEST')
-  await page.locator('input[name="email"]').fill('migration@example.test')
-  await page.locator('input[name="name"]').fill('Migration Viewer')
-  await page.locator('input[name="password"]').fill('fixture-password')
-  await page.locator('input[name="password_confirmation"]').fill('fixture-password')
-  const submitted = page.waitForRequest(request => new URL(request.url()).pathname === '/api/register')
-  await page.getByRole('button', { name: 'Register', exact: true }).click()
-  expect((await submitted).postDataJSON()).toMatchObject({ request_access_code: 'MIGRATION-TEST', name: 'Migration Viewer' })
+  await page.route('**/api/auth/discord/exchange', route => route.fulfill({ json: {
+    requires_request_access: true, onboarding_ticket: 'c'.repeat(64), name: viewer.name,
+    expires_at: new Date(Date.now() + 900000).toISOString(),
+  } }))
+  await page.route('**/api/auth/request', route => {
+    const body = route.request().postDataJSON()
+    expect(body.ticket).toBe('c'.repeat(64))
+    expect(body.verifier).toBe('b'.repeat(64))
+    return body.request_access === 'FRIENDS' ? route.fulfill({ json: session() }) :
+      route.fulfill({ status: 422, json: { errors: { request_access: ['That code didn’t match. Please try again.'] } } })
+  })
+  await discordCallback(page)
+  await expect(page).toHaveURL(/\/request-access$/)
+  expect((await page.context().cookies()).find(cookie => cookie.name === 'app_token')).toBeUndefined()
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'You’re almost in.' })).toBeVisible()
+  await page.getByLabel('Access code').fill('WRONG')
+  await page.getByRole('button', { name: 'Let me in' }).click()
+  await expect(page.getByRole('alert')).toContainText('That code didn’t match.')
+  await page.screenshot({ path: test.info().outputPath('request-access.png'), fullPage: true })
+  await page.getByLabel('Access code').fill('FRIENDS')
+  await page.getByRole('button', { name: 'Let me in' }).click()
   await expect(page).toHaveURL(/\/$/)
   await expect(page.getByRole('heading', { name: 'All titles' })).toBeVisible()
-  await expect(page.getByText('Your account was created successfully!')).toBeVisible()
+})
+
+test('an expired callback shows recovery without exposing the temporary code', async ({ page }) => {
+  await page.route('**/api/auth/discord/exchange', route => route.fulfill({ status: 422, json: {
+    errors: { ticket: ['Your sign-in expired. Please continue with Discord again.'] },
+  } }))
+  await discordCallback(page)
+  await expect(page.getByRole('alert')).toContainText('Your sign-in expired.')
+  await expect(page).toHaveURL(/\/auth\/callback$/)
+  await expect(page.getByRole('button', { name: 'Try again with Discord' })).toBeEnabled()
+})
+
+test('an invalid restored session returns to an interactive login', async ({ page }) => {
+  await page.context().addCookies([{ name: 'app_token', value: 'expired', url: test.info().project.use.baseURL as string }])
+  await page.route('**/api/me', route => route.fulfill({ status: 401, json: { message: 'Unauthenticated.' } }))
+  await page.goto('/settings')
+  await expect(page).toHaveURL(/\/login$/)
+  await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeEnabled()
+})
+
+test('reduced motion disables falling reactions', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/login')
+  await expect(page.locator('.login-reactions')).toHaveCSS('display', 'none')
+  await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
 })
 
 test('unmatched URLs retain the existing authenticated app shell', async ({ page }) => {

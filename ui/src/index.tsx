@@ -3,7 +3,7 @@ import 'font-awesome/css/font-awesome.css'
 import './global.css'
 
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, Outlet } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
 import { PrivateRoute, GuestRoute } from '~/components/RoutePermission'
 import { Toast } from '~/components/Toast'
@@ -18,27 +18,27 @@ import AppWatch from '~/screens/app.watch'
 import AppWatchHome from '~/screens/app.watch.home'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
-import AppSettingsPassword from '~/screens/app.settings-password'
 import AppSettingsFaq from '~/screens/app.settings-faq'
 import AppDownload from '~/screens/app.download'
 import Login from '~/screens/login'
 import Logout from '~/screens/logout'
-import Register from '~/screens/register'
+import AuthCallback from '~/screens/auth.callback'
+import RequestAccess from '~/screens/request-access'
 
 function RootLayout() {
   return (
     <>
       <WindowVhSetter />
       <AuthProvider>
-        <QueryProvider>
-          <PusherManager>
-            <AxiosManager><Outlet /></AxiosManager>
-          </PusherManager>
-        </QueryProvider>
+        <AxiosManager><Outlet /></AxiosManager>
       </AuthProvider>
       <Toast />
     </>
   )
+}
+
+function ApplicationLayout() {
+  return <QueryProvider><PusherManager><App><Outlet /></App></PusherManager></QueryProvider>
 }
 
 const router = createBrowserRouter([{
@@ -46,16 +46,18 @@ const router = createBrowserRouter([{
   children: [
     { element: <GuestRoute />, children: [
       { path: '/login', element: <Login /> },
-      { path: '/register', element: <Register /> },
+      { path: '/register', element: <Navigate to="/login" replace /> },
     ] },
+    { path: '/auth/callback', element: <AuthCallback /> },
+    { path: '/request-access', element: <RequestAccess /> },
     { path: '/logout', element: <Logout /> },
-    { element: <App><Outlet /></App>, children: [
+    { element: <ApplicationLayout />, children: [
       { path: '/', element: <AppHome /> },
       { path: '/download', element: <AppDownload /> },
       { element: <PrivateRoute />, children: [
         { path: '/settings', element: <AppSettings /> },
         { path: '/settings/profile', element: <AppSettingsProfile /> },
-        { path: '/settings/password', element: <AppSettingsPassword /> },
+        { path: '/settings/password', element: <Navigate to="/settings" replace /> },
         { path: '/settings/faq', element: <AppSettingsFaq /> },
         { path: '/watch/:partyId', element: <AppWatch><AppWatchHome /></AppWatch> },
       ] },

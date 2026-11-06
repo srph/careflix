@@ -60,7 +60,9 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'throttle.auth' => \App\Http\Middleware\ThrottleAuthRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'request.access' => \App\Http\Middleware\EnsureRequestAccess::class,
 
         'party.member' => \App\Http\Middleware\MemberOfParty::class,
         'party.invitation.recipient' => \App\Http\Middleware\RecipientOfInvitation::class

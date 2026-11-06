@@ -29,6 +29,8 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        Event::listen(\SocialiteProviders\Manager\SocialiteWasCalled::class, function ($event) {
+            $event->extendSocialite('discord', \App\Auth\DiscordProvider::class);
+        });
     }
 }

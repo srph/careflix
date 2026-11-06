@@ -26,6 +26,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::routes();
+        // Tokens are issued internally after Discord/access verification. Exposing
+        // Passport's OAuth routes would leave the old password grant available.
+        Passport::personalAccessTokensExpireIn(now()->addDays(30));
     }
 }

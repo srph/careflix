@@ -58,18 +58,6 @@ function AppSettings(props: ReactComponentWrapper) {
               </div>
             </Link>
 
-            <Link to="/settings/password" className="item">
-              <div className="icon">
-                <i className="fa fa-lock" />
-              </div>
-
-              <div className="text">Update password</div>
-
-              <div className="caret">
-                <i className="fa fa-angle-right" />
-              </div>
-            </Link>
-
             {!isPWA && (
               <Link to="/download" className="item">
                 <div className="icon">

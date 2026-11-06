@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('register', 'MeController@register');
+Route::post('auth/discord/exchange', 'Auth\DiscordController@exchange')->middleware('throttle.auth:10,1');
+Route::post('auth/request', 'Auth\DiscordController@requestAccess')->middleware('throttle.auth:5,1');
+Route::post('logout', 'Auth\DiscordController@logout')->middleware('auth:api');
 
-Route::middleware('auth:api')->group(function() {
+Route::middleware(['auth:api', 'request.access'])->group(function() {
     Route::get('shows', 'ShowsController@index');
     Route::get('shows/{show}/groups', 'ShowsController@groups');
     Route::get('videos/{video}/subtitle', 'ShowsController@subtitle');

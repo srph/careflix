@@ -6,7 +6,8 @@ export default {
   setup: (auth: AuthContext): number => {
     return instance.interceptors.request.use((config) => {
       if (auth.token != null) {
-        config.headers['X-Socket-ID'] = pusher().connection.socket_id;
+        const socketId = pusher()?.connection.socket_id
+        if (socketId) config.headers['X-Socket-ID'] = socketId
       }
       
       return config;

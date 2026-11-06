@@ -62,7 +62,7 @@ Playback is kept in sync across party members by dispatching local player action
 
 ```bash
 npm install
-cp .env.example .env   # set VITE_API_BASE_URL, VITE_API_CLIENT_*, VITE_PUSHER_*
+cp .env.example .env   # set VITE_API_BASE_URL, VITE_PUSHER_*
 npm start               # Vite dev server, http://localhost:8484
 npm run typecheck       # tsc --noEmit
 npm test                # focused Vitest/React Testing Library suite
@@ -74,3 +74,9 @@ npm run test:e2e          # Playwright smoke tests; first run npx playwright ins
 Existing unprefixed local environment variables remain supported through an explicit allowlist in Vite configuration. New configuration uses `VITE_*`; Pusher server secrets belong only in the API.
 
 See [TESTING.md](TESTING.md) for cross-browser projects, production-preview checks, and opt-in live two-account verification.
+
+## Authentication
+
+Discord login starts with a full navigation to `/auth/discord`. The browser keeps a random verifier in sessionStorage and sends only its SHA-256 challenge to Laravel. `/auth/callback` exchanges the handoff code with the verifier; `/request-access` uses only a restricted onboarding ticket until the optional code passes. Never add OAuth client secrets to browser configuration.
+
+Keep callback and onboarding routes outside the account-keyed Query/Pusher providers: those providers remount when the account changes. Axios interceptors remain around all routes and initialize before requests. The full Passport token is stored in `app_token` with the server’s expiration; logout revokes it on the API. See [../AUTHENTICATION.md](../AUTHENTICATION.md).

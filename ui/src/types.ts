@@ -35,7 +35,7 @@ type AppId = string | number
 
 interface AppUser {
   id: AppId
-  email: string
+  email: string | null
   name: string
   avatar: string
   invitations?: AppPartyInvitation[]

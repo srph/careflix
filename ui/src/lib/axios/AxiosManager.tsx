@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { useAuth } from '~/contexts/Auth'
 
 import instance from './instance'
@@ -16,7 +16,7 @@ function AxiosManager({ children }: ReactComponentWrapper) {
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
   const auth = useAuth()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const requests = [
       appInit.setup(),
       oauth.setup(auth),
@@ -39,11 +39,10 @@ function AxiosManager({ children }: ReactComponentWrapper) {
         instance.interceptors.response.eject(interceptor)
       })
 
-      setIsInitialized(false)
     }
   }, [auth.token])
 
   return <React.Fragment>{isInitialized ? children : null}</React.Fragment>
 }
 
-export { AxiosManager } 
+export { AxiosManager }

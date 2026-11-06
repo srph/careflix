@@ -6,7 +6,7 @@ Laravel backend for Care.tv: auth, shows catalog, watch parties, chat, and invit
 
 -   PHP `^7.1.3` in `composer.json` — locally run via **valet's** PHP (currently PHP 8.3 on this machine; keep that mismatch in mind if you hit compatibility issues)
 -   Laravel `5.8.*` (`laravel/framework` v5.8.15 installed)
--   Laravel Passport `^7.2` (v7.2.2 installed) — OAuth2 password-grant auth for the UI
+-   Laravel Passport `^7.2` (v7.2.2 installed) — personal access tokens issued after Discord authentication
 -   Pusher (`pusher/pusher-php-server` ~3.0) — broadcasts party sync, chat, and invitation events
 -   MySQL `5.7` — run locally via **Docker Compose** (see Dev setup below)
 
@@ -59,10 +59,18 @@ php artisan key:generate
 php artisan migrate
 php artisan db:seed && php artisan db:seed --class=ShowSeeder
 php artisan passport:install
-php artisan passport:client --password
+php artisan app:link-discord USER_ID DISCORD_USER_ID # existing account cutover
 php artisan serve   # or just hit the Valet-linked domain
 
 # Custom Artisan commands
 php artisan app:list-pt [days=3]      # recent parties
 php artisan app:list-users [count=15] # recent registrations
 ```
+
+## Discord authentication
+
+Socialite 4.4 and the Discord provider 2.x support this Laravel/PHP version. `App\Auth\DiscordProvider` updates the legacy adapter’s URLs and username mapping. `DiscordLogin` creates hashed, short-lived, browser-bound tickets and redeems them under a database row lock. Never issue a full Passport token to a user who still needs access verification.
+
+`APP_REQUEST_ACCESS_CODE` empty or whitespace disables the gate. Otherwise `users.request_access_verified_at` controls access; `request_access` stores the raw successful code and is hidden from JSON. API routes and Pusher authorization both enforce the gate. Existing users are grandfathered by the migration and must be explicitly linked to Discord, never merged automatically by email.
+
+See [../AUTHENTICATION.md](../AUTHENTICATION.md) for environment variables, local/production callback URLs, and cutover. Tests run with `valet php vendor/bin/phpunit`; authentication tests use in-memory SQLite and mocked Discord HTTP responses.

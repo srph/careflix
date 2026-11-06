@@ -9,7 +9,6 @@ const headings: Record<string, { title: string; backUrl: string }> = {
   '/download': { title: 'Download The App', backUrl: '/' },
   '/settings': { title: 'Settings', backUrl: '/' },
   '/settings/profile': { title: 'Account Settings', backUrl: '/settings' },
-  '/settings/password': { title: 'Change Password', backUrl: '/settings' },
   '/settings/faq': { title: 'FAQ', backUrl: '/settings' },
 }
 

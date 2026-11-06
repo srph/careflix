@@ -1,0 +1,170 @@
+import { useEffect, useRef, type RefObject } from 'react'
+import { useReducedMotion } from 'motion/react'
+
+interface Reaction {
+  x: number; y: number; vx: number; vy: number; radius: number
+  angle: number; alpha: number; rest: number; sprite: HTMLCanvasElement
+}
+interface Collider { x: number; y: number; width: number; height: number; radius: number }
+const EMOJI = ['🍿', '😂', '😭', '❤️', '😱', '🔥', '👀', '🥹', '💀', '✨']
+
+export default function ReactionCanvas({ stage, state }: { stage: RefObject<HTMLElement | null>; state: string }) {
+  const canvas = useRef<HTMLCanvasElement>(null)
+  const currentState = useRef(state)
+  const kick = useRef<() => void>(() => {})
+  const refresh = useRef<() => void>(() => {})
+  const reducedMotion = useReducedMotion()
+  useEffect(() => {
+    currentState.current = state
+    refresh.current()
+    if (state === 'connecting' || state === 'welcome') kick.current()
+  }, [state])
+  useEffect(() => {
+    const root = stage.current, surface = canvas.current
+    if (!root || !surface || reducedMotion) return
+    const context = surface.getContext('2d')
+    if (!context) return
+    const sprites = EMOJI.map(emoji => {
+      const sprite = document.createElement('canvas')
+      sprite.width = sprite.height = 128
+      const ctx = sprite.getContext('2d')!
+      ctx.font = '100px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(emoji, 64, 71)
+      return sprite
+    })
+    const reactions: Reaction[] = []
+    let width = 0, height = 0, ratio = 1, tick = 0, frame = 0, last = performance.now(), accumulator = 0
+    let colliders: Collider[] = []
+    let pointer: { x: number; y: number; vx: number; vy: number } | null = null
+    const measure = () => {
+      const bounds = root.getBoundingClientRect()
+      width = bounds.width; height = bounds.height; ratio = Math.min(window.devicePixelRatio || 1, 2)
+      surface.width = Math.round(width * ratio); surface.height = Math.round(height * ratio)
+      colliders = Array.from(root.querySelectorAll<HTMLElement>('[data-reaction-shelf]')).flatMap(element => {
+        const range = document.createRange()
+        range.selectNodeContents(element)
+        const button = element.tagName === 'BUTTON'
+        const boxes = button ? [element.getBoundingClientRect()] : Array.from(range.getClientRects())
+        return boxes.filter(rect => rect.width > 4).map(rect => ({
+          x: rect.left - bounds.left, y: rect.top - bounds.top + (button ? 0 : rect.height * .17),
+          width: rect.width, height: rect.height * (button ? 1 : .68), radius: button ? rect.height / 2 : 0,
+        }))
+      })
+    }
+    const collide = (reaction: Reaction, box: Collider) => {
+      const x = Math.max(box.x + box.radius, Math.min(reaction.x, box.x + box.width - box.radius))
+      const y = Math.max(box.y + box.radius, Math.min(reaction.y, box.y + box.height - box.radius))
+      let dx = reaction.x - x, dy = reaction.y - y
+      const radius = reaction.radius + box.radius, squared = dx * dx + dy * dy
+      if (squared >= radius * radius) return
+      let distance = Math.sqrt(squared)
+      if (distance < .001) { dx = 0; dy = -1; distance = 1 }
+      const nx = dx / distance, ny = dy / distance
+      reaction.x = x + nx * radius; reaction.y = y + ny * radius
+      const velocity = reaction.vx * nx + reaction.vy * ny
+      if (velocity < 0) { reaction.vx = (reaction.vx - 1.3 * velocity * nx) * .94; reaction.vy -= 1.3 * velocity * ny }
+    }
+    const step = () => {
+      tick++
+      if (tick % 18 === 0 && reactions.length < 30 && currentState.current !== 'welcome') {
+        const radius = width >= 720 ? 20 + Math.random() * 8 : 15 + Math.random() * 6
+        reactions.push({ x: radius + Math.random() * (width - radius * 2), y: -radius - Math.random() * 40,
+          vx: (Math.random() - .5) * 3, vy: 0, radius, angle: (Math.random() - .5) * .6,
+          alpha: 1, rest: 0, sprite: sprites[Math.floor(Math.random() * sprites.length)] })
+      }
+      for (const reaction of reactions) {
+        reaction.vx *= .995; reaction.vy = (reaction.vy + .38) * .995
+        if (pointer) {
+          const dx = reaction.x - pointer.x, dy = reaction.y - pointer.y
+          const distance = Math.hypot(dx, dy), radius = reaction.radius + 46
+          if (distance > 0 && distance < radius) {
+            const force = (radius - distance) / radius
+            reaction.vx += dx / distance * force * 2.4 + pointer.vx * .1 * force
+            reaction.vy += dy / distance * force * 2.4 + pointer.vy * .1 * force
+          }
+        }
+        reaction.x += reaction.vx; reaction.y += reaction.vy; reaction.angle += reaction.vx / reaction.radius * .5
+      }
+      if (pointer) { pointer.vx *= .5; pointer.vy *= .5 }
+      for (let iteration = 0; iteration < 2; iteration++) {
+        for (let i = 0; i < reactions.length; i++) {
+          for (let j = i + 1; j < reactions.length; j++) {
+            const a = reactions[i], b = reactions[j], dx = b.x - a.x, dy = b.y - a.y, radius = a.radius + b.radius
+            const distance = Math.hypot(dx, dy)
+            if (!distance || distance >= radius) continue
+            const nx = dx / distance, ny = dy / distance, overlap = (radius - distance) / 2
+            a.x -= nx * overlap; a.y -= ny * overlap; b.x += nx * overlap; b.y += ny * overlap
+            const velocity = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny
+            if (velocity < 0) {
+              const impulse = velocity * .55
+              a.vx += nx * impulse; a.vy += ny * impulse; b.vx -= nx * impulse; b.vy -= ny * impulse
+            }
+          }
+        }
+        for (const reaction of reactions) {
+          if (currentState.current !== 'welcome') colliders.forEach(box => collide(reaction, box))
+          if (reaction.y > height - reaction.radius) {
+            reaction.y = height - reaction.radius
+            if (reaction.vy > 0) reaction.vy *= -.25
+            reaction.vx *= .92
+          }
+          if (reaction.x < reaction.radius) { reaction.x = reaction.radius; reaction.vx = Math.abs(reaction.vx) * .5 }
+          if (reaction.x > width - reaction.radius) { reaction.x = width - reaction.radius; reaction.vx = -Math.abs(reaction.vx) * .5 }
+        }
+      }
+      for (let i = reactions.length - 1; i >= 0; i--) {
+        const reaction = reactions[i]
+        if (Math.abs(reaction.vx) + Math.abs(reaction.vy) < .8) {
+          const lifetime = reaction.y > height - reaction.radius - 2 ? 150 : 540
+          if (++reaction.rest > lifetime) reaction.alpha -= .04
+        } else reaction.rest = 0
+        if (reaction.alpha <= 0) reactions.splice(i, 1)
+      }
+    }
+    const draw = (now: number) => {
+      frame = requestAnimationFrame(draw)
+      if (document.hidden) { last = now; return }
+      accumulator += Math.min(100, now - last); last = now
+      let steps = 0
+      while (accumulator >= 1000 / 60 && steps < 3) { step(); accumulator -= 1000 / 60; steps++ }
+      if (steps === 3) accumulator = 0
+      context.setTransform(1, 0, 0, 1, 0, 0); context.clearRect(0, 0, surface.width, surface.height)
+      for (const reaction of reactions) {
+        const cosine = Math.cos(reaction.angle) * ratio, sine = Math.sin(reaction.angle) * ratio
+        context.setTransform(cosine, sine, -sine, cosine, reaction.x * ratio, reaction.y * ratio)
+        context.globalAlpha = reaction.alpha
+        const size = reaction.radius * 2.2
+        context.drawImage(reaction.sprite, -size / 2, -size / 2, size, size)
+      }
+      context.globalAlpha = 1
+    }
+    const move = (event: PointerEvent) => {
+      const bounds = root.getBoundingClientRect(), x = event.clientX - bounds.left, y = event.clientY - bounds.top
+      pointer = { x, y, vx: pointer ? x - pointer.x : 0, vy: pointer ? y - pointer.y : 0 }
+    }
+    const leave = () => { pointer = null }
+    refresh.current = measure
+    kick.current = () => {
+      const button = colliders.find(box => box.radius > 0)
+      for (const reaction of reactions) {
+        if (currentState.current === 'welcome' || (button && reaction.x > button.x && reaction.x < button.x + button.width && reaction.y < button.y + 4 && reaction.y > button.y - 90)) {
+          reaction.vy = -7 - Math.random() * 4; reaction.vx = (Math.random() - .5) * 8
+        }
+      }
+    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(root)
+    root.querySelectorAll<HTMLElement>('[data-reaction-shelf]').forEach(element => observer.observe(element))
+    root.addEventListener('pointermove', move); root.addEventListener('pointerleave', leave); root.addEventListener('pointerup', leave)
+    let mounted = true
+    document.fonts?.ready.then(() => { if (mounted) measure() })
+    measure(); frame = requestAnimationFrame(draw)
+    return () => {
+      mounted = false; cancelAnimationFrame(frame); observer.disconnect()
+      root.removeEventListener('pointermove', move); root.removeEventListener('pointerleave', leave); root.removeEventListener('pointerup', leave)
+      kick.current = () => {}
+      refresh.current = () => {}
+    }
+  }, [stage, reducedMotion])
+  return <canvas ref={canvas} className="login-reactions" aria-hidden="true" />
+}

@@ -57,7 +57,7 @@ install: install-api install-ui
 	@echo "    make start:db"
 	@echo "    cd api && $(PHP) artisan migrate"
 	@echo "    cd api && $(PHP) artisan db:seed && $(PHP) artisan db:seed --class=ShowSeeder"
-	@echo "    cd api && $(PHP) artisan passport:install && $(PHP) artisan passport:client --password"
+	@echo "    cd api && $(PHP) artisan passport:install"
 
 install-api:
 	@echo "==> Installing API dependencies with '$(COMPOSER)'"
@@ -101,7 +101,7 @@ start-ui:
 	$(use_nvm); \
 	npm start
 
-# Vite forwards API/OAuth/broadcasting requests to the local API. Only one
+# Vite forwards API/Discord/broadcasting requests to the local API. Only one
 # loopback port needs sharing; --bg keeps the private route across restarts.
 serve:
 	@tailscale serve --bg --https=443 http://127.0.0.1:8484

@@ -59,12 +59,8 @@ export default [
     content: [`Of course, I do.`]
   },
   {
-    title: 'Can you see our password?',
-    content: [`No, I don't. All of your passwords (including mine) are hashed by a one-way function called Bcrypt.`]
-  },
-  {
-    title: 'But what if we forget our password?',
-    content: [`We simply reset your password. We won't have a trace of your old password in the database.`]
+    title: 'How do I sign in?',
+    content: ['Continue with Discord. Care.tv uses your Discord profile and email when available; your Discord password stays with Discord.']
   },
   {
     title: 'Can you see our messages?',

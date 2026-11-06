@@ -4,17 +4,19 @@ import * as cookie from 'cookie-machine'
 import immer from 'immer'
 import axios from '~/lib/axios'
 import { useNavigate } from 'react-router'
-import config from '~/config'
-import { addYears } from 'date-fns-v1'
 import { toast } from '~/components/Toast'
+import { beginDiscord, clearDiscordFlow, pendingOnboarding, saveOnboarding, verifier, type DiscordAuthResult, type Onboarding } from '~/lib/auth/discord'
 
 export interface AuthContext {
   data: AppUser | null
   token: string | null
   isAuthenticated: boolean
   isGuest: boolean
-  login: (credentials: { username: string; password: string }) => Promise<AsyncGoReturn>
-  logout: () => void
+  onboarding: Onboarding | null
+  startDiscord: (returnTo?: string) => Promise<void>
+  exchangeDiscord: (ticket: string) => Promise<AsyncGoReturn<DiscordAuthResult>>
+  requestAccess: (code: string) => Promise<AsyncGoReturn<DiscordAuthResult>>
+  logout: (notify?: boolean) => Promise<void>
   updateUserData: (payload: Partial<AppUser>) => void
   shiftInvitations: () => void
   removeInvitation: (id: AppId) => void
@@ -27,8 +29,11 @@ const Context = createContext<AuthContext>({
   token: null,
   isAuthenticated: false,
   isGuest: false,
-  login: async () => new Promise(() => {}),
-  logout: () => {},
+  onboarding: null,
+  startDiscord: beginDiscord,
+  exchangeDiscord: async () => [],
+  requestAccess: async () => [],
+  logout: async () => {},
   updateUserData: () => {},
   shiftInvitations: () => {},
   removeInvitation: () => {},
@@ -42,6 +47,8 @@ function AuthProvider({ children }: ReactComponentWrapper) {
   const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const removedInvitations = useRef(new Set<string>())
+  const [onboarding, setOnboarding] = useState<Onboarding | null>(pendingOnboarding)
+  const exchanges = useRef(new Map<string, Promise<AsyncGoReturn<DiscordAuthResult>>>())
 
   /**
    * Block rendering and load the user data
@@ -60,6 +67,8 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       })
 
       if (err) {
+        cookie.remove('app_token', { path: '/' })
+        setIsLoading(false)
         return [err]
       }
 
@@ -72,48 +81,64 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     getUserData()
   }, [])
 
-  const login = async (credentials: { username: string; password: string }): Promise<AsyncGoReturn> => {
-    const [err, tokenResponse] = await axios.post(
-      '/oauth/token',
-      {
-        username: credentials.username,
-        password: credentials.password,
-        client_id: config.api.clientId,
-        client_secret: config.api.clientSecret,
-        grant_type: 'password'
-      },
-      {
-        app: { validation: false }
-      }
-    )
-    if (err) {
-      return [err]
+  const acceptResult = (result: DiscordAuthResult) => {
+    if (result.requires_request_access) {
+      const pending = { ticket: result.onboarding_ticket!, name: result.name!, expiresAt: result.expires_at }
+      saveOnboarding(pending)
+      setOnboarding(pending)
+      return
     }
-    const token = tokenResponse.data.access_token
-    const [err2, dataResponse] = await axios.get('/api/me', {
-      app: { validation: false },
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    if (err2) {
-      return [err2]
-    }
-    const data = dataResponse.data
-    cookie.set('app_token', token, {
+    cookie.set('app_token', result.access_token!, {
       path: '/',
-      expires: addYears(new Date(), 1)
+      expires: new Date(result.expires_at),
+      secure: window.location.protocol === 'https:',
+      sameSite: 'lax',
     })
-    setToken(token)
-    setData(data)
-    return []
+    clearDiscordFlow()
+    setOnboarding(null)
+    setToken(result.access_token!)
+    setData(result.user!)
   }
 
-  const logout = () => {
+  const exchangeDiscord = (ticket: string): Promise<AsyncGoReturn<DiscordAuthResult>> => {
+    if (!exchanges.current.has(ticket)) {
+      exchanges.current.set(ticket, (async () => {
+        const [err, response] = await axios.post('/api/auth/discord/exchange', { ticket, verifier: verifier() }, { app: { validation: false } })
+        if (err) return [err] as AsyncGoReturn<DiscordAuthResult>
+        acceptResult(response.data)
+        return [null, response.data] as AsyncGoReturn<DiscordAuthResult>
+      })())
+    }
+    return exchanges.current.get(ticket)!
+  }
+
+  const requestAccess = async (code: string): Promise<AsyncGoReturn<DiscordAuthResult>> => {
+    const [err, response] = await axios.post('/api/auth/request', {
+      ticket: onboarding?.ticket, verifier: verifier(), request_access: code,
+    }, { app: { validation: false } })
+    if (err) return [err]
+    acceptResult(response.data)
+    return [null, response.data]
+  }
+
+  const startDiscord = async (returnTo = '/') => {
+    await beginDiscord(returnTo)
+  }
+
+  const logout = async (notify = true) => {
+    const revocation = token ? axios.post('/api/logout', {}, {
+      headers: { Authorization: `Bearer ${token}` }, app: { validation: false }, timeout: 5000,
+    }) : Promise.resolve()
     removedInvitations.current.clear()
-    toast('You have been logged out.')
+    exchanges.current.clear()
+    clearDiscordFlow()
+    setOnboarding(null)
+    if (notify) toast('You have been logged out.')
     cookie.remove('app_token', { path: '/' })
     setData(null)
     setToken(null)
     navigate('/login')
+    await revocation
   }
 
   const updateUserData = (payload: Partial<AppUser>) => {
@@ -170,7 +195,10 @@ function AuthProvider({ children }: ReactComponentWrapper) {
         token,
         isAuthenticated: data != null,
         isGuest: data == null,
-        login,
+        onboarding,
+        startDiscord,
+        exchangeDiscord,
+        requestAccess,
         logout,
         updateUserData,
         shiftInvitations,

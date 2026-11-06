@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'discord' => [
+        'client_id' => env('DISCORD_CLIENT_ID'),
+        'client_secret' => env('DISCORD_CLIENT_SECRET'),
+        'redirect' => env('DISCORD_REDIRECT_URI', 'http://localhost:8000/auth/discord/callback'),
+        'frontend_url' => env('APP_FRONTEND_URL', 'http://localhost:8484'),
+        'guzzle' => ['timeout' => 15, 'connect_timeout' => 5],
+    ],
 
     /*
     |--------------------------------------------------------------------------

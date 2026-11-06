@@ -14,3 +14,6 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('auth/discord', 'Auth\DiscordController@redirect')->middleware('throttle.auth:10,1');
+Route::get('auth/discord/callback', 'Auth\DiscordController@callback')->middleware('throttle.auth:10,1');

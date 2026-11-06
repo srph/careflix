@@ -35,7 +35,7 @@ make serve     # prints the private HTTPS URL to open on the PC
 make unserve   # remove this app's Tailscale route when finished
 ```
 
-Both devices must be connected to the same tailnet. [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve) provides HTTPS and proxies to Vite on `127.0.0.1:8484`. Vite forwards `/api`, `/oauth`, and `/broadcasting` to `VITE_API_BASE_URL` (or the legacy `API_BASE_URL`), defaulting to `http://127.0.0.1:8000`. The browser uses the same origin for those requests in development, so no PC-specific API URL or CORS change is needed. Production builds still use the configured API URL.
+Both devices must be connected to the same tailnet. [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve) provides HTTPS and proxies to Vite on `127.0.0.1:8484`. Vite forwards `/api`, `/auth/discord`, and `/broadcasting` to `VITE_API_BASE_URL` (or the legacy `API_BASE_URL`), defaulting to `http://127.0.0.1:8000`. The browser uses the same origin for those requests in development, so no PC-specific API URL or CORS change is needed. Production builds still use the configured API URL.
 
 The Serve route persists across restarts; the app servers must also be running. This uses HTTPS port 443 on this device's Tailscale address, so reserve it for this app. The development servers and MySQL stay on loopback.
 
@@ -87,17 +87,14 @@ APP_REQUEST_ACCESS_CODE=
 php artisan key:generate
 ```
 
-- Run the migrations. Don't forget to store the client id and secret output from running `php artisan passport:client`.
+- Run the migrations and provision Passport’s internal personal access client.
 ```bash
 php artisan migrate
 php artisan db:seed && php artisan db:seed --class=ShowSeeder
 php artisan passport:install
-php artisan passport:client --password
 ```
 
-This installs all required tables and creates a user with the following credentials: `admin@admin.com` (email) / `admin` (password)
-
-> Make sure to replace `<YOUR PASSWORD HERE>` with your desired password.
+The legacy admin row is retained for migration. Sign in with Discord; link existing accounts with `php artisan app:link-discord USER_ID DISCORD_USER_ID`. See [AUTHENTICATION.md](AUTHENTICATION.md) for Discord setup and cutover.
 
 - Setup [Pusher](https://pusher.com/) by logging in to its dashboard, and creating a client. When you're done, open up `.env`, and change the following with the details provided by Pusher:
 ```bash
@@ -143,7 +140,7 @@ cd ui
 npm i
 ```
 
-- Copy `.env.example` to `.env`, and setup your environment config. Update the `VITE_API_CLIENT_*` based on the output from `php artisan passport:client --password` (refer to instructions above).
+- Copy `.env.example` to `.env`. Set `VITE_API_BASE_URL` and the public Pusher values. Discord and Passport client secrets stay on the API.
 ```bash
 cp .env.example .env
 ```
@@ -155,7 +152,7 @@ npm start
 
 Open http://localhost:8484. Set `VITE_API_BASE_URL` to your API URL (the default `make start:api` URL is http://localhost:8000). Existing unprefixed environment variables remain supported through an explicit allowlist; new configuration uses `VITE_*`.
 
-You can either register or login with the following credentials: `admin@admin.com` (email) / `admin` (password)
+Use Continue with Discord to sign in or create an account. The separate access-code step appears only when `APP_REQUEST_ACCESS_CODE` is configured and the user has not already passed it.
 
 ## Deployment
 The API and front-end are deployed separately.
@@ -167,17 +164,9 @@ Currently, Care.tv is deployed on Laravel Forge. If you follow the API setup ins
 
 ```bash
 php artisan passport:install
-php artisan passport:client --password
 ```
 
-- Make sure to also change the default admin ceredentials as soon as possible:
-
-```bash
-php artisan tinker
-$user = User::first();
-$user->password = Hash::make('<YOUR PASSWORD HERE>');
-$user->save();
-```
+- Configure Discord and link the existing admin’s Discord ID before cutover. See [AUTHENTICATION.md](AUTHENTICATION.md).
 
 - Lastly, make sure to setup active presence - can also be seen above.
 

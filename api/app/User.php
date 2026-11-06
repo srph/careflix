@@ -26,7 +26,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'request_access',
     ];
 
     /**
@@ -36,22 +36,16 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'request_access_verified_at' => 'datetime',
         'is_online' => 'boolean'
     ];
 
-    /**
-     * Find the user instance for the given username.
-     *
-     * @param  string  $username
-     * @return \App\User
-     */
-    public function findForPassport($username)
-    {
-        return $this->where('email', $username)->first();
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = $value === null ? null : bcrypt($value);
     }
 
-    public function setPasswordAttribute($value) {
-        $this->attributes['password'] = bcrypt($value);
+    public function needsRequestAccess() {
+        return trim((string) config('config.request_access_code')) !== '' && $this->request_access_verified_at === null;
     }
 
     public function parties() {

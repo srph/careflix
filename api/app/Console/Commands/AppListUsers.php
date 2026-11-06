@@ -48,7 +48,7 @@ class AppListUsers extends Command
 
         $users->each(function($user) {
             $this->info(
-                "{$user->name} ({$user->email}) registered {$user->created_at->diffForHumans()}"
+                "#{$user->id}: {$user->name} ({$user->email}) registered {$user->created_at->diffForHumans()}"
             );
         });
     }

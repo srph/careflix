@@ -40,7 +40,7 @@ that callback in Discord and keep the API running at `VITE_API_BASE_URL`.
 ## Access code
 
 Leave `APP_REQUEST_ACCESS_CODE` empty to allow anyone to sign in. Set it to
-require users to enter the code once.
+require users to enter the code once on `/onboarding`.
 
 ## Production
 

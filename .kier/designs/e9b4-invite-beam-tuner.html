@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<script type="importmap">{"imports":{"react":"https://esm.sh/react@18.3.1","react/jsx-runtime":"https://esm.sh/react@18.3.1/jsx-runtime","react-dom/client":"https://esm.sh/react-dom@18.3.1/client?deps=react@18.3.1"}}</script>
 <style>
 /* ───────────── Page chrome (neutral) ───────────── */
 :root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
@@ -152,6 +153,17 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .beam i{padding:var(--w);opacity:var(--bloom);filter:blur(var(--blur)) brightness(var(--br)) saturate(var(--sat));
   background:conic-gradient(from var(--ang),var(--blg));
   -webkit-mask:var(--ring);-webkit-mask-composite:xor;mask:var(--ring);mask-composite:exclude}
+/* library-rendered types: the real <BorderBeam> wraps the same pill */
+.lbhost{position:absolute;left:50%;transform:translateX(-50%);width:max-content;border-radius:20px;box-shadow:0 26px 54px -16px rgba(0,0,0,.85)}
+.lbhost.pend{bottom:20px}
+.lbhost.dock{left:calc(50% - 75px);top:20px}
+.pill-lb{border-radius:20px;background:rgba(21,32,43,.97);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.frame[data-mode="lib"] .pill,.frame[data-mode="app"] .lbhost{display:none}
+.tune[data-mode="lib"] .app-only,.tune[data-mode="app"] .lib-only{display:none}
+.typebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.typebar>span:first-child{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);width:82px}
+.typebar .seg button{font-family:ui-monospace,Menlo,monospace}
+.typebar .src{font-size:12.5px;color:var(--mut)}
 .frame.paused .beam,.frame.paused .beam::before,.frame.paused .beam::after,
 .frame[data-off] .beam,.frame[data-off] .beam::before,.frame[data-off] .beam::after{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.beam,.beam::after,.beam::before{animation:none}}
@@ -168,7 +180,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
     <div>Only the two beam states: an invite waiting, and joined + docked.</div>
     <div>Every slider drives a real layer of <code>.invitation-beam</code>.</div>
     <div>Copy CSS swaps the beam block in <code>InvitationModal/style.css</code>.</div>
-    <div>Each canvas is a preset; tune any of them, Reset returns it.</div>
+    <div>Type <code>sm · in-app</code> is our hand copy; the rest render the real <code>border-beam</code>.</div>
   </div>
 </header>
 
@@ -228,10 +240,42 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   </div>
 </section>
 
+<section class="var" id="v-g" data-id="G" data-name="Line" data-preset="g">
+  <div class="var-h"><span class="id">G</span><h2>Line</h2></div>
+  <div class="notes">
+    <div class="note good">Light travels along the bottom edge only; the pill keeps a clean outline.</div>
+    <div class="note bad">On a 40px pill the glow pools under the text.</div>
+  </div>
+</section>
+
+<section class="var" id="v-h" data-id="H" data-name="Full ring (md)" data-preset="h">
+  <div class="var-h"><span class="id">H</span><h2>Full ring (md)</h2></div>
+  <div class="notes">
+    <div class="note good">The library's default; the most even glow round the ring.</div>
+    <div class="note bad">Much fainter than sm at full strength; tuned for cards.</div>
+  </div>
+</section>
+
+<section class="var" id="v-i" data-id="I" data-name="Pulse inner" data-preset="i">
+  <div class="var-h"><span class="id">I</span><h2>Pulse inner</h2></div>
+  <div class="notes">
+    <div class="note good">Breathes instead of spinning; calm while the invite waits.</div>
+    <div class="note bad">Without travel it reads less as "new" on arrival.</div>
+  </div>
+</section>
+
+<section class="var" id="v-j" data-id="J" data-name="Pulse outside" data-preset="j">
+  <div class="var-h"><span class="id">J</span><h2>Pulse outside</h2></div>
+  <div class="notes">
+    <div class="note good">Halo spills past the pill, so it lifts off busy art.</div>
+    <div class="note bad">Needs the pill's clip off and room around it in-app.</div>
+  </div>
+</section>
+
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from B: quiet beams that run only for the first few seconds.</div>
+    <div><b>Explore</b>Explore from G: line beams that sweep once on arrival, then rest.</div>
     <div><b>Remix</b>Remix E: drop yellow so the beam can't read as expired.</div>
     <div><b>Settle</b>Settle on A to trade the rainbow for brand pink.</div>
   </div>
@@ -254,7 +298,19 @@ const PALS = {
   sunset:['255,90,90','255,160,60','255,200,80','255,120,60','232,54,143','255,150,60','255,110,40','240,60,140','255,80,120'],
 };
 const PAL_NAMES = {rainbow:'Rainbow',pink:'Pink',mono:'White',trio:'Trio',ocean:'Ocean',sunset:'Sunset',custom:'Custom'};
-const BASE = {dur:1.96,dir:'cw',n:1,len:65,fe:.57,w:1,hl:1,hw:24,glow:.36,bloom:.6,blur:8,br:1.3,sat:1.2,hue:30,hp:12,pal:'rainbow',c1:'#E8368F',c2:'#65D6AD'};
+const BASE = {type:'app',dur:1.96,dir:'cw',n:1,len:65,fe:.57,w:1,hl:1,hw:24,glow:.36,bloom:.6,blur:8,br:1.3,sat:1.2,hue:30,hp:12,pal:'rainbow',c1:'#E8368F',c2:'#65D6AD'};
+// border-beam's own types and palettes (dark theme defaults from the package source)
+const TYPES = [['app','sm · in-app'],['sm','sm'],['md','md'],['line','line'],['pulse-inner','pulse-inner'],['pulse-outside','pulse-outside']];
+const LIB_PALS = {
+  colorful:['255,50,100','40,140,255','50,200,80','100,70,255','255,120,40'],mono:['180,180,180','140,140,140','190,190,190','150,150,150','170,170,170'],
+  ocean:['100,80,220','60,120,255','50,140,220','120,80,255','140,100,240'],sunset:['255,80,50','255,160,40','255,200,50','255,60,60','255,140,50'],
+  forest:['46,160,90','30,190,120','70,180,70','20,150,130','120,210,70'],candy:['240,70,170','255,90,140','215,60,200','200,80,240','230,120,220'],
+  ice:['90,200,240','60,175,230','130,220,250','70,190,215','150,230,250'],gold:['240,190,60','255,210,90','225,165,40','255,225,120','215,155,35'],
+};
+function libDefaults(t){
+  const pulse = t.startsWith('pulse');
+  return {dur: t === 'line' ? 3.1 : pulse ? 2.3 : 1.96, br: t === 'pulse-outside' ? 1.9 : t === 'pulse-inner' ? .75 : 1.3, sat:1.2, strength:1, glow:1, hue:30, cv:'colorful', stat:false};
+}
 const PRESETS = {
   now:{},
   a:{dur:2.4,len:60,hl:.9,glow:.3,bloom:.5,sat:1.1,hue:12,pal:'pink'},
@@ -263,8 +319,13 @@ const PRESETS = {
   d:{dur:5.5,len:85,fe:.85,hl:.5,hw:30,glow:.5,bloom:.35,blur:12,br:1.2,hue:40,hp:16,pal:'ocean'},
   e:{dur:2.2,len:60,glow:.32,bloom:.55,sat:1.15,hue:0,pal:'trio'},
   f:{dur:3,n:2,len:34,fe:.55,hl:.9,hw:12,glow:.28,bloom:.5,pal:'sunset'},
+  g:{type:'line'}, h:{type:'md'}, i:{type:'pulse-inner'}, j:{type:'pulse-outside'},
 };
-const preset = k => ({...BASE, ...PRESETS[k]});
+function preset(k){
+  const p = PRESETS[k], s = {...BASE, ...p};
+  s.lib = {...libDefaults(s.type === 'app' ? 'sm' : s.type), ...(p.lib || {})};
+  return s;
+}
 
 const f2 = v => String(+(+v).toFixed(2));
 const hexRgb = h => { const n = parseInt(h.slice(1),16); return `${n>>16&255},${n>>8&255},${n&255}`; };
@@ -305,12 +366,26 @@ function applyBeam(frame, s){
   st.setProperty('--br', s.br); st.setProperty('--sat', s.sat); st.setProperty('--hue', s.hue + 'deg'); st.setProperty('--hp', s.hp + 's');
 }
 function valuesText(s){
+  if(s.type !== 'app'){ const l = s.lib;
+    return `border-beam type ${s.type}, palette ${l.cv}, duration ${f2(l.dur)}s, strength ${f2(l.strength)}, brightness ${f2(l.br)}, saturation ${f2(l.sat)}, glow size ${f2(l.glow)}, hue range ±${l.hue}°${l.stat ? ' (hue shift off)' : ''}`; }
+  return `type sm (in-app copy), ` + appValues(s);
+}
+function jsxText(s){
+  const l = s.lib;
+  return `import { BorderBeam } from 'border-beam'
+
+<BorderBeam size="${s.type}" colorVariant="${l.cv}" theme="dark" duration={${f2(l.dur)}} strength={${f2(l.strength)}} brightness={${f2(l.br)}} saturation={${f2(l.sat)}} glowSize={${f2(l.glow)}} hueRange={${l.hue}}${l.stat ? ' staticColors' : ''} active={showBeam}>
+  {/* the .incoming-invitation pill */}
+</BorderBeam>
+`;
+}
+function appValues(s){
   return `speed ${f2(s.dur)}s ${s.dir}, ${s.n} beam${s.n>1?'s':''}, arc ${s.len}%, feather ${f2(s.fe)}, width ${f2(s.w)}px, streak ${f2(s.hl)} × ${s.hw}%, glow ${f2(s.glow)}, bloom ${f2(s.bloom)} blur ${s.blur}px, intensity ${f2(s.br)}, saturation ${f2(s.sat)}, hue drift ±${s.hue}° over ${s.hp}s, palette ${PAL_NAMES[s.pal]}${s.pal==='custom'?` ${s.c1}/${s.c2}`:''}`;
 }
 function cssText(s){
   const l = layers(s), spin = `invitation-beam-spin ${f2(s.dur)}s linear infinite${s.dir === 'ccw' ? ' reverse' : ''}`;
   const hue = `invitation-beam-hue ${s.hp}s ease-in-out infinite`, fx = `brightness(${f2(s.br)}) saturate(${f2(s.sat)})`;
-  return `/* invite beam — ${valuesText(s)} */
+  return `/* invite beam — ${appValues(s)} */
 @property --invitation-beam-angle {
   syntax: '<angle>';
   initial-value: 0deg;
@@ -395,34 +470,45 @@ function copyText(text){
 }
 
 /* ───── Canvases + tuners ───── */
+const PEND_LINE = `<div class="line"><span class="av" style="--c:#F7C948">J</span><p><b>Joyce</b> invited you to watch <b>Past Lives</b></p><button class="respond" type="button">Respond</button></div>`;
+const DOCK_LINE = `<div class="line"><span class="avs"><span class="av" style="--c:#F7C948">J</span><span class="av" style="--c:#9EB8FF">K</span></span><p>You’re in with <b>Joyce</b></p></div>`;
 const PEND = `<div class="lib-nav"><span class="sk" style="width:58px;height:12px"></span><span class="sk" style="width:40px"></span><span class="sk" style="width:46px"></span><span class="sk me"></span></div>
   <span class="sk lib-h"></span><div class="lib-grid">${'<span class="sk"></span>'.repeat(6)}</div>
-  <div class="pill pend"><div class="beam" aria-hidden="true"><i></i></div><div class="line"><span class="av" style="--c:#F7C948">J</span><p><b>Joyce</b> invited you to watch <b>Past Lives</b></p><button class="respond" type="button">Respond</button></div></div>`;
+  <div class="pill pend"><div class="beam" aria-hidden="true"><i></i></div>${PEND_LINE}</div><div class="lbhost pend"></div>`;
 const DOCK = `<div class="room"><div class="room-vid"><div class="still"></div><div class="room-ctl"><span class="sk"></span><div class="seek"><i></i></div><span class="sk"></span><span class="sk"></span></div></div>
   <div class="room-chat">${[[60,40],[80,55],[50,70]].map(([a,b]) => `<div class="m"><span class="sk"></span><div><span class="sk" style="width:${a}%"></span><span class="sk" style="width:${b}%"></span></div></div>`).join('')}<span class="sk inp"></span></div></div>
-  <div class="pill dock"><div class="beam" aria-hidden="true"><i></i></div><div class="line"><span class="avs"><span class="av" style="--c:#F7C948">J</span><span class="av" style="--c:#9EB8FF">K</span></span><p>You’re in with <b>Joyce</b></p></div></div>`;
+  <div class="pill dock"><div class="beam" aria-hidden="true"><i></i></div>${DOCK_LINE}</div><div class="lbhost dock"></div>`;
 
 const SLIDERS = {
   motion:[['dur','Speed',.6,8,.05,v=>f2(v)+'s']],
   shape:[['len','Arc',15,85,1,v=>v+'%'],['fe','Feather',.2,1,.01,f2],['w','Width',.5,3,.5,v=>f2(v)+'px']],
   light:[['hl','Streak',0,1.6,.05,f2],['hw','Streak len',6,40,1,v=>v+'%'],['glow','Inner glow',0,1,.01,f2],['bloom','Bloom',0,1.2,.05,f2],['blur','Bloom blur',0,20,1,v=>v+'px'],['br','Intensity',.6,2,.05,f2],['sat','Saturation',0,2,.05,f2]],
   color:[['hue','Hue drift',0,90,1,v=>'±'+v+'°'],['hp','Drift time',4,30,1,v=>v+'s']],
+  libMotion:[['lib.dur','Duration',.6,8,.05,v=>f2(v)+'s']],
+  libLight:[['lib.strength','Strength',0,1,.01,f2],['lib.br','Brightness',.3,2.5,.05,f2],['lib.sat','Saturation',0,2.5,.05,f2],['lib.glow','Glow size',.3,3,.05,f2]],
+  libColor:[['lib.hue','Hue range',0,90,1,v=>'±'+v+'°']],
 };
 const range = ([k,label,min,max,step]) => `<label class="row"><span>${label}</span><input type="range" data-k="${k}" min="${min}" max="${max}" step="${step}"><output data-o="${k}"></output></label>`;
 const seg = (k,label,opts) => `<div class="row wide"><span>${label}</span><span class="seg" data-seg="${k}">${opts.map(([v,t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</span></div>`;
 const swatch = p => `linear-gradient(90deg,${[0,1,2,4,6,8].map(i => `rgb(${PALS[p][i]})`).join(',')})`;
+const libSwatch = p => `linear-gradient(90deg,${LIB_PALS[p].map(c => `rgb(${c})`).join(',')})`;
+const libRender = (...a) => window.renderLib ? window.renderLib(...a) : (window.__lbq = window.__lbq || []).push(a);
 
 const frames = [];
 document.querySelectorAll('.var').forEach(sec => {
   const key = sec.dataset.preset;
-  let s = preset(key);
+  let s = preset(key), paused = false;
+  const getv = k => k.startsWith('lib.') ? s.lib[k.slice(4)] : s[k];
+  const setv = (k, v) => { if(k.startsWith('lib.')) s.lib[k.slice(4)] = v; else s[k] = v; };
   const h = sec.querySelector('.var-h');
   const badge = document.createElement('span'); badge.className = 'tuned'; badge.textContent = 'Tuned'; badge.hidden = true; h.append(badge);
   const frame = document.createElement('div'); frame.className = 'frame';
   frame.innerHTML = `<div class="panel">${PEND}</div><div class="panel">${DOCK}</div>`;
+  const hosts = [[frame.querySelector('.lbhost.pend'), PEND_LINE], [frame.querySelector('.lbhost.dock'), DOCK_LINE]];
   const caps = document.createElement('div'); caps.className = 'caps'; caps.innerHTML = '<span>Invite waiting · collapsed</span><span>Joined · docked on the player</span>';
   const tune = document.createElement('div'); tune.className = 'tune';
-  tune.innerHTML = `<div class="tgs">
+  tune.innerHTML = `<div class="typebar"><span>Type</span><span class="seg" data-seg="type">${TYPES.map(([v,t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</span><span class="src"></span></div>
+    <div class="tgs app-only">
       <div class="tg"><h4>Motion</h4>${SLIDERS.motion.map(range).join('')}${seg('dir','Direction',[['cw','Clockwise'],['ccw','Counter']])}${seg('n','Beams',[[1,'1'],[2,'2'],[3,'3']])}</div>
       <div class="tg"><h4>Shape</h4>${SLIDERS.shape.map(range).join('')}</div>
       <div class="tg"><h4>Light</h4>${SLIDERS.light.map(range).join('')}</div>
@@ -430,43 +516,65 @@ document.querySelectorAll('.var').forEach(sec => {
         <div class="cust" hidden>Colours <input type="color" data-c="c1"><input type="color" data-c="c2"></div>
         <div style="margin-top:8px">${SLIDERS.color.map(range).join('')}</div></div>
     </div>
-    <div class="tact"><button type="button" data-act="reset">Reset</button><button type="button" data-act="pause">Pause</button><button type="button" data-act="css">Copy CSS</button><button type="button" data-act="vals">Copy values</button><span class="st">Copy CSS replaces <code>@property --invitation-beam-angle</code> → <code>.invitation-beam i</code></span></div>
+    <div class="tgs lib-only">
+      <div class="tg"><h4>Motion</h4>${SLIDERS.libMotion.map(range).join('')}${seg('lib.stat','Hue shift',[['false','On'],['true','Off']])}</div>
+      <div class="tg"><h4>Light</h4>${SLIDERS.libLight.map(range).join('')}</div>
+      <div class="tg"><h4>Colour</h4><div class="pals">${Object.keys(LIB_PALS).map(p => `<button type="button" data-lpal="${p}"><i style="background:${libSwatch(p)}"></i>${p}</button>`).join('')}</div>
+        <div style="margin-top:8px">${SLIDERS.libColor.map(range).join('')}</div></div>
+    </div>
+    <div class="tact"><button type="button" data-act="reset">Reset</button><button type="button" data-act="pause">Pause</button><button type="button" data-act="css">Copy CSS</button><button type="button" data-act="vals">Copy values</button><span class="st"></span></div>
     <div class="tout" hidden><textarea readonly></textarea></div>`;
   h.after(frame); frame.after(caps); caps.after(tune);
   frames.push(frame);
 
   const st = tune.querySelector('.st'), out = tune.querySelector('.tout'), ta = out.querySelector('textarea'), cust = tune.querySelector('.cust');
+  const cssBtn = tune.querySelector('[data-act="css"]'), src = tune.querySelector('.src');
   const isTuned = () => JSON.stringify(s) !== JSON.stringify(preset(key));
+  const hint = () => s.type === 'app' ? 'Copy CSS replaces @property --invitation-beam-angle → .invitation-beam i' : 'Copy JSX needs the border-beam package in ui/';
   function sync(){
-    tune.querySelectorAll('input[type=range]').forEach(inp => { inp.value = s[inp.dataset.k]; });
-    Object.values(SLIDERS).flat().forEach(([k,,,,,fmt]) => { tune.querySelector(`[data-o="${k}"]`).textContent = fmt(s[k]); });
-    tune.querySelectorAll('[data-seg]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', String(s[g.dataset.seg]) === b.dataset.v)));
+    const mode = s.type === 'app' ? 'app' : 'lib';
+    frame.dataset.mode = tune.dataset.mode = mode;
+    tune.querySelectorAll('input[type=range]').forEach(inp => { inp.value = getv(inp.dataset.k); });
+    Object.values(SLIDERS).flat().forEach(([k,,,,,fmt]) => { tune.querySelector(`[data-o="${k}"]`).textContent = fmt(getv(k)); });
+    tune.querySelectorAll('[data-seg]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', String(getv(g.dataset.seg)) === b.dataset.v)));
     tune.querySelectorAll('[data-pal]').forEach(b => b.classList.toggle('on', b.dataset.pal === s.pal));
+    tune.querySelectorAll('[data-lpal]').forEach(b => b.classList.toggle('on', b.dataset.lpal === s.lib.cv));
     cust.hidden = s.pal !== 'custom';
     tune.querySelectorAll('[data-c]').forEach(inp => { inp.value = s[inp.dataset.c]; });
     badge.hidden = !isTuned();
-    applyBeam(frame, s);
+    cssBtn.textContent = mode === 'app' ? 'Copy CSS' : 'Copy JSX';
+    src.textContent = mode === 'app' ? 'Our static copy of border-beam sm, in style.css' : `Real <BorderBeam size="${s.type}">, border-beam 1.4.1`;
+    if(!st.classList.contains('ok')) st.textContent = hint();
+    if(mode === 'app') applyBeam(frame, s);
+    else hosts.forEach(([host, html]) => libRender(host, {size:s.type, ...s.lib, active:!paused}, html));
   }
   tune.addEventListener('input', e => {
     const t = e.target;
-    if(t.dataset.k) s[t.dataset.k] = +t.value;
+    if(t.dataset.k) setv(t.dataset.k, +t.value);
     if(t.dataset.c) s[t.dataset.c] = t.value;
     sync();
   });
   tune.addEventListener('click', async e => {
     const b = e.target.closest('button'); if(!b) return;
     const g = b.closest('[data-seg]');
-    if(g){ const k = g.dataset.seg; s[k] = k === 'n' ? +b.dataset.v : b.dataset.v; return sync(); }
+    if(g){
+      const k = g.dataset.seg, v = b.dataset.v;
+      if(k === 'type'){ if(v !== s.type){ const keep = {cv:s.lib.cv, strength:s.lib.strength}; s.type = v; s.lib = {...libDefaults(v === 'app' ? 'sm' : v), ...keep}; } }
+      else setv(k, k === 'n' ? +v : k === 'lib.stat' ? v === 'true' : v);
+      st.className = 'st'; return sync();
+    }
     if(b.dataset.pal){ s.pal = b.dataset.pal; return sync(); }
+    if(b.dataset.lpal){ s.lib.cv = b.dataset.lpal; return sync(); }
     const act = b.dataset.act;
-    if(act === 'reset'){ s = preset(key); out.hidden = true; st.className = 'st'; st.textContent = 'Back to the preset'; return sync(); }
-    if(act === 'pause'){ const on = frame.classList.toggle('paused'); b.classList.toggle('on', on); b.textContent = on ? 'Play' : 'Pause'; return; }
+    if(act === 'reset'){ s = preset(key); out.hidden = true; st.className = 'st'; return sync(); }
+    if(act === 'pause'){ paused = !paused; frame.classList.toggle('paused', paused); b.classList.toggle('on', paused); b.textContent = paused ? 'Play' : 'Pause'; return sync(); }
     if(act === 'css' || act === 'vals'){
-      const text = act === 'css' ? cssText(s) : `Use this border beam for the invite toast: ${valuesText(s)} (from ${sec.dataset.id} in ${FILE})`;
+      const text = act === 'vals' ? `Use this border beam for the invite toast: ${valuesText(s)} (from ${sec.dataset.id} in ${FILE})` : s.type === 'app' ? cssText(s) : jsxText(s);
       const ok = await copyText(text);
       st.className = ok ? 'st ok' : 'st';
-      st.textContent = ok ? (act === 'css' ? 'Copied CSS' : 'Copied values') : 'Clipboard blocked — copy from the box';
+      st.textContent = ok ? `Copied ${act === 'vals' ? 'values' : s.type === 'app' ? 'CSS' : 'JSX'}` : 'Clipboard blocked — copy from the box';
       out.hidden = ok; if(!ok){ ta.value = text; ta.focus(); ta.select(); }
+      if(ok) setTimeout(() => { st.className = 'st'; st.textContent = hint(); }, 2400);
     }
   });
   sec._state = () => s; sec._tuned = isTuned;
@@ -518,6 +626,21 @@ function syncMM(){
 }
 addEventListener('scroll', syncMM, {passive:true}); syncMM();
 if(secs.length < 2) mm.remove();
+</script>
+<script type="module">
+// Renders md / line / pulse types with the real package (vendor/ is border-beam 1.4.1, MIT).
+import { createElement as h } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BorderBeam } from './vendor/border-beam-1.4.1.es.js';
+const roots = new WeakMap();
+window.renderLib = (host, p, html) => {
+  let root = roots.get(host);
+  if(!root){ root = createRoot(host); roots.set(host, root); }
+  root.render(h(BorderBeam, {key:p.size, size:p.size, colorVariant:p.cv, theme:'dark', duration:p.dur, strength:p.strength, brightness:p.br,
+    saturation:p.sat, glowSize:p.glow, hueRange:p.hue, staticColors:p.stat, active:p.active}, h('div', {className:'pill-lb', dangerouslySetInnerHTML:{__html:html}})));
+};
+(window.__lbq || []).forEach(a => window.renderLib(...a));
+window.__lbq = null;
 </script>
 </body>
 </html>

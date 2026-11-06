@@ -6,7 +6,7 @@ import UiAvatar from '~/components/UiAvatar'
 import Splash from '~/screens/login/Splash'
 import './style.css'
 
-export default function RequestAccess() {
+export default function Onboarding() {
   const auth = useAuth()
   const navigate = useNavigate()
   const [code, setCode] = useState('')

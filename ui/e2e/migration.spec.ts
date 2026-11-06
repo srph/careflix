@@ -163,7 +163,7 @@ test('settings remove password controls and retain account navigation', async ({
   await expect(page).toHaveTitle('Download The App - Care.tv')
 })
 
-test('request access persists across reloads and only grants a session after the correct code', async ({ page }) => {
+test('onboarding persists across reloads and only grants a session after the correct code', async ({ page }) => {
   await authenticatedCatalog(page, false)
   await page.route('**/api/auth/discord/exchange', route => route.fulfill({ json: {
     requires_request_access: true, onboarding_ticket: 'c'.repeat(64), name: viewer.name,
@@ -177,8 +177,10 @@ test('request access persists across reloads and only grants a session after the
       route.fulfill({ status: 422, json: { errors: { request_access: ['That code didn’t match. Please try again.'] } } })
   })
   await discordCallback(page)
-  await expect(page).toHaveURL(/\/request-access$/)
+  await expect(page).toHaveURL(/\/onboarding$/)
   expect((await page.context().cookies()).find(cookie => cookie.name === 'app_token')).toBeUndefined()
+  await page.goto('/request-access')
+  await expect(page).toHaveURL(/\/onboarding$/)
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Ticket, please.' })).toBeVisible()
   await expect(page.getByText('Signed in as')).toContainText(viewer.name)
@@ -188,7 +190,7 @@ test('request access persists across reloads and only grants a session after the
   await expect(submit).toBeDisabled()
   await expect(input).toHaveAttribute('placeholder', 'Paste or type your code')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  await page.screenshot({ path: test.info().outputPath('request-access-empty.png'), fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('onboarding-empty.png'), fullPage: true })
   await input.fill('WRONG')
   await submit.click()
   await expect(page.getByRole('alert')).toContainText('That code didn’t match.')
@@ -196,7 +198,7 @@ test('request access persists across reloads and only grants a session after the
   const field = await input.boundingBox(), error = await page.getByRole('alert').boundingBox(), button = await submit.boundingBox()
   expect(error!.y).toBeGreaterThanOrEqual(field!.y + field!.height)
   expect(button!.y).toBeGreaterThanOrEqual(error!.y + error!.height)
-  await page.screenshot({ path: test.info().outputPath('request-access.png'), fullPage: true })
+  await page.screenshot({ path: test.info().outputPath('onboarding.png'), fullPage: true })
   await input.fill('FRIENDS')
   await expect(page.getByRole('alert')).toHaveCount(0)
   await submit.click()

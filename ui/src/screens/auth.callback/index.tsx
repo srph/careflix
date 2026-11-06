@@ -33,7 +33,7 @@ export default function AuthCallback() {
     }
     auth.exchangeDiscord(code).then(([err, result]) => {
       if (err || !result) { setState('cancelled'); setError(authError(err)) }
-      else if (result.requires_request_access) navigate('/request-access', { replace: true })
+      else if (result.requires_request_access) navigate('/onboarding', { replace: true })
       else { destination.current = returnToApp(); setName(result.user!.name.split(' ')[0]); setState('welcome') }
     })
   }, [])

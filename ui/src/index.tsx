@@ -23,7 +23,7 @@ import AppDownload from '~/screens/app.download'
 import Login from '~/screens/login'
 import Logout from '~/screens/logout'
 import AuthCallback from '~/screens/auth.callback'
-import RequestAccess from '~/screens/request-access'
+import Onboarding from '~/screens/onboarding'
 
 function RootLayout() {
   return (
@@ -49,7 +49,8 @@ const router = createBrowserRouter([{
       { path: '/register', element: <Navigate to="/login" replace /> },
     ] },
     { path: '/auth/callback', element: <AuthCallback /> },
-    { path: '/request-access', element: <RequestAccess /> },
+    { path: '/onboarding', element: <Onboarding /> },
+    { path: '/request-access', element: <Navigate to="/onboarding" replace /> },
     { path: '/logout', element: <Logout /> },
     { element: <ApplicationLayout />, children: [
       { path: '/', element: <AppHome /> },

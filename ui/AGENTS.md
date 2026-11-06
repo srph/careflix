@@ -77,6 +77,6 @@ See [TESTING.md](TESTING.md) for cross-browser projects, production-preview chec
 
 ## Authentication
 
-Discord login starts with a full navigation to `/auth/discord`. The browser keeps a random verifier in sessionStorage and sends only its SHA-256 challenge to Laravel. `/auth/callback` exchanges the handoff code with the verifier; `/request-access` uses only a restricted onboarding ticket until the optional code passes. Never add OAuth client secrets to browser configuration.
+Discord login starts with a full navigation to `/auth/discord`. The browser keeps a random verifier in sessionStorage and sends only its SHA-256 challenge to Laravel. `/auth/callback` exchanges the handoff code with the verifier; `/onboarding` uses only a restricted onboarding ticket until the optional code passes. The former `/request-access` URL redirects to `/onboarding`. Never add OAuth client secrets to browser configuration.
 
 Keep callback and onboarding routes outside the account-keyed Query/Pusher providers: those providers remount when the account changes. Axios interceptors remain around all routes and initialize before requests. The full Passport token is stored in `app_token` with the server’s expiration; logout revokes it on the API. See [../AUTHENTICATION.md](../AUTHENTICATION.md).

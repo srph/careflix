@@ -22,7 +22,8 @@ export default defineConfig(({ mode }) => {
       // Keep API, Passport, and Pusher auth on the browser's origin in development.
       proxy: {
         '^/(api|broadcasting)(/|$)': { target: apiTarget, changeOrigin: true },
-        '^/auth/discord(/|$)': { target: apiTarget, changeOrigin: true },
+        // Vite matches the full request URL, including the query string.
+        '^/auth/discord(?:[/?]|$)': { target: apiTarget, changeOrigin: true },
       },
     },
   }

@@ -47,6 +47,13 @@ both `APP_FRONTEND_URL` and the registered `DISCORD_REDIRECT_URI` to that HTTPS 
 with `/auth/discord/callback` on the latter. The Vite proxy preserves the browser's
 origin for Socialite's session cookie.
 
+The API must also be running at the URL configured in `VITE_API_BASE_URL` (or
+legacy `API_BASE_URL`). For example, a target of `http://localhost:8485` needs
+`valet php artisan serve --host=127.0.0.1 --port=8485` from `api/`. Sharing the
+Vite server alone does not start the API. Register the Tailscale callback in
+Discord before testing from another device; a localhost callback sends that
+device back to its own localhost and does not retain the Tailscale session.
+
 ## Production
 
 ```dotenv

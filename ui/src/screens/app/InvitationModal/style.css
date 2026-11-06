@@ -253,10 +253,19 @@
   color: #fff;
   font-size: 13px;
   font-weight: 600;
+  transition: background-color .15s ease;
 }
 
 .invitation-actions > .is-primary {
   background: var(--color-primary);
+}
+
+.invitation-actions > button:not(:disabled):is(:hover, :focus-visible) {
+  background: rgba(255,255,255,.16);
+}
+
+.invitation-actions > .is-primary:not(:disabled):is(:hover, :focus-visible) {
+  background: color-mix(in srgb, var(--color-primary), #fff 16%);
 }
 
 .invitation-unavailable, .invitation-error {
@@ -432,7 +441,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .invitation-body {
+  .invitation-body, .invitation-actions > button {
     transition: none;
   }
   .incoming-invitation-position {

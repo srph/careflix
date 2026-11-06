@@ -18,6 +18,7 @@ class DoInvitation extends FormRequest
         $isResponse = in_array($this->route()->getActionMethod(), ['accept', 'decline']);
 
         return $invitation->action === 'pending'
+            && ($isResponse || $this->user()->isMemberOfParty($invitation->party))
             && (!$isResponse || Carbon::parse($invitation->expires_at)->isFuture());
     }
 

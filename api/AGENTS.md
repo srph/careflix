@@ -36,6 +36,8 @@ Party chat and activity feed are unified through a single polymorphic log:
 
 -   `PartyInvitation` ([app/PartyInvitation.php](app/PartyInvitation.php)) links a `sender` and `recipient` (both `User`) to a `Party`, with an `invitation_code`, `action` (`pending` by default via accessor fallback, or `accepted`/`declined`/`cancelled`), and `expires_at`.
 -   `scopePending()` filters to non-expired invitations still awaiting a response.
+-   Member-only `GET /api/parties/{party}/invitations` returns the latest invitation per recipient, including outcomes and expiry. The room's `invitations` relation still contains only active pending invitations. The B5b2 host panel combines both with Pusher updates.
+-   `GET /api/parties/{party}/invitations/search` without a query returns up to 20 previous co-watchers ordered by shared party activity, excluding current members and the viewer. A `search` query searches everyone by literal name/email, returns public profile fields, and is capped at 20 results. Sending is serialized with joins under the recipient row lock and reuses an existing pending invitation. Any room member may cancel an invitation; outsiders may not.
 -   Broadcast via `PartyInvitationSent` / `PartyInvitationAccepted` / `PartyInvitationDeclined` / `PartyInvitationCancelled` / `UserInvitationReceived` / `UserInvitationCancelled` events (see `app/Events`).
 
 ### Movies / shows — how titles are structured

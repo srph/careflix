@@ -1,0 +1,35 @@
+.host-invite-panel { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; min-height: 0; color: var(--color-white); }
+.host-invite-heading { display: flex; align-items: center; gap: 8px; flex: none; padding: 16px 16px 6px 20px; }
+.host-invite-heading h3 { margin: 0; font-size: 17px; font-weight: 700; }
+.host-invite-heading button { display: grid; place-items: center; width: 32px; height: 32px; margin-left: auto; border-radius: 50%; color: var(--color-black-5); }
+.host-invite-heading button:hover { background: #ffffff14; color: white; }
+.host-invite-search { display: flex; flex: none; align-items: center; gap: 10px; height: 42px; margin: 10px 16px 4px; padding: 0 14px; border: 1px solid #ffffff12; border-radius: 12px; background: var(--color-black-1); color: var(--color-black-5); }
+.host-invite-search:focus-within { border-color: var(--color-primary); }
+.host-invite-search input { width: 100%; min-width: 0; padding: 0; outline: 0; border: 0; background: transparent; color: white; font: inherit; font-size: 14px; }
+.host-invite-search input::placeholder { color: var(--color-black-5); }
+.host-invite-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 6px 8px; }
+.host-invite-label { display: block; padding: 16px 14px 8px; color: var(--color-black-5); font: 600 11px var(--font-family-subheading); letter-spacing: .08em; text-transform: uppercase; }
+.host-invite-person { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 10px 14px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: left; }
+button.host-invite-person { cursor: pointer; }
+button.host-invite-person:hover, .host-invite-person[data-highlighted] { background: #ffffff0d; }
+.host-invite-person:disabled { cursor: wait; }
+.host-invite-person .ui-presence-avatar { flex: none; opacity: 1; }
+.host-invite-person .ui-presence-avatar > .status { width: 11px; height: 11px; bottom: -1px; right: -1px; }
+.host-invite-person .ui-presence-avatar:not(.is-online) > .status { display: none; }
+.host-invite-avatar { position: relative; display: inline-flex; flex: none; }
+.host-invite-ring { position: absolute; inset: -4px; border-radius: 50%; mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px)); pointer-events: none; }
+.host-invite-details { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 2px; }
+.host-invite-details b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 600; }
+.host-invite-details small { color: var(--color-black-5); font-size: 12px; font-variant-numeric: tabular-nums; }
+.host-invite-details em { margin-left: 6px; color: var(--color-black-5); font-size: 11px; font-style: normal; }
+.host-invite-details .is-error { color: #ff9bad; }
+.host-invite-action { display: grid; flex: none; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #e8368f26; color: #ff9fcb; }
+button:hover .host-invite-action { background: var(--color-primary); color: white; }
+.host-invite-action.is-cancel { background: #ffffff0d; color: var(--color-black-5); }
+button:hover .host-invite-action.is-cancel { background: #ffffff1f; color: white; }
+.host-invite-action.is-retry { width: auto; height: 30px; padding: 0 12px; border-radius: 15px; background: #ffffff0d; color: white; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.host-invite-footer { flex: none; min-height: 60px; border-top: 1px solid var(--color-black-1); }
+.host-invite-footer .watch-party-code { min-height: 60px; margin: 0; padding: 0 16px 0 20px; border-radius: 0; background: transparent; }
+.host-invite-note { padding: 12px 14px; color: var(--color-black-5); font-size: 13px; }
+.host-invite-note button { border: 0; background: transparent; color: white; cursor: pointer; text-decoration: underline; }
+.host-invite-panel button:focus-visible { outline: 2px solid white; outline-offset: -2px; }

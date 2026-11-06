@@ -52,7 +52,7 @@ async function setup(page: Page, options: { invitations?: boolean; failLookup?: 
     if (path === '/api/shows') body = { data: [show], current_page: 1, last_page: 1 }
     if (path === '/api/me/parties') body = { data: [], current_page: 1, last_page: 1 }
     if (path === `/api/parties/${party.id}`) body = party
-    if (path.endsWith('/logs') || path.endsWith('/invitations/search')) body = []
+    if (path.endsWith('/logs') || path.endsWith('/invitations/search') || path.endsWith('/invitations')) body = []
     await route.fulfill({ json: body })
   })
   const emit = (channel: string, event: string, data: unknown) => connection.send(JSON.stringify({ channel, event, data: JSON.stringify(data) }))

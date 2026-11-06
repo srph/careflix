@@ -37,7 +37,7 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
     let body: unknown = {}
     if (path === '/api/me') body = { ...viewer, invitations: [] }
     if (path === `/api/parties/${party.id}`) body = party
-    if (path.endsWith('/logs')) body = []
+    if (path.endsWith('/logs') || path.endsWith('/invitations')) body = []
     if (path.endsWith('/invitations/search')) {
       await searchReady
       body = [online, offline]

@@ -48,7 +48,7 @@ async function setup(page: Page, invitations = [invite(0), invite(1), invite(2)]
     if (/\/groups$/.test(path)) body = [{ id: 93001, title: 'Season 1', videos: [videos[0], videos[2], { ...videos[2], id: 92009 }] }]
     if (/\/parties\/\d+$/.test(path)) body = parties.find(party => path.endsWith(String(party.id)))
     if (/\/logs$/.test(path)) body = []
-    if (/\/invitations\/search$/.test(path)) body = []
+    if (/\/invitations(?:\/search)?$/.test(path)) body = []
     if (/\/accept$/.test(path)) {
       const accepted = invitations.find(invitation => path.includes(String(invitation.id)))
       body = { ...accepted?.party, declined_invitation_ids: invitations.filter(invitation => invitation.id !== accepted?.id && invitation.action === 'pending' && new Date(invitation.expires_at).getTime() > Date.now()).map(invitation => invitation.id) }

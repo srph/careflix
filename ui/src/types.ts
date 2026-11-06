@@ -51,6 +51,7 @@ interface AppPartyInvitation {
   party?: AppParty
   sender: AppUser
   action: 'pending' | 'cancelled' | 'accepted' | 'declined'
+  duration?: number
   recipient: AppUser
   expires_at: string
   created_at: string

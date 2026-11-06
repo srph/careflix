@@ -4,7 +4,9 @@ import * as React from 'react'
 import cx from 'classnames'
 import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
-import ChatInvitationModal from '../ChatInvitationModal'
+import ChatInvitationPanel from '../ChatInvitationPanel'
+import useHostInvitations from '../ChatInvitationPanel/useHostInvitations'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import ChatWidgetTip from '../ChatWidgetTip'
 import PartyCode from '../PartyCode'
 
@@ -133,6 +135,14 @@ const init: State = {
 
 function ChatWidget(props: Props) {
   const auth = useAuth()
+  const invitations = useHostInvitations(props.isInvitationOpen)
+  const reducedMotion = useReducedMotion()
+  const inviteButton = useRef<HTMLButtonElement>(null)
+  const wasInvitationOpen = useRef(false)
+  useEffect(() => {
+    if (wasInvitationOpen.current && !props.isInvitationOpen) inviteButton.current?.focus({ preventScroll: true })
+    wasInvitationOpen.current = props.isInvitationOpen
+  }, [props.isInvitationOpen])
   const [state, dispatch] = useReducer(reducer, init)
   const { height } = useWindowSize()
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false)
@@ -243,6 +253,8 @@ function ChatWidget(props: Props) {
         return
       }
 
+      if (props.isInvitationOpen) return
+
       if (evt.keyCode === 191 && !evt.shiftKey) {
         // Otherwise, the `/` keydown would be appended to the input.
         setTimeout(() => {
@@ -256,7 +268,7 @@ function ChatWidget(props: Props) {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
+  }, [props.isInvitationOpen])
 
   // Whether the user toggles fullscreen or changes their orientation,
   // we want to keep them at the same position as they were from the bottom.
@@ -371,97 +383,117 @@ function ChatWidget(props: Props) {
       className={cx('watch-screen-chat', {
         'is-chat-open': props.isChatOpen
       })}>
-      <div className="watch-screen-canopy">
-        <UiAvatarGroup users={props.party.members} />
+      <motion.div className="watch-screen-chat-content" inert={props.isInvitationOpen}
+        initial={false} animate={{ opacity: props.isInvitationOpen ? 0 : 1 }}
+        transition={{ duration: reducedMotion ? 0 : .24 }}>
+        <div className="watch-screen-canopy">
+          <UiAvatarGroup users={props.party.members} />
 
-        <ChatInvitationModal
-          isOpen={props.isInvitationOpen}
-          onOpen={props.onOpenInvitationModal}
-          onClose={props.onCloseInvitationModal}
-        />
-      </div>
+          <UiPlainButton type="button" className="invite" ref={inviteButton}
+            aria-label="Invite people" aria-expanded={props.isInvitationOpen} onClick={props.onOpenInvitationModal}>
+            <i className="fa fa-user-plus" aria-hidden="true" />
+          </UiPlainButton>
+        </div>
 
-      <PartyCode code={props.party.join_code} />
-      <div className="watch-screen-chat-messages-container">
-        <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
-          <ChatWidgetTip />
+        <PartyCode code={props.party.join_code} />
+        {invitations.pending.length > 0 && <UiPlainButton type="button" className="host-invite-waiting" onClick={props.onOpenInvitationModal}>
+          <span className="host-invite-waiting-avatars">{invitations.pending.slice(0, 3).map(invitation => <UiAvatar key={invitation.id} user={invitation.recipient} size="sm" />)}</span>
+          <span>Waiting on {invitations.pending.map(invitation => invitation.recipient.name).join(', ')}</span>
+          <small>{Math.max(1, Math.floor((Math.min(...invitations.pending.map(invitation => Date.parse(invitation.expires_at))) - invitations.now) / 60000))}m</small>
+        </UiPlainButton>}
+        <motion.div className="watch-screen-chat-messages-container" initial={false}
+          animate={{ scale: props.isInvitationOpen && !reducedMotion ? .96 : 1 }} transition={{ duration: reducedMotion ? 0 : .32, ease: [.2, .8, .2, 1] }}>
+          <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
+            <ChatWidgetTip />
 
-          {grouped.map((group, i) => {
-            if (group.type === 'activity') {
-              return (
-                <div className="watch-screen-activity-group" key={i}>
-                  {group.logs.map(log => (
-                    <div className="activity" key={log.id}>
-                      <div className="avatar">
-                        <UiAvatar user={log.activity.user} size="sm" />
-                      </div>
-
-                      <h6 className="ui-subheading">
-                        {log.activity.user.name} {log.activity.text}.
-                      </h6>
-                    </div>
-                  ))}
-                </div>
-              )
-            }
-
-            const isSelf = group.user.id === auth.data.id
-
-            return (
-              <div
-                className={cx('watch-screen-chat-group', {
-                  'is-self': isSelf
-                })}
-                key={i}>
-                <div className="avatar">
-                  <UiAvatar user={group.user} />
-                </div>
-
-                <div className="messages">
-                  {!isSelf && <div className="name">{group.user.name}</div>}
-
-                  <div className="list">
+            {grouped.map((group, i) => {
+              if (group.type === 'activity') {
+                return (
+                  <div className="watch-screen-activity-group" key={i}>
                     {group.logs.map(log => (
-                      <div className="message" key={log.id}>
-                        <div className="inner">{log.message.text}</div>
+                      <div className="activity" key={log.id}>
+                        <div className="avatar">
+                          <UiAvatar user={log.activity.user} size="sm" />
+                        </div>
+
+                        <h6 className="ui-subheading">
+                          {log.activity.user.name} {log.activity.text}.
+                        </h6>
                       </div>
                     ))}
                   </div>
+                )
+              }
+
+              const isSelf = group.user.id === auth.data.id
+
+              return (
+                <div
+                  className={cx('watch-screen-chat-group', {
+                    'is-self': isSelf
+                  })}
+                  key={i}>
+                  <div className="avatar">
+                    <UiAvatar user={group.user} />
+                  </div>
+
+                  <div className="messages">
+                    {!isSelf && <div className="name">{group.user.name}</div>}
+
+                    <div className="list">
+                      {group.logs.map(log => (
+                        <div className="message" key={log.id}>
+                          <div className="inner">{log.message.text}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+            {invitations.outcomes.map(invitation => <div className="host-invite-outcome" key={invitation.id}>
+              <UiAvatar user={invitation.recipient} size="sm" />
+              <span>{invitation.recipient.name} {invitation.action === 'declined' ? 'declined' : 'didn’t answer'}</span>
+              <UiPlainButton type="button" disabled={invitations.busy[String(invitation.recipient.id)]}
+                onClick={() => invitations.invite(invitation.recipient)}>Ask again</UiPlainButton>
+              {invitations.errors[String(invitation.recipient.id)] && <small role="alert">{invitations.errors[String(invitation.recipient.id)]}</small>}
+            </div>)}
+          </div>
+
+          {hasUnreadMessages && (
+            <div className="watch-screen-chatbar-unread-note" onClick={handleClickUnreadMessages}>
+              <UiPlainButton type="button" className="note">
+                You have unread messages
+                <span className="icon">
+                  <i className="fa fa-angle-down" />
+                </span>
+              </UiPlainButton>
+            </div>
+          )}
+        </motion.div>
+
+        <div className="watch-screen-chatbar">
+          <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
+            <textarea
+              rows={1}
+              placeholder={`Press / to focus`}
+              value={state.message.text}
+              ref={inputRef}
+              onChange={handleInput}
+              onKeyDown={handleInputKeyDown}
+              className="textarea"
+            />
+
+            <UiPlainButton className="button" disabled={!isSubmittable} ref={buttonRef}>
+              <i className="fa fa-arrow-up" />
+            </UiPlainButton>
+          </form>
         </div>
 
-        {hasUnreadMessages && (
-          <div className="watch-screen-chatbar-unread-note" onClick={handleClickUnreadMessages}>
-            <UiPlainButton type="button" className="note">
-              You have unread messages
-              <span className="icon">
-                <i className="fa fa-angle-down" />
-              </span>
-            </UiPlainButton>
-          </div>
-        )}
-      </div>
-
-      <div className="watch-screen-chatbar">
-        <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
-          <textarea
-            rows={1}
-            placeholder={`Press / to focus`}
-            value={state.message.text}
-            ref={inputRef}
-            onChange={handleInput}
-            onKeyDown={handleInputKeyDown}
-            className="textarea"
-          />
-
-          <UiPlainButton className="button" disabled={!isSubmittable} ref={buttonRef}>
-            <i className="fa fa-arrow-up" />
-          </UiPlainButton>
-        </form>
-      </div>
+      </motion.div>
+      <AnimatePresence>
+        {props.isInvitationOpen && <ChatInvitationPanel key="host-invites" invitations={invitations} onClose={props.onCloseInvitationModal} />}
+      </AnimatePresence>
 
       <audio className="chat-notification-audio" ref={idleAudioRef}>
         <source src={asset_chatInactive} type="audio/ogg" />

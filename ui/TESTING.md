@@ -122,6 +122,16 @@ HTTP/WebSocket fixtures establish interface behavior independently of live Pushe
 The corresponding isolated API and creator backfill tests run with
 `valet php vendor/bin/phpunit --filter 'PartyCodeApiTest|PartyCodeMigrationTest'`.
 
+`host-invitations.spec.ts` checks the B5b2 panel inside chat, Party and Recents,
+keyboard search/inviting, cancellation, countdown expiry, live outcomes, duplicate
+and late events, request retries, stale search results, code copying, focus and
+draft preservation, reduced motion, and viewport bounds across all five browser
+targets. Screenshots cover Recents, pending invitations, and empty Recents. These
+controlled HTTP/WebSocket fixtures do not establish live Pusher delivery.
+The isolated `HostInvitationApiTest` verifies recent co-watchers, literal search,
+latest invitation history, duplicate sends, fresh reinvites, and room membership
+permissions. Run it alongside `InvitationApiTest` for the recipient actions.
+
 The invitation API checks run with
 `valet php vendor/bin/phpunit --filter InvitationApiTest`. They use isolated SQLite
 and verify expiry, already answered invitations, recipient membership on accept,

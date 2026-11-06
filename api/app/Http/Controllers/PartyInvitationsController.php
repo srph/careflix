@@ -26,7 +26,11 @@ class PartyInvitationsController extends Controller
      */
     public function index(Party $party)
     {
-        return $party->invitations;
+        // Keep the latest outcome for each person, including expired invitations.
+        return PartyInvitation::whereIn('id', function ($query) use ($party) {
+            $query->selectRaw('MAX(id)')->from('party_invitations')
+                ->where('party_id', $party->id)->groupBy('recipient_id');
+        })->orderBy('id')->get();
     }
 
     /**
@@ -36,22 +40,31 @@ class PartyInvitationsController extends Controller
      */
     public function search(Request $request, Party $party)
     {
-        $search = $request->get('search');
+        $request->validate(['search' => 'nullable|string|max:100']);
+        $search = trim((string) $request->get('search'));
+        $users = User::select('users.id', 'name', 'avatar', 'is_online')
+            ->where('users.id', '!=', $request->user()->id);
 
-        return User::when($request->has('search'), function($query) use ($search) {
-                $query->search($search);
-            }, function($query) use($party) {
-                $query->select(
-                    'users.*',
-                    'party_user.party_id as member_party_id',
-                    'party_user.user_id as member_user_id'
-                )->leftJoin('party_user', function($join) use ($party) {
-                    $join->on('party_user.party_id', '=', \DB::raw($party->id));
-                    $join->on('party_user.user_id', '=', 'users.id');
-                })->orderBy('party_user.party_id', 'desc');
-            })
-            ->where('users.id', '!=', $request->user()->id)
-            ->get();
+        if ($search !== '') {
+            $pattern = '%' . str_replace(['!', '%', '_'], ['!!', '!%', '!_'], mb_strtolower($search)) . '%';
+            return $users->where(function ($query) use ($pattern) {
+                $query->whereRaw("LOWER(name) LIKE ? ESCAPE '!'", [$pattern])
+                    ->orWhereRaw("LOWER(email) LIKE ? ESCAPE '!'", [$pattern]);
+            })->orderBy('name')->orderBy('users.id')->limit(20)->get();
+        }
+
+        // Recents are previous co-watchers, ordered by the latest shared party.
+        $ids = DB::table('party_user as viewer')
+            ->join('party_user as companion', 'companion.party_id', '=', 'viewer.party_id')
+            ->join('parties', 'parties.id', '=', 'viewer.party_id')
+            ->where('viewer.user_id', $request->user()->id)
+            ->where('companion.user_id', '!=', $request->user()->id)
+            ->whereNotIn('companion.user_id', $party->members()->pluck('users.id'))
+            ->groupBy('companion.user_id')
+            ->orderByRaw('MAX(parties.last_activity_at) DESC')
+            ->orderBy('companion.user_id')->limit(20)->pluck('companion.user_id');
+        $byId = $users->whereIn('users.id', $ids)->get()->keyBy('id');
+        return $ids->map(function ($id) use ($byId) { return $byId->get($id); })->filter()->values();
     }
 
     /**
@@ -63,10 +76,12 @@ class PartyInvitationsController extends Controller
     {
         $duration = config('config.party.invitation_duration');
 
-        $invitation = DB::transaction(function () use ($request, $party, $duration) {
+        list($invitation, $created) = DB::transaction(function () use ($request, $party, $duration) {
             User::whereKey($request->get('recipient_id'))->lockForUpdate()->firstOrFail();
             abort_if($party->members()->where('user_id', $request->get('recipient_id'))->exists(), 422, 'This person is already a member of the party.');
-            return PartyInvitation::create([
+            $pending = $party->invitations()->where('recipient_id', $request->get('recipient_id'))->first();
+            if ($pending) return [$pending, false];
+            return [PartyInvitation::create([
                 'party_id' => $party->id,
                 'sender_id' => $request->user()->id,
                 'recipient_id' => $request->get('recipient_id'),
@@ -74,14 +89,15 @@ class PartyInvitationsController extends Controller
                 'duration' => $duration,
                 'action' => 'pending',
                 'expires_at' => Carbon::now()->addSeconds($duration)
-            ])->fresh();
+            ])->fresh(), true];
         });
 
         $invitation->load('party');
 
-        broadcast(new PartyInvitationSent($invitation->party, $invitation))->toOthers();
-
-        broadcast(new UserInvitationReceived($request->get('recipient_id'), $party, $invitation));
+        if ($created) {
+            broadcast(new PartyInvitationSent($invitation->party, $invitation))->toOthers();
+            broadcast(new UserInvitationReceived($request->get('recipient_id'), $party, $invitation));
+        }
 
         return $invitation;
     }

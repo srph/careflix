@@ -16,23 +16,24 @@ function DiscordButton({ state, onClick, name }: { state: string; onClick?: () =
   </button>
 }
 
-export default function Splash({ state = 'idle', name, error, children, onDiscord, access = false }: {
-  state?: string; name?: string; error?: string; children?: ReactNode; onDiscord?: () => void; access?: boolean
+export default function Splash({ state = 'idle', name, error, children, identity, onDiscord, access = false }: {
+  state?: string; name?: string; error?: string; children?: ReactNode; identity?: ReactNode; onDiscord?: () => void; access?: boolean
 }) {
   const stage = useRef<HTMLElement>(null)
   return <main className={`login-splash${access ? ' login-splash-access' : ''}`} ref={stage} data-state={state}>
     <PageTitle title={access ? 'Request access' : 'Watch together'} />
     <Link className="login-brand" to="/" aria-label="Care.tv home">Care.tv</Link>
     <div className="login-message">
-      <h1>{access ? <span>You’re almost in.</span> : state === 'welcome' ? <><span>Here they</span><br /><span>come, {name}.</span></> :
+      {identity}
+      <h1>{access ? <span data-reaction-shelf>Ticket, please.</span> : state === 'welcome' ? <><span>Here they</span><br /><span>come, {name}.</span></> :
         <><span data-reaction-shelf>Bring popcorn.</span><br /><span data-reaction-shelf>Bring feelings.</span></>}</h1>
-      <p className="login-subtitle" data-reaction-shelf>{access ? `Hi ${name}. Enter the access code shared with you.` : state === 'welcome' ? 'Taking you in…' : 'Host watch parties with your friends.'}</p>
+      <p className="login-subtitle" data-reaction-shelf>{access ? 'Care.tv is invite-only for now. Ask Kier or a friend who’s already in.' : state === 'welcome' ? 'Taking you in…' : 'Host watch parties with your friends.'}</p>
     </div>
     <div className="login-actions">
       {error && <p className="login-error" role="alert">{error}</p>}
       {children || <DiscordButton state={state} onClick={onDiscord} name={name} />}
     </div>
     <span className="login-announcement" role="status">{state === 'connecting' ? 'Opening Discord…' : state === 'welcome' ? 'Signed in. Taking you in…' : ''}</span>
-    <ReactionCanvas stage={stage} state={state} />
+    <ReactionCanvas stage={stage} state={state} resting={access} />
   </main>
 }

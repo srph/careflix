@@ -2,7 +2,9 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useAuth } from '~/contexts/Auth'
 import { authError, returnToApp } from '~/lib/auth/discord'
+import UiAvatar from '~/components/UiAvatar'
 import Splash from '~/screens/login/Splash'
+import './style.css'
 
 export default function RequestAccess() {
   const auth = useAuth()
@@ -31,14 +33,22 @@ export default function RequestAccess() {
     setBusy(true)
     try { await auth.startDiscord() } catch { setError('Discord couldn’t open. Please try again.'); setBusy(false) }
   }
-  return <Splash access name={auth.onboarding.name.split(' ')[0]} error={expired ? 'Your sign-in expired. Please continue with Discord again.' : error}>
-    <form className="login-access-form" onSubmit={submit}>
-      {!expired && <label htmlFor="request-access">Access code
-        <input id="request-access" name="request_access" value={code} onChange={event => setCode(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} required maxLength={255} disabled={busy} aria-invalid={!!error} />
-      </label>}
+  const message = expired ? 'Your sign-in expired. Please continue with Discord again.' : error
+  return <Splash access state={busy ? 'checking' : error ? 'wrong' : 'idle'} identity={
+    <div className="login-identity" data-reaction-shelf data-reaction-solid>
+      <span aria-hidden="true"><UiAvatar user={{ name: auth.onboarding.name, avatar: '' }} /></span>
+      <span className="login-identity-account">Signed in as <b title={auth.onboarding.name}>{auth.onboarding.name}</b></span>
+      <span className="login-identity-switch">(<button type="button" onClick={reconnect} disabled={busy} aria-label="Use a different Discord account">Not you?</button>)</span>
+    </div>
+  }>
+    <form className="login-access-form" onSubmit={submit} aria-busy={busy}>
+      {!expired && <>
+        <label htmlFor="request-access">Access code</label>
+        <input id="request-access" name="request_access" value={code} onChange={event => { setCode(event.target.value); setError('') }} placeholder="Paste or type your code" autoComplete="off" autoCapitalize="none" spellCheck={false} required maxLength={255} disabled={busy} aria-invalid={!!error} aria-describedby={message ? 'request-access-error' : undefined} data-reaction-shelf />
+      </>}
+      {message && <p id="request-access-error" className="login-access-error" role="alert">{message}</p>}
       {expired ? <button type="button" className="login-discord" onClick={reconnect} disabled={busy}>Continue with Discord</button> :
-        <button className="login-discord" type="submit" disabled={busy}>{busy && <i className="login-spinner" aria-hidden="true" />}{busy ? 'Checking your code…' : 'Let me in'}</button>}
+        <button className="login-access-continue" type="submit" disabled={busy || !code.trim()} data-reaction-shelf>{busy && <i className="login-spinner" aria-hidden="true" />}{busy ? 'Checking…' : 'Continue'}</button>}
     </form>
-    {!expired && <button type="button" className="login-switch" onClick={reconnect} disabled={busy}>Use a different Discord account</button>}
   </Splash>
 }

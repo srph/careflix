@@ -20,13 +20,16 @@
 .login-subtitle { max-width: 520px; margin: 24px auto 0; color: #b9c3cd; font-size: 19px; line-height: 1.5; text-wrap: balance; }
 .login-friends { white-space: nowrap; }
 .login-friend-avatars {
+  --login-friend-overlap: .42em;
   position: relative;
   display: inline-flex;
-  width: 3.81em;
+  width: calc(4.65em - 2 * var(--login-friend-overlap));
   margin: -.2em .32em 0 .12em;
   vertical-align: middle;
-  animation: login-friends-open .5s cubic-bezier(.2, .8, .2, 1) .3s both;
+  animation: login-friends-open .5s cubic-bezier(.2, .8, .2, 1) .3s backwards;
+  transition: width .28s cubic-bezier(.2, .8, .2, 1);
 }
+.login-friend-avatars:hover { --login-friend-overlap: .16em; }
 .login-friend-avatar {
   position: relative;
   display: block;
@@ -37,15 +40,14 @@
   animation: login-friend-drop .9s linear .85s both;
   transition: margin .28s cubic-bezier(.2, .8, .2, 1);
 }
-.login-friend-avatar + .login-friend-avatar { margin-left: -.42em; }
-.login-friend-avatars:hover .login-friend-avatar + .login-friend-avatar { margin-left: -.16em; }
+.login-friend-avatar + .login-friend-avatar { margin-left: calc(-1 * var(--login-friend-overlap)); }
 .login-friend-avatar-circle { position: absolute; inset: 0; border-radius: 50%; background: #cfe4ff; box-shadow: 0 0 0 2px #0e1318; }
 .login-friend-avatar:nth-child(2) { animation-delay: .72s; }
 .login-friend-avatar:nth-child(2) .login-friend-avatar-circle { background: #ffedb0; }
 .login-friend-avatar:nth-child(3) { animation-delay: .98s; }
 .login-friend-avatar:nth-child(3) .login-friend-avatar-circle { background: #ffd1e4; }
 .login-friend-avatar-face { position: absolute; inset: 0; overflow: hidden; border-radius: 50%; }
-.login-friend-avatar-face img { position: absolute; left: 50%; bottom: -7%; width: 86%; transform: translateX(-50%); pointer-events: none; user-select: none; }
+.login-friend-avatar-face img { position: absolute; top: 50%; left: 50%; width: 86%; transform: translate(-50%, -50%); pointer-events: none; user-select: none; }
 .login-actions { position: relative; z-index: 2; grid-row: 4; width: min(380px, calc(100% - 48px)); }
 .login-discord { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56px; padding: 12px 22px; border: 0; border-radius: 999px; background: #5865f2; color: #fff; font: inherit; font-size: 17px; font-weight: 600; line-height: 1.35; letter-spacing: -.01em; cursor: pointer; transition: background .15s; }
 .login-discord:hover { background: #4752c4; }

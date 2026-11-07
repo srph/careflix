@@ -43,7 +43,10 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
       const form = resting && width < 720 ? root.querySelector('form')?.getBoundingClientRect() : null
       // On mobile the pile rests above the form, leaving the controls clear.
       floor = form ? form.top - bounds.top : height
-      surface.width = Math.round(width * ratio); surface.height = Math.round(height * ratio)
+      const pixelWidth = Math.round(width * ratio), pixelHeight = Math.round(height * ratio)
+      // Assigning either dimension clears the canvas, even if its value is unchanged.
+      if (surface.width !== pixelWidth) surface.width = pixelWidth
+      if (surface.height !== pixelHeight) surface.height = pixelHeight
       colliders = Array.from(root.querySelectorAll<HTMLElement>('[data-reaction-shelf]')).flatMap(element => {
         const range = document.createRange()
         range.selectNodeContents(element)

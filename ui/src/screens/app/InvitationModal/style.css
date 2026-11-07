@@ -327,88 +327,18 @@
   }
 }
 
-@property --invitation-beam-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: true;
-}
-
-@keyframes invitation-beam-spin {
-  to {
-    --invitation-beam-angle: 360deg;
-  }
-}
-
-@keyframes invitation-beam-hue {
-  0%,100% {
-    filter: hue-rotate(-30deg) brightness(1.3) saturate(1.2);
-  }
-  50% {
-    filter: hue-rotate(30deg) brightness(1.3) saturate(1.2);
-  }
-}
-
-.invitation-beam {
-  --bc: radial-gradient(ellipse 70px 40px at 33% -7.4%,rgb(255,50,100),transparent),radial-gradient(ellipse 60px 35px at 12% -5%,rgb(40,140,255),transparent), radial-gradient(ellipse 40px 70px at 2.1% 68.3%,rgb(50,200,80),transparent),radial-gradient(ellipse 20px 35px at 2.1% 68.3%,rgb(30,185,170),transparent), radial-gradient(ellipse 180px 32px at 74.4% 100%,rgb(100,70,255),transparent),radial-gradient(ellipse 85px 26px at 55% 100%,rgb(40,140,255),transparent), radial-gradient(ellipse 74px 32px at 93.9% 0%,rgb(255,120,40),transparent),radial-gradient(ellipse 26px 42px at 100% 27.1%,rgb(240,50,180),transparent), radial-gradient(ellipse 52px 48px at 100% 27.1%,rgb(180,40,240),transparent);
-  --ring: linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+/* Keep the library's decorative layers inside the animated invitation card. */
+.incoming-invitation > .invitation-beam {
   position: absolute;
   inset: 0;
   z-index: 3;
   border-radius: inherit;
   pointer-events: none;
-  animation: invitation-beam-spin 1.96s linear infinite;
+  opacity: 0;
   transition: opacity .5s ease;
 }
 
-.invitation-beam::after,.invitation-beam::before,.invitation-beam i {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-}
-
-.invitation-beam::after {
-  padding: 1px;
-  opacity: 1;
-  animation: invitation-beam-hue 12s ease-in-out infinite;
-  background: conic-gradient(from var(--invitation-beam-angle),transparent 0 54%,rgba(255,255,255,.1) 57%,rgba(255,255,255,.3) 60%,rgba(255,255,255,.6) 63%,rgba(255,255,255,.75) 66%,rgba(255,255,255,.6) 69%,rgba(255,255,255,.3) 72%,rgba(255,255,255,.1) 75%,transparent 78%),var(--bc);
-  -webkit-mask: conic-gradient(from var(--invitation-beam-angle),transparent 0 30%,rgba(255,255,255,.1) 36%,rgba(255,255,255,.35) 44%,#fff 52% 80%,rgba(255,255,255,.35) 86%,rgba(255,255,255,.1) 92%,transparent 95%),var(--ring);
-  -webkit-mask-composite: source-in,xor;
-  mask: conic-gradient(from var(--invitation-beam-angle),transparent 0 30%,rgba(255,255,255,.1) 36%,rgba(255,255,255,.35) 44%,#fff 52% 80%,rgba(255,255,255,.35) 86%,rgba(255,255,255,.1) 92%,transparent 95%),var(--ring);
-  mask-composite: intersect,exclude;
-}
-
-.invitation-beam::before {
-  opacity: .36;
-  background: var(--bc);
-  box-shadow: inset 0 0 5px 1px rgba(255,255,255,.3);
-  animation: invitation-beam-hue 12s ease-in-out infinite;
-  -webkit-mask: conic-gradient(from var(--invitation-beam-angle),transparent 0 22%,rgba(255,255,255,.12) 28%,rgba(255,255,255,.4) 36%,#fff 46% 82%,rgba(255,255,255,.4) 88%,rgba(255,255,255,.12) 94%,transparent 97%);
-  mask: conic-gradient(from var(--invitation-beam-angle),transparent 0 22%,rgba(255,255,255,.12) 28%,rgba(255,255,255,.4) 36%,#fff 46% 82%,rgba(255,255,255,.4) 88%,rgba(255,255,255,.12) 94%,transparent 97%);
-}
-
-.invitation-beam i {
-  padding: 1px;
-  opacity: .6;
-  filter: blur(8px) brightness(1.3) saturate(1.2);
-  background: conic-gradient(from var(--invitation-beam-angle),transparent 0 58%,rgba(255,255,255,.03) 62%,rgba(255,255,255,.08) 65%,rgba(255,255,255,.2) 67%,rgba(255,255,255,.45) 69%,rgba(255,255,255,.85) 70% 70.5%,rgba(255,255,255,.45) 71.5%,rgba(255,255,255,.2) 73%,rgba(255,255,255,.08) 75%,rgba(255,255,255,.03) 78%,transparent 82%);
-  -webkit-mask: var(--ring);
-  -webkit-mask-composite: xor;
-  mask: var(--ring);
-  mask-composite: exclude;
-}
-
-@media (prefers-reduced-motion:reduce) {
-  .invitation-beam,.invitation-beam::after,.invitation-beam::before {
-    animation: none;
-  }
-}
-
-.invitation-beam {
-  opacity: 0;
-}
-
-.invitation-beam.is-on {
+.incoming-invitation > .invitation-beam.is-on {
   opacity: 1;
 }
 
@@ -441,7 +371,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .invitation-body, .invitation-actions > button {
+  .incoming-invitation > .invitation-beam, .invitation-body, .invitation-actions > button {
     transition: none;
   }
   .incoming-invitation-position {

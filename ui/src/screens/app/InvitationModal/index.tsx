@@ -1,5 +1,6 @@
 import './style.css'
 import { Dialog } from '@base-ui/react/dialog'
+import { BorderBeam } from 'border-beam'
 import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
@@ -229,7 +230,11 @@ export default function InvitationModal() {
             width: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
             borderRadius: { duration: reducedMotion ? 0 : 0.45 },
           }} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
-            <div className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"><i /></div>
+            <BorderBeam className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"
+              size={docked ? 'pulse-inner' : 'line'} colorVariant={docked ? 'mono' : 'candy'} theme="dark"
+              duration={docked ? 4 : 3.2} strength={1} brightness={docked ? 1 : 1.3}
+              saturation={docked ? 1.2 : 2.5} glowSize={docked ? 1 : 3} hueRange={0} staticColors
+              borderRadius={20} active={showBeam && !reducedMotion} children={null} />
             {invitation && <>
               {header(expanded)}
               {/* Keep the preview mounted so the container clips it during collapse. */}

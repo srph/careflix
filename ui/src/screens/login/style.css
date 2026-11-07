@@ -11,12 +11,41 @@
   color: #fff;
   background: #0e1318;
   font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
 }
 .login-brand { position: absolute; z-index: 2; top: 36px; left: 44px; color: #e8368f; font-size: 27px; font-weight: 700; letter-spacing: -.04em; text-decoration: none; }
 .login-message { z-index: 2; grid-row: 2; width: 100%; padding: 0 24px; text-align: center; }
 .login-message h1 { font-size: clamp(64px, 8.6vw, 110px); line-height: 1.02; letter-spacing: -.045em; font-weight: 700; }
 .login-message h1 span { overflow-wrap: anywhere; }
-.login-subtitle { max-width: 520px; margin: 24px auto 0; color: #b9c3cd; font-size: 19px; line-height: 1.5; }
+.login-subtitle { max-width: 520px; margin: 24px auto 0; color: #b9c3cd; font-size: 19px; line-height: 1.5; text-wrap: balance; }
+.login-friends { white-space: nowrap; }
+.login-friend-avatars {
+  position: relative;
+  display: inline-flex;
+  width: 3.81em;
+  margin: -.2em .32em 0 .12em;
+  vertical-align: middle;
+  animation: login-friends-open .5s cubic-bezier(.2, .8, .2, 1) .3s both;
+}
+.login-friend-avatar {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 1.55em;
+  height: 1.55em;
+  transform-origin: 50% 100%;
+  animation: login-friend-drop .9s linear .85s both;
+  transition: margin .28s cubic-bezier(.2, .8, .2, 1);
+}
+.login-friend-avatar + .login-friend-avatar { margin-left: -.42em; }
+.login-friend-avatars:hover .login-friend-avatar + .login-friend-avatar { margin-left: -.16em; }
+.login-friend-avatar-circle { position: absolute; inset: 0; border-radius: 50%; background: #cfe4ff; box-shadow: 0 0 0 2px #0e1318; }
+.login-friend-avatar:nth-child(2) { animation-delay: .72s; }
+.login-friend-avatar:nth-child(2) .login-friend-avatar-circle { background: #ffedb0; }
+.login-friend-avatar:nth-child(3) { animation-delay: .98s; }
+.login-friend-avatar:nth-child(3) .login-friend-avatar-circle { background: #ffd1e4; }
+.login-friend-avatar-face { position: absolute; inset: 0; overflow: hidden; border-radius: 50%; }
+.login-friend-avatar-face img { position: absolute; left: 50%; bottom: -7%; width: 86%; transform: translateX(-50%); pointer-events: none; user-select: none; }
 .login-actions { position: relative; z-index: 2; grid-row: 4; width: min(380px, calc(100% - 48px)); }
 .login-discord { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 56px; padding: 12px 22px; border: 0; border-radius: 999px; background: #5865f2; color: #fff; font: inherit; font-size: 17px; font-weight: 600; line-height: 1.35; letter-spacing: -.01em; cursor: pointer; transition: background .15s; }
 .login-discord:hover { background: #4752c4; }
@@ -28,6 +57,15 @@
 .login-spinner { display: inline-block; width: 18px; height: 18px; flex: none; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: login-spin .75s linear infinite; }
 .login-announcement { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 @keyframes login-spin { to { transform: rotate(360deg); } }
+@keyframes login-friends-open { from { width: 0; margin-left: 0; margin-right: 0; } }
+@keyframes login-friend-drop {
+  0% { transform: translateY(-3.4em); opacity: 0; animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  12% { opacity: 1; }
+  48% { transform: translateY(0) scale(1.14, .84); animation-timing-function: cubic-bezier(0, .55, .45, 1); }
+  68% { transform: translateY(-.42em) scale(.97, 1.04); animation-timing-function: cubic-bezier(.55, 0, 1, .45); }
+  84% { transform: translateY(0) scale(1.05, .95); animation-timing-function: ease-out; }
+  to { transform: none; opacity: 1; }
+}
 @media (max-width: 719px) {
   .login-splash { grid-template-rows: minmax(190px, 28svh) auto minmax(64px, 1fr) auto 24px; min-height: 620px; min-height: max(620px, 100svh); }
   .login-brand { top: 22px; left: 0; right: 0; text-align: center; font-size: 25px; }
@@ -40,4 +78,5 @@
   .login-reactions { display: none; }
   .login-spinner { animation: none; }
   .login-discord { transition: none; }
+  .login-friend-avatars, .login-friend-avatar { animation: none; transition: none; }
 }

@@ -1,6 +1,7 @@
 import { useRef, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import PageTitle from '~/components/PageTitle'
+import FriendAvatars from './FriendAvatars'
 import ReactionCanvas from './ReactionCanvas'
 import './style.css'
 
@@ -27,7 +28,8 @@ export default function Splash({ state = 'idle', name, error, children, identity
       {identity}
       <h1>{access ? <span data-reaction-shelf>Ticket, please.</span> : state === 'welcome' ? <><span>Here they</span><br /><span>come, {name}.</span></> :
         <><span data-reaction-shelf>Bring popcorn.</span><br /><span data-reaction-shelf>Bring feelings.</span></>}</h1>
-      <p className="login-subtitle" data-reaction-shelf>{access ? 'Care.tv is invite-only for now. Ask Kier or a friend who’s already in.' : state === 'welcome' ? 'Taking you in…' : 'Host watch parties with your friends.'}</p>
+      <p className="login-subtitle" data-reaction-shelf>{access ? 'Care.tv is invite-only for now. Ask Kier or a friend who’s already in.' : state === 'welcome' ? 'Taking you in…' :
+        <>Host watch parties with your <span className="login-friends"><FriendAvatars />friends.</span></>}</p>
     </div>
     <div className="login-actions">
       {error && <p className="login-error" role="alert">{error}</p>}

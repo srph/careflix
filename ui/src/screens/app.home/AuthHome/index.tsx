@@ -20,9 +20,7 @@ export default function AuthHome() {
   const reduceMotion = useReducedMotion()
   const shows = useMemo(() => showsQuery.data?.pages.flatMap(page => page.data) ?? [], [showsQuery.data])
   const parties = useMemo(() => partiesQuery.data?.pages.flatMap(page => page.data) ?? [], [partiesQuery.data])
-  const featured = useMemo(() => tab === 'parties'
-    ? parties.slice(0, 4).map(party => ({ show: party.video.show, party }))
-    : shows.slice(0, 5).map(show => ({ show })), [tab, shows, parties])
+  const featured = useMemo(() => shows.slice(0, 5).map(show => ({ show })), [shows])
   const query = tab === 'parties' ? partiesQuery : showsQuery
   const items = tab === 'parties' ? parties : shows
   const title = tab === 'movie' ? 'Movies' : tab === 'series' ? 'Series' : 'All titles'
@@ -41,8 +39,8 @@ export default function AuthHome() {
     <div className="listing-shell">
       <ListingNavigation tab={tab} onTabChange={setTab} onShowSelect={setSelectedShow} parties={parties} />
       <main id="listing-panel" role="tabpanel" aria-labelledby={`listing-tab-${tab}`} tabIndex={0}>
-        {!query.data ? <FeaturedPlaceholder error={initialError} parties={tab === 'parties'} onRetry={() => { void query.refetch() }} />
-          : <FeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />}
+        {tab !== 'parties' && (!query.data ? <FeaturedPlaceholder error={initialError} onRetry={() => { void query.refetch() }} />
+          : <FeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />)}
         <div className="listing-body">
           {createParty.isError && <div className="listing-status" role="alert">Unable to start the party. Please try again. <button type="button" onClick={() => createParty.reset()}>Dismiss</button></div>}
           {tab === 'all' && <AnimatePresence initial={false}>
@@ -50,15 +48,15 @@ export default function AuthHome() {
               exit={{ height: 0, opacity: 0, marginTop: 0, overflow: 'hidden' }} transition={{ duration: reduceMotion ? 0 : .45 }}>
               <div className="listing-recent-parties-content">
                 {!partiesQuery.data ? <PartiesPlaceholder recent error={partiesError} onRetry={() => { void partiesQuery.refetch() }} />
-                  : <PartySection parties={parties} total={partiesQuery.data.pages[0].total} recent onSeeAll={() => { setTab('parties'); window.scrollTo({ top: 0 }) }} />}
+                  : <PartySection parties={parties} recent onSeeAll={() => { setTab('parties'); window.scrollTo({ top: 0 }) }} />}
               </div>
             </motion.div>}
           </AnimatePresence>}
-          {!query.data ? (tab === 'parties' ? <PartiesPlaceholder error={initialError} /> : <TitlesPlaceholder title={title} error={initialError} />)
+          {!query.data ? (tab === 'parties' ? <PartiesPlaceholder error={initialError} onRetry={() => { void query.refetch() }} /> : <TitlesPlaceholder title={title} error={initialError} />)
             : <InfiniteScroll key={tab} itemCount={items.length} hasMore={Boolean(query.hasNextPage)} isLoading={query.isFetching}
               onLoadMore={async () => { const result = await query.fetchNextPage(); if (result.isError) throw result.error }}
               renderError={retry => <LoadMoreError parties={tab === 'parties'} onRetry={retry} />}>
-              {tab === 'parties' ? <PartySection parties={parties} total={partiesQuery.data.pages[0].total} isLoadingMore={partiesQuery.isFetchingNextPage} />
+              {tab === 'parties' ? <PartySection parties={parties} isLoadingMore={partiesQuery.isFetchingNextPage} />
                 : <section className="listing-section" aria-label={title}>
                   <div className="listing-section-heading"><h2>{title}</h2>{tab !== 'all' && <span>{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
                   <div className="listing-show-grid">

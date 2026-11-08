@@ -23,7 +23,7 @@ export default function JoinPartyModal() {
       event.currentTarget.focus()
       overlay.setExpanded(false)
       setOpen(true)
-    }}><span aria-hidden="true">#</span> Join</UiPlainButton>
+    }}>Join Party</UiPlainButton>
     <UiModal isOpen={open} onClose={close} finalFocus={trigger} ariaLabel="Join a watch party"
       modalClassName="join-party-modal" overlayClassName="join-party-overlay">
       {() => <JoinPartyForm onClose={close} joining={joining} />}

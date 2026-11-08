@@ -61,7 +61,7 @@ async function setup(page: Page, options: { invitations?: boolean; failLookup?: 
 
 async function open(page: Page) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Join', exact: true }).click()
+  await page.getByRole('button', { name: 'Join Party', exact: true }).click()
   const dialog = page.getByRole('dialog', { name: 'Join a watch party' })
   await expect(dialog).toBeVisible()
   return dialog
@@ -117,7 +117,7 @@ test('partial and wrong codes stay out of the party; Escape restores focus', asy
   await page.screenshot({ path: test.info().outputPath('wrong-code.png') })
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Join', exact: true })).toBeFocused()
+  await expect(page.getByRole('button', { name: 'Join Party', exact: true })).toBeFocused()
 })
 
 test('late lookup responses cannot reveal a preview for a different code', async ({ page }) => {

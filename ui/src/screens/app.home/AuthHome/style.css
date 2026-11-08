@@ -34,9 +34,37 @@
 .listing-logo .ui-logo::first-letter { color: var(--color-primary); }
 .listing-tabs { display: flex; align-items: center; gap: 26px; }
 .listing-tabs button { position: relative; padding: 10px 0; color: #929296; font-size: 15px; font-weight: 700; }
-.listing-tabs button:hover, .listing-tabs button[aria-selected=true] { color: #fff; }
-.listing-tabs button::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; border-radius: 2px; background: var(--color-primary); transform: scaleX(0); transition: transform .3s; }
-.listing-tabs button[aria-selected=true]::after { transform: scaleX(1); }
+.listing-tabs button[aria-selected=true] { color: #fff; }
+/* One underline anchored to the hovered/focused tab, falling back to the selected tab, so it slides between tabs. */
+@supports (anchor-name: --a) {
+  .listing-tabs { position: relative; }
+  .listing-tabs button[aria-selected=true], .listing-tabs button:is(:hover, :focus-visible) { anchor-name: --listing-tab; }
+  .listing-tabs:has(button:is(:hover, :focus-visible)) button[aria-selected=true]:not(:hover, :focus-visible),
+  .listing-tabs:has(button:hover) button:focus-visible:not(:hover) { anchor-name: none; }
+  .listing-tabs::after {
+    content: '';
+    position: absolute;
+    position-anchor: --listing-tab;
+    left: anchor(left);
+    right: anchor(right);
+    top: calc(anchor(bottom) - 2px);
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-primary);
+    pointer-events: none;
+    transition: left .3s cubic-bezier(.3, 0, 0, 1), right .3s cubic-bezier(.3, 0, 0, 1), top .3s cubic-bezier(.3, 0, 0, 1);
+    /* Waiting before returning to the selected tab keeps the bar from jumping back while the pointer crosses the gap between tabs. */
+    transition-delay: .12s;
+  }
+  .listing-tabs:has(button:is(:hover, :focus-visible))::after { transition-delay: 0s; }
+}
+@supports not (anchor-name: --a) {
+  .listing-tabs button::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; border-radius: 2px; background: var(--color-primary); transform: scaleX(0); transition: transform .3s; }
+  .listing-tabs button[aria-selected=true]::after, .listing-tabs button:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .listing-tabs::after { transition: none; }
+}
 .listing-account { flex: none; display: flex; align-items: center; margin-left: -20px; }
 .listing-account .ui-avatar { width: 34px; height: 34px; }
 .listing-search { position: relative; margin-left: auto; display: flex; align-items: center; gap: 10px; width: 250px; height: 42px; padding: 0 12px 0 14px; color: #969a9e; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; transition: background .2s, border-color .2s; }

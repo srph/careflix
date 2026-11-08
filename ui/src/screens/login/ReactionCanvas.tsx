@@ -183,21 +183,19 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
     }
     const observer = new ResizeObserver(measure)
     observer.observe(root)
-    // Inline slot animations move shelves even when the subtitle keeps the same size.
+    // Subtitle wrapping can move the button without adding a collision surface.
     root.querySelectorAll<HTMLElement>('[data-reaction-shelf], [data-reaction-layout]').forEach(element => observer.observe(element))
     if (resting) {
       const form = root.querySelector('form')
       if (form) observer.observe(form)
     }
     root.addEventListener('pointermove', move); root.addEventListener('pointerleave', leave); root.addEventListener('pointerup', leave)
-    root.addEventListener('animationend', measure); root.addEventListener('transitionend', measure)
     let mounted = true
     document.fonts?.ready.then(() => { if (mounted) measure() })
     measure(); frame = requestAnimationFrame(draw)
     return () => {
       mounted = false; cancelAnimationFrame(frame); observer.disconnect()
       root.removeEventListener('pointermove', move); root.removeEventListener('pointerleave', leave); root.removeEventListener('pointerup', leave)
-      root.removeEventListener('animationend', measure); root.removeEventListener('transitionend', measure)
       kick.current = () => {}
       refresh.current = () => {}
     }

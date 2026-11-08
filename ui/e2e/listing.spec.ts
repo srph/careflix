@@ -16,7 +16,7 @@ const parties = [shows[1], shows[3], shows[0], shows[6]].map((show, index) => ({
   is_playing: index === 0, current_time: 1520, last_activity_at: '2026-11-02T18:00:00+08:00', invitations: [],
 }))
 
-async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolean; pageSize?: number } = {}) {
+async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolean; pageSize?: number; parties?: typeof parties } = {}) {
   await page.context().addCookies([{ name: 'app_token', value: 'listing-test-token', url: test.info().project.use.baseURL as string }])
   await page.routeWebSocket(/pusher/, socket => socket.close())
   let failed = false
@@ -34,7 +34,7 @@ async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolea
       const type = url.searchParams.get('title_type')
       const source = options.empty ? [] : path === '/api/shows'
         ? shows.filter(show => (!type || show.title_type === type) && show.title.toLowerCase().includes(q))
-        : parties.filter(party => party.video.show.title.toLowerCase().includes(q) && (!url.searchParams.has('show_id') || party.video.show.id === Number(url.searchParams.get('show_id'))))
+        : (options.parties ?? parties).filter(party => party.video.show.title.toLowerCase().includes(q) && (!url.searchParams.has('show_id') || party.video.show.id === Number(url.searchParams.get('show_id'))))
       const perPage = Number(url.searchParams.get('per_page') || options.pageSize || 6)
       const current = Number(url.searchParams.get('page') || 1)
       body = { data: source.slice((current - 1) * perPage, current * perPage), total: source.length, current_page: current, last_page: Math.max(1, Math.ceil(source.length / perPage)) }
@@ -59,6 +59,7 @@ test('listing matches the chosen structure and filters with cached tab results',
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'All titles', exact: true })).toBeVisible()
   await expect(page.getByRole('region', { name: 'Recent parties' }).locator('.listing-party-card')).toHaveCount(3)
+  await expect(page.getByRole('button', { name: 'See all parties' })).toHaveCount(0)
   await expect(page.getByRole('list', { name: 'Choose a featured title' }).getByRole('button')).toHaveCount(5)
   await expect(page.getByRole('tab', { name: 'All', exact: true })).toHaveAttribute('aria-selected', 'true')
   await page.getByRole('tab', { name: 'Movies', exact: true }).click()

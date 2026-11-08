@@ -48,7 +48,7 @@ export default function AuthHome() {
               exit={{ height: 0, opacity: 0, marginTop: 0, overflow: 'hidden' }} transition={{ duration: reduceMotion ? 0 : .45 }}>
               <div className="listing-recent-parties-content">
                 {!partiesQuery.data ? <PartiesPlaceholder recent error={partiesError} onRetry={() => { void partiesQuery.refetch() }} />
-                  : <PartySection parties={parties} recent onSeeAll={() => { setTab('parties'); window.scrollTo({ top: 0 }) }} />}
+                  : <PartySection parties={parties} recent total={partiesQuery.data.pages[0].total} onSeeAll={partiesQuery.data.pages[0].total >= 5 ? () => { setTab('parties'); window.scrollTo({ top: 0 }) } : undefined} />}
               </div>
             </motion.div>}
           </AnimatePresence>}

@@ -7,6 +7,8 @@ interface Reaction {
 }
 interface Collider { x: number; y: number; width: number; height: number; radius: number }
 const EMOJI = ['🍿', '😂', '😭', '❤️', '😱', '🔥', '👀', '🥹', '💀', '✨']
+// The final friend avatar settles at 1.88s; leave a short pause before the rain.
+const RAIN_DELAY_SECONDS = 2.2
 
 export default function ReactionCanvas({ stage, state, resting = false }: { stage: RefObject<HTMLElement | null>; state: string; resting?: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -33,6 +35,7 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
       return sprite
     })
     const reactions: Reaction[] = []
+    const rainStartTick = Math.round(RAIN_DELAY_SECONDS * 60)
     let width = 0, height = 0, floor = 0, ratio = 1, tick = 0, frame = 0, last = performance.now(), accumulator = 0
     let colliders: Collider[] = []
     let pointer: { x: number; y: number; vx: number; vy: number } | null = null
@@ -75,9 +78,12 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
     }
     const step = () => {
       tick++
-      if (!resting && tick % 18 === 0 && reactions.length < 30 && currentState.current !== 'welcome') {
+      if (!resting && tick >= rainStartTick && (tick - rainStartTick) % 18 === 0 && reactions.length < 30 && currentState.current !== 'welcome') {
         const radius = width >= 720 ? 20 + Math.random() * 8 : 15 + Math.random() * 6
-        reactions.push({ x: radius + Math.random() * (width - radius * 2), y: -radius - Math.random() * 40,
+        // Send 40% to each outer quarter and 20% to the middle half.
+        const lane = Math.random(), laneStart = lane < .4 ? 0 : lane < .8 ? .75 : .25
+        const laneWidth = lane < .8 ? .25 : .5
+        reactions.push({ x: radius + (laneStart + Math.random() * laneWidth) * (width - radius * 2), y: -radius - Math.random() * 40,
           vx: (Math.random() - .5) * 3, vy: 0, radius, angle: (Math.random() - .5) * .6,
           alpha: 1, rest: 0, sprite: sprites[Math.floor(Math.random() * sprites.length)] })
       }

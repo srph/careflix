@@ -9,7 +9,8 @@
   -webkit-font-smoothing: antialiased;
 }
 .listing-shell { max-width: 1600px; margin: 0 auto; }
-.listing-home button, .listing-home input { font: inherit; }
+/* UiButton sets its own font; :where keeps this at the original specificity. */
+:where(.listing-home) button:not(.ui-button), .listing-home input { font: inherit; }
 .listing-home button { cursor: pointer; }
 .listing-home a { color: inherit; text-decoration: none; }
 .listing-home button:focus-visible, .listing-home a:focus-visible, .listing-home input:focus-visible {
@@ -72,9 +73,6 @@
 .listing-featured-copy h1 { margin: 14px 0 12px; font-size: clamp(40px, 5.3vw, 76px); font-weight: 800; line-height: .98; letter-spacing: -.025em; overflow-wrap: anywhere; }
 .listing-featured-copy p { max-width: 440px; margin-bottom: 22px; color: #ffffffcc; font-size: 15.5px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .listing-featured-actions { display: flex; flex-wrap: wrap; gap: 12px; }
-.listing-home .ui-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; height: 44px; padding: 0 22px; border-radius: 24px; background: #ffffff1c; font: 700 11px 'Work Sans', sans-serif; letter-spacing: .08em; }
-.listing-home .ui-button.is-primary { background: var(--color-primary); }
-.listing-home .ui-button:hover { filter: brightness(1.15); }
 .listing-featured-copy > .listing-party-progress { max-width: 340px; margin: 0 0 20px; height: 4px; }
 .listing-featured-actions .ui-avatar { width: 30px; height: 30px; font-size: 11px; }
 .listing-carousel-toggle { position: absolute; right: 14px; top: 14px; z-index: 2; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #090c1177; border: 1px solid #ffffff40; color: #fff; }
@@ -167,7 +165,6 @@
 .listing-error-overlay > span { color: #b8c0c9; font-size: 13.5px; }
 .listing-error-overlay .ui-button { flex: none; margin-top: 12px; }
 .listing-load-more-error { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; margin-top: 34px; padding-top: 26px; border-top: 1px solid #ffffff12; color: #b8c0c9; }
-.listing-load-more-error .ui-button { height: 36px; }
 .listing-recent-parties-content { padding-bottom: 44px; }
 .listing-body > .listing-recent-parties + * { margin-top: 0; }
 @media (max-width: 1100px) {
@@ -186,7 +183,6 @@
   .listing-featured-copy h1 { font-size: 44px; }
   .listing-featured-copy { left: 24px; right: 20px; }
   .listing-featured-actions { gap: 8px; }
-  .listing-home .ui-button { padding: 0 16px; }
   .listing-body { padding: 30px 24px 60px; }
   .listing-show-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }

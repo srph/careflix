@@ -18,7 +18,7 @@
   transition: transform .3s ease, opacity .2s ease;
 }
 .show-modal[data-starting-style], .show-modal[data-ending-style] { transform: translateY(22px) scale(.97); }
-.show-modal button, .show-modal select { font: inherit; }
+:where(.show-modal) button:not(.ui-button), .show-modal select { font: inherit; }
 .show-modal a { color: inherit; text-decoration: none; }
 .show-modal button:focus-visible, .show-modal a:focus-visible, .show-modal select:focus-visible { outline: 2px solid var(--color-white); outline-offset: 4px; }
 .show-modal button:disabled { cursor: default; opacity: .6; }
@@ -30,9 +30,6 @@
 .show-modal-meta { margin-top: 10px; color: #ffffff80; font: 600 11px/1.5 var(--font-family-subheading); letter-spacing: .09em; text-transform: uppercase; }
 .show-modal-synopsis { margin-top: 14px; color: #ffffffcc; font-size: 14px; line-height: 1.6; }
 .show-modal-actions { display: flex; align-items: center; gap: 10px; margin-top: 18px; }
-.show-modal .ui-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 999px; color: var(--color-white); background: #ffffff1a; font: 700 12.5px/1 var(--font-family-subheading); letter-spacing: .08em; }
-.show-modal .ui-button.is-primary { background: var(--color-primary); box-shadow: 0 10px 30px -8px #e8368f8c; }
-.show-modal .ui-button:not(:disabled):hover { transform: translateY(-2px); filter: brightness(1.1); }
 .show-modal .show-modal-close { position: absolute; z-index: 2; top: 18px; right: 18px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #090c11a8; backdrop-filter: blur(8px); color: var(--color-white); }
 .show-modal .show-modal-close:hover { background: #090c11e6; }
 .show-modal-notice { margin-top: 14px; }

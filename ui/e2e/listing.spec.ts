@@ -511,6 +511,8 @@ for (const first of ['episodes', 'parties']) {
     await page.getByRole('button', { name: 'Details for Hollow County', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Hollow County', exact: true })
     await expect(dialog).toHaveCSS('opacity', '1')
+    // A late web-font swap rewraps the synopsis, which would read as a layout shift.
+    await page.evaluate(() => document.fonts.ready)
     const geometry = () => dialog.evaluate(element => {
       const frame = element.getBoundingClientRect()
       const heading = element.querySelector('.show-modal-heading')!.getBoundingClientRect()

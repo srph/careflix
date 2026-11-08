@@ -6,9 +6,12 @@ import { Link, LinkProps } from 'react-router'
 interface OwnProps {
   disabled?: boolean
   variant?: 'default' | 'primary'
-  size?: 's' | 'l'
+  size?: 's' | 'm' | 'l'
   link?: boolean
   block?: boolean
+  round?: boolean
+  /** Pink shadow under a primary button. Ignored on the default variant. */
+  glow?: boolean
 }
 
 type ButtonAttributes =  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>
@@ -16,11 +19,14 @@ type LinkAttributes = Omit<LinkProps, 'className'>
 type Attributes = ButtonAttributes | LinkAttributes
 type Props = OwnProps & Attributes
 
-function UiButton({ variant, size, block, link, ...props }: Props) {
+function UiButton({ variant, size = 'm', block, round, glow, link, ...props }: Props) {
   const cls = cx("ui-button", {
     'is-primary': variant === 'primary',
     'is-block': block,
+    'is-s': size === 's',
     'is-l': size === 'l',
+    'is-round': round,
+    'is-glow': glow && variant === 'primary',
   })
 
   return link

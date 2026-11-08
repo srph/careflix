@@ -1,15 +1,15 @@
 import UiButton from '~/components/UiButton'
 import UiSkeleton from '~/components/UiSkeleton'
 
-function RetryButton({ onRetry, children = 'Retry' }: { onRetry: () => void; children?: string }) {
-  return <UiButton type="button" onClick={onRetry}><i className="fa fa-repeat" aria-hidden="true" />{children}</UiButton>
+function RetryButton({ onRetry, size, children = 'Retry' }: { onRetry: () => void; size?: 'm' | 'l'; children?: string }) {
+  return <UiButton type="button" size={size} onClick={onRetry}><i className="fa fa-repeat" aria-hidden="true" />{children}</UiButton>
 }
 
 function ErrorOverlay({ title, description, onRetry }: { title: string; description?: string; onRetry: () => void }) {
   return <div className="listing-error-overlay" role="alert">
     <b>{title}</b>
     {description && <span>{description}</span>}
-    <RetryButton onRetry={onRetry}>{description ? 'Try again' : 'Retry'}</RetryButton>
+    <RetryButton onRetry={onRetry} size="l">{description ? 'Try again' : 'Retry'}</RetryButton>
   </div>
 }
 

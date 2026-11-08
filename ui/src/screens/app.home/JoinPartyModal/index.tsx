@@ -116,8 +116,8 @@ function JoinPartyForm({ onClose, joining }: { onClose: () => void; joining: Rea
       {preview && <PartyPreview party={preview} />}
     </div></div>
     <div className="join-party-actions">
-      <UiButton type="button" disabled={join.isPending} onClick={onClose}>Cancel</UiButton>
-      <UiButton type="submit" variant="primary" disabled={!preview || looking || join.isPending || wrong}>
+      <UiButton type="button" size="l" disabled={join.isPending} onClick={onClose}>Cancel</UiButton>
+      <UiButton type="submit" variant="primary" size="l" disabled={!preview || looking || join.isPending || wrong}>
         {join.isPending ? <><i className="fa fa-circle-o-notch fa-spin" aria-hidden="true" /> Joining</> : preview?.is_member ? 'Open party' : 'Join party'}
       </UiButton>
     </div>

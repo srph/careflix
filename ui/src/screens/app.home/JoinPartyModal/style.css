@@ -49,10 +49,6 @@
 .join-party-avatars .ui-avatar { width: 22px; height: 22px; font-size: 9px; }
 .join-party-avatars .is-away { opacity: .4; }
 .join-party-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
-.join-party-actions .ui-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 20px; border-radius: 21px; background: #ffffff1a; font: 700 11px var(--font-family-subheading); letter-spacing: .08em; }
-.join-party-actions .ui-button.is-primary { background: var(--color-primary); }
-.join-party-actions .ui-button:disabled { opacity: .38; cursor: default; }
-.join-party-actions .ui-button:not(:disabled):hover { filter: brightness(1.12); }
 .join-party-modal button:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 @keyframes join-party-blink { 50% { opacity: 0; } }
 @media (max-width: 1100px) { .listing-join + .listing-search { margin-left: -10px; } }

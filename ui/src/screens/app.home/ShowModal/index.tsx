@@ -64,7 +64,7 @@ function ShowDetails({ show, onClose, onPlay, isCreating, createError }: Props &
         <p className="show-modal-meta">{metadata}</p>
         <p className="show-modal-synopsis">{show.synopsis}</p>
         <div className="show-modal-actions">
-          <UiButton variant="primary" disabled={isCreating || !video} onClick={() => { if (video) onPlay(video) }}>
+          <UiButton variant="primary" size="l" glow disabled={isCreating || !video} onClick={() => { if (video) onPlay(video) }}>
             <i className={`fa ${isCreating ? 'fa-spinner fa-spin' : 'fa-play'}`} aria-hidden="true" />{isCreating ? 'Starting…' : 'Start Party'}
           </UiButton>
         </div>
@@ -87,7 +87,7 @@ function ShowDetails({ show, onClose, onPlay, isCreating, createError }: Props &
             {parties.length > 0 && <Tabs.Panel className="show-modal-pane" value="parties">
               <PartyHistory parties={parties} />
               {partiesQuery.isFetchNextPageError && <p className="show-modal-status" role="alert">Unable to load more parties. <button type="button" onClick={() => { void partiesQuery.fetchNextPage() }}>Retry</button></p>}
-              {partiesQuery.hasNextPage && !partiesQuery.isFetchNextPageError && <div className="show-modal-more"><UiButton disabled={partiesQuery.isFetchingNextPage} onClick={() => { void partiesQuery.fetchNextPage() }}>{partiesQuery.isFetchingNextPage ? 'Loading…' : 'Load more parties'}</UiButton></div>}
+              {partiesQuery.hasNextPage && !partiesQuery.isFetchNextPageError && <div className="show-modal-more"><UiButton size="l" disabled={partiesQuery.isFetchingNextPage} onClick={() => { void partiesQuery.fetchNextPage() }}>{partiesQuery.isFetchingNextPage ? 'Loading…' : 'Load more parties'}</UiButton></div>}
             </Tabs.Panel>}
             <Tabs.Panel className="show-modal-pane" value="details">
               <Details show={show} groups={groups} groupsLoading={isSeries && groupsQuery.isPending} groupsStatus={isSeries ? groupsStatus : null} />

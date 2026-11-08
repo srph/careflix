@@ -42,9 +42,9 @@ export default function FeaturedCarousel({ items, onDetails, onStart, isCreating
             <i style={{ width: `${Math.max(0, Math.min(100, party.video.duration ? party.current_time / party.video.duration * 100 : 0))}%` }} />
           </div>}
           <div className="listing-featured-actions">
-            {party ? <UiButton link to={`/watch/${party.id}`} variant="primary"><i className="fa fa-play" aria-hidden="true" /> Rejoin party</UiButton>
-              : <><UiButton variant="primary" disabled={isCreating} onClick={() => onStart(show)}><i className="fa fa-play" aria-hidden="true" /> {isCreating ? 'Starting…' : 'Start a party'}</UiButton>
-                <UiButton onClick={() => onDetails(show)}>Details</UiButton></>}
+            {party ? <UiButton link to={`/watch/${party.id}`} variant="primary" size="l"><i className="fa fa-play" aria-hidden="true" /> Rejoin party</UiButton>
+              : <><UiButton variant="primary" size="l" disabled={isCreating} onClick={() => onStart(show)}><i className="fa fa-play" aria-hidden="true" /> {isCreating ? 'Starting…' : 'Start a party'}</UiButton>
+                <UiButton size="l" onClick={() => onDetails(show)}>Details</UiButton></>}
             {party && <UiAvatarGroup users={party.members ?? []} size="sm" />}
           </div>
         </div>

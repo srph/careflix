@@ -9,8 +9,8 @@ import JoinPartyModal from '../JoinPartyModal'
 
 const tabs: Array<[ListingTab, string]> = [['all', 'All'], ['movie', 'Movies'], ['series', 'Series'], ['parties', 'Parties']]
 
-export default function ListingNavigation({ tab, onTabChange, onShowSelect, parties }: {
-  tab: ListingTab; onTabChange: (tab: ListingTab) => void; onShowSelect: (show: AppShow) => void; parties: AppParty[]
+export default function ListingNavigation({ tab, onTabChange, onShowSelect }: {
+  tab: ListingTab; onTabChange: (tab: ListingTab) => void; onShowSelect: (show: AppShow) => void
 }) {
   const auth = useAuth()
   return <nav className="listing-navigation" aria-label="Catalog">
@@ -31,7 +31,7 @@ export default function ListingNavigation({ tab, onTabChange, onShowSelect, part
         }}>{label}</UiPlainButton>)}
     </div>
     <JoinPartyModal />
-    <ListingSearch onShowSelect={onShowSelect} recentParties={parties} />
+    <ListingSearch onShowSelect={onShowSelect} />
     <Link to="/settings" className="listing-account" aria-label="Account settings"><UiAvatar user={auth.data} /></Link>
   </nav>
 }

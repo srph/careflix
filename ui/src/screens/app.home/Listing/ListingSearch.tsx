@@ -1,46 +1,47 @@
-import { Fragment, useEffect, useId, useRef, useState } from 'react'
+import { Autocomplete } from '@base-ui/react/autocomplete'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import UiSkeleton from '~/components/UiSkeleton'
 import { useListingSearchQuery } from '../queries'
 import Artwork from './Artwork'
 import { partyDetails, partyStatus, showMeta } from './format'
 
+type SearchOption = { key: string; show: AppShow; party: AppParty | null }
+type SearchGroup = { value: 'Titles' | 'Parties'; items: SearchOption[] }
+
 function SearchSkeleton() {
-  return <div className="listing-search-loading">
-    <span className="listing-search-loading-label" role="status">Searching titles and parties…</span>
-    <div aria-hidden="true">
-      {[{ label: 'Titles', widths: [68, 52, 60] }, { label: 'Parties', widths: [58, 72] }].map(({ label, widths }) => <Fragment key={label}>
-        <div className="listing-search-group">{label}</div>
-        {widths.map((width, index) => <div className="listing-search-skeleton-row" key={index}>
-          <UiSkeleton className="listing-search-skeleton-artwork" />
-          <div className="listing-search-skeleton-copy">
-            <UiSkeleton width={`${width}%`} height={14} />
-            <UiSkeleton width={`${width + 12}%`} height={10} />
-          </div>
-        </div>)}
-      </Fragment>)}
-    </div>
+  return <div className="listing-search-loading" aria-hidden="true">
+    {[{ label: 'Titles', widths: [68, 52, 60] }, { label: 'Parties', widths: [58, 72] }].map(({ label, widths }) => <Fragment key={label}>
+      <div className="listing-search-group">{label}</div>
+      {widths.map((width, index) => <div className="listing-search-skeleton-row" key={index}>
+        <UiSkeleton className="listing-search-skeleton-artwork" />
+        <div className="listing-search-skeleton-copy">
+          <UiSkeleton width={`${width}%`} height={14} />
+          <UiSkeleton width={`${width + 12}%`} height={10} />
+        </div>
+      </div>)}
+    </Fragment>)}
   </div>
 }
 
-export default function ListingSearch({ onShowSelect, recentParties }: { onShowSelect: (show: AppShow) => void; recentParties: AppParty[] }) {
+export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: AppShow) => void }) {
   const [text, setText] = useState('')
   const [term, setTerm] = useState('')
+  // Whether the rows on screen belong to what's being typed now; emptying the field starts over with a skeleton.
+  const [keep, setKeep] = useState(false)
   const [open, setOpen] = useState(false)
-  const [active, setActive] = useState(-1)
   const input = useRef<HTMLInputElement>(null)
-  const id = useId()
   const navigate = useNavigate()
   const trimmed = text.trim()
-  const query = useListingSearchQuery(term, open && trimmed === term)
-  const busy = Boolean(trimmed) && (trimmed !== term || query.isPending)
-  const expanded = open
-  const titles = trimmed && !busy ? query.data?.titles ?? [] : []
-  const parties = trimmed ? (!busy ? query.data?.parties ?? [] : []) : recentParties.slice(0, 3)
-  const options = [
-    ...titles.map(show => ({ show, party: null as AppParty | null })),
-    ...parties.map(party => ({ show: party.video.show, party })),
-  ]
+  const query = useListingSearchQuery(term, keep)
+  const current = Boolean(trimmed) && term === trimmed
+  const failed = current && query.isError
+  const results = trimmed && !failed && (keep || current) ? query.data : undefined
+  const loading = Boolean(trimmed) && !results && !failed
+  const groups: SearchGroup[] = results ? [
+    { value: 'Titles' as const, items: results.titles.map(show => ({ key: `title-${show.id}`, show, party: null })) },
+    { value: 'Parties' as const, items: results.parties.map(party => ({ key: `party-${party.id}`, show: party.video.show, party })) },
+  ].filter(group => group.items.length) : []
 
   useEffect(() => {
     const timer = setTimeout(() => setTerm(trimmed), 200)
@@ -60,12 +61,13 @@ export default function ListingSearch({ onShowSelect, recentParties }: { onShowS
     return () => document.removeEventListener('keydown', shortcut)
   }, [])
 
-  function select(index: number) {
-    const option = options[index]
-    if (!option) return
-    setOpen(false)
-    setText('')
-    setActive(-1)
+  function change(value: string) {
+    setText(value)
+    setKeep(Boolean(value.trim()) && (keep || (current && query.isSuccess && !query.isPlaceholderData)))
+  }
+
+  function select(option: SearchOption) {
+    change('')
     if (option.party) navigate(`/watch/${option.party.id}`)
     else onShowSelect(option.show)
   }
@@ -76,41 +78,44 @@ export default function ListingSearch({ onShowSelect, recentParties }: { onShowS
     return <>{value.slice(0, index)}<mark>{value.slice(index, index + trimmed.length)}</mark>{value.slice(index + trimmed.length)}</>
   }
 
-  return <div className="listing-search" onBlur={event => {
-    if (!event.currentTarget.contains(event.relatedTarget as Node)) setOpen(false)
-  }}>
-    <i className="fa fa-search" aria-hidden="true" />
-    <input ref={input} role="combobox" aria-label="Search titles and parties" placeholder="Search titles & parties"
-      aria-expanded={expanded} aria-controls={expanded ? `${id}-results` : undefined} aria-autocomplete="list"
-      aria-activedescendant={expanded && active >= 0 && options[active] ? `${id}-${active}` : undefined}
-      autoComplete="off" maxLength={200} value={text} onFocus={() => setOpen(true)}
-      onChange={event => { setText(event.target.value); setOpen(true); setActive(-1) }}
-      onKeyDown={event => {
-        if (event.key === 'Escape') { event.preventDefault(); setText(''); setActive(-1); setOpen(false); input.current?.blur() }
-        else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-          event.preventDefault()
-          setOpen(true)
-          if (options.length) setActive(index => event.key === 'ArrowDown' ? (index + 1) % options.length : (index <= 0 ? options.length : index) - 1)
-        } else if (event.key === 'Enter' && expanded && !busy) {
-          event.preventDefault()
-          select(active < 0 ? 0 : active)
-        }
-      }} />
-    <kbd aria-hidden="true">/</kbd>
-    {expanded && <div className="listing-search-dropdown">
-      {busy ? <SearchSkeleton /> : trimmed && query.isError ? <div role="alert">Unable to search. <button type="button" onClick={() => { void query.refetch() }}>Retry</button></div> : null}
-      <div id={`${id}-results`} role="listbox" aria-label="Search results" aria-busy={busy}>
-        {!busy && !(trimmed && query.isError) && !options.length && <p role="status">{trimmed ? `No matches for “${trimmed}”.` : 'Search for a title or a party.'}</p>}
-        {options.map((option, index) => <Fragment key={`${option.party ? 'party' : 'title'}-${option.party?.id ?? option.show.id}`}>
-          {(index === 0 || index === titles.length) && <div className="listing-search-group" role="presentation">{!trimmed ? 'Jump back in' : option.party ? 'Parties' : 'Titles'}</div>}
-          <button type="button" role="option" id={`${id}-${index}`} aria-selected={active === index} tabIndex={-1}
-            className="listing-search-option" onMouseEnter={() => setActive(index)} onMouseDown={event => event.preventDefault()} onClick={() => select(index)}>
-            <Artwork src={option.party?.video.preview_image || option.show.preview_image} />
-            <span><b>{highlight(option.show.title)}</b><small>{option.party ? `${partyDetails(option.party)} · ${partyStatus(option.party)}` : showMeta(option.show, true)}</small></span>
-            <span className="listing-search-return" aria-hidden="true">↵</span>
-          </button>
-        </Fragment>)}
-      </div>
-    </div>}
-  </div>
+  // Base UI opens on ↑/↓ even when the field is empty; with no query there's nothing to show, so stay closed.
+  return <Autocomplete.Root items={groups} filter={null} value={text} autoHighlight open={open && Boolean(trimmed)}
+    onOpenChange={next => setOpen(next && Boolean(input.current?.value.trim()))}
+    onValueChange={(value, details) => { if (details.reason !== 'item-press') change(value) }}
+    itemToStringValue={(option: SearchOption) => option.show.title}>
+    <Autocomplete.InputGroup className="listing-search">
+      <i className="fa fa-search" aria-hidden="true" />
+      <Autocomplete.Input ref={input} aria-label="Search titles and parties" placeholder="Search titles & parties"
+        autoComplete="off" maxLength={200} />
+      <Autocomplete.Clear className="listing-search-clear" aria-label="Clear search"><i className="fa fa-close" aria-hidden="true" /></Autocomplete.Clear>
+      {!text && <kbd aria-hidden="true">/</kbd>}
+    </Autocomplete.InputGroup>
+    <Autocomplete.Portal>
+      <Autocomplete.Positioner className="listing-search-positioner" align="end" sideOffset={8} collisionPadding={16}>
+        <Autocomplete.Popup className="listing-search-dropdown">
+          <Autocomplete.Status className="listing-search-status">
+            {loading && <span className="listing-search-loading-label">Searching titles and parties…</span>}
+            {failed && <div role="alert">Unable to search. <button type="button" onClick={() => { void query.refetch() }}>Retry</button></div>}
+          </Autocomplete.Status>
+          {loading && <SearchSkeleton />}
+          <Autocomplete.Empty className="listing-search-empty">
+            {results && <p>No matches for “{trimmed}”.</p>}
+          </Autocomplete.Empty>
+          <Autocomplete.List aria-label="Search results" aria-busy={loading}>
+            {(group: SearchGroup) => <Autocomplete.Group key={group.value} items={group.items}>
+              <Autocomplete.GroupLabel className="listing-search-group">{group.value}</Autocomplete.GroupLabel>
+              <Autocomplete.Collection>
+                {(option: SearchOption) => <Autocomplete.Item key={option.key} value={option} className="listing-search-option"
+                  onClick={() => select(option)}>
+                  <Artwork src={option.party?.video.preview_image || option.show.preview_image} />
+                  <span><b>{highlight(option.show.title)}</b><small>{option.party ? `${partyDetails(option.party)} · ${partyStatus(option.party)}` : showMeta(option.show, true)}</small></span>
+                  <span className="listing-search-return" aria-hidden="true">↵</span>
+                </Autocomplete.Item>}
+              </Autocomplete.Collection>
+            </Autocomplete.Group>}
+          </Autocomplete.List>
+        </Autocomplete.Popup>
+      </Autocomplete.Positioner>
+    </Autocomplete.Portal>
+  </Autocomplete.Root>
 }

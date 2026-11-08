@@ -48,15 +48,32 @@ describe('listing queries', () => {
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
   })
 
-  it('does not fetch search suggestions until enabled and supplies server-side limits', async () => {
+  it('does not fetch search suggestions for an empty term and supplies server-side limits', async () => {
     vi.mocked(axios.get).mockResolvedValue([null, { data: page }] as any)
     const { wrapper } = setup()
-    const hook = renderHook(({ enabled }) => useListingSearchQuery('moon', enabled), { wrapper, initialProps: { enabled: false } })
+    const hook = renderHook(({ term }) => useListingSearchQuery(term), { wrapper, initialProps: { term: '' } })
     expect(axios.get).not.toHaveBeenCalled()
-    hook.rerender({ enabled: true })
+    hook.rerender({ term: 'moon' })
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
     expect(axios.get).toHaveBeenCalledWith('/api/shows', expect.objectContaining({ params: { q: 'moon', per_page: 5 } }))
     expect(axios.get).toHaveBeenCalledWith('/api/me/parties', expect.objectContaining({ params: { q: 'moon', per_page: 4 } }))
+  })
+
+  it('keeps the previous term’s results only when asked to', async () => {
+    let release: () => void
+    vi.mocked(axios.get).mockResolvedValueOnce([null, { data: page }] as any).mockResolvedValueOnce([null, { data: page }] as any)
+      .mockImplementation(() => new Promise(resolve => { release = () => resolve([null, { data: page }] as any) }))
+    const { wrapper } = setup()
+    const hook = renderHook(({ term, keep }) => useListingSearchQuery(term, keep), { wrapper, initialProps: { term: 'moo', keep: true } })
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+    const previous = hook.result.current.data
+    hook.rerender({ term: 'moon', keep: true })
+    expect(hook.result.current.data).toBe(previous)
+    expect(hook.result.current.isPlaceholderData).toBe(true)
+    hook.rerender({ term: 'moonl', keep: false })
+    expect(hook.result.current.data).toBeUndefined()
+    expect(hook.result.current.isPending).toBe(true)
+    release()
   })
 
   it('invalidates history and search after creating a party, then enters its room', async () => {

@@ -37,7 +37,7 @@ export default function AuthHome() {
   return <div className="listing-home">
     <PageTitle title="Watch together" />
     <div className="listing-shell">
-      <ListingNavigation tab={tab} onTabChange={setTab} onShowSelect={setSelectedShow} parties={parties} />
+      <ListingNavigation tab={tab} onTabChange={setTab} onShowSelect={setSelectedShow} />
       <main id="listing-panel" role="tabpanel" aria-labelledby={`listing-tab-${tab}`} tabIndex={0}>
         {tab !== 'parties' && (!query.data ? <FeaturedPlaceholder error={initialError} onRetry={() => { void query.refetch() }} />
           : <FeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />)}

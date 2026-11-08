@@ -36,7 +36,7 @@
 .listing-tabs button:hover, .listing-tabs button[aria-selected=true] { color: #fff; }
 .listing-tabs button::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; border-radius: 2px; background: var(--color-primary); transform: scaleX(0); transition: transform .3s; }
 .listing-tabs button[aria-selected=true]::after { transform: scaleX(1); }
-.listing-account { flex: none; display: flex; align-items: center; }
+.listing-account { flex: none; display: flex; align-items: center; margin-left: -20px; }
 .listing-account .ui-avatar { width: 34px; height: 34px; }
 .listing-search { position: relative; margin-left: auto; display: flex; align-items: center; gap: 10px; width: 250px; height: 42px; padding: 0 12px 0 14px; color: #969a9e; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; transition: background .2s, border-color .2s; }
 .listing-search:focus-within { background: #111820; border-color: rgba(255,255,255,.35); }
@@ -172,6 +172,7 @@
 .listing-body > .listing-recent-parties + * { margin-top: 0; }
 @media (max-width: 1100px) {
   .listing-navigation { gap: 24px; }
+  .listing-account { margin-left: -8px; }
   .listing-tabs { gap: 20px; }
   .listing-featured { grid-template-columns: minmax(0, 1fr) 260px; }
   .listing-featured-copy { left: 28px; right: 24px; bottom: 30px; }
@@ -191,6 +192,7 @@
 }
 @media (max-width: 600px) {
   .listing-navigation { gap: 14px; padding: 14px 20px 10px; }
+  .listing-account { margin-left: 0; }
   .listing-logo .ui-logo { font-size: 18px; }
   .listing-search { margin-left: auto; flex: 1; min-width: 0; width: auto; padding: 0 10px; gap: 7px; }
   .listing-search input::placeholder { font-size: 12px; }

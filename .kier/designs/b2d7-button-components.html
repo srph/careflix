@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button Components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Work+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea;--k:#a3236b;--a:#1d5fa8;--s:#16794c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328;--k:#f28cbf;--a:#8cb8f2;--s:#8fd8a8}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328;--k:#f28cbf;--a:#8cb8f2;--s:#8fd8a8}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{max-width:720px;margin:0 auto;padding:48px 16px 120px}
+@media (min-width:1000px){.doc{margin-left:max(120px,calc(50vw - 360px))}}
+.eyebrow{font:600 11.5px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:34px;line-height:1.1;letter-spacing:-.02em;margin:12px 0 18px;font-weight:650}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13.5px}
+.var{margin-top:60px;scroll-margin-top:20px}
+.var-h{display:flex;align-items:center;gap:10px}
+.var-h .id{display:inline-grid;place-items:center;height:28px;padding:0 9px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 12.5px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:17px;font-weight:600;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 11px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;color:var(--ink);font-family:inherit;width:200px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 9px}
+.pick-out input{width:100%}
+.pick-out .ok{color:var(--good);font-weight:600}
+.sub{margin:22px 0 8px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.07em;text-transform:uppercase;color:var(--mut)}
+.props{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px}
+.props th,.props td{text-align:left;padding:7px 10px;border-top:1px solid var(--line);vertical-align:top}
+.props th{border-top:0;font-weight:600;color:var(--mut);font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;background:var(--code)}
+.props td:first-child{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;white-space:nowrap}
+.props td code,.cap code{font:12px ui-monospace,Menlo,monospace;background:var(--code);padding:1px 4px;border-radius:4px}
+.props .new{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;background:var(--goodbg);color:var(--good);font:700 10px ui-monospace,Menlo,monospace;letter-spacing:.05em;vertical-align:1px}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:12.5px;color:var(--mut)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{font:500 12.5px/1 ui-monospace,Menlo,monospace;color:var(--mut);background:none;border:0;padding:7px 9px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{color:var(--ink);background:var(--code);font-weight:700}
+.chk{display:inline-flex;align-items:center;gap:5px;font:500 12.5px ui-monospace,Menlo,monospace;color:var(--ink);cursor:pointer}
+.stage{position:relative;display:flex;align-items:center;justify-content:center;min-height:120px;margin-top:8px;padding:24px;border:1px solid var(--line);border-radius:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.grid3 .stage{min-height:96px;margin-top:0;padding:18px 10px;flex-direction:column;gap:10px}
+.cell-l{display:block;margin-bottom:5px;font:600 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+pre.code{margin:8px 0 0;padding:11px 13px;background:var(--code);border:1px solid var(--line);border-radius:10px;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-x:auto;white-space:pre}
+.code .t{color:var(--k)}.code .a{color:var(--a)}.code .s{color:var(--s)}.code .c{color:var(--mut)}
+.cap{margin-top:6px;font-size:12.5px;color:var(--mut)}
+.notes{display:grid;gap:8px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13.5px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.use{display:grid;gap:8px}
+.use>div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:12px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.use .sw{display:flex;align-items:center;min-height:44px;padding:8px;border-radius:8px}
+.use code.combo{display:block;font:12px/1.4 ui-monospace,Menlo,monospace;color:var(--ink);margin-bottom:5px}
+.use ul{margin:0;padding:0;list-style:none;font-size:13px}
+.use li{display:flex;justify-content:space-between;gap:10px;padding:2px 0}
+.use li span{font:11.5px ui-monospace,Menlo,monospace;color:var(--mut);white-space:nowrap}
+.use .none{opacity:.75}
+.plain-use{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.plain-use>div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13px}
+.plain-use b{display:flex;justify-content:space-between;font-weight:600}
+.plain-use b span{font:600 12px ui-monospace,Menlo,monospace;color:var(--mut)}
+.plain-use p{margin:3px 0 0;color:var(--mut);font-size:12.5px}
+@media (max-width:560px){.grid3{grid-template-columns:1fr}.use>div{grid-template-columns:1fr}.plain-use{grid-template-columns:1fr}}
+.further{margin-top:80px}
+.further h2{font-size:20px;margin:0 0 12px;font-weight:650}
+.further .cards>div b{display:block;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:3px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:220px}
+.mm a.on span{color:var(--ink)}
+@media (max-width:860px){.mm{display:none}}
+
+/* ───────────── Mockup: the app (ui/src/global.css + components) ───────────── */
+.app{--font-size-h6:12px;--font-family:'halyard-display','Outfit',sans-serif;--font-family-subheading:'Work Sans',sans-serif;--color-black-1:#10171E;--color-black-5:#8899A6;--color-primary:#E8368F;--color-white:#fff;--border-radius:4px;background:var(--color-black-1);color:#fff;font-family:var(--font-family);font-size:14px;-webkit-font-smoothing:antialiased}
+.app a{color:inherit}
+/* UiButton/style.css (with the new is-round) */
+.ui-button{display:inline-block;height:26px;padding:0 8px;line-height:25px;text-transform:uppercase;font-weight:500;letter-spacing:1px;color:var(--color-white);background:var(--color-black-5);font-size:var(--font-size-h6);font-family:var(--font-family);border-radius:var(--border-radius);border:0;outline:0;transition:200ms all ease;cursor:pointer;white-space:nowrap}
+.ui-button.is-primary{background:var(--color-primary)}
+.ui-button.is-block{width:100%}
+.ui-button.is-round{border-radius:999px}
+.ui-button.is-l{height:50px;line-height:49px}
+a.ui-button{text-decoration:none;text-align:center}
+.ui-button:disabled{opacity:.6}
+/* UiPlainButton/style.css */
+.ui-plain-button{display:inline-block;padding:0;color:inherit;background:transparent;border:0;outline:0;cursor:pointer;font:inherit}
+/* screen skins (border-radius removed in this change) */
+.sk-listing .ui-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 22px;background:#ffffff1c;font:700 11px 'Work Sans',sans-serif;letter-spacing:.08em;line-height:1}
+.sk-listing .ui-button.is-primary{background:var(--color-primary)}
+.sk-listing .ui-button:hover{filter:brightness(1.15)}
+.sk-modal .ui-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;background:#ffffff1a;font:700 12.5px/1 var(--font-family-subheading);letter-spacing:.08em}
+.sk-modal .ui-button.is-primary{background:var(--color-primary);box-shadow:0 10px 30px -8px #e8368f8c}
+.sk-modal .ui-button:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.1)}
+.sk-join .ui-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 20px;background:#ffffff1a;font:700 11px var(--font-family-subheading);letter-spacing:.08em;line-height:1}
+.sk-join .ui-button.is-primary{background:var(--color-primary)}
+.sk-join .ui-button:disabled{opacity:.38;cursor:default}
+.skins{display:grid;gap:8px}
+.skins .stage{justify-content:flex-start;gap:10px;min-height:0;margin:0;padding:16px 18px}
+.skins .stage .lbl{margin-left:auto;font:600 10.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:#8899a6}
+/* plain-button skins */
+.pb-tabs{display:flex;gap:26px}
+.pb-tabs .ui-plain-button{position:relative;padding:10px 0;color:#929296;font-size:15px;font-weight:700}
+.pb-tabs .ui-plain-button:hover,.pb-tabs .ui-plain-button[aria-selected=true]{color:#fff}
+.pb-tabs .ui-plain-button[aria-selected=true]::after{content:'';position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;background:var(--color-primary)}
+.pb-icon{display:flex;gap:18px;font-size:20px}
+.pb-icon .ui-plain-button{opacity:.85}.pb-icon .ui-plain-button:hover{opacity:1}
+.pb-close{display:grid;place-items:center;width:36px;height:36px;border-radius:50% !important;background:#090c11a8 !important}
+.pb-text{color:var(--color-primary) !important;font-weight:600}
+.focus-ring{outline:2px solid #fff !important;outline-offset:5px}
+.hover-sim{filter:brightness(1.15)}
+/* Font comparison: proposed sizes on the shared skin look */
+.fc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 10px;margin-top:12px}
+.fc .col-h{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);padding-bottom:2px}
+.fc .stage{justify-content:flex-start;flex-wrap:wrap;gap:8px;min-height:0;margin:0;padding:16px}
+.fc .stage.situ{flex-direction:column;align-items:flex-start;gap:12px}
+.fc .stage.situ p{margin:0;color:#ffffffcc;font-size:13.5px;line-height:1.45}
+.fc .rl{grid-column:1/-1;margin-top:6px;font:600 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.fc .ui-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px;line-height:1;background:#ffffff1a}
+.fc .ui-button.is-primary{background:var(--color-primary)}
+.fc .ui-button.is-s{height:26px;padding:0 12px}
+.fc .ui-button.is-l{height:40px;padding:0 20px}
+.fc .ui-button.is-glow{box-shadow:0 10px 30px -8px #e8368f8c}
+.fc .ui-button:not(:disabled):hover{filter:brightness(1.12)}
+.fc .ui-button:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.fc .f-hal .ui-button{font:var(--hw,500) 12px/1 var(--font-family);letter-spacing:1px}
+.fc .f-ws .ui-button{font:700 11px/1 'Work Sans',sans-serif;letter-spacing:.08em}
+@media (max-width:560px){.fc{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="mm" id="mm" aria-label="Sections"></nav>
+<main class="doc">
+
+  <section class="brief">
+    <p class="eyebrow">Care.tv · components · UiPlainButton &amp; UiButton</p>
+    <h1>Two button components, every prop, and where each one is used.</h1>
+    <div class="cards">
+      <div>Real size, on the app's dark background.</div>
+      <div><code>round</code> is new; the default is 4px.</div>
+      <div>Usage is taken from <code>ui/src</code>.</div>
+    </div>
+  </section>
+
+  <!-- ───── UiPlainButton ───── -->
+  <section class="var" data-id="UiPlainButton" data-name="Unstyled button" data-key="plain">
+    <div class="var-h"><span class="id">UiPlainButton</span><h2>Unstyled button</h2></div>
+
+    <p class="sub">Props</p>
+    <table class="props">
+      <tr><th>Prop</th><th>Type</th><th>Does</th></tr>
+      <tr><td>className</td><td>string</td><td>Added after <code>ui-plain-button</code>; this is how every screen styles it</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>Native only; no visual change</td></tr>
+      <tr><td>ref</td><td>Ref&lt;button&gt;</td><td>Forwarded to the <code>&lt;button&gt;</code></td></tr>
+      <tr><td>…rest</td><td>ButtonHTMLAttributes</td><td><code>type</code>, <code>onClick</code>, <code>aria-*</code>, <code>role</code></td></tr>
+    </table>
+
+    <p class="sub">States</p>
+    <div class="grid3">
+      <div><span class="cell-l">Rest</span><div class="stage app"><button class="ui-plain-button">Watch together</button></div></div>
+      <div><span class="cell-l">Keyboard focus</span><div class="stage app"><button class="ui-plain-button">Watch together</button></div></div>
+      <div><span class="cell-l">Disabled</span><div class="stage app"><button class="ui-plain-button" disabled>Watch together</button></div></div>
+    </div>
+    <pre class="code" data-code="plain-base"></pre>
+
+    <p class="sub">With className, as screens use it</p>
+    <div class="skins">
+      <div class="stage app"><div class="pb-tabs"><button class="ui-plain-button" aria-selected="true">All</button><button class="ui-plain-button">Movies</button><button class="ui-plain-button">Parties</button></div><span class="lbl">Listing tabs</span></div>
+      <div class="stage app"><div class="pb-icon"><button class="ui-plain-button"><i class="fa fa-play"></i></button><button class="ui-plain-button"><i class="fa fa-backward"></i></button><button class="ui-plain-button"><i class="fa fa-volume-up"></i></button><button class="ui-plain-button"><i class="fa fa-comment"></i></button></div><span class="lbl">Player .icon</span></div>
+      <div class="stage app"><button class="ui-plain-button pb-close"><i class="fa fa-close"></i></button><button class="ui-plain-button pb-text">Copy code</button><span class="lbl">Close · text action</span></div>
+    </div>
+    <pre class="code" data-code="plain-skin"></pre>
+
+    <div class="notes">
+      <div class="note good">Forwards refs, which focus handling in modals and chat relies on.</div>
+      <div class="note bad"><code>outline: 0</code> hides the focus ring; only screens that add one back show it.</div>
+      <div class="note bad">Disabled looks and points like an active button.</div>
+    </div>
+  </section>
+
+  <!-- ───── UiButton ───── -->
+  <section class="var" data-id="UiButton" data-name="Filled button" data-key="button">
+    <div class="var-h"><span class="id">UiButton</span><h2>Filled button</h2></div>
+
+    <p class="sub">Props</p>
+    <table class="props">
+      <tr><th>Prop</th><th>Type</th><th>Does</th></tr>
+      <tr><td>variant</td><td>'default' | 'primary'</td><td>Grey or pink fill</td></tr>
+      <tr><td>size</td><td>'s' | 'l'</td><td><code>l</code> is 50px tall; <code>s</code> has no CSS</td></tr>
+      <tr><td>block</td><td>boolean</td><td>Full width</td></tr>
+      <tr><td>round<span class="new">NEW</span></td><td>boolean</td><td>Pill corners (999px). Default is <code>--border-radius</code>, 4px</td></tr>
+      <tr><td>link</td><td>boolean</td><td>Renders a router <code>&lt;Link&gt;</code>; pass <code>to</code></td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>60% opacity</td></tr>
+    </table>
+
+    <p class="sub">Playground</p>
+    <div class="ctl" id="pg-ctl">
+      <span class="seg" data-k="variant"><button data-v="default" aria-pressed="true">default</button><button data-v="primary">primary</button></span>
+      <span class="seg" data-k="size"><button data-v="" aria-pressed="true">–</button><button data-v="s">s</button><button data-v="l">l</button></span>
+      <label class="chk"><input type="checkbox" data-k="round">round</label>
+      <label class="chk"><input type="checkbox" data-k="block">block</label>
+      <label class="chk"><input type="checkbox" data-k="link">link</label>
+      <label class="chk"><input type="checkbox" data-k="disabled">disabled</label>
+    </div>
+    <div class="stage app" id="pg-stage"></div>
+    <pre class="code" id="pg-code"></pre>
+
+    <p class="sub">States</p>
+    <div class="grid3">
+      <div><span class="cell-l">Rest</span><div class="stage app"><button class="ui-button">Details</button><button class="ui-button is-primary">Start party</button></div></div>
+      <div><span class="cell-l">Hover · focus</span><div class="stage app"><button class="ui-button">Details</button><button class="ui-button is-primary">Start party</button></div></div>
+      <div><span class="cell-l">Disabled</span><div class="stage app"><button class="ui-button" disabled>Details</button><button class="ui-button is-primary" disabled>Start party</button></div></div>
+    </div>
+    <p class="cap">The base has no hover or focus style; screen skins add a brightness hover.</p>
+
+    <p class="sub">Screen skins</p>
+    <div class="ctl"><span class="seg" id="skin-shape"><button data-v="" aria-pressed="true">default 4px</button><button data-v="round">round</button></span></div>
+    <div class="skins" id="skins" style="margin-top:8px">
+      <div class="stage app sk-listing"><button class="ui-button is-primary"><i class="fa fa-play"></i> Start a party</button><button class="ui-button">Details</button><span class="lbl">Listing</span></div>
+      <div class="stage app sk-modal"><button class="ui-button is-primary"><i class="fa fa-play"></i>Start Party</button><button class="ui-button">Load more parties</button><span class="lbl">Show modal</span></div>
+      <div class="stage app sk-join"><button class="ui-button">Cancel</button><button class="ui-button is-primary">Join party</button><span class="lbl">Join modal</span></div>
+    </div>
+    <pre class="code" data-code="skin"></pre>
+
+    <div class="notes">
+      <div class="note good">Every screen gets 4px corners; <code>round</code> brings back the pill.</div>
+      <div class="note bad">The base is 26px tall; three screens restyle it to 42–44px.</div>
+      <div class="note bad"><code>size="s"</code> has no styles and <code>UiButtonLoader</code> is never used.</div>
+    </div>
+  </section>
+
+  <!-- ───── Usage ───── -->
+  <section class="var" data-id="Usage" data-name="Where each combination is used" data-key="usage">
+    <div class="var-h"><span class="id">Usage</span><h2>Where each combination is used</h2></div>
+
+    <p class="sub">UiButton · 14 call sites, 4 combinations</p>
+    <div class="use" id="use"></div>
+
+    <p class="sub">UiPlainButton · 39 call sites</p>
+    <div class="plain-use">
+      <div><b>Player controls <span>15</span></b><p>PlayerModal <code>.icon</code> <code>.action</code> <code>.toggle</code>; VolumeControl mute</p></div>
+      <div><b>Chat <span>6</span></b><p>ChatWidget invite, waiting, invitation action, note, send; invite panel close</p></div>
+      <div><b>Invitations <span>5</span></b><p>InvitationModal decline, accept, dismiss, respond, collapse</p></div>
+      <div><b>Listing <span>5</span></b><p>Tabs, show card, Join trigger and close, show modal close</p></div>
+      <div><b>Watch room misc <span>6</span></b><p>Party code copy, mobile title bar ×2, season and keyboard modal close, “You were watching” dismiss icon</p></div>
+      <div><b>Shared <span>2</span></b><p>UiAccordion heading and close</p></div>
+    </div>
+
+    <div class="notes">
+      <div class="note good">Four combinations cover every UiButton.</div>
+      <div class="note bad">Guest, watch room and “You were watching” still use the 26px base.</div>
+    </div>
+  </section>
+
+  <!-- ───── Font comparison ───── -->
+  <section class="var" data-id="Font" data-name="Halyard vs Work Sans" data-key="font">
+    <div class="var-h"><span class="id">Font</span><h2>Halyard vs Work Sans</h2></div>
+    <p class="cap">Same sizes (s 26 · m 32 · l 40), padding and background. Only the font changes.</p>
+    <div class="ctl" style="margin-top:10px">Halyard weight <span class="seg" id="hal-w"><button data-v="500" aria-pressed="true">500 now</button><button data-v="600">600</button><button data-v="700">700</button></span></div>
+    <div class="fc" id="fc"></div>
+    <div class="notes">
+      <div class="note good">Halyard: same family as headings and body text.</div>
+      <div class="note good">Work Sans: already on every home-screen button.</div>
+      <div class="note bad">Halyard at 500 is today's watch-room look; heavier weights are untested in the app.</div>
+    </div>
+  </section>
+
+  <section class="further">
+    <h2>Further Actions</h2>
+    <div class="cards">
+      <div><b>Explore</b> From UiButton: fold the three skins into a <code>size="m"</code>.</div>
+      <div><b>Remix</b> UiPlainButton: add a default focus ring and disabled style.</div>
+      <div><b>Settle</b> UiButton with <code>round</code> as the only shape option.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const FILE = '.kier/designs/b2d7-button-components.html';
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* tiny JSX/CSS highlighter */
+function hl(src){
+  const re = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|(<\/?)([A-Za-z][\w.]*)|([a-zA-Z-]+)(?==)|("[^"\n]*"|'[^'\n]*'|\{[^}\n]*\})/g;
+  let out = '', last = 0, m;
+  while((m = re.exec(src))){
+    out += esc(src.slice(last, m.index));
+    if(m[1]) out += `<span class="c">${esc(m[1])}</span>`;
+    else if(m[3]) out += `${esc(m[2])}<span class="t">${esc(m[3])}</span>`;
+    else if(m[4]) out += `<span class="a">${esc(m[4])}</span>`;
+    else out += `<span class="s">${esc(m[5])}</span>`;
+    last = re.lastIndex;
+  }
+  return out + esc(src.slice(last));
+}
+const CODE = {
+  'plain-base': `import UiPlainButton from '~/components/UiPlainButton'
+
+<UiPlainButton>Watch together</UiPlainButton>
+<UiPlainButton disabled>Watch together</UiPlainButton>
+<UiPlainButton ref={closeRef} aria-label="Close" onClick={onClose} />`,
+  'plain-skin': `<UiPlainButton role="tab" aria-selected={tab === 'all'}>All</UiPlainButton>
+<UiPlainButton className="icon" onClick={props.onPlay}>
+  <i className="fa fa-play" />
+</UiPlainButton>
+<UiPlainButton className="show-modal-close" aria-label="Close details" />`,
+  'skin': `// AuthHome/style.css, ShowModal/style.css, JoinPartyModal/style.css
+.listing-home .ui-button { height: 44px; padding: 0 22px; /* radius from UiButton */ }
+
+<UiButton variant="primary" round>Start a party</UiButton> // opt back into the pill`
+};
+document.querySelectorAll('[data-code]').forEach(el => { el.innerHTML = hl(CODE[el.dataset.code]); });
+
+/* playground */
+const pg = {variant:'default', size:'', round:false, block:false, link:false, disabled:false};
+function renderPg(){
+  const cls = ['ui-button', pg.variant === 'primary' && 'is-primary', pg.block && 'is-block', pg.size === 'l' && 'is-l', pg.round && 'is-round'].filter(Boolean).join(' ');
+  const label = pg.link ? 'Rejoin party' : 'Start party';
+  document.getElementById('pg-stage').innerHTML = pg.link
+    ? `<a class="${cls}" href="#" onclick="return false"${pg.disabled ? ' aria-disabled="true"' : ''}>${label}</a>`
+    : `<button class="${cls}"${pg.disabled ? ' disabled' : ''}>${label}</button>`;
+  const attrs = [
+    pg.link && 'link', pg.link && 'to="/watch/42"',
+    pg.variant === 'primary' && 'variant="primary"',
+    pg.size && `size="${pg.size}"`,
+    pg.block && 'block', pg.round && 'round', pg.disabled && 'disabled'
+  ].filter(Boolean);
+  let code = `<UiButton${attrs.length ? ' ' + attrs.join(' ') : ''}>${label}</UiButton>`;
+  if(pg.size === 's') code += `\n// size="s" adds no class; looks like the default`;
+  if(pg.link && pg.disabled) code += `\n// disabled is ignored on a Link`;
+  document.getElementById('pg-code').innerHTML = hl(code);
+}
+document.getElementById('pg-ctl').addEventListener('click', e => {
+  const b = e.target.closest('.seg button'); if(!b) return;
+  const seg = b.parentElement; pg[seg.dataset.k] = b.dataset.v;
+  seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  renderPg();
+});
+document.getElementById('pg-ctl').addEventListener('change', e => { pg[e.target.dataset.k] = e.target.checked; renderPg(); });
+renderPg();
+
+
+/* skins radius toggle */
+document.getElementById('skin-shape').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  e.currentTarget.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('#skins .ui-button').forEach(x => x.classList.toggle('is-round', b.dataset.v === 'round'));
+});
+document.querySelectorAll('.stage button, .stage a').forEach(b => b.addEventListener('click', e => e.preventDefault()));
+
+/* usage */
+const USE = [
+  {combo:'<UiButton>', sw:'<button class="ui-button">Details</button>', at:[
+    ['Details', 'FeaturedCarousel.tsx:47'], ['Load more parties', 'ShowModal/index.tsx:90'], ['Cancel', 'JoinPartyModal/index.tsx:119'],
+    ['Retry', 'Listing/ListingStates.tsx:5'], ['Retry', 'app.watch/index.tsx:237'], ['Dismiss', 'YouWereWatching/index.tsx:65']]},
+  {combo:'<UiButton variant="primary">', sw:'<button class="ui-button is-primary">Start party</button>', at:[
+    ['Start a party', 'FeaturedCarousel.tsx:46'], ['Start Party', 'ShowModal/index.tsx:67'], ['Join party (submit)', 'JoinPartyModal/index.tsx:120'],
+    ['Okay, Gotcha.', 'MobileTitleBar/index.tsx:69']]},
+  {combo:'<UiButton link variant="primary">', sw:'<a class="ui-button is-primary" href="#">Rejoin party</a>', at:[
+    ['Rejoin party', 'FeaturedCarousel.tsx:45'], ['Rejoin Party / Continue Watching', 'YouWereWatching/index.tsx:104'], ['Download Now', 'MobileTitleBar/index.tsx:79']]},
+  {combo:'<UiButton link variant="primary" block size="l">', sw:'<a class="ui-button is-primary is-block is-l" href="#">Sign In</a>', at:[
+    ['Sign In', 'GuestHome/index.tsx:28']]},
+  {combo:'size="s" · round · UiButtonLoader', sw:'<button class="ui-button is-round">Unused</button>', none:true, at:[['Not used anywhere yet', '']]}
+];
+document.getElementById('use').innerHTML = USE.map(u => `<div class="${u.none ? 'none' : ''}">
+  <div class="sw app">${u.sw}</div>
+  <div><code class="combo">${esc(u.combo)}</code><ul>${u.at.map(([l, f]) => `<li>${esc(l)}<span>${f}</span></li>`).join('')}</ul></div></div>`).join('');
+document.querySelectorAll('#use a').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+
+/* font comparison */
+const B = (label, cls = '', extra = '') => `<button class="ui-button ${cls}"${extra}>${label}</button>`;
+const PLAY = '<i class="fa fa-play" aria-hidden="true"></i>';
+const FONT_ROWS = [
+  ['Sizes · default', () => B('Details', 'is-s') + B('Details') + B('Details', 'is-l')],
+  ['Sizes · primary', () => B('Start party', 'is-primary is-s') + B('Start party', 'is-primary') + B('Start party', 'is-primary is-l')],
+  ['Icon · l', () => B(PLAY + 'Start a party', 'is-primary is-l') + B('Details', 'is-l')],
+  ['Glow · l', () => B(PLAY + 'Start Party', 'is-primary is-l is-glow') + B('Load more parties', 'is-l')],
+  ['Disabled', () => B('Starting…', 'is-primary', ' disabled') + B('Cancel', '', ' disabled')],
+  ['Watch room error', () => `<p>We couldn’t load this room. Please try again.</p>${B('Retry')}`, 'situ'],
+  ['Mobile fullscreen help', () => `<p>Manually rotate your device to go fullscreen mode.</p>${B('Okay, Gotcha.', 'is-primary')}`, 'situ']
+];
+document.getElementById('fc').innerHTML = `<div class="col-h">Halyard · 12px · 1px tracking</div><div class="col-h">Work Sans · 700 11px · .08em</div>` +
+  FONT_ROWS.map(([label, html, cls = '']) => `<div class="rl">${label}</div>
+    <div class="stage app f-hal ${cls}">${html()}</div><div class="stage app f-ws ${cls}">${html()}</div>`).join('');
+document.querySelectorAll('#fc button').forEach(b => b.addEventListener('click', e => e.preventDefault()));
+document.getElementById('hal-w').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  e.currentTarget.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.getElementById('fc').style.setProperty('--hw', b.dataset.v);
+});
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  ['Explore from this', 'More variations in this direction.', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and change something.', id => `Remix ${id} in ${FILE}: `],
+  ['Settle on this', 'Make it the direction.', id => `Settle on ${id} in ${FILE}`]
+];
+const menus = [];
+document.querySelectorAll('.var').forEach(sec => {
+  sec.id = 'v-' + sec.dataset.key;
+  const id = sec.dataset.id, h = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick';
+  btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-haspopup', 'menu');
+  h.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  menu.innerHTML = VERBS.map((x, i) => `<button role="menuitem" data-i="${i}"><b>${x[0]}</b><span>${x[1]}</span></button>`).join('');
+  h.after(menu);
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  menu.after(out);
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+  menus.push(close);
+  btn.addEventListener('click', () => {
+    const open = menu.hidden;
+    menus.forEach(c => c());
+    menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', async e => {
+    const b = e.target.closest('button[data-i]');
+    if(!b) return;
+    const text = VERBS[Number(b.dataset.i)][2](id);
+    close();
+    out.hidden = false;
+    try{
+      await navigator.clipboard.writeText(text);
+      out.innerHTML = `<code>${esc(text)}</code><span class="ok">Copied</span>`;
+    }catch(err){
+      out.innerHTML = `<input readonly value="${esc(text)}">`;
+      out.querySelector('input').select();
+    }
+  });
+  document.addEventListener('click', e => { if(!h.contains(e.target) && !menu.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+});
+
+/* ───── minimap ───── */
+const vars = [...document.querySelectorAll('.var')];
+document.getElementById('mm').innerHTML = vars.map(v => `<a href="#${v.id}"><i></i><span><b>${v.dataset.id}</b> ${v.dataset.name}</span></a>`).join('');
+const links = [...document.querySelectorAll('.mm a')];
+function syncMM(){
+  let best = 0, bd = Infinity;
+  vars.forEach((v, i) => { const d = Math.abs(v.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((a, i) => a.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMM, {passive:true});
+syncMM();
+</script>
+</body>
+</html>

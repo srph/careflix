@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Care.tv Chat Sidebar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.ref{margin:6px 0 0 48px;font-size:13px;color:var(--mut)}
+.ref a{color:var(--mut);text-decoration-color:var(--line);text-underline-offset:3px}
+.ref a:hover{color:var(--ink)}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.frame{position:relative;height:620px;margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail button{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
+.rail button:hover{border-color:var(--mut)}
+.rail .hint{font-size:13px;color:var(--mut);margin-left:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:280px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup base (Care.tv look) ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;--tx:#d5dde4;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:#000;height:100%;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk button:focus-visible,.mk input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.mk p{margin:0}
+.mk svg{width:18px;height:18px;flex:none;display:block}
+.mk .sub{font:600 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--n5)}
+.mk .num{font-variant-numeric:tabular-nums}
+.mk input.ci{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit;font-size:13.5px}
+.mk input.ci::placeholder{color:var(--n5)}
+.av{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:13px;font-style:normal;flex:none}
+.av.s{width:24px;height:24px;font-size:10.5px}
+.av.xs{width:20px;height:20px;font-size:9px}
+.av.xxs{width:16px;height:16px;font-size:8px}
+.av.m{width:36px;height:36px;font-size:14px}
+.avs{display:flex;align-items:center}
+.avs .av{box-shadow:0 0 0 2px var(--ring,#15202B)}
+.avs .av+.av{margin-left:-8px}
+.copied-t{display:none}
+.copied .copy-t{display:none}
+.copied .copied-t{display:inline-flex;color:var(--g)}
+.copy-t{display:inline-flex}
+.fx{animation:fxin .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes fxin{from{opacity:0;transform:translateY(6px)}}
+.pd{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:0 0 0 2px var(--n2)}
+
+/* room + video skeleton */
+.rm{position:absolute;inset:0;display:flex;background:#000}
+.vd{position:relative;flex:1;min-width:0;overflow:hidden;background:radial-gradient(80% 70% at 40% 45%,#1d2733,#0b0f14 70%)}
+.sk{background:#ffffff14;border-radius:6px}
+.vd .t1{position:absolute;left:20px;top:20px;display:flex;align-items:center;gap:12px}
+.vd .t1 .c{width:32px;height:32px;border-radius:50%}
+.vd .t1 .b{width:180px;height:14px}
+.vd .ctr{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%}
+.vd .bot{position:absolute;left:20px;right:20px;bottom:20px;display:flex;align-items:center;gap:14px}
+.vd .bot .c{width:24px;height:24px;border-radius:50%}
+.vd .bot .tm{width:42px;height:10px}
+.vd .bot .seek{flex:1;height:4px;border-radius:4px;background:#ffffff1f;position:relative}
+.vd .bot .seek i{position:absolute;left:0;top:0;bottom:0;width:38%;background:#e8368f99;border-radius:4px}
+.col{width:320px;flex:none;display:flex;flex-direction:column;background:var(--n2);position:relative;min-height:0}
+.feedw{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.feed{flex:1;min-height:0;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ffffff22 transparent}
+.unr{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:2;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.unr svg{width:14px;height:14px}
+
+/* ── Now (current ChatWidget) ── */
+.n-can{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;--ring:var(--n2)}
+.mk .n-inv{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--n5)}
+.n-inv svg{width:16px;height:16px}
+.n-code{display:flex;align-items:center;gap:10px;min-height:40px;margin:0 16px 14px;padding:0 6px 0 14px;border-radius:12px;background:#ffffff0d;flex:none}
+.mk .n-code button{display:inline-flex;align-items:center;gap:8px;min-height:32px;margin-left:auto;padding:0 8px 0 10px;border-radius:16px}
+.mk .n-code button:hover{background:#ffffff14}
+.n-code b{font-size:14px;font-weight:700}
+.n-code svg{width:14px;height:14px;color:var(--n5)}
+.v-now .feedw{border-top:1px solid var(--n1)}
+.n-tip{display:flex;gap:14px;margin:16px 16px 0;padding:8px 10px;background:#1da1f2;border-radius:4px;line-height:1.5;font-size:13.5px}
+.n-tip span{font-size:26px;line-height:1.2}
+.n-actg{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px}
+.n-act{display:flex;align-items:center;gap:8px;padding:8px;background:var(--n1);border-radius:4px;font:500 11px/1.3 'Work Sans',sans-serif;letter-spacing:1px;text-transform:uppercase}
+.n-grp{display:flex;gap:16px;padding:16px}
+.n-grp>.av{align-self:flex-end}
+.n-nm{font-size:12px;color:var(--n5);margin:0 0 4px 6px}
+.n-l{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.n-b{padding:6px 8px;background:var(--n4);border-radius:24px;max-width:220px;overflow-wrap:anywhere}
+.n-b:not(:first-child){border-top-left-radius:0}
+.n-b:not(:last-child){border-bottom-left-radius:0}
+.n-grp.me{flex-direction:row-reverse}
+.n-grp.me .n-l{align-items:flex-end}
+.n-grp.me .n-b{background:var(--pk);border-radius:24px}
+.n-grp.me .n-b:not(:first-child){border-top-right-radius:0}
+.n-grp.me .n-b:not(:last-child){border-bottom-right-radius:0}
+.n-bar{flex:none;display:flex;align-items:center;gap:16px;padding:16px;border-top:1px solid var(--n1)}
+.n-ta{flex:1;display:flex;align-items:center;height:50px;padding:0 16px;background:rgb(37,51,65);border:1px solid transparent;border-radius:25px}
+.n-ta:focus-within{background:var(--n1);border-color:#1da1f2}
+.n-ta input.ci{color:var(--n5)}
+.mk .n-sd{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--n5);flex:none}
+.mk .n-sd.on{background:var(--pk)}
+.n-sd svg{width:12px;height:12px}
+.v-now .unr{padding:8px 16px;background:var(--n5);border-radius:4px;font-size:12px;box-shadow:4px 0 8px #00000080}
+
+/* shared compact header (A, D) */
+.hd{flex:none;display:flex;align-items:center;gap:8px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--n1);--ring:var(--n2)}
+.hd .cnt{font-size:12.5px;color:var(--n5);margin-right:auto;margin-left:4px}
+.mk .chip{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px 0 12px;border-radius:15px;background:#ffffff0d;font-weight:700;font-size:13px;white-space:nowrap;transition:background .2s}
+.mk .chip:hover{background:#ffffff1a}
+.chip svg{width:13px;height:13px;color:var(--n5)}
+.mk .icb{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#ffffff14;flex:none;transition:background .2s}
+.mk .icb:hover{background:#ffffff26}
+.icb svg{width:15px;height:15px}
+.field{display:flex;align-items:center;gap:4px;height:40px;padding:0 5px 0 14px;border-radius:20px;background:var(--n3);border:1px solid transparent;transition:border-color .15s}
+.field:focus-within{border-color:#ffffff40}
+.mk .fb{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:var(--n5);flex:none;transition:background .15s,color .15s}
+.mk .fb:hover{color:#fff}
+.fb svg{width:16px;height:16px}
+.mk .fb.send.on{background:var(--pk);color:#fff}
+.pill-unr{padding:6px 12px;border-radius:16px;background:#fff;color:var(--n1);font-weight:600;font-size:12.5px;box-shadow:0 8px 20px -8px #000}
+
+/* ── A: live-chat rows ── */
+.a-feed{padding:10px 0}
+.a-row{display:flex;gap:10px;padding:3px 16px;font-size:13.5px;line-height:1.45;color:var(--tx)}
+.a-row:hover{background:#ffffff06}
+.a-row .av{margin-top:1px}
+.a-row b{font-weight:700;margin-right:6px}
+.a-row.cont{padding-left:46px}
+.a-row.first{margin-top:6px}
+.a-act{display:flex;align-items:center;gap:10px;padding:5px 16px;color:var(--n5);font-size:12.5px;margin-top:4px}
+.a-act .ic{display:grid;place-items:center;width:20px;flex:none}
+.a-act svg{width:12px;height:12px}
+.a-bar{flex:none;padding:12px;border-top:1px solid var(--n1)}
+
+/* ── B: tabs ── */
+.b-tabs{flex:none;display:flex;margin:12px 12px 4px;padding:3px;background:var(--n1);border-radius:12px}
+.mk .b-tabs button{position:relative;flex:1;height:32px;border-radius:9px;text-align:center;font-weight:600;font-size:13px;color:var(--n5);transition:background .2s,color .2s}
+.mk .b-tabs button.on{background:var(--n4);color:#fff}
+.b-tabs em{font-style:normal;margin-left:4px;opacity:.7}
+.b-tabs .dot{position:absolute;top:8px;right:calc(50% - 30px);width:7px;height:7px;border-radius:50%;background:var(--pk)}
+.b-feed{padding:6px 0 10px}
+.b-grp{padding:8px 16px}
+.b-gh{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.b-gh b{font-size:13.5px;font-weight:600}
+.b-gh small{font-size:11.5px;color:var(--n5)}
+.b-ln{padding-left:34px;font-size:13.5px;color:var(--tx);margin-top:2px;overflow-wrap:anywhere}
+.b-act{text-align:center;color:var(--n5);font-size:12px;padding:6px 16px}
+.b-bar{flex:none;padding:12px}
+.b-bar .field{border-radius:12px;height:44px}
+.b-bar .fb.send{border-radius:9px}
+.b-pp{flex:1;min-height:0;overflow-y:auto;padding:8px 12px 12px}
+.b-pp .gl{display:block;padding:12px 4px 6px}
+.pr{display:flex;align-items:center;gap:12px;padding:8px 4px}
+.pr .pn b{display:block;font-size:14px;font-weight:600}
+.pr .pn small{display:block;font-size:12px;color:var(--n5)}
+.avp{position:relative;display:inline-flex}
+.mk .ubtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:42px;border-radius:21px;background:var(--pk);font:700 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:10px}
+.mk .ubtn svg{width:15px;height:15px}
+.b-code{margin-top:16px;padding:14px;border-radius:14px;background:#ffffff0d}
+.b-code .row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.b-code b{font-size:24px;font-weight:700;letter-spacing:.02em}
+.mk .b-code button{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border-radius:15px;background:#ffffff14;font-weight:600;font-size:12.5px}
+.b-code button svg{width:13px;height:13px}
+.b-code p{font-size:12.5px;color:var(--n5);margin-top:6px}
+
+/* ── C / E: bubbles ── */
+.v-c .rm{padding:8px;gap:8px}
+.v-c .vd{border-radius:14px}
+.v-c .col{border-radius:14px;overflow:hidden}
+.c-hd{flex:none;display:flex;align-items:center;gap:8px;padding:12px 12px 8px 14px;--ring:var(--n2)}
+.c-hd .cnt{font-size:12.5px;color:var(--n5);margin-right:auto;margin-left:4px}
+.c-feed{padding:2px 12px 8px}
+.c-sep{text-align:center;font-size:11.5px;color:var(--n5);margin:14px 0 6px}
+.c-grp{display:flex;gap:8px;margin:8px 0}
+.c-grp>.av{margin-top:19px}
+.c-l{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0}
+.c-nm{font-size:12px;color:var(--n5);margin:0 0 2px 4px}
+.c-b{max-width:224px;padding:7px 12px;background:var(--n3);border-radius:18px;font-size:13.5px;overflow-wrap:anywhere}
+.c-l .c-b:not(:last-child){border-bottom-left-radius:6px}
+.c-l .c-b+.c-b{border-top-left-radius:6px}
+.c-grp.me{justify-content:flex-end}
+.c-grp.me .c-l{align-items:flex-end}
+.c-grp.me .c-b{background:var(--pk)}
+.c-grp.me .c-l .c-b{border-radius:18px}
+.c-grp.me .c-l .c-b:not(:last-child){border-bottom-right-radius:6px}
+.c-grp.me .c-l .c-b+.c-b{border-top-right-radius:6px}
+.c-act{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--n5);font-size:12px;margin:10px 0}
+.c-act svg{width:11px;height:11px}
+.c-bar{flex:none;padding:6px 10px 10px}
+
+/* ── D: reactions + movie time ── */
+.mt{display:inline-flex;align-items:center;gap:3px;margin-left:6px;padding:1px 6px;border-radius:6px;background:#ffffff0d;color:var(--n5);font-size:11px;font-variant-numeric:tabular-nums}
+.mt svg{width:9px;height:9px}
+.d-rx{display:flex;align-items:center;justify-content:center;gap:4px;margin:8px 0;font-size:12px;color:var(--n5)}
+.d-rx .e{font-size:16px;line-height:1}
+.d-bar{flex:none;padding:10px 12px 12px;border-top:1px solid var(--n1)}
+.d-row{display:flex;gap:8px;align-items:center}
+.d-row .field{flex:1}
+.mk .d-heart{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--n3);color:var(--n5);flex:none;transition:background .2s,color .2s}
+.mk .d-heart:hover,.mk .d-heart.on{color:var(--pk);background:#e8368f1f}
+.d-tray{display:none;justify-content:space-between;padding:0 2px 10px}
+.d-tray.on{display:flex;animation:fxin .25s cubic-bezier(.2,.8,.2,1)}
+.mk .d-tray button{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;font-size:22px;transition:background .15s,transform .15s}
+.mk .d-tray button:hover{background:#ffffff12;transform:translateY(-2px)}
+.d-fl{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.d-fl span{position:absolute;bottom:0;font-size:26px;animation:rise 2.2s cubic-bezier(.3,.6,.4,1) forwards}
+@keyframes rise{0%{opacity:0;transform:translate(0,10px) scale(.6)}12%{opacity:1;transform:translate(0,-20px) scale(1.1)}100%{opacity:0;transform:translate(var(--dx),-300px) scale(.9)}}
+
+/* ── E: rail + panel ── */
+.e-pan{width:272px;flex:none;display:flex;flex-direction:column;background:var(--n2);border-right:1px solid var(--n1);overflow:hidden;transition:width .28s cubic-bezier(.2,.8,.2,1)}
+.e-pan.shut{width:0;border-right:0}
+.e-in{width:272px;flex:1;display:flex;flex-direction:column;min-height:0}
+.e-hd{flex:none;display:flex;align-items:center;gap:10px;height:52px;padding:0 8px 0 16px}
+.e-hd h3{margin:0;font-size:15px;font-weight:600;flex:1}
+.mk .x{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:var(--n5)}
+.mk .x:hover{background:#ffffff14;color:#fff}
+.x svg{width:16px;height:16px}
+.e-rail{width:64px;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0;background:var(--n2)}
+.mk .e-rail button{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;width:52px;padding:8px 0 6px;border-radius:12px;color:var(--n5);font-size:10.5px;font-weight:500;transition:background .2s,color .2s}
+.mk .e-rail button:hover{color:#fff}
+.mk .e-rail button.on{background:#ffffff14;color:#fff}
+.e-rail svg{width:19px;height:19px}
+.e-rail .bdg{position:absolute;top:2px;right:6px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--pk);color:#fff;font:700 10px/17px 'Work Sans',sans-serif;text-align:center;box-shadow:0 0 0 2px var(--n2)}
+.e-rail .sep{width:28px;height:1px;background:#ffffff14;margin:4px 0}
+.e-rail .avs{flex-direction:column;--ring:var(--n2)}
+.e-rail .avs .av+.av{margin:-6px 0 0}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+<header class="brief">
+  <div class="eyebrow">Care.tv · Chat sidebar · References from Mobbin</div>
+  <h1>The chat column spends its height on chrome, not conversation.</h1>
+  <div class="cards">
+    <div>Stay in today’s navy and pink.</div>
+    <div>Party code and invite stay one tap away.</div>
+    <div>Activity reads quieter than friends talking.</div>
+    <div>Composer is one line until you type more.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="Today’s ChatWidget">
+  <div class="var-h"><span class="id">Now</span><h2>Today’s ChatWidget</h2></div>
+  <div class="frame"><div class="mk v-now" data-v="now"></div></div>
+  <div class="rail" data-for="now"></div>
+  <div class="notes">
+    <div class="note good">Bubbles feel personal.</div>
+    <div class="note bad">Faces, code and tip take a third of the height.</div>
+    <div class="note bad">Uppercase activity boxes shout over friends.</div>
+    <div class="note bad">50px field, 24px send.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="Live-chat rows, names inline">
+  <div class="var-h"><span class="id">A</span><h2>Live-chat rows, names inline</h2></div>
+  <p class="ref">Refs: <a href="https://mobbin.com/screens/e6dd161a-05b9-49c1-9f6f-66cffebffee9" target="_blank" rel="noopener">YouTube</a>, <a href="https://mobbin.com/screens/45584a8f-68db-45da-b8a3-fd6b154ccb0b" target="_blank" rel="noopener">TikTok LIVE</a></p>
+  <div class="frame"><div class="mk v-a" data-v="a"></div></div>
+  <div class="rail" data-for="a"></div>
+  <div class="notes">
+    <div class="note good">About twice the lines in the same height.</div>
+    <div class="note good">Activity drops to quiet one-liners.</div>
+    <div class="note bad">Reads like a stranger stream, not three friends.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Chat and People tabs">
+  <div class="var-h"><span class="id">B</span><h2>Chat and People tabs</h2></div>
+  <p class="ref">Refs: <a href="https://mobbin.com/screens/f6cc21e3-24f2-4f62-a70b-14579255eae7" target="_blank" rel="noopener">Whereby</a>, <a href="https://mobbin.com/screens/289e83ec-4360-4883-beb2-61365f130e91" target="_blank" rel="noopener">Google Meet</a>, <a href="https://mobbin.com/screens/8984e5ce-c9d2-4e33-a056-e31ef4abf698" target="_blank" rel="noopener">Cal.com</a></p>
+  <div class="frame"><div class="mk v-b" data-v="b"></div></div>
+  <div class="rail" data-for="b"></div>
+  <div class="notes">
+    <div class="note good">Header shrinks to one control.</div>
+    <div class="note good">Code and invite get room in People.</div>
+    <div class="note bad">Faces leave the screen while you chat.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c" data-id="C" data-name="Inset card, tighter bubbles">
+  <div class="var-h"><span class="id">C</span><h2>Inset card, tighter bubbles</h2></div>
+  <p class="ref">Refs: <a href="https://mobbin.com/screens/5191d4a7-f540-4677-a3d1-3f633820c12c" target="_blank" rel="noopener">Suno</a>, <a href="https://mobbin.com/screens/c89bc823-e583-401e-88f1-38ca4342c54c" target="_blank" rel="noopener">ClickUp</a>, <a href="https://mobbin.com/screens/5928de15-a091-4b5f-a47f-5916c3996db5" target="_blank" rel="noopener">Dialpad</a></p>
+  <div class="frame"><div class="mk v-c" data-v="c"></div></div>
+  <div class="rail" data-for="c"></div>
+  <div class="notes">
+    <div class="note good">Closest to today, just calmer.</div>
+    <div class="note good">Time breaks replace per-group clutter.</div>
+    <div class="note bad">Gutters cost 16px of video.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d" data-id="D" data-name="Reactions and movie-time stamps">
+  <div class="var-h"><span class="id">D</span><h2>Reactions and movie-time stamps</h2></div>
+  <p class="ref">Refs: <a href="https://mobbin.com/screens/cead5524-3612-4935-ac7c-9c9e5529cb28" target="_blank" rel="noopener">Substack Live</a>, <a href="https://mobbin.com/screens/f505132b-f8f4-4507-9825-d8a58f78cc35" target="_blank" rel="noopener">Discord</a>, <a href="https://mobbin.com/screens/37b37ab2-37f3-4680-bd77-d8127767bc8d" target="_blank" rel="noopener">Instagram</a></p>
+  <div class="frame"><div class="mk v-d" data-v="d"></div></div>
+  <div class="rail" data-for="d"></div>
+  <div class="notes">
+    <div class="note good">React without typing in the dark.</div>
+    <div class="note good">Stamps say where in the movie.</div>
+    <div class="note bad">Floating emoji pull eyes off the film.</div>
+  </div>
+</section>
+
+<section class="var" id="v-e" data-id="E" data-name="Icon rail, collapsible panel">
+  <div class="var-h"><span class="id">E</span><h2>Icon rail, collapsible panel</h2></div>
+  <p class="ref">Refs: <a href="https://mobbin.com/screens/ad4edf54-7675-4050-b03c-9b1f99e2a3e4" target="_blank" rel="noopener">Riverside</a>, <a href="https://mobbin.com/screens/2b9b9679-43af-49a3-a36e-3e2f620c58a1" target="_blank" rel="noopener">Descript</a>, <a href="https://mobbin.com/screens/5cc10035-7a07-4957-8486-73f42546f68a" target="_blank" rel="noopener">Vimeo</a></p>
+  <div class="frame"><div class="mk v-e" data-v="e"></div></div>
+  <div class="rail" data-for="e"></div>
+  <div class="notes">
+    <div class="note good">Closed chat still shows unread and faces.</div>
+    <div class="note good">People gets its own panel.</div>
+    <div class="note bad">Rail always takes 64px from the video.</div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from C with D’s reaction tray.</div>
+    <div><b>Remix</b>Remix A: keep pink bubbles for your own messages.</div>
+    <div><b>Settle</b>Settle on E if the closed state matters most.</div>
+  </div>
+</section>
+</main>
+
+<script>
+const FILE = '.kier/designs/3c9f-chat-sidebar.html';
+const ME = 'Kier';
+const C = {Kier:'#E8368F', Joyce:'#F7C948', Mira:'#C084FC'};
+const MEM = ['Kier','Joyce','Mira'];
+const ROLE = {Kier:'Host', Joyce:'Watching', Mira:'Watching'};
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const I = {
+  copy: svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+  check: svg('<path d="M20 6 9 17l-5-5"/>'),
+  x: svg('<path d="M18 6 6 18M6 6l12 12"/>'),
+  uplus: svg('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>'),
+  users: svg('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'),
+  chat: svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+  up: svg('<path d="M12 19V5M5 12l7-7 7 7"/>'),
+  down: svg('<path d="M12 5v14M19 12l-7 7-7-7"/>'),
+  smile: svg('<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>'),
+  heart: svg('<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z"/>'),
+  play: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>`,
+  pause: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`,
+  join: svg('<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>'),
+  star: svg('<path d="M12 3v18M3 12h18"/>')
+};
+
+/* ── data ── */
+// [type, user, text, movie seconds, clock minutes, kind]
+const SEED = [
+  ['act','Kier','created the room',0,1262,'create'],
+  ['act','Joyce','joined the room',0,1263,'join'],
+  ['msg','Joyce','ok snacks acquired',0,1263],
+  ['msg','Joyce','start whenever',0,1263],
+  ['msg','Kier','pressing play 🍿',0,1264],
+  ['act','Kier','played the video',0,1264,'play'],
+  ['act','Mira','joined the room with the code',312,1269,'code'],
+  ['msg','Mira','wait did i miss anything',318,1269],
+  ['msg','Joyce','just the opening, you’re fine',330,1270],
+  ['act','Kier','paused the video',2472,1305,'pause'],
+  ['msg','Joyce','WHO is he',2474,1305],
+  ['msg','Joyce','and why does he have the key',2479,1305],
+  ['rx','Mira','😱',2481,1305]
+];
+const POOL = [['Joyce','no because the music'],['Mira','i’m scared'],['Joyce','HE’S BACK'],['Mira','lol stop'],['Joyce','called it'],['Mira','can we go back 10s'],['Joyce','brb refilling'],['Mira','this part is so good']];
+const SHORT = {create:'started the room', join:'joined', code:'joined with the code', play:'played', pause:'paused'};
+const mtime = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = String(s%60).padStart(2,'0'); return h ? `${h}:${String(m).padStart(2,'0')}:${x}` : `${m}:${x}`; };
+const clock = m => { const h = Math.floor(m/60) % 24, mm = String(m%60).padStart(2,'0'); return `${(h % 12) || 12}:${mm} ${h < 12 ? 'AM' : 'PM'}`; };
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${C[n]}">${n[0]}</i>`;
+const avs = (ns, cls = '') => `<span class="avs">${ns.map(n => av(n, cls)).join('')}</span>`;
+const who = n => n === ME ? 'You' : n;
+const actIcon = k => k === 'play' ? I.play : k === 'pause' ? I.pause : k === 'create' ? I.star : I.join;
+const short = (l, at = true) => `${esc(who(l.u))} ${SHORT[l.k]}${at && (l.k === 'play' || l.k === 'pause') ? ` at ${mtime(l.m)}` : ''}`;
+
+function group(logs, withRx){
+  const out = [];
+  logs.forEach(l => {
+    if(l.t === 'rx' && !withRx) return;
+    const g = out[out.length - 1];
+    if(g && g.t === l.t && (l.t === 'act' || g.u === l.u)) g.items.push(l);
+    else out.push({t:l.t, u:l.u, items:[l]});
+  });
+  return out;
+}
+
+/* ── state ── */
+const ST = {};
+let uid = 0;
+function fresh(){
+  return {logs: SEED.map(([t,u,x,m,c,k]) => ({id:++uid, t, u, x, m, c, k})), mt:2481, cm:1305, playing:false, pool:0,
+          tab:'chat', pan:'chat', unread:0, tray:false, draft:'', stuck:true, fresh:new Set()};
+}
+
+/* ── feeds ── */
+const fx = (st, l) => st.fresh.has(l.id) ? ' fx' : '';
+const FEED = {
+  now(st){
+    return `<div class="n-tip"><span>✌</span><p><strong>Tip #4: </strong>Invitations expire after 30 minutes.</p></div>` + group(st.logs).map(g => {
+      if(g.t === 'act') return `<div class="n-actg">${g.items.map(l => `<div class="n-act${fx(st,l)}">${av(l.u,'xs')}${esc(l.u)} ${esc(l.x)}.</div>`).join('')}</div>`;
+      const me = g.u === ME;
+      return `<div class="n-grp${me ? ' me' : ''}">${av(g.u)}<div style="min-width:0">${me ? '' : `<div class="n-nm">${g.u}</div>`}<div class="n-l">${g.items.map(l => `<div class="n-b${fx(st,l)}">${esc(l.x)}</div>`).join('')}</div></div></div>`;
+    }).join('');
+  },
+  a(st){
+    return `<div class="a-feed">` + group(st.logs).map(g => {
+      if(g.t === 'act') return g.items.map(l => `<div class="a-act${fx(st,l)}"><span class="ic">${actIcon(l.k)}</span>${short(l)}</div>`).join('');
+      return g.items.map((l, i) => i === 0
+        ? `<div class="a-row first${fx(st,l)}">${av(g.u,'xs')}<p><b style="color:${C[g.u]}">${who(g.u)}</b>${esc(l.x)}</p></div>`
+        : `<div class="a-row cont${fx(st,l)}"><p>${esc(l.x)}</p></div>`).join('');
+    }).join('') + `</div>`;
+  },
+  b(st){
+    return `<div class="b-feed">` + group(st.logs).map(g => {
+      if(g.t === 'act') return g.items.map(l => `<div class="b-act${fx(st,l)}">${short(l)} · ${clock(l.c)}</div>`).join('');
+      return `<div class="b-grp"><div class="b-gh">${av(g.u,'s')}<b>${who(g.u)}</b><small>${clock(g.items[0].c)}</small></div>${g.items.map(l => `<p class="b-ln${fx(st,l)}">${esc(l.x)}</p>`).join('')}</div>`;
+    }).join('') + `</div>`;
+  },
+  c(st, opt = {}){
+    let last = -99;
+    return `<div class="c-feed">` + group(st.logs, opt.rx).map(g => {
+      const c0 = g.items[0].c, sep = !opt.mt && c0 - last >= 10 ? `<div class="c-sep">${clock(c0)}</div>` : '';
+      last = g.items[g.items.length - 1].c;
+      if(g.t === 'act') return sep + g.items.map(l => `<div class="c-act${fx(st,l)}">${opt.mt ? `<span>${actIcon(l.k)}</span>` : av(l.u,'xxs')}${short(l)}</div>`).join('');
+      if(g.t === 'rx') return sep + g.items.map(l => `<div class="d-rx${fx(st,l)}"><span class="e">${l.x}</span>${esc(who(l.u))}<span class="mt">${mtime(l.m)}</span></div>`).join('');
+      const me = g.u === ME;
+      const stamp = opt.mt ? `<span class="mt">${I.play}${mtime(g.items[0].m)}</span>` : '';
+      return sep + `<div class="c-grp${me ? ' me' : ''}">${me ? '' : av(g.u,'s')}<div style="min-width:0">${me ? (opt.mt ? `<div class="c-nm" style="text-align:right;margin-right:4px">${stamp}</div>` : '') : `<div class="c-nm">${g.u}${stamp}</div>`}<div class="c-l">${g.items.map(l => `<div class="c-b${fx(st,l)}">${esc(l.x)}</div>`).join('')}</div></div></div>`;
+    }).join('') + `</div>`;
+  },
+  d(st){ return FEED.c(st, {rx:true, mt:true}); },
+  e(st){ return FEED.c(st); }
+};
+
+/* ── shells ── */
+const VIDEO = `<div class="vd"><div class="t1"><span class="sk c"></span><span class="sk b"></span></div><span class="sk ctr"></span><div class="bot"><span class="sk c"></span><span class="sk tm"></span><span class="seek"><i></i></span><span class="sk tm"></span><span class="sk c"></span></div></div>`;
+const codeChip = () => `<button class="chip" data-act="copy" aria-label="Copy party code 482 913"><span class="num">482 913</span><span class="copy-t">${I.copy}</span><span class="copied-t">${I.check}</span></button>`;
+const inviteBtn = () => `<button class="icb" aria-label="Invite people">${I.uplus}</button>`;
+const feedw = (st, v) => `<div class="feedw"><div class="feed" data-feed></div>${v === 'd' ? '<div class="d-fl"></div>' : ''}</div>`;
+const field = (ph, extra = '') => `<label class="field"><input class="ci" placeholder="${ph}" autocomplete="off">${extra}<button class="fb send" data-act="send" aria-label="Send">${I.up}</button></label>`;
+const people = () => `<div class="b-pp"><span class="gl sub">In the room · ${MEM.length}</span>${MEM.map(n => `<div class="pr"><span class="avp">${av(n,'m')}<i class="pd"></i></span><div class="pn"><b>${who(n)}</b><small>${ROLE[n]}</small></div></div>`).join('')}<button class="ubtn">${I.uplus}Invite people</button><div class="b-code"><span class="sub">Party code</span><div class="row"><b class="num">482 913</b><button data-act="copy"><span class="copy-t">${I.copy}</span><span class="copied-t">${I.check}</span>Copy</button></div><p>Friends type this on Care.tv to join.</p></div></div>`;
+
+const SHELL = {
+  now: st => `<div class="rm">${VIDEO}<div class="col"><div class="n-can">${avs(MEM)}<button class="n-inv" aria-label="Invite people">${I.uplus}</button></div><div class="n-code"><span class="sub">Party code</span><button data-act="copy"><b class="num">482 913</b><span class="copy-t">${I.copy}</span><span class="copied-t">${I.check}</span></button></div>${feedw(st)}<div class="n-bar"><label class="n-ta"><input class="ci" placeholder="Press / to focus" autocomplete="off"></label><button class="n-sd" data-act="send" aria-label="Send">${I.up}</button></div></div></div>`,
+  a: st => `<div class="rm">${VIDEO}<div class="col"><div class="hd">${avs(MEM,'s')}<span class="cnt">3 here</span>${codeChip()}${inviteBtn()}</div>${feedw(st)}<div class="a-bar">${field('Say something', `<button class="fb" aria-label="Emoji">${I.smile}</button>`)}</div></div></div>`,
+  b: st => `<div class="rm">${VIDEO}<div class="col"><div class="b-tabs" role="tablist"><button role="tab" data-tab="chat" class="${st.tab === 'chat' ? 'on' : ''}">Chat${st.tab !== 'chat' && st.unread ? '<i class="dot"></i>' : ''}</button><button role="tab" data-tab="people" class="${st.tab === 'people' ? 'on' : ''}">People<em>${MEM.length}</em></button></div>${st.tab === 'chat' ? feedw(st) + `<div class="b-bar">${field('Message the room')}</div>` : people()}</div></div>`,
+  c: st => `<div class="rm">${VIDEO}<div class="col"><div class="c-hd">${avs(MEM,'s')}<span class="cnt">3 watching</span>${codeChip()}${inviteBtn()}</div>${feedw(st)}<div class="c-bar">${field('Message', `<button class="fb" aria-label="Emoji">${I.smile}</button>`)}</div></div></div>`,
+  d: st => `<div class="rm">${VIDEO}<div class="col"><div class="hd">${avs(MEM,'s')}<span class="cnt">3 here</span>${codeChip()}${inviteBtn()}</div>${feedw(st,'d')}<div class="d-bar"><div class="d-tray${st.tray ? ' on' : ''}">${['😂','😱','😭','🔥','❤️','👀'].map(e => `<button data-rx="${e}" aria-label="React ${e}">${e}</button>`).join('')}</div><div class="d-row">${field('Message')}<button class="d-heart${st.tray ? ' on' : ''}" data-act="tray" aria-label="Reactions" aria-expanded="${st.tray}">${I.heart}</button></div></div></div></div>`,
+  e: st => {
+    const open = st.pan;
+    const body = open === 'people' ? people() : feedw(st) + `<div class="c-bar">${field('Message', `<button class="fb" aria-label="Emoji">${I.smile}</button>`)}</div>`;
+    const badge = open !== 'chat' && st.unread ? `<i class="bdg">${st.unread}</i>` : '';
+    return `<div class="rm">${VIDEO}<div class="e-pan${open ? '' : ' shut'}"><div class="e-in"><div class="e-hd"><h3>${open === 'people' ? 'People' : 'Chat'}</h3><button class="x" data-act="shut" aria-label="Close panel">${I.x}</button></div>${body}</div></div>
+      <nav class="e-rail"><button data-pan="chat" class="${open === 'chat' ? 'on' : ''}">${I.chat}Chat${badge}</button><button data-pan="people" class="${open === 'people' ? 'on' : ''}">${I.users}People</button><button data-pan="people" data-inv>${I.uplus}Invite</button><span class="sep"></span>${avs(MEM,'s')}</nav></div>`;
+  }
+};
+const UNREAD = {now: () => `<button class="unr" data-act="bottom">You have unread messages ${I.down}</button>`};
+const unreadPill = v => (UNREAD[v] || (() => `<button class="unr pill-unr" data-act="bottom">New messages ${I.down}</button>`))();
+
+/* ── render ── */
+function atBottom(f){ return !f || f.scrollHeight - f.scrollTop - f.clientHeight < 8; }
+function renderFeed(el, v){
+  const st = ST[v], f = el.querySelector('[data-feed]');
+  if(!f) return;
+  f.innerHTML = FEED[v](st);
+  st.fresh.clear();
+  if(st.stuck) f.scrollTop = f.scrollHeight;
+  const w = f.parentElement, old = w.querySelector('.unr');
+  if(old) old.remove();
+  if(st.unread && !st.stuck) w.insertAdjacentHTML('beforeend', unreadPill(v));
+  f.onscroll = () => { st.stuck = atBottom(f); if(st.stuck && st.unread && (v !== 'e' || st.pan === 'chat') && (v !== 'b' || st.tab === 'chat')){ st.unread = 0; const u = w.querySelector('.unr'); if(u) u.remove(); } };
+}
+function render(el){
+  const v = el.dataset.v, st = ST[v];
+  const focused = el.contains(document.activeElement) && document.activeElement.classList.contains('ci');
+  el.innerHTML = SHELL[v](st);
+  const inp = el.querySelector('input.ci');
+  if(inp){ inp.value = st.draft; syncSend(el); if(focused) inp.focus(); }
+  renderFeed(el, v);
+}
+function syncSend(el){
+  const v = el.dataset.v, has = ST[v].draft.trim().length > 0;
+  el.querySelectorAll('[data-act="send"]').forEach(b => { b.classList.toggle('on', has); });
+}
+function push(el, log){
+  const v = el.dataset.v, st = ST[v], f = el.querySelector('[data-feed]');
+  const wasBottom = atBottom(f);
+  log.id = ++uid; st.logs.push(log); st.fresh.add(log.id);
+  const mine = log.u === ME;
+  const hidden = (v === 'e' && st.pan !== 'chat') || (v === 'b' && st.tab !== 'chat');
+  st.stuck = mine || wasBottom;
+  if(!mine && (hidden || !wasBottom) && log.t !== 'rx') st.unread++;
+  if(v === 'e' || v === 'b'){ if(hidden) return render(el); }
+  renderFeed(el, v);
+}
+function tick(st, s){ st.mt += s; st.cm += 1; }
+
+function send(el){
+  const v = el.dataset.v, st = ST[v], text = st.draft.trim();
+  if(!text) return;
+  st.draft = ''; const inp = el.querySelector('input.ci'); if(inp) inp.value = '';
+  syncSend(el); tick(st, 6);
+  push(el, {t:'msg', u:ME, x:text, m:st.mt, c:st.cm});
+}
+function incoming(el){
+  const st = ST[el.dataset.v], [u, x] = POOL[st.pool++ % POOL.length];
+  tick(st, 9);
+  push(el, {t:'msg', u, x, m:st.mt, c:st.cm});
+}
+function toggle(el){
+  const st = ST[el.dataset.v]; st.playing = !st.playing; tick(st, 2);
+  push(el, {t:'act', u:'Mira', x: st.playing ? 'played the video' : 'paused the video', k: st.playing ? 'play' : 'pause', m:st.mt, c:st.cm});
+  syncRail(el.dataset.v);
+}
+function react(el, e, u = ME){
+  const st = ST[el.dataset.v]; tick(st, 1);
+  const fl = el.querySelector('.d-fl');
+  if(fl){ for(let i = 0; i < (u === ME ? 3 : 2); i++){ const s = document.createElement('span'); s.textContent = e; s.style.left = (60 + Math.random() * 180) + 'px'; s.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px'); s.style.animationDelay = (i * 140) + 'ms'; fl.appendChild(s); setTimeout(() => s.remove(), 2600 + i * 140); } }
+  push(el, {t:'rx', u, x:e, m:st.mt, c:st.cm});
+}
+
+/* ── wiring ── */
+const MK = {};
+document.querySelectorAll('.mk[data-v]').forEach(el => {
+  const v = el.dataset.v; ST[v] = fresh(); MK[v] = el; render(el);
+  el.addEventListener('input', e => { if(e.target.classList.contains('ci')){ ST[v].draft = e.target.value; syncSend(el); } });
+  el.addEventListener('keydown', e => {
+    if(e.target.classList.contains('ci') && e.key === 'Enter'){ e.preventDefault(); send(el); }
+    if(e.target.classList.contains('ci') && e.key === 'Escape') e.target.blur();
+  });
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b || !el.contains(b)) return;
+    const st = ST[v], act = b.dataset.act;
+    if(act === 'send'){ e.preventDefault(); send(el); return; }
+    if(act === 'copy'){ try { navigator.clipboard.writeText('482913').catch(() => {}); } catch(_) {} b.classList.add('copied'); setTimeout(() => b.classList.remove('copied'), 1600); return; }
+    if(act === 'bottom'){ const f = el.querySelector('[data-feed]'); f.scrollTo({top:f.scrollHeight, behavior:'smooth'}); return; }
+    if(act === 'tray'){ st.tray = !st.tray; const t = el.querySelector('.d-tray'); t.classList.toggle('on', st.tray); b.classList.toggle('on', st.tray); b.setAttribute('aria-expanded', st.tray); const f = el.querySelector('[data-feed]'); if(st.stuck) f.scrollTop = f.scrollHeight; return; }
+    if(b.dataset.rx){ react(el, b.dataset.rx); return; }
+    if(b.dataset.tab){ st.tab = b.dataset.tab; if(st.tab === 'chat'){ st.unread = 0; st.stuck = true; } render(el); return; }
+    if(act === 'shut'){ st.pan = null; render(el); return; }
+    if(b.dataset.pan){ const p = b.dataset.pan; st.pan = st.pan === p && !b.hasAttribute('data-inv') ? null : p; if(st.pan === 'chat'){ st.unread = 0; st.stuck = true; } render(el); return; }
+  });
+});
+
+/* rails under each canvas */
+function syncRail(v){
+  const r = document.querySelector(`.rail[data-for="${v}"]`), st = ST[v];
+  r.querySelector('[data-r="toggle"]').textContent = st.playing ? 'Mira pauses' : 'Mira plays';
+}
+document.querySelectorAll('.rail[data-for]').forEach(r => {
+  const v = r.dataset.for, el = MK[v];
+  r.innerHTML = `<button data-r="msg">Friend sends a message</button><button data-r="toggle">Mira plays</button>${v === 'd' ? '<button data-r="rx">Joyce reacts</button>' : ''}<button data-r="reset">Reset</button><span class="hint">${v === 'e' ? 'Close the panel, then send a message.' : v === 'b' ? 'Switch to People, then send a message.' : 'Type and press Enter. Scroll up, then send one.'}</span>`;
+  r.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b) return;
+    if(b.dataset.r === 'msg') incoming(el);
+    if(b.dataset.r === 'toggle') toggle(el);
+    if(b.dataset.r === 'rx') react(el, ['😂','🔥','😭','👀'][Math.floor(Math.random() * 4)], 'Joyce');
+    if(b.dataset.r === 'reset'){ ST[v] = fresh(); render(el); syncRail(v); }
+  });
+});
+
+/* ── Pick menus ── */
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:id => `Explore from ${id} in ${FILE}`},
+  {label:'Remix this',        hint:'Fork it and apply changes.',        make:id => `Remix ${id} in ${FILE}:`},
+  {label:'Settle on this',    hint:'This is the direction from here.',  make:id => `Settle on ${id} in ${FILE}`}
+];
+let openMenu = null;
+function closeMenu(){ if(openMenu){ openMenu.menu.hidden = true; openMenu.btn.setAttribute('aria-expanded','false'); openMenu = null; } }
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-expanded','false'); btn.setAttribute('aria-haspopup','menu');
+  head.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role','menu');
+  menu.innerHTML = VERBS.map((v, i) => `<button role="menuitem" data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  head.after(menu); menu.after(out);
+  btn.onclick = () => { const was = openMenu && openMenu.menu === menu; closeMenu(); if(!was){ menu.hidden = false; btn.setAttribute('aria-expanded','true'); openMenu = {menu, btn}; menu.querySelector('button').focus(); } };
+  menu.querySelectorAll('button').forEach(b => b.onclick = async () => {
+    const prompt = VERBS[+b.dataset.i].make(id);
+    closeMenu();
+    out.hidden = false;
+    try {
+      await navigator.clipboard.writeText(prompt);
+      out.innerHTML = `<span class="ok">Copied</span><code>${esc(prompt)}</code>`;
+    } catch(e) {
+      out.innerHTML = `<span>Copy this</span><input readonly value="${esc(prompt)}">`;
+      out.querySelector('input').select();
+    }
+  });
+});
+document.addEventListener('click', e => { if(openMenu && !e.target.closest('.pick-menu') && !e.target.closest('.pick-btn')) closeMenu(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && openMenu){ const b = openMenu.btn; closeMenu(); b.focus(); } });
+
+/* ── Minimap ── */
+const secs = [...document.querySelectorAll('.var')];
+const mm = document.querySelector('.mm');
+mm.innerHTML = secs.map(s => `<a href="#${s.id}"><i></i><span><b>${s.dataset.id}</b>${s.dataset.name}</span></a>`).join('');
+const links = [...mm.querySelectorAll('a')];
+function syncMap(){
+  let best = 0, bd = Infinity;
+  secs.forEach((s, i) => { const d = Math.abs(s.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((l, i) => l.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMap, {passive:true});
+addEventListener('resize', syncMap);
+syncMap();
+</script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login Friends Avatars</title>
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1220px,calc(100vw - 240px));margin-left:max(200px,calc((100vw - 1220px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+@media (max-width:600px){.brief h1{font-size:32px}}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px;overflow-wrap:anywhere}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600;flex:none}
+.frame{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:16px;margin-top:14px;align-items:start}
+.col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.dp,.mp{position:relative;overflow:hidden;background:#0e1318;border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.dp{height:660px;border-radius:14px}
+.mp{width:390px;height:780px;border-radius:30px}
+.cap{font-size:12.5px;color:var(--mut);padding:0 4px}
+.ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctl button{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.ctl button:hover{border-color:var(--mut)}
+.ctl button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ctl .cap{margin-left:auto}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:4px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+@media (max-width:1000px){.frame{grid-template-columns:1fr}.mp{margin:0 auto;max-width:100%}}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:240px}
+.mm a.on span{color:var(--ink)}
+@media (max-width:600px){.mm{display:none}}
+
+/* ───────────── Mockup: login splash (matches ui/src/screens/login/style.css) ───────────── */
+.lp{--s:1;position:absolute;top:0;display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;overflow:hidden;isolation:isolate;color:#fff;background:#0e1318;font-family:'halyard-display',sans-serif;-webkit-font-smoothing:antialiased}
+.lp *{box-sizing:border-box;margin:0}
+.lp.slow{--s:4}
+.lp.desk{width:1280px;height:660px;left:50%;transform:translateX(-50%);grid-template-rows:170px auto 40px auto minmax(64px,1fr)}
+.lp.mob{width:390px;height:780px;left:0;grid-template-rows:218px auto minmax(64px,1fr) auto 24px}
+.lp .brand{position:absolute;z-index:2;top:36px;left:44px;color:#e8368f;font-size:27px;font-weight:700;letter-spacing:-.04em}
+.mob .brand{top:22px;left:0;right:0;text-align:center;font-size:25px}
+.lp .msg{z-index:2;grid-row:2;width:100%;padding:0 24px;text-align:center}
+.mob .msg{padding:0 20px}
+.lp h1{font-size:110px;line-height:1.02;letter-spacing:-.045em;font-weight:700}
+.mob h1{font-size:46px;line-height:1.06}
+.lp .sub{max-width:520px;margin:24px auto 0;color:#b9c3cd;font-size:19px;line-height:1.5;text-wrap:balance}
+.mob .sub{max-width:320px;margin-top:18px;font-size:16px}
+.lp .act{position:relative;z-index:2;grid-row:4;width:min(380px,calc(100% - 48px))}
+.mob .act{align-self:end}
+.lp .dc{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:56px;padding:12px 22px;border:0;border-radius:999px;background:#5865f2;color:#fff;font:inherit;font-size:17px;font-weight:600;line-height:1.35;letter-spacing:-.01em;cursor:pointer;transition:background .15s}
+.lp .dc:hover{background:#4752c4}
+.lp .dc svg{width:23px;height:23px;flex:none}
+.lp canvas{position:absolute;inset:0;z-index:3;width:100%;height:100%;pointer-events:none}
+.lp .w{display:inline-block}
+.lp .fr{white-space:nowrap}
+
+/* Avatar stack — shared base */
+.stk{display:inline-flex;vertical-align:middle;margin:-.2em .32em 0 .12em;position:relative}
+.av{position:relative;display:block;flex:none;width:1.55em;height:1.55em;transition:margin .28s cubic-bezier(.2,.8,.2,1)}
+.av+.av{margin-left:-.42em}
+.av .c{position:absolute;inset:0;border-radius:50%;background:var(--bg);box-shadow:0 0 0 2px #0e1318}
+.av .f{position:absolute;inset:0;border-radius:50%;overflow:hidden}
+.av img{position:absolute;left:50%;bottom:-7%;width:86%;transform:translateX(-50%);pointer-events:none;user-select:none}
+.stk:hover .av+.av{margin-left:-.16em}
+.wait .av{opacity:0}
+
+/* A · Pop in, fixed slot */
+[data-v="a"].in .av{animation:pop calc(.52s*var(--s)) cubic-bezier(.34,1.56,.64,1) calc((.35s + var(--k)*.09s)*var(--s)) both}
+@keyframes pop{from{transform:scale(0);opacity:0}35%{opacity:1}to{transform:none;opacity:1}}
+
+/* B · Slot opens, sentence makes room */
+[data-v="b"] .stk{width:3.81em;transition:none}
+[data-v="b"].wait .stk{width:0;margin-left:0;margin-right:0}
+[data-v="b"].in .stk{animation:open calc(.55s*var(--s)) cubic-bezier(.2,.8,.2,1) calc(.3s*var(--s)) both}
+[data-v="b"].in .av{animation:pop calc(.5s*var(--s)) cubic-bezier(.34,1.56,.64,1) calc((.48s + var(--k)*.09s)*var(--s)) both}
+@keyframes open{from{width:0;margin-left:0;margin-right:0}}
+
+/* C · Fan out from one */
+[data-v="c"] .av{z-index:calc(3 - var(--d))}
+[data-v="c"].in .av{animation:fan calc(.75s*var(--s)) cubic-bezier(.3,1.35,.5,1) calc((.35s + var(--d)*.04s)*var(--s)) both}
+@keyframes fan{from{transform:translateX(calc((1 - var(--k))*1.13em)) scale(.55) rotate(calc((var(--k) - 1)*-24deg));opacity:0}25%{opacity:1}to{transform:none;opacity:1}}
+
+/* D · Drop in, like the reactions */
+.av{transform-origin:50% 100%}
+[data-v="d"].in .av{animation:drop calc(.9s*var(--s)) linear calc((.3s + var(--o)*.13s)*var(--s)) both}
+@keyframes drop{
+  0%{transform:translateY(-3.4em);opacity:0;animation-timing-function:cubic-bezier(.55,0,1,.45)}
+  12%{opacity:1}
+  48%{transform:translateY(0) scale(1.14,.84);animation-timing-function:cubic-bezier(0,.55,.45,1)}
+  68%{transform:translateY(-.42em) scale(.97,1.04);animation-timing-function:cubic-bezier(.55,0,1,.45)}
+  84%{transform:translateY(0) scale(1.05,.95);animation-timing-function:ease-out}
+  to{transform:none;opacity:1}}
+
+/* D2 · Slot opens (B), then they drop in (D) */
+[data-v="d2"] .stk{width:3.81em}
+[data-v="d2"].wait .stk{width:0;margin-left:0;margin-right:0}
+[data-v="d2"].in .stk{animation:open calc(.5s*var(--s)) cubic-bezier(.2,.8,.2,1) calc(.3s*var(--s)) both}
+[data-v="d2"].in .av{animation:drop calc(.9s*var(--s)) linear calc((.72s + var(--o)*.13s)*var(--s)) both}
+
+/* E · Peek up into the circle */
+[data-v="e"].in .av{animation:pop calc(.42s*var(--s)) cubic-bezier(.34,1.4,.64,1) calc((.35s + var(--k)*.1s)*var(--s)) both}
+[data-v="e"].in .av img{animation:peek calc(.6s*var(--s)) cubic-bezier(.34,1.5,.64,1) calc((.58s + var(--k)*.1s)*var(--s)) both}
+@keyframes peek{from{transform:translate(-50%,105%)}to{transform:translate(-50%,0)}}
+
+/* F · Heads out of the circle */
+[data-v="f"] .stk{margin-top:-.42em}
+[data-v="f"] .av{width:1.6em;height:1.6em}
+[data-v="f"] .av+.av{margin-left:-.36em}
+[data-v="f"] .stk:hover .av+.av{margin-left:-.1em}
+[data-v="f"] .av .f{inset:-.7em 0 0 0;border-radius:0 0 .8em .8em}
+[data-v="f"] .av img{width:100%;bottom:.24em}
+[data-v="f"].in .av .c{animation:pop calc(.42s*var(--s)) cubic-bezier(.34,1.4,.64,1) calc((.35s + var(--k)*.1s)*var(--s)) both}
+[data-v="f"].in .av img{animation:emerge calc(.62s*var(--s)) cubic-bezier(.34,1.45,.64,1) calc((.55s + var(--k)*.1s)*var(--s)) both}
+[data-v="f"].in .av{animation:show 0s calc((.35s + var(--k)*.1s)*var(--s)) both}
+@keyframes emerge{from{transform:translate(-50%,100%)}to{transform:translate(-50%,0)}}
+@keyframes show{from{opacity:0}to{opacity:1}}
+
+/* G · Sentence beat — words, then faces, then "friends." */
+[data-v="g"].wait .w{opacity:0}
+[data-v="g"].in .w{animation:word calc(.5s*var(--s)) cubic-bezier(.2,.8,.2,1) calc((.25s + var(--i)*.07s)*var(--s)) both}
+[data-v="g"].in .av{animation:pop calc(.46s*var(--s)) cubic-bezier(.34,1.56,.64,1) calc((.62s + var(--k)*.1s)*var(--s)) both}
+@keyframes word{from{opacity:0;transform:translateY(.45em);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+
+/* H · Say hi — rise together, hop in turn */
+[data-v="h"].wait .stk{opacity:0}
+[data-v="h"].wait .av{opacity:1}
+[data-v="h"].in .stk{animation:rise calc(.45s*var(--s)) cubic-bezier(.2,.8,.2,1) calc(.3s*var(--s)) both}
+[data-v="h"].in .av{animation:hop calc(.5s*var(--s)) cubic-bezier(.3,0,.3,1) calc((.75s + var(--k)*.11s)*var(--s)) both}
+[data-v="h"].in .stk:hover .av{animation:hop2 .5s cubic-bezier(.3,0,.3,1) calc(var(--k)*.09s) both}
+@keyframes rise{from{opacity:0;transform:translateY(.35em)}to{opacity:1;transform:none}}
+@keyframes hop{0%,100%{transform:none}38%{transform:translateY(-.4em) rotate(calc((var(--k) - 1)*7deg - 3deg))}68%{transform:translateY(0) scale(1.07,.93)}84%{transform:scale(.98,1.02)}}
+@keyframes hop2{0%,100%{transform:none}38%{transform:translateY(-.4em) rotate(calc((var(--k) - 1)*7deg - 3deg))}68%{transform:translateY(0) scale(1.07,.93)}84%{transform:scale(.98,1.02)}}
+
+@media (prefers-reduced-motion:reduce){
+  .lp *,.lp{animation:none!important;transition:none!important}
+  .lp.wait .av,.lp.wait .w,.lp.wait .stk{opacity:1}
+  [data-v="b"].wait .stk,[data-v="d2"].wait .stk{width:3.81em}
+  .lp canvas{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+<header class="brief">
+  <div class="eyebrow">a7c3 · Login splash · follows d15c H2b2b, as shipped</div>
+  <h1>Put three faces in front of “friends”</h1>
+  <div class="cards">
+    <div>Three pastel circles with memoji, inline before “friends”.</div>
+    <div>Entrance plays once on load; reactions still rain like today.</div>
+    <div>Stack is decorative: screen readers still hear “with your friends.”</div>
+    <div>Replay and Slow-mo on every canvas; hover the stack to spread it.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="Plain line, as shipped" data-v="now">
+  <div class="var-h"><span class="id">Now</span><h2>Plain line, as shipped</h2></div>
+  <div class="notes">
+    <div class="note good">Quiet; nothing competes with the heading.</div>
+    <div class="note bad">“Friends” is abstract — no faces on a social product.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="Pop in, fixed slot" data-v="a">
+  <div class="var-h"><span class="id">A</span><h2>Pop in, fixed slot</h2></div>
+  <div class="notes">
+    <div class="note good">Text never moves; faces just appear in their seats.</div>
+    <div class="note good">Shortest, cheapest to build — one keyframe.</div>
+    <div class="note bad">An empty gap sits in the sentence for ⅓ s.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Slot opens, sentence makes room" data-v="b">
+  <div class="var-h"><span class="id">B</span><h2>Slot opens, sentence makes room</h2></div>
+  <div class="notes">
+    <div class="note good">Reads as friends squeezing into the line.</div>
+    <div class="note bad">Whole line slides while you start reading it.</div>
+    <div class="note bad">Reflow re-shapes the emoji shelf mid-entrance.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c" data-id="C" data-name="Fan out from one" data-v="c">
+  <div class="var-h"><span class="id">C</span><h2>Fan out from one</h2></div>
+  <div class="notes">
+    <div class="note good">One gesture, like dealing a hand of cards.</div>
+    <div class="note bad">The overlap order flips once it settles.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d" data-id="D" data-name="Drop in, like the reactions" data-v="d">
+  <div class="var-h"><span class="id">D</span><h2>Drop in, like the reactions</h2></div>
+  <div class="notes">
+    <div class="note good">Borrows the page’s own physics: they fall and land.</div>
+    <div class="note bad">Busiest of the set; can blur into the emoji rain.</div>
+  </div>
+</section>
+
+<section class="var" id="v-d2" data-id="D2" data-name="Slot opens, then they drop in" data-v="d2">
+  <div class="var-h"><span class="id">D2</span><h2>Slot opens, then they drop in</h2></div>
+  <div class="notes">
+    <div class="note good">The gap is a cue: something’s about to land here.</div>
+    <div class="note good">Drops into a finished slot, so the text is still when they land.</div>
+    <div class="note bad">About 1.9 s end to end, the longest here.</div>
+  </div>
+</section>
+
+<section class="var" id="v-e" data-id="E" data-name="Peek up into the circle" data-v="e">
+  <div class="var-h"><span class="id">E</span><h2>Peek up into the circle</h2></div>
+  <div class="notes">
+    <div class="note good">Seats first, then friends arrive — tells a tiny story.</div>
+    <div class="note bad">At 25px the peek is hard to see on phone.</div>
+  </div>
+</section>
+
+<section class="var" id="v-f" data-id="F" data-name="Heads out of the circle" data-v="f">
+  <div class="var-h"><span class="id">F</span><h2>Heads out of the circle</h2></div>
+  <div class="notes">
+    <div class="note good">Bigger faces without a bigger stack.</div>
+    <div class="note good">Hair breaking the circle feels playful, not stuck-on.</div>
+    <div class="note bad">Taller than the line; nudges line spacing.</div>
+  </div>
+</section>
+
+<section class="var" id="v-g" data-id="G" data-name="Sentence beat: words, faces, “friends.”" data-v="g">
+  <div class="var-h"><span class="id">G</span><h2>Sentence beat: words, faces, “friends.”</h2></div>
+  <div class="notes">
+    <div class="note good">The faces are a beat in the sentence, not a sticker.</div>
+    <div class="note bad">Subtitle animates while the heading doesn’t.</div>
+  </div>
+</section>
+
+<section class="var" id="v-h" data-id="H" data-name="Say hi: rise together, hop in turn" data-v="h">
+  <div class="var-h"><span class="id">H</span><h2>Say hi: rise together, hop in turn</h2></div>
+  <div class="notes">
+    <div class="note good">Calm arrival, then a wave of personality.</div>
+    <div class="note good">Hover replays the hop — small reward for curiosity.</div>
+    <div class="note bad">Longest sequence, about 1.3 s.</div>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from H: other greetings — a wink, a nod, a lean-in.</div>
+    <div><b>Remix</b>Remix F: heads out with E’s seats-first timing.</div>
+    <div><b>Settle</b>Settle on A for the quietest version that ships today.</div>
+  </div>
+</section>
+</main>
+
+<script>
+const FILE = '.kier/designs/a7c3-login-friends-avatars.html';
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const PAL = ['#CFE4FF', '#FFEDB0', '#FFD1E4'];
+const DROP_ORDER = [1, 0, 2];
+const DISCORD = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4a20 20 0 0 0-5-1.6l-.6 1.3a18 18 0 0 0-5.4 0l-.6-1.3a20 20 0 0 0-5 1.6C.5 9.1-.3 13.7.1 18.2a20 20 0 0 0 6.1 3.1l1.3-2.1-1.9-.9.5-.4a14 14 0 0 0 11.8 0l.5.4-1.9.9 1.3 2.1a20 20 0 0 0 6.1-3.1c.5-5.2-.9-9.7-3.7-13.8ZM8 15.4c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4Zm8 0c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4Z"/></svg>';
+
+const stack = () => `<span class="stk" aria-hidden="true">${PAL.map((bg, k) =>
+  `<i class="av" style="--k:${k};--d:${Math.abs(k - 1)};--o:${DROP_ORDER[k]};--bg:${bg}"><b class="c"></b><span class="f"><img src="assets/memoji-${k + 1}.webp" alt="" draggable="false"></span></i>`).join('')}</span>`;
+function subtitle(v){
+  if(v === 'now') return 'Host watch parties with your friends.';
+  const w = (t, i) => `<span class="w" style="--i:${i}">${t}</span>`;
+  return `${['Host','watch','parties','with','your'].map(w).join(' ')} <span class="fr">${stack()}${w('friends.', 8)}</span>`;
+}
+const page = (kind, v) => `<div class="lp ${kind} wait" data-v="${v}">
+  <span class="brand">Care.tv</span>
+  <div class="msg"><h1><span data-shelf>Bring popcorn.</span><br><span data-shelf>Bring feelings.</span></h1>
+  <p class="sub" data-shelf>${subtitle(v)}</p></div>
+  <div class="act"><button type="button" class="dc" data-shelf data-solid>${DISCORD}Continue with Discord</button></div>
+  <canvas aria-hidden="true"></canvas></div>`;
+
+/* ───── Reaction pile (port of ui/src/screens/login/ReactionCanvas.tsx) ───── */
+const EMOJI = ['🍿','😂','😭','❤️','😱','🔥','👀','🥹','💀','✨'];
+const SPRITES = EMOJI.map(e => {
+  const s = document.createElement('canvas'); s.width = s.height = 128;
+  const x = s.getContext('2d'); x.font = '100px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+  x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(e, 64, 71); return s;
+});
+function makePit(root){
+  const surface = root.querySelector('canvas'), ctx = surface.getContext('2d');
+  let R = [], width = 0, height = 0, ratio = 1, tick = 0, frame = 0, last = 0, acc = 0, cols = [], pointer = null, on = true, running = false;
+  const measure = () => {
+    const b = root.getBoundingClientRect();
+    width = root.offsetWidth; height = root.offsetHeight; ratio = Math.min(devicePixelRatio || 1, 2);
+    if(surface.width !== Math.round(width * ratio)){ surface.width = Math.round(width * ratio); surface.height = Math.round(height * ratio); }
+    cols = [...root.querySelectorAll('[data-shelf]')].flatMap(el => {
+      const solid = el.hasAttribute('data-solid');
+      let boxes;
+      if(solid) boxes = [el.getBoundingClientRect()];
+      else { const r = document.createRange(); r.selectNodeContents(el); boxes = [...r.getClientRects()]; }
+      return boxes.filter(r => r.width > 4).map(r => ({x:r.left - b.left, y:r.top - b.top + (solid ? 0 : r.height * .17), width:r.width, height:r.height * (solid ? 1 : .68), radius:solid ? r.height / 2 : 0}));
+    });
+  };
+  const collide = (p, box) => {
+    const x = Math.max(box.x + box.radius, Math.min(p.x, box.x + box.width - box.radius));
+    const y = Math.max(box.y + box.radius, Math.min(p.y, box.y + box.height - box.radius));
+    let dx = p.x - x, dy = p.y - y; const rad = p.radius + box.radius, sq = dx * dx + dy * dy;
+    if(sq >= rad * rad) return;
+    let d = Math.sqrt(sq); if(d < .001){ dx = 0; dy = -1; d = 1; }
+    const nx = dx / d, ny = dy / d; p.x = x + nx * rad; p.y = y + ny * rad;
+    const v = p.vx * nx + p.vy * ny; if(v < 0){ p.vx = (p.vx - 1.3 * v * nx) * .94; p.vy -= 1.3 * v * ny; }
+  };
+  const step = () => {
+    tick++;
+    if(tick % 12 === 0) measure();
+    if(on && tick % 18 === 0 && R.length < 30){
+      const radius = width >= 720 ? 20 + Math.random() * 8 : 15 + Math.random() * 6;
+      R.push({x:radius + Math.random() * (width - radius * 2), y:-radius - Math.random() * 40, vx:(Math.random() - .5) * 3, vy:0, radius, angle:(Math.random() - .5) * .6, alpha:1, rest:0, sprite:SPRITES[Math.floor(Math.random() * SPRITES.length)]});
+    }
+    for(const p of R){
+      p.vx *= .995; p.vy = (p.vy + .38) * .995;
+      if(pointer){
+        const dx = p.x - pointer.x, dy = p.y - pointer.y, d = Math.hypot(dx, dy), rad = p.radius + 46;
+        if(d > 0 && d < rad){ const f = (rad - d) / rad; p.vx += dx / d * f * 2.4 + pointer.vx * .1 * f; p.vy += dy / d * f * 2.4 + pointer.vy * .1 * f; }
+      }
+      p.x += p.vx; p.y += p.vy; p.angle += p.vx / p.radius * .5;
+    }
+    if(pointer){ pointer.vx *= .5; pointer.vy *= .5; }
+    for(let it = 0; it < 2; it++){
+      for(let i = 0; i < R.length; i++) for(let j = i + 1; j < R.length; j++){
+        const a = R[i], b = R[j], dx = b.x - a.x, dy = b.y - a.y, rad = a.radius + b.radius, d = Math.hypot(dx, dy);
+        if(!d || d >= rad) continue;
+        const nx = dx / d, ny = dy / d, o = (rad - d) / 2;
+        a.x -= nx * o; a.y -= ny * o; b.x += nx * o; b.y += ny * o;
+        const v = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny;
+        if(v < 0){ const im = v * .55; a.vx += nx * im; a.vy += ny * im; b.vx -= nx * im; b.vy -= ny * im; }
+      }
+      for(const p of R){
+        cols.forEach(box => collide(p, box));
+        if(p.y > height - p.radius){ p.y = height - p.radius; if(p.vy > 0) p.vy *= -.25; p.vx *= .92; }
+        if(p.x < p.radius){ p.x = p.radius; p.vx = Math.abs(p.vx) * .5; }
+        if(p.x > width - p.radius){ p.x = width - p.radius; p.vx = -Math.abs(p.vx) * .5; }
+      }
+    }
+    for(let i = R.length - 1; i >= 0; i--){
+      const p = R[i];
+      if(Math.abs(p.vx) + Math.abs(p.vy) < .8){ if(++p.rest > (p.y > height - p.radius - 2 ? 150 : 540)) p.alpha -= .04; } else p.rest = 0;
+      if(p.alpha <= 0 || !on && p.y < -60) R.splice(i, 1);
+    }
+  };
+  const draw = now => {
+    frame = requestAnimationFrame(draw);
+    acc += Math.min(100, now - last); last = now;
+    let n = 0; while(acc >= 1000 / 60 && n < 3){ step(); acc -= 1000 / 60; n++; } if(n === 3) acc = 0;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, surface.width, surface.height);
+    for(const p of R){
+      const c = Math.cos(p.angle) * ratio, s = Math.sin(p.angle) * ratio;
+      ctx.setTransform(c, s, -s, c, p.x * ratio, p.y * ratio); ctx.globalAlpha = p.alpha;
+      const z = p.radius * 2.2; ctx.drawImage(p.sprite, -z / 2, -z / 2, z, z);
+    }
+    ctx.globalAlpha = 1;
+  };
+  root.addEventListener('pointermove', e => { const b = root.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top; pointer = {x, y, vx:pointer ? x - pointer.x : 0, vy:pointer ? y - pointer.y : 0}; });
+  root.addEventListener('pointerleave', () => { pointer = null; });
+  return {
+    start(){ if(running || matchMedia('(prefers-reduced-motion: reduce)').matches) return; running = true; measure(); last = performance.now(); frame = requestAnimationFrame(draw); },
+    stop(){ running = false; cancelAnimationFrame(frame); },
+    reset(){ R = []; tick = 0; },
+    set on(v){ on = v; if(!v) R = []; },
+  };
+}
+
+/* ───── Canvases ───── */
+const canvases = [];
+document.querySelectorAll('.var').forEach(sec => {
+  const v = sec.dataset.v, h = sec.querySelector('.var-h'), notes = sec.querySelector('.notes');
+  const frame = document.createElement('div'); frame.className = 'frame';
+  frame.innerHTML = `<div class="col">
+      <div class="dp">${page('desk', v)}</div>
+      <div class="ctl"><button type="button" data-act="replay">Replay</button><button type="button" data-act="slow" aria-pressed="false">Slow-mo ×4</button><button type="button" data-act="rx" aria-pressed="true">Reactions</button><span class="cap">Desktop · centre 1280px wide, real size</span></div>
+    </div>
+    <div class="col"><div class="mp">${page('mob', v)}</div><span class="cap">Phone · 390 × 780</span></div>`;
+  h.after(frame);
+  frame.querySelector('.col').append(notes);
+  const pages = [...frame.querySelectorAll('.lp')], pits = pages.map(makePit);
+  const play = () => {
+    pits.forEach(p => p.reset());
+    pages.forEach(p => { p.classList.remove('in'); p.classList.add('wait'); });
+    void frame.offsetWidth;
+    requestAnimationFrame(() => pages.forEach(p => { p.classList.remove('wait'); p.classList.add('in'); }));
+  };
+  frame.addEventListener('click', e => {
+    const b = e.target.closest('[data-act]'); if(!b) return;
+    if(b.dataset.act === 'replay') play();
+    if(b.dataset.act === 'slow'){ const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); pages.forEach(p => p.classList.toggle('slow', on)); play(); }
+    if(b.dataset.act === 'rx'){ const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); pits.forEach(p => { p.on = on; }); }
+  });
+  canvases.push({frame, pits, play, played:false});
+});
+const io = new IntersectionObserver(entries => entries.forEach(en => {
+  const c = canvases.find(x => x.frame === en.target);
+  if(en.isIntersecting){ c.pits.forEach(p => p.start()); if(!c.played && en.intersectionRatio >= .3){ c.played = true; c.play(); } }
+  else c.pits.forEach(p => p.stop());
+}), {threshold:[0, .3]});
+document.fonts?.ready.then(() => canvases.forEach(c => io.observe(c.frame)));
+
+/* ───── Clipboard ───── */
+function legacyCopy(text){
+  const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0'; document.body.append(ta); ta.select();
+  let ok = false; try { ok = document.execCommand('copy'); } catch(e){} ta.remove(); return ok;
+}
+function copyText(text){
+  if(navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).then(() => true, () => legacyCopy(text));
+  return Promise.resolve(legacyCopy(text));
+}
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  {label:'Explore from this', hint:'New variations in this direction.', make:sec => `Explore from ${sec.dataset.id} in ${FILE}`},
+  {label:'Remix this', hint:'Fork it and apply your changes.', make:sec => `Remix ${sec.dataset.id} in ${FILE}:`},
+  {label:'Settle on this', hint:'Stop exploring; build from this one.', make:sec => `Settle on ${sec.dataset.id} in ${FILE}`}
+];
+const pickers = [];
+function closeAll(){ pickers.forEach(p => { p.menu.hidden = true; p.btn.setAttribute('aria-expanded','false'); }); }
+document.querySelectorAll('.var').forEach(sec => {
+  const h = sec.querySelector('.var-h');
+  const btn = document.createElement('button'); btn.className = 'pick-btn'; btn.type = 'button'; btn.textContent = 'Pick ▾';
+  btn.setAttribute('aria-haspopup','menu'); btn.setAttribute('aria-expanded','false'); h.append(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.setAttribute('role','menu'); menu.hidden = true;
+  menu.innerHTML = VERBS.map((v,i) => `<button type="button" role="menuitem" data-i="${i}"><b>${v.label}</b><span>${v.hint}</span></button>`).join('');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  h.after(menu); menu.after(out);
+  pickers.push({btn, menu});
+  btn.addEventListener('click', e => { e.stopPropagation(); const willOpen = menu.hidden; closeAll(); menu.hidden = !willOpen; btn.setAttribute('aria-expanded', String(willOpen)); if(willOpen) menu.querySelector('button').focus(); });
+  menu.addEventListener('click', async e => {
+    e.stopPropagation(); const b = e.target.closest('button'); if(!b) return;
+    const text = VERBS[b.dataset.i].make(sec); closeAll(); btn.focus();
+    const ok = await copyText(text); out.hidden = false;
+    if(ok){ out.innerHTML = '<code></code><span class="ok">Copied</span>'; out.querySelector('code').textContent = text; }
+    else { out.innerHTML = '<span>Copy this prompt</span><input readonly>'; const f = out.querySelector('input'); f.value = text; f.focus(); f.select(); }
+  });
+});
+document.addEventListener('click', e => { if(!e.target.closest('.pick-menu')) closeAll(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeAll(); });
+
+/* ───── Minimap ───── */
+const mm = document.querySelector('.mm'), secs = [...document.querySelectorAll('.var')];
+mm.innerHTML = secs.map(s => `<a href="#${s.id}" data-for="${s.id}"><i></i><span><b>${s.dataset.id}</b>${esc(s.dataset.name)}</span></a>`).join('');
+mm.addEventListener('click', e => { const a = e.target.closest('a'); if(!a) return; e.preventDefault(); document.getElementById(a.dataset.for).scrollIntoView({behavior:'smooth', block:'start'}); });
+function syncMM(){
+  let cur = secs[0];
+  secs.forEach(s => { if(s.getBoundingClientRect().top <= innerHeight * .35) cur = s; });
+  mm.querySelectorAll('a').forEach(a => a.classList.toggle('on', a.dataset.for === cur.id));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+if(location.hash){ const t = document.querySelector(location.hash); if(t) requestAnimationFrame(() => t.scrollIntoView()); }
+</script>
+</body>
+</html>

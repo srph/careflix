@@ -158,7 +158,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .lbhost.pend{bottom:20px}
 .lbhost.dock{left:calc(50% - 75px);top:20px}
 .pill-lb{border-radius:20px;background:rgba(21,32,43,.97);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
-.frame[data-mode="lib"] .pill,.frame[data-mode="app"] .lbhost{display:none}
+.panel[data-mode="lib"] .pill,.panel[data-mode="app"] .lbhost{display:none}
 .tune[data-mode="lib"] .app-only,.tune[data-mode="app"] .lib-only{display:none}
 .typebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:12px;margin-bottom:8px;border-bottom:1px solid var(--line)}
 .typebar>span:first-child{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);width:82px}
@@ -248,6 +248,15 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   </div>
 </section>
 
+<section class="var" id="v-g2" data-id="G2" data-name="Candy line, mono pulse on join" data-preset="g2">
+  <div class="var-h"><span class="id">G2</span><h2>Candy line, mono pulse on join</h2></div>
+  <div class="notes">
+    <div class="note good">Two motions say two things: waiting travels, joined settles.</div>
+    <div class="note good">Mono on join stops colour fighting the room's avatars.</div>
+    <div class="note bad">Needs two beam types in-app, so the package becomes a dependency.</div>
+  </div>
+</section>
+
 <section class="var" id="v-h" data-id="H" data-name="Full ring (md)" data-preset="h">
   <div class="var-h"><span class="id">H</span><h2>Full ring (md)</h2></div>
   <div class="notes">
@@ -320,12 +329,19 @@ const PRESETS = {
   e:{dur:2.2,len:60,glow:.32,bloom:.55,sat:1.15,hue:0,pal:'trio'},
   f:{dur:3,n:2,len:34,fe:.55,hl:.9,hw:12,glow:.28,bloom:.5,pal:'sunset'},
   g:{type:'line'}, h:{type:'md'}, i:{type:'pulse-inner'}, j:{type:'pulse-outside'},
+  g2:{type:'line', lib:{cv:'candy'}, dock:{type:'pulse-inner', lib:{cv:'mono', dur:4}}},
 };
-function preset(k){
-  const p = PRESETS[k], s = {...BASE, ...p};
+function build(p){
+  const s = {...BASE, ...p}; delete s.dock;
   s.lib = {...libDefaults(s.type === 'app' ? 'sm' : s.type), ...(p.lib || {})};
   return s;
 }
+// A canvas holds one beam per state; linked canvases share a single object for both.
+function preset(k){
+  const p = PRESETS[k], pend = build(p);
+  return p.dock ? {pend, dock:build(p.dock), linked:false} : {pend, dock:pend, linked:true};
+}
+const beamLabel = x => x.type === 'app' ? 'sm · in-app' : `${x.type} · ${x.lib.cv}`;
 
 const f2 = v => String(+(+v).toFixed(2));
 const hexRgb = h => { const n = parseInt(h.slice(1),16); return `${n>>16&255},${n>>8&255},${n&255}`; };
@@ -497,17 +513,21 @@ const libRender = (...a) => window.renderLib ? window.renderLib(...a) : (window.
 const frames = [];
 document.querySelectorAll('.var').forEach(sec => {
   const key = sec.dataset.preset;
-  let s = preset(key), paused = false;
+  let P = preset(key), edit = P.linked ? 'both' : 'pend', paused = false;
+  const cur = () => edit === 'dock' ? P.dock : P.pend;
+  let s = cur();
   const getv = k => k.startsWith('lib.') ? s.lib[k.slice(4)] : s[k];
   const setv = (k, v) => { if(k.startsWith('lib.')) s.lib[k.slice(4)] = v; else s[k] = v; };
   const h = sec.querySelector('.var-h');
   const badge = document.createElement('span'); badge.className = 'tuned'; badge.textContent = 'Tuned'; badge.hidden = true; h.append(badge);
   const frame = document.createElement('div'); frame.className = 'frame';
-  frame.innerHTML = `<div class="panel">${PEND}</div><div class="panel">${DOCK}</div>`;
-  const hosts = [[frame.querySelector('.lbhost.pend'), PEND_LINE], [frame.querySelector('.lbhost.dock'), DOCK_LINE]];
+  frame.innerHTML = `<div class="panel" data-p="pend">${PEND}</div><div class="panel" data-p="dock">${DOCK}</div>`;
+  const panels = {pend:frame.querySelector('[data-p="pend"]'), dock:frame.querySelector('[data-p="dock"]')};
+  const hosts = [['pend', PEND_LINE], ['dock', DOCK_LINE]];
   const caps = document.createElement('div'); caps.className = 'caps'; caps.innerHTML = '<span>Invite waiting · collapsed</span><span>Joined · docked on the player</span>';
   const tune = document.createElement('div'); tune.className = 'tune';
-  tune.innerHTML = `<div class="typebar"><span>Type</span><span class="seg" data-seg="type">${TYPES.map(([v,t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</span><span class="src"></span></div>
+  tune.innerHTML = `<div class="typebar"><span>Edit</span><span class="seg" data-seg="edit"><button type="button" data-v="both">Both states</button><button type="button" data-v="pend">Invite waiting</button><button type="button" data-v="dock">Joined</button></span><span class="src edit-src"></span></div>
+    <div class="typebar"><span>Type</span><span class="seg" data-seg="type">${TYPES.map(([v,t]) => `<button type="button" data-v="${v}">${t}</button>`).join('')}</span><span class="src type-src"></span></div>
     <div class="tgs app-only">
       <div class="tg"><h4>Motion</h4>${SLIDERS.motion.map(range).join('')}${seg('dir','Direction',[['cw','Clockwise'],['ccw','Counter']])}${seg('n','Beams',[[1,'1'],[2,'2'],[3,'3']])}</div>
       <div class="tg"><h4>Shape</h4>${SLIDERS.shape.map(range).join('')}</div>
@@ -528,15 +548,21 @@ document.querySelectorAll('.var').forEach(sec => {
   frames.push(frame);
 
   const st = tune.querySelector('.st'), out = tune.querySelector('.tout'), ta = out.querySelector('textarea'), cust = tune.querySelector('.cust');
-  const cssBtn = tune.querySelector('[data-act="css"]'), src = tune.querySelector('.src');
-  const isTuned = () => JSON.stringify(s) !== JSON.stringify(preset(key));
+  const cssBtn = tune.querySelector('[data-act="css"]'), src = tune.querySelector('.type-src');
+  const isTuned = () => JSON.stringify(P) !== JSON.stringify(preset(key));
+  const canvasValues = () => P.linked ? valuesText(P.pend) : `invite waiting: ${valuesText(P.pend)}; joined: ${valuesText(P.dock)}`;
+  const one = x => x.type === 'app' ? cssText(x) : jsxText(x);
+  const editSrc = tune.querySelector('.edit-src');
   const hint = () => s.type === 'app' ? 'Copy CSS replaces @property --invitation-beam-angle → .invitation-beam i' : 'Copy JSX needs the border-beam package in ui/';
   function sync(){
     const mode = s.type === 'app' ? 'app' : 'lib';
-    frame.dataset.mode = tune.dataset.mode = mode;
+    tune.dataset.mode = mode;
     tune.querySelectorAll('input[type=range]').forEach(inp => { inp.value = getv(inp.dataset.k); });
     Object.values(SLIDERS).flat().forEach(([k,,,,,fmt]) => { tune.querySelector(`[data-o="${k}"]`).textContent = fmt(getv(k)); });
-    tune.querySelectorAll('[data-seg]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', String(getv(g.dataset.seg)) === b.dataset.v)));
+    tune.querySelectorAll('[data-seg]').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', (g.dataset.seg === 'edit' ? edit : String(getv(g.dataset.seg))) === b.dataset.v)));
+    editSrc.textContent = P.linked ? 'One beam on both' : edit === 'pend' ? 'Changes apply to the waiting pill only' : 'Changes apply to the joined pill only';
+    caps.children[0].textContent = `Invite waiting · collapsed — ${beamLabel(P.pend)}`;
+    caps.children[1].textContent = `Joined · docked on the player — ${beamLabel(P.dock)}`;
     tune.querySelectorAll('[data-pal]').forEach(b => b.classList.toggle('on', b.dataset.pal === s.pal));
     tune.querySelectorAll('[data-lpal]').forEach(b => b.classList.toggle('on', b.dataset.lpal === s.lib.cv));
     cust.hidden = s.pal !== 'custom';
@@ -545,8 +571,12 @@ document.querySelectorAll('.var').forEach(sec => {
     cssBtn.textContent = mode === 'app' ? 'Copy CSS' : 'Copy JSX';
     src.textContent = mode === 'app' ? 'Our static copy of border-beam sm, in style.css' : `Real <BorderBeam size="${s.type}">, border-beam 1.4.1`;
     if(!st.classList.contains('ok')) st.textContent = hint();
-    if(mode === 'app') applyBeam(frame, s);
-    else hosts.forEach(([host, html]) => libRender(host, {size:s.type, ...s.lib, active:!paused}, html));
+    hosts.forEach(([k, html]) => {
+      const x = P[k], panel = panels[k];
+      panel.dataset.mode = x.type === 'app' ? 'app' : 'lib';
+      if(x.type === 'app') applyBeam(panel, x);
+      else libRender(panel.querySelector('.lbhost'), {size:x.type, ...x.lib, active:!paused}, html);
+    });
   }
   tune.addEventListener('input', e => {
     const t = e.target;
@@ -559,6 +589,11 @@ document.querySelectorAll('.var').forEach(sec => {
     const g = b.closest('[data-seg]');
     if(g){
       const k = g.dataset.seg, v = b.dataset.v;
+      if(k === 'edit'){
+        if(v === 'both'){ if(!P.linked){ P.pend = P.dock = s; P.linked = true; } }
+        else if(P.linked){ P.dock = structuredClone(P.pend); P.linked = false; }
+        edit = v; s = cur(); st.className = 'st'; return sync();
+      }
       if(k === 'type'){ if(v !== s.type){ const keep = {cv:s.lib.cv, strength:s.lib.strength}; s.type = v; s.lib = {...libDefaults(v === 'app' ? 'sm' : v), ...keep}; } }
       else setv(k, k === 'n' ? +v : k === 'lib.stat' ? v === 'true' : v);
       st.className = 'st'; return sync();
@@ -566,10 +601,11 @@ document.querySelectorAll('.var').forEach(sec => {
     if(b.dataset.pal){ s.pal = b.dataset.pal; return sync(); }
     if(b.dataset.lpal){ s.lib.cv = b.dataset.lpal; return sync(); }
     const act = b.dataset.act;
-    if(act === 'reset'){ s = preset(key); out.hidden = true; st.className = 'st'; return sync(); }
+    if(act === 'reset'){ P = preset(key); edit = P.linked ? 'both' : 'pend'; s = cur(); out.hidden = true; st.className = 'st'; return sync(); }
     if(act === 'pause'){ paused = !paused; frame.classList.toggle('paused', paused); b.classList.toggle('on', paused); b.textContent = paused ? 'Play' : 'Pause'; return sync(); }
     if(act === 'css' || act === 'vals'){
-      const text = act === 'vals' ? `Use this border beam for the invite toast: ${valuesText(s)} (from ${sec.dataset.id} in ${FILE})` : s.type === 'app' ? cssText(s) : jsxText(s);
+      const text = act === 'vals' ? `Use this border beam for the invite toast: ${canvasValues()} (from ${sec.dataset.id} in ${FILE})`
+        : P.linked ? one(s) : `/* Invite waiting (pending, collapsed) */\n${one(P.pend)}\n/* Joined (docked) */\n${one(P.dock)}`;
       const ok = await copyText(text);
       st.className = ok ? 'st ok' : 'st';
       st.textContent = ok ? `Copied ${act === 'vals' ? 'values' : s.type === 'app' ? 'CSS' : 'JSX'}` : 'Clipboard blocked — copy from the box';
@@ -577,7 +613,7 @@ document.querySelectorAll('.var').forEach(sec => {
       if(ok) setTimeout(() => { st.className = 'st'; st.textContent = hint(); }, 2400);
     }
   });
-  sec._state = () => s; sec._tuned = isTuned;
+  sec._values = canvasValues; sec._tuned = isTuned;
   sync();
 });
 
@@ -586,7 +622,7 @@ const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersectin
 frames.forEach(f => io.observe(f));
 
 /* ───── Pick menus ───── */
-const tunedNote = sec => sec._tuned && sec._tuned() ? ` (tuned: ${valuesText(sec._state())})` : '';
+const tunedNote = sec => sec._tuned && sec._tuned() ? ` (tuned: ${sec._values()})` : '';
 const VERBS = [
   {label:'Explore from this', hint:'New variations in this direction.', make:sec => `Explore from ${sec.dataset.id} in ${FILE}${tunedNote(sec)}`},
   {label:'Remix this', hint:'Fork it and apply your changes.', make:sec => `Remix ${sec.dataset.id} in ${FILE}${tunedNote(sec)}:`},
@@ -626,6 +662,8 @@ function syncMM(){
 }
 addEventListener('scroll', syncMM, {passive:true}); syncMM();
 if(secs.length < 2) mm.remove();
+// Canvases are built by script, so re-land a #v-… link once they exist.
+if(location.hash){ const t = document.querySelector(location.hash); if(t) requestAnimationFrame(() => t.scrollIntoView()); }
 </script>
 <script type="module">
 // Renders md / line / pulse types with the real package (vendor/ is border-beam 1.4.1, MIT).

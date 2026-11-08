@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>See All Parties</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.states{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.cell-l{display:block;margin-bottom:6px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.stage{display:flex;align-items:center;justify-content:center;min-height:120px !important;padding:28px 26px;border:1px solid var(--line);border-radius:12px}
+.stage>*{flex:1}
+.stage>.d-solo{flex:none}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--mut)}
+.ctl .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.ctl .seg button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;padding:8px 12px;cursor:pointer}
+.ctl .seg button+button{border-left:1px solid var(--line)}
+.ctl .seg button[aria-pressed="true"]{color:var(--ink);background:var(--code);font-weight:600}
+.ctl small{margin-left:auto}
+.frame{position:relative;height:clamp(560px,calc(100vh - 160px),640px);margin-top:10px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#090c11;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.frame>.scroll{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:240px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup: shipped listing (ui/src/screens/app.home/AuthHome/style.css) ───────────── */
+.listing-home{--color-primary:#E8368F;--listing-muted:#8899a6;position:relative;min-height:100%;color:#fff;background:#090c11;font:14px/1.4 'halyard-display','Outfit',sans-serif;-webkit-font-smoothing:antialiased}
+.listing-home *{box-sizing:border-box}
+.listing-home h1,.listing-home h2,.listing-home h3,.listing-home p{margin:0}
+.listing-home button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.listing-home a{color:inherit;text-decoration:none;cursor:pointer}
+.listing-home :focus-visible,.listing-home .is-focus{outline:2px solid #fff;outline-offset:5px}
+.listing-navigation{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:36px;min-height:76px;padding:12px 40px;background:rgba(9,12,17,.95)}
+.ui-logo{color:#fff;font:700 20px 'Work Sans',sans-serif}
+.ui-logo::first-letter{color:var(--color-primary)}
+.listing-tabs{display:flex;align-items:center;gap:26px}
+.listing-tabs button{position:relative;padding:10px 0;color:#929296;font-size:15px;font-weight:700}
+.listing-tabs button:hover,.listing-tabs button[aria-selected=true]{color:#fff}
+.listing-tabs button::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:2px;background:var(--color-primary);transform:scaleX(0);transition:transform .3s}
+.listing-tabs button[aria-selected=true]::after{transform:scaleX(1)}
+.nav-sk{margin-left:auto;display:flex;align-items:center;gap:14px}
+.ui-avatar{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--c,#E8368F);color:#10171E;font:700 12px/1 'Work Sans',sans-serif;font-style:normal;flex:none}
+.listing-artwork{position:absolute;inset:0;width:100%;height:100%;background-color:#0b0f14;background-size:cover}
+.listing-body{padding:36px 40px 80px}
+.listing-body>*+*{margin-top:44px}
+.listing-section-heading{display:flex;align-items:baseline;gap:10px;margin-bottom:20px}
+.stage .listing-section-heading{margin-bottom:0}
+.listing-section-heading h2{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.listing-party-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px 16px;padding:6px 0}
+.listing-party-card{position:relative;display:block;min-width:0;aspect-ratio:16/9;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px #ffffff12;outline:2px solid transparent;outline-offset:4px;transition:outline-color .25s}
+.listing-party-card:hover{outline:2px solid #fff}
+.listing-party-shade{position:absolute;inset:0;background:linear-gradient(0deg,#0a0e14f5 18%,#0a0e1414 95%)}
+.listing-party-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:8px}
+.listing-party-badges>span{padding:5px 9px;border-radius:99px;background:#10171ed9;font:700 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.listing-party-badges i{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:var(--color-primary)}
+.listing-party-content{position:absolute;bottom:12px;left:14px;right:14px}
+.listing-party-content h3{font-size:19px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.listing-party-content p{margin:1px 0 9px;color:#ffffffb3;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listing-party-progress{height:3px;margin-bottom:9px;border-radius:4px;overflow:hidden;background:#ffffff30}
+.listing-party-progress i{display:block;height:100%;border-radius:inherit;background:var(--color-primary)}
+.listing-party-members{display:flex;align-items:center;gap:10px}
+.avs{display:inline-flex;flex:none}
+.listing-party-members .ui-avatar{width:28px;height:28px;font-size:11px;border:2px solid #10171e}
+.avs .ui-avatar+.ui-avatar{margin-left:-7px}
+.listing-party-members>span{min-width:0;color:#ffffffb3;font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.listing-party-members .listing-party-join{flex:none;margin-left:auto;color:#fff;opacity:0;transition:opacity .2s}
+.listing-party-card:hover .listing-party-join{opacity:1}
+.listing-show-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:26px 16px}
+.listing-empty{padding:36px 0;color:var(--listing-muted);font-size:16px}
+.art::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.fade-in{animation:fadeIn .4s ease backwards}
+@keyframes fadeIn{from{opacity:0}}
+/* skeleton for the rest of the page */
+.sk{display:block;flex:none;border-radius:4px;background:#ffffff09}
+.hero-sk{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;height:200px;margin:12px 40px 0}
+.hero-sk .col{display:flex;flex-direction:column;gap:6px}
+.hero-sk .col .sk{flex:1;border-radius:14px}
+.sk-sc .th{aspect-ratio:16/9;width:100%;border-radius:10px}
+svg.ic{flex:none;transition:transform .2s}
+
+/* ───────────── Now ───────────── */
+.now-link{margin-left:auto;padding:5px 0;color:#cccfd3;font-size:13px}
+.now-link span{margin-left:5px}
+.now-link:hover,.now-link.is-hover{color:var(--color-primary)}
+
+/* ───────────── A — count in the link ───────────── */
+.a-link{margin-left:auto;display:inline-flex;align-items:center;gap:3px;padding:5px 0;color:#fff;font-size:13.5px;font-weight:600;transition:color .2s}
+.a-link svg{color:var(--color-primary)}
+.a-link:hover,.a-link.is-hover{color:var(--color-primary)}
+.a-link:hover svg,.a-link.is-hover svg{transform:translateX(3px)}
+
+/* ───────────── B — ghost pill with count ───────────── */
+.b-head{align-items:center}
+.b-pill{margin-left:auto;display:inline-flex;align-items:center;gap:9px;height:32px;padding:0 5px 0 14px;border-radius:99px;background:#ffffff14;color:#fff;font:700 10.5px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:background .2s}
+.b-pill .n{display:grid;place-items:center;min-width:22px;height:22px;padding:0 7px;border-radius:99px;background:#ffffff1f;letter-spacing:0;transition:background .2s}
+.b-pill:hover,.b-pill.is-hover{background:#ffffff24}
+.b-pill:hover .n,.b-pill.is-hover .n{background:var(--color-primary)}
+
+/* ───────────── C — heading is the link ───────────── */
+.c-head{display:inline-flex;align-items:center;gap:6px;padding:2px 0;border-radius:6px}
+.c-head svg{color:#8899a6;margin-top:2px}
+.c-more{color:var(--color-primary);font-size:13.5px;font-weight:600;opacity:0;transform:translateX(-6px);transition:opacity .2s,transform .2s}
+.c-head:hover svg,.c-head.is-hover svg,.c-head:focus-visible svg{color:#fff;transform:translateX(3px)}
+.c-head:hover .c-more,.c-head.is-hover .c-more,.c-head:focus-visible .c-more,.c-head.is-focus .c-more{opacity:1;transform:none}
+
+/* ───────────── D — more tile at the row's end ───────────── */
+.d-grid{grid-template-columns:repeat(3,minmax(0,1fr)) 188px}
+.d-more{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:12px;border-radius:14px;background:#ffffff06;box-shadow:0 0 0 1px #ffffff12;outline:2px solid transparent;outline-offset:4px;transition:outline-color .25s,background .25s}
+.d-more:hover,.d-more.is-hover{outline-color:#fff;background:#ffffff0c}
+.d-thumbs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.d-thumbs i{display:block;aspect-ratio:16/9;border-radius:6px;opacity:.45;transition:opacity .25s}
+.d-more:hover .d-thumbs i,.d-more.is-hover .d-thumbs i{opacity:.9}
+.d-copy b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.d-copy span{display:flex;align-items:center;gap:6px;margin-top:5px;color:#cccfd3;font-size:12.5px}
+.d-more:hover .d-copy span,.d-more.is-hover .d-copy span{color:#fff}
+.d-more:hover svg,.d-more.is-hover svg{transform:translateX(3px)}
+.d-solo{display:flex;width:188px;height:178px}
+.d-solo .d-more{flex:1}
+
+/* ───────────── E — divider footer with faces ───────────── */
+.e-foot{display:flex;align-items:center;gap:16px;margin-top:26px}
+.stage .e-foot{margin-top:0}
+.e-foot::before,.e-foot::after{content:'';flex:1;height:1px;background:#ffffff14}
+.e-btn{display:inline-flex;align-items:center;gap:10px;height:40px;padding:0 16px 0 6px;border-radius:99px;box-shadow:inset 0 0 0 1px #ffffff24;font-size:13px;font-weight:600;white-space:nowrap;transition:background .2s,box-shadow .2s}
+.e-btn .ui-avatar{width:28px;height:28px;font-size:11px;border:2px solid #090c11}
+.e-btn:hover,.e-btn.is-hover{background:#ffffff10;box-shadow:inset 0 0 0 1px #ffffff40}
+.e-btn:hover svg,.e-btn.is-hover svg{transform:translateX(3px)}
+
+@media (prefers-reduced-motion:reduce){.listing-home *,.listing-home *::before,.listing-home *::after{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<nav class="mm" id="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+  <section class="brief">
+    <p class="eyebrow">Care.tv · All page · Recent parties link</p>
+    <h1>“See all parties” reads like a caption, not a way in.</h1>
+    <div class="cards">
+      <div>Say how many parties are behind it.</div>
+      <div>Hide it when every party is already showing.</div>
+      <div>Use the listing's type, pills and pink.</div>
+      <div>Still opens the Parties tab.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="Now" data-name="Grey text link" data-key="now">
+    <div class="var-h"><span class="id">Now</span><h2>Grey text link</h2></div>
+    <div class="states"></div><div class="ctl"></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note bad">Grey 13px at the far right is easy to skim past.</div>
+      <div class="note bad">No hint of how many more there are.</div>
+      <div class="note bad">Shows with 2 parties, opening the same 2.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="A" data-name="Count in the link" data-key="a">
+    <div class="var-h"><span class="id">A</span><h2>Count in the link</h2></div>
+    <div class="states"></div><div class="ctl"></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note good">Same spot, white with a pink chevron; two-line change.</div>
+      <div class="note good">“All 12 parties” says what you'll get.</div>
+      <div class="note bad">Still a small target at the far right.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="B" data-name="Ghost pill with count" data-key="b">
+    <div class="var-h"><span class="id">B</span><h2>Ghost pill with count</h2></div>
+    <div class="states"></div><div class="ctl"></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note good">Same pill as the hero's Details button.</div>
+      <div class="note good">Count turns pink on hover.</div>
+      <div class="note bad">Loud for a secondary action.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="C" data-name="Heading is the link" data-key="c">
+    <div class="var-h"><span class="id">C</span><h2>Heading is the link</h2></div>
+    <div class="states"></div><div class="ctl"></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note good">Big target where you're already reading.</div>
+      <div class="note bad">“See all 12” only appears on hover.</div>
+      <div class="note bad">A clickable heading is easy to miss.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="D" data-name="More tile at the row's end" data-key="d">
+    <div class="var-h"><span class="id">D</span><h2>More tile at the row's end</h2></div>
+    <div class="states"></div><div class="ctl"></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note good">Sits where your eye lands after the last card.</div>
+      <div class="note good">Previews the next four parties.</div>
+      <div class="note bad">Narrows the three party cards.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="E" data-name="Divider footer with faces" data-key="e">
+    <div class="var-h"><span class="id">E</span><h2>Divider footer with faces</h2></div>
+    <div class="states"></div><div class="ctl"></div>
+    <div class="frame"><div class="scroll listing-home"></div></div>
+    <div class="notes">
+      <div class="note good">Separates your parties from the catalog.</div>
+      <div class="note good">Faces show who else is in there.</div>
+      <div class="note bad">Adds 66px before All titles.</div>
+    </div>
+  </section>
+
+  <section class="further">
+    <h2>Further Actions</h2>
+    <div class="cards">
+      <div><b>Explore</b> From A, put the same count on the Parties nav tab.</div>
+      <div><b>Remix</b> A with E's three faces before the count.</div>
+      <div><b>Settle</b> A: smallest change, fixes the count and the 3-or-fewer case.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const FILE = '.kier/designs/5b1e-see-all-parties-link.html';
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8'};
+const SHOWS = [
+  {id:'velvet', t:'Velvet Static', type:'movie', c:['#e8368f','#1b0f3a'], p:'rings'},
+  {id:'hollow', t:'Hollow County', type:'series', c:['#a3e635','#14240a'], p:'stripes'},
+  {id:'paper', t:'Paper Moons', type:'movie', c:['#ff7a59','#3b0d4c'], p:'sun'},
+  {id:'orbit', t:'Orbit Diner', type:'series', c:['#f7c948','#7a1f4d'], p:'dots'},
+  {id:'ferry', t:'Night Ferry', type:'movie', c:['#1fd1f9','#0b1b3f'], p:'stripes'},
+  {id:'under', t:'The Understudies', type:'series', c:['#c084fc','#2a0e5c'], p:'split'},
+  {id:'signal', t:'Signal & Noise', type:'series', c:['#22d3ee','#082f49'], p:'rings'},
+  {id:'glass', t:'Glasshouse', type:'movie', c:['#65d6ad','#0d2b2a'], p:'split'},
+  {id:'lantern', t:'Lantern Street', type:'series', c:['#fbbf24','#3a1503'], p:'aurora'},
+  {id:'kite', t:'Kite Season', type:'movie', c:['#7dd3fc','#9d174d'], p:'aurora'},
+  {id:'neon', t:'Neon Gardeners', type:'series', c:['#4ade80','#3b0764'], p:'dots'},
+  {id:'tide', t:'Low Tide', type:'movie', c:['#38bdf8','#0f172a'], p:'sun'}
+];
+const PARTIES = [
+  {s:'hollow', st:'Watching now', live:true, det:'Season 2 · The Clerk', p:46, m:['Joyce','Nico','Mira']},
+  {s:'velvet', st:'Last watched yesterday', det:'Movie · 1:12:40 of 2:04:00', p:58, m:['Joyce']},
+  {s:'orbit', st:'Last watched 3 days ago', det:'Season 1 · Last Call', p:21, m:['Leo','Mira']},
+  {s:'paper', st:'Last watched 4 days ago', det:'Movie · 0:41:10 of 1:52:00', p:37, m:['Nico']},
+  {s:'under', st:'Last watched 6 days ago', det:'Season 1 · Places, Please', p:72, m:['Mira','Joyce']},
+  {s:'ferry', st:'Last watched 9 days ago', det:'Movie · 1:30:02 of 1:41:00', p:89, m:['Leo']},
+  {s:'signal', st:'Last watched 12 days ago', det:'Season 2 · First Contact', p:15, m:['Joyce','Leo','Nico']},
+  {s:'glass', st:'Last watched 15 days ago', det:'Movie · 0:12:44 of 1:57:00', p:11, m:['Mira']},
+  {s:'lantern', st:'Last watched 18 days ago', det:'Season 3 · Closing Time', p:64, m:['Nico','Joyce']},
+  {s:'kite', st:'Last watched 21 days ago', det:'Movie · 1:02:10 of 1:46:00', p:59, m:['Leo','Mira']},
+  {s:'neon', st:'Last watched 26 days ago', det:'Season 1 · Seedlings', p:33, m:['Joyce']},
+  {s:'tide', st:'Last watched 30 days ago', det:'Movie · 1:20:00 of 1:33:00', p:86, m:['Nico','Leo']}
+];
+const COUNTS = [2, 3, 12];
+const byId = id => SHOWS.find(s => s.id === id);
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const typeL = s => s.type === 'movie' ? 'Movie' : 'Series';
+const CHEV = '<svg class="ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
+const CHEV_L = CHEV.replace('width="16" height="16"', 'width="20" height="20"');
+const ARROW = '<svg class="ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'sun': return `radial-gradient(circle at 68% 36%, ${a} 0 17%, ${a}00 17.6%), radial-gradient(90% 70% at 68% 40%, ${a}77, ${a}00 65%), linear-gradient(0deg, #05060aee 0 18%, #05060a00 60%), linear-gradient(175deg, ${b}, #07070c)`;
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 50% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(70% 60% at 50% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    case 'split': return `linear-gradient(118deg, ${a}00 0 52%, ${a} 52% 54.5%, ${a}00 54.6%), linear-gradient(118deg, ${a}38 0 52%, ${a}00 52.1%), radial-gradient(80% 80% at 82% 18%, ${a}66, ${a}00 60%), linear-gradient(200deg, ${b}, #060608)`;
+    case 'dots': return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+    default: return `radial-gradient(55% 45% at 22% 28%, ${a}dd, ${a}00 70%), radial-gradient(60% 50% at 85% 75%, ${a}66, ${a}00 70%), linear-gradient(160deg, ${b}, #06060b 80%)`;
+  }
+}
+const artwork = s => `<div class="listing-artwork art" style="background:${art(s)}"></div>`;
+const av = n => `<i class="ui-avatar" style="--c:${FR[n]}">${n[0]}</i>`;
+const bar = (w, h, extra = '') => `<i class="sk" style="width:${w};height:${h}px;${extra}"></i>`;
+
+function partyCard(p){
+  const s = byId(p.s);
+  return `<a class="listing-party-card">${artwork(s)}<div class="listing-party-shade"></div>
+    <div class="listing-party-badges"><span>${p.live ? '<i></i>' : ''}${p.st}</span><span>${typeL(s)}</span></div>
+    <div class="listing-party-content"><h3>${esc(s.t)}</h3><p>${p.det}</p>
+      <div class="listing-party-progress"><i style="width:${p.p}%"></i></div>
+      <div class="listing-party-members"><span class="avs">${p.m.map(av).join('')}</span><span>${p.m.join(', ')}</span><span class="listing-party-join">Rejoin →</span></div></div></a>`;
+}
+
+/* ───── variations: the link itself, at real size ───── */
+const heading = (right = '', cls = '') => `<div class="listing-section-heading ${cls}"><h2>Recent parties</h2>${right}</div>`;
+const dTile = (n, c = '') => `<a class="d-more ${c}" data-see>
+  <span class="d-thumbs">${PARTIES.slice(3, 7).map(p => `<i style="background:${art(byId(p.s))}"></i>`).join('')}</span>
+  <span class="d-copy"><b>+${n - 3}</b><span>See all parties ${ARROW}</span></span></a>`;
+const eFoot = (n, c = '') => `<div class="e-foot"><button class="e-btn ${c}" data-see><span class="avs">${['Joyce','Leo','Mira'].map(av).join('')}</span>See all ${n} parties ${ARROW}</button></div>`;
+
+const V = {
+  now: {head: (n, c = '') => heading(`<button class="now-link ${c}" data-see>See all parties <span>→</span></button>`)},
+  a: {head: (n, c = '') => heading(n > 3 ? `<button class="a-link ${c}" data-see>All ${n} parties ${CHEV}</button>` : '')},
+  b: {head: (n, c = '') => heading(n > 3 ? `<button class="b-pill ${c}" data-see>See all <span class="n">${n}</span></button>` : '', 'b-head')},
+  c: {head: (n, c = '') => n > 3
+    ? `<div class="listing-section-heading"><button class="c-head ${c}" data-see><h2>Recent parties</h2>${CHEV_L}<span class="c-more">See all ${n}</span></button></div>`
+    : heading()},
+  d: {head: () => heading(), tile: dTile, state: c => `<div class="d-solo">${dTile(12, c)}</div>`},
+  e: {head: () => heading(), foot: eFoot, state: c => eFoot(12, c)}
+};
+
+/* ───── in-situ: All page, rest as skeleton ───── */
+function nav(tab){
+  return `<nav class="listing-navigation">
+    <a class="listing-logo" data-tab="all"><span class="ui-logo">Care.tv</span></a>
+    <div class="listing-tabs">${[['all','All'],['movie','Movies'],['series','Series'],['parties','Parties']].map(([k,l]) => `<button data-tab="${k}" aria-selected="${tab === k}">${l}</button>`).join('')}</div>
+    <div class="nav-sk">${bar('104px',34,'border-radius:20px')}${bar('250px',42,'border-radius:12px')}${bar('34px',34,'border-radius:50%')}</div>
+  </nav>`;
+}
+const heroSk = `<div class="hero-sk"><i class="sk" style="height:100%;border-radius:20px"></i><div class="col">${'<i class="sk"></i>'.repeat(5)}</div></div>`;
+const titlesSk = `<section>${bar('112px',20,'margin-bottom:22px')}<div class="listing-show-grid">${Array.from({length:5}, () => `<div class="sk-sc"><i class="sk th"></i>${bar('62%',13,'margin-top:12px')}${bar('34%',10,'margin-top:8px')}</div>`).join('')}</div></section>`;
+
+function recent(v, n){
+  const cards = PARTIES.slice(0, Math.min(n, 3)).map(partyCard).join('');
+  const tile = v.tile && n > 3 ? v.tile(n) : '';
+  return `<section class="listing-section">${v.head(n)}<div class="listing-party-grid ${tile ? 'd-grid' : ''}">${cards}${tile}</div>${v.foot && n > 3 ? v.foot(n) : ''}</section>`;
+}
+function page(v, st){
+  if(st.view === 'parties') return `${nav('parties')}<div class="listing-body fade-in"><section class="listing-section"><div class="listing-section-heading"><h2>All parties</h2></div>
+    <div class="listing-party-grid">${PARTIES.slice(0, st.n).map(partyCard).join('')}</div></section></div>`;
+  return `${nav('all')}${heroSk}<div class="listing-body">${recent(v, st.n)}${titlesSk}</div>`;
+}
+
+document.querySelectorAll('.var').forEach(sec => {
+  const v = V[sec.dataset.key];
+  sec.id = 'v-' + sec.dataset.key;
+  sec.querySelector('.states').innerHTML = [['Default',''],['Hover','is-hover'],['Focus','is-focus']].map(([l, c]) =>
+    `<div><span class="cell-l">${l}</span><div class="stage listing-home">${v.state ? v.state(c) : v.head(12, c)}</div></div>`).join('');
+  const root = sec.querySelector('.scroll'), ctl = sec.querySelector('.ctl');
+  const st = {n: 12, view: 'all'};
+  ctl.innerHTML = `Your parties <span class="seg">${COUNTS.map(n => `<button data-n="${n}" aria-pressed="${n === st.n}">${n}</button>`).join('')}</span><small>Click the link to open Parties; All returns.</small>`;
+  const render = () => { root.innerHTML = page(v, st); };
+  ctl.addEventListener('click', e => {
+    const b = e.target.closest('[data-n]'); if(!b) return;
+    st.n = Number(b.dataset.n); st.view = 'all';
+    ctl.querySelectorAll('[data-n]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    render();
+  });
+  root.addEventListener('click', e => {
+    if(e.target.closest('[data-see]')){ st.view = 'parties'; render(); root.scrollTop = 0; return; }
+    const t = e.target.closest('[data-tab]');
+    if(t && (t.dataset.tab === 'all' || t.dataset.tab === 'parties')){ st.view = t.dataset.tab; render(); root.scrollTop = 0; }
+  });
+  sec.querySelectorAll('.stage').forEach(s => s.addEventListener('click', e => e.preventDefault()));
+  render();
+});
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  ['Explore from this', 'More variations in this direction.', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and change something.', id => `Remix ${id} in ${FILE}: `],
+  ['Settle on this', 'Make it the direction.', id => `Settle on ${id} in ${FILE}`]
+];
+const menus = [];
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, h = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick';
+  btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-haspopup', 'menu');
+  h.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  menu.innerHTML = VERBS.map((x, i) => `<button role="menuitem" data-i="${i}"><b>${x[0]}</b><span>${x[1]}</span></button>`).join('');
+  h.after(menu);
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  menu.after(out);
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+  menus.push(close);
+  btn.addEventListener('click', () => {
+    const open = menu.hidden;
+    menus.forEach(c => c());
+    menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', async e => {
+    const b = e.target.closest('button[data-i]');
+    if(!b) return;
+    const text = VERBS[Number(b.dataset.i)][2](id);
+    close();
+    out.hidden = false;
+    try{
+      await navigator.clipboard.writeText(text);
+      out.innerHTML = `<code>${esc(text)}</code><span class="ok">Copied</span>`;
+    }catch(err){
+      out.innerHTML = `<input readonly value="${esc(text)}">`;
+      out.querySelector('input').select();
+    }
+  });
+  document.addEventListener('click', e => { if(!h.contains(e.target) && !menu.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+});
+
+/* ───── minimap ───── */
+const vars = [...document.querySelectorAll('.var')];
+document.getElementById('mm').innerHTML = vars.map(v => `<a href="#${v.id}"><i></i><span><b>${v.dataset.id}</b>${v.dataset.name}</span></a>`).join('');
+const links = [...document.querySelectorAll('.mm a')];
+function syncMM(){
+  let best = 0, bd = Infinity;
+  vars.forEach((v, i) => { const d = Math.abs(v.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((a, i) => a.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMM, {passive:true});
+syncMM();
+</script>
+</body>
+</html>

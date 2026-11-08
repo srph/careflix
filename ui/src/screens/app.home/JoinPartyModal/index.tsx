@@ -103,7 +103,7 @@ function JoinPartyForm({ onClose, joining }: { onClose: () => void; joining: Rea
       <div className="join-party-cells" aria-hidden="true">
         {Array.from({ length: 6 }, (_, index) => <Fragment key={index}>
           {index === 3 && <span className="join-party-separator" />}
-          <span className={`join-party-cell${code[index] ? ' is-filled' : ''}${index === code.length ? ' is-current' : ''}`}>{code[index] || ''}</span>
+          <span className={`join-party-cell${code[index] ? ' is-filled' : ''}${index === Math.min(code.length, 5) ? ' is-current' : ''}`}>{code[index] || ''}</span>
         </Fragment>)}
       </div>
     </div>

@@ -29,7 +29,7 @@ export default function PartySection({ parties, total, recent = false, onSeeAll,
     }))
   }
   return <section className="listing-section" aria-label={recent ? 'Recent parties' : 'All parties'} aria-busy={isLoadingMore}>
-    <div className="listing-section-heading"><h2>{recent ? 'Recent parties' : 'All parties'}</h2><span>{recent ? Math.min(3, parties.length) : total}</span>
+    <div className="listing-section-heading"><h2>{recent ? 'Recent parties' : 'All parties'}</h2>{!recent && <span>{total}</span>}
       {recent && <button type="button" onClick={onSeeAll}>See all parties <span aria-hidden="true">→</span></button>}
     </div>
     {parties.length ? <div className="listing-party-grid" ref={grid} onPointerOver={shift} onPointerLeave={() => { hovered.current = null; setStyles([]) }}>

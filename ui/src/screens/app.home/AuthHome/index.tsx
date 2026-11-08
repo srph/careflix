@@ -60,7 +60,7 @@ export default function AuthHome() {
               renderError={retry => <LoadMoreError parties={tab === 'parties'} onRetry={retry} />}>
               {tab === 'parties' ? <PartySection parties={parties} total={partiesQuery.data.pages[0].total} isLoadingMore={partiesQuery.isFetchingNextPage} />
                 : <section className="listing-section" aria-label={title}>
-                  <div className="listing-section-heading"><h2>{title}</h2><span>{showsQuery.data?.pages[0].total ?? shows.length}</span></div>
+                  <div className="listing-section-heading"><h2>{title}</h2>{tab !== 'all' && <span>{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
                   <div className="listing-show-grid">
                     {shows.map(show => <ShowCard key={show.id} show={show} onDetails={setSelectedShow} />)}
                     {showsQuery.isFetchingNextPage && <ShowSkeletonCards />}

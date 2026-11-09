@@ -1,6 +1,7 @@
 import './style.css'
 import { Dialog } from '@base-ui/react/dialog'
 import { BorderBeam } from 'border-beam'
+import { CANDY_LINE_STROKE_ONLY } from './beamFix'
 import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
@@ -17,8 +18,10 @@ import { useShowGroupsQuery } from '~/screens/app.home/queries'
 import assetInvitation from '~/assets/audio/invitation.ogg'
 import { useInvitationOverlay } from './Context'
 import { initialState, invitationStatus, reducer } from './state'
+import { sendDecline } from './sendDecline'
 
 const COLLAPSED_HEIGHT = 40
+const DECLINE_COOLDOWN = 500
 
 export default function InvitationModal() {
   const auth = useAuth()
@@ -35,7 +38,7 @@ export default function InvitationModal() {
   // Keep the visible invite when it expires; skip stale invites waiting behind it.
   const current = invitations.find(invite => invite.id === activeId)
     ?? invitations.find(invite => invitationStatus(invite, now) === 'pending')
-  const invitation = state.joined ?? state.declined ?? current
+  const invitation = state.joined ?? state.declined ?? state.dismissed ?? current
   const expanded = overlay.isExpanded && state.phase === 'respond' && state.action !== 'accept'
   const busy = state.action != null || state.phase !== 'respond'
   const status = invitation ? invitationStatus(invitation, now) : 'answered'
@@ -45,6 +48,7 @@ export default function InvitationModal() {
   const respondRef = useRef<HTMLButtonElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const requestRef = useRef(false)
+  const lastDecline = useRef(0)
   const mounted = useRef(true)
   useEffect(() => {
     mounted.current = true
@@ -98,11 +102,11 @@ export default function InvitationModal() {
 
   useEffect(() => {
     setActiveId(current?.id ?? null)
-    if (!current && state.phase === 'respond') {
+    if (!current && state.phase === 'respond' && !state.dismissed) {
       overlay.setExpanded(false)
       dispatch({ type: 'reset' })
     }
-  }, [current?.id, state.phase])
+  }, [current?.id, state.phase, state.dismissed])
 
   useEffect(() => {
     if (!current || state.phase !== 'respond' || lastNotification.current === current.id) return
@@ -168,33 +172,44 @@ export default function InvitationModal() {
 
   function dismiss() {
     if (busy || !current) return
+    const hasNext = latestInvitations.current.some(invite => invite.id !== current.id && invitationStatus(invite, new Date()) === 'pending')
     auth.removeInvitation(current.id)
-    dispatch({ type: 'advance' })
+    // Without a next invite, hold this one so the toast fades out with its content.
+    dispatch(hasNext ? { type: 'advance' } : { type: 'dismissed', invitation: current })
   }
 
-  async function answer(action: 'accept' | 'decline') {
+  // Declining is optimistic: the invite leaves now and the request retries in the background.
+  // A failed decline is never shown; the invite expires and the host sees "didn't answer".
+  function decline() {
+    if (!current || busy || invitationStatus(current, new Date()) !== 'pending') return
+    // The next invite slides in under the pointer; don't let a double click decline it too.
+    if (Date.now() - lastDecline.current < DECLINE_COOLDOWN) return
+    lastDecline.current = Date.now()
+    const target = current
+    const hasNext = latestInvitations.current.some(invite => invite.id !== target.id && invitationStatus(invite, new Date()) === 'pending')
+    auth.declineInvitation(target)
+    void sendDecline(target)
+    if (hasNext) dispatch({ type: 'advance' })
+    else {
+      overlay.setExpanded(false)
+      dispatch({ type: 'declined', invitation: { ...target, action: 'declined' } })
+    }
+  }
+
+  async function accept() {
     if (!current || requestRef.current || invitationStatus(current, new Date()) !== 'pending') return
     const target = current
     requestRef.current = true
-    dispatch({ type: 'request', action })
-    const [error, response] = await axios.post(`/api/invitations/${target.id}/${action}`, {}, { app: { validation: false } })
+    dispatch({ type: 'request' })
+    const [error, response] = await axios.post(`/api/invitations/${target.id}/accept`, {}, { app: { validation: false } })
     requestRef.current = false
     if (!mounted.current) return
     if (error) {
-      dispatch({ type: 'error', message: `Could not ${action} this invitation. Please try again.` })
+      dispatch({ type: 'error', message: 'Could not accept this invitation. Please try again.' })
       overlay.setExpanded(true)
       return
     }
     auth.removeInvitation(target.id)
-    if (action === 'decline') {
-      const hasNext = latestInvitations.current.some(invite => invite.id !== target.id && invitationStatus(invite, new Date()) === 'pending')
-      if (hasNext) dispatch({ type: 'advance' })
-      else {
-        overlay.setExpanded(false)
-        dispatch({ type: 'declined', invitation: { ...target, action: 'declined' } })
-      }
-      return
-    }
     for (const id of response.data.declined_invitation_ids ?? []) auth.removeInvitation(id)
     for (const id of response.data.accepted_invitation_ids ?? []) auth.removeInvitation(id)
     overlay.setExpanded(false)
@@ -211,14 +226,14 @@ export default function InvitationModal() {
   const position = docked && dock ? dock : { left: '50%', bottom: location.pathname.startsWith('/watch/') ? 64 : 20 }
 
   return <>
-    <Dialog.Root open={Boolean(invitation) && state.phase !== 'leaving'} modal={false} disablePointerDismissal
+    <Dialog.Root open={Boolean(invitation) && state.phase !== 'leaving' && !state.dismissed} modal={false} disablePointerDismissal
       onOpenChangeComplete={open => { if (!open) dispatch({ type: 'reset' }) }} onOpenChange={(open, details) => {
       if (open) return
       details.cancel()
       if (expanded) collapse()
     }}>
       <Dialog.Portal>
-        <Dialog.Popup className={cx('incoming-invitation-position', { 'is-confirmation': docked || declined })} initialFocus={false}
+        <Dialog.Popup className={cx('incoming-invitation-position', { 'is-confirmation': docked || declined, 'is-exit-down': declined || Boolean(state.dismissed) })} initialFocus={false}
           aria-label="Watch invitation" style={position}>
           {invitation && header(false, true)}
           {pillWidth !== null && <motion.div initial={false} animate={{
@@ -232,9 +247,9 @@ export default function InvitationModal() {
           }} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
             <BorderBeam className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"
               size={docked ? 'pulse-inner' : 'line'} colorVariant={docked ? 'mono' : 'candy'} theme="dark"
-              duration={docked ? 4 : 3.2} strength={1} brightness={docked ? 1 : 1.3}
-              saturation={docked ? 1.2 : 2.5} glowSize={docked ? 1 : 3} hueRange={0} staticColors
-              borderRadius={20} active={showBeam && !reducedMotion} children={null} />
+              duration={docked ? 4 : 3.1} strength={1} brightness={docked ? 1 : 1.3}
+              saturation={1.2} glowSize={1} hueRange={docked ? 0 : 30} staticColors={docked}
+              borderRadius={20} css={docked ? undefined : CANDY_LINE_STROKE_ONLY} active={showBeam && !reducedMotion} children={null} />
             {invitation && <>
               {header(expanded)}
               {/* Keep the preview mounted so the container clips it during collapse. */}
@@ -255,8 +270,8 @@ export default function InvitationModal() {
                   {state.error && <p role="alert" className="invitation-error">{state.error}</p>}
                   <div className="invitation-actions">
                     {pending ? <>
-                      <UiPlainButton onClick={() => answer('decline')} disabled={busy}>{state.action === 'decline' ? 'Declining…' : 'Decline'}</UiPlainButton>
-                      <UiPlainButton className="is-primary" onClick={() => answer('accept')} disabled={busy}>Accept</UiPlainButton>
+                      <UiPlainButton onClick={decline} disabled={busy}>Decline</UiPlainButton>
+                      <UiPlainButton className="is-primary" onClick={accept} disabled={busy}>Accept</UiPlainButton>
                     </> : <UiPlainButton onClick={dismiss} disabled={busy}>Dismiss</UiPlainButton>}
                   </div>
                 </motion.div>

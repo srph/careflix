@@ -95,8 +95,8 @@
   font-size: 19px;
 }
 
+/* Inset so the pill's rounded clip doesn't cut the ring. */
 .incoming-invitation button:focus-visible {
-  outline: 2px solid #fff;
   outline-offset: -3px;
 }
 
@@ -370,6 +370,12 @@
   transition: opacity .45s ease, transform .45s ease;
 }
 
+/* Dismissed and declined toasts are put away, so they sink. Joined stays up to sit over the player. */
+.incoming-invitation-position.is-exit-down[data-ending-style] {
+  transform: translateX(-50%) translateY(10px);
+  transition: opacity .45s ease, transform .45s ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .incoming-invitation > .invitation-beam, .invitation-body, .invitation-actions > button {
     transition: none;
@@ -377,13 +383,14 @@
   .incoming-invitation-position {
     transition: none;
   }
-  .incoming-invitation-position.is-confirmation[data-ending-style], .incoming-invitation {
+  .incoming-invitation-position.is-confirmation[data-ending-style], .incoming-invitation-position.is-exit-down[data-ending-style], .incoming-invitation {
     transition: none;
   }
   .invitation-spinner {
     animation: none;
   }
-  .incoming-invitation-position[data-starting-style], .incoming-invitation-position[data-ending-style] {
+  .incoming-invitation-position[data-starting-style], .incoming-invitation-position[data-ending-style],
+  .incoming-invitation-position.is-exit-down[data-ending-style] {
     transform: translateX(-50%);
   }
 }

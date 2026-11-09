@@ -6,6 +6,7 @@ import axios from '~/lib/axios'
 import { useNavigate } from 'react-router'
 import { toast } from '~/components/Toast'
 import { beginDiscord, clearDiscordFlow, pendingOnboarding, saveOnboarding, verifier, type DiscordAuthResult, type Onboarding } from '~/lib/auth/discord'
+import { readDeclinedInvitations, rememberDeclinedInvitation } from './declinedInvitations'
 
 export interface AuthContext {
   data: AppUser | null
@@ -20,6 +21,7 @@ export interface AuthContext {
   updateUserData: (payload: Partial<AppUser>) => void
   shiftInvitations: () => void
   removeInvitation: (id: AppId) => void
+  declineInvitation: (invitation: AppPartyInvitation) => void
   receiveInvitation: (invitation: AppPartyInvitation) => void
   cancelInvitation: (invitation: AppPartyInvitation) => void
 }
@@ -37,6 +39,7 @@ const Context = createContext<AuthContext>({
   updateUserData: () => {},
   shiftInvitations: () => {},
   removeInvitation: () => {},
+  declineInvitation: () => {},
   receiveInvitation: () => {},
   cancelInvitation: () => {}
 })
@@ -73,7 +76,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       }
 
       setToken(token)
-      setData(res.data)
+      setData(withoutDeclined(res.data))
       setIsLoading(false)
       return []
     }
@@ -97,7 +100,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     clearDiscordFlow()
     setOnboarding(null)
     setToken(result.access_token!)
-    setData(result.user!)
+    setData(withoutDeclined(result.user!))
   }
 
   const exchangeDiscord = (ticket: string): Promise<AsyncGoReturn<DiscordAuthResult>> => {
@@ -139,6 +142,14 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     setToken(null)
     navigate('/login')
     await revocation
+  }
+
+  // A decline that hasn't reached the API yet must not bring its invite back on reload.
+  const withoutDeclined = (user: AppUser): AppUser => {
+    if (!user) return user
+    for (const entry of readDeclinedInvitations(user.id)) removedInvitations.current.add(entry.id)
+    if (!user.invitations?.length) return user
+    return { ...user, invitations: user.invitations.filter(invitation => !removedInvitations.current.has(String(invitation.id))) }
   }
 
   const updateUserData = (payload: Partial<AppUser>) => {
@@ -188,6 +199,11 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     }))
   }
 
+  const declineInvitation = (invitation: AppPartyInvitation) => {
+    if (data) rememberDeclinedInvitation(data.id, invitation)
+    removeInvitation(invitation.id)
+  }
+
   return (
     <Context.Provider
       value={{
@@ -203,6 +219,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
         updateUserData,
         shiftInvitations,
         removeInvitation,
+        declineInvitation,
         receiveInvitation,
         cancelInvitation
       }}>

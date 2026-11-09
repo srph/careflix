@@ -5,7 +5,7 @@ import { getInitials, getBgFromInitials } from './utils'
 
 interface Props {
   img?: string
-  user?: Pick<AppUser, 'name' | 'avatar'>
+  user?: Pick<AppUser, 'name' | 'avatar'> | null
   size?: 'sm' | 'm' | 'l' | 'xl'
 }
 
@@ -17,17 +17,16 @@ function UiAvatar(props: Props) {
     'is-xl': props.size === 'xl'
   })
 
-  if (props.user && !props.user.avatar) {
-    const initials = getInitials(props.user.name)
+  const src = props.img || props.user?.avatar
+  if (src) return <img src={src} alt="Avatar" className={className} />
 
-    return (
-      <div className={className} style={{ backgroundColor: getBgFromInitials(initials) }}>
-        {initials}
-      </div>
-    )
-  }
-
-  return <img src={props.img || props.user.avatar} alt="Avatar" className={className} />
+  // A missing user (signed out mid-render, deleted account) gets a blank circle instead of crashing the route.
+  const initials = props.user?.name ? getInitials(props.user.name) : ''
+  return (
+    <div className={className} style={{ backgroundColor: initials ? getBgFromInitials(initials) : 'var(--color-black-4)' }}>
+      {initials}
+    </div>
+  )
 }
 
 export default UiAvatar

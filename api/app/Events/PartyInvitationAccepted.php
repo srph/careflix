@@ -71,7 +71,8 @@ class PartyInvitationAccepted implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'invitation' => $this->invitation->attributesToArray(),
+            // Hosts key invitation history by recipient, so keep the eager-loaded sender and recipient.
+            'invitation' => $this->invitation->loadMissing('sender', 'recipient')->toArray(),
             'member' => $this->member
         ];
     }

@@ -41,7 +41,8 @@ class JoinParty
                 $activity = PartyActivity::create([
                     'user_id' => $user->id,
                     'party_id' => $party->id,
-                    'text' => $invitation ? 'joined the room' : 'joined the room with the code'
+                    'text' => $invitation ? 'joined the room' : 'joined the room with the code',
+                    'kind' => $invitation ? 'joined' : 'joined_code'
                 ]);
                 $log = $party->logs()->create([
                     'loggable_type' => PartyActivity::class,

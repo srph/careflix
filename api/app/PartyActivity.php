@@ -16,7 +16,20 @@ class PartyActivity extends Model
     protected $fillable = [
         'user_id',
         'party_id',
-        'text'
+        'text',
+        'kind',
+        'meta'
+    ];
+
+    /**
+     * `kind` says what happened; `meta` holds that kind's details, e.g.
+     * `played`/`paused` {seconds} and `seeked` {seconds, from_seconds}.
+     * `text` stays as the readable sentence for older clients.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'meta' => 'array'
     ];
 
     /**

@@ -36,7 +36,8 @@ class PartyLogsController extends Controller
         $activity = PartyActivity::create([
             'user_id' => $request->user()->id,
             'party_id' => $party->id,
-            'text' => 'accepted the invitation'
+            'text' => 'accepted the invitation',
+            'kind' => 'accepted'
         ]);
 
         $log = $party->logs()->create([

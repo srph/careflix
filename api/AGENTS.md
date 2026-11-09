@@ -25,7 +25,7 @@ Party chat and activity feed are unified through a single polymorphic log:
 
 -   `PartyLog` ([app/PartyLog.php](app/PartyLog.php)) — has `loggable_type` / `loggable_id`, `morphTo()` into either:
     -   `PartyMessage` ([app/PartyMessage.php](app/PartyMessage.php)) — table `party_log_messages`, a chat message
-    -   `PartyActivity` ([app/PartyActivity.php](app/PartyActivity.php)) — table `party_log_activities`, a system activity line (e.g. "so-and-so joined")
+    -   `PartyActivity` ([app/PartyActivity.php](app/PartyActivity.php)) — table `party_log_activities`, a system activity line (e.g. "so-and-so joined"). `kind` (`created`, `joined`, `joined_code`, `accepted`, `played`, `paused`, `seeked`, `switched`) says what happened and `meta` (JSON) holds that kind's details: `played`/`paused` `{seconds}`, `seeked` `{seconds, from_seconds}`, `switched` `{video_id}`. `text` stays as the readable sentence; rows from before the 2026-11-10 migration had `kind`/`meta` recovered from it.
 -   `PartyLog` appends virtual `type` (`'message'` or `'activity'`), plus `activity`/`message` accessors that resolve the polymorphic relation — so API consumers just check `type` and read the matching key, without caring about `loggable_type` internals (which are hidden from serialization).
 
 ### Invitations

@@ -39,7 +39,8 @@ class PartiesController extends Controller
             $activity = \App\PartyActivity::create([
                 'user_id' => $request->user()->id,
                 'party_id' => $party->id,
-                'text' => 'created the room'
+                'text' => 'created the room',
+                'kind' => 'created'
             ]);
 
             $party->logs()->create([
@@ -78,19 +79,23 @@ class PartiesController extends Controller
             'is_playing' => (boolean) $request->get('is_playing')
         ];
 
-        $action = null;
-
         $time = Helper::getReadableFormatFromDurationInSeconds($payload['current_time']);
+        $meta = ['seconds' => $payload['current_time']];
 
         if ($party->is_playing && !$payload['is_playing']) {
+            $kind = 'paused';
             $action = 'paused the video (' . $time . ')';
         } else if (!$party->is_playing && $payload['is_playing']) {
+            $kind = 'played';
             $action = 'played the video (' . $time . ')';
         } else {
             // By default, the user probably seeked.
             // This is pretty brittle because what if two users tried to play/pause
             // the video at the same time? Not urgent, but something to look at in the future.
+            $kind = 'seeked';
             $action = 'seeked to ' . $time;
+            // Read before the fill below so clients can tell a jump back from a skip ahead.
+            $meta['from_seconds'] = (int) $party->current_time;
         }
 
         $party->fill([
@@ -102,7 +107,9 @@ class PartiesController extends Controller
         $activity = PartyActivity::create([
             'user_id' => $request->user()->id,
             'party_id' => $party->id,
-            'text' => $action
+            'text' => $action,
+            'kind' => $kind,
+            'meta' => $meta
         ]);
 
         $log = $party->logs()->create([
@@ -157,7 +164,9 @@ class PartiesController extends Controller
         $activity = \App\PartyActivity::create([
             'user_id' => $request->user()->id,
             'party_id' => $party->id,
-            'text' => "switched to {$party->video->group->title}: {$party->video->title}"
+            'text' => "switched to {$party->video->group->title}: {$party->video->title}",
+            'kind' => 'switched',
+            'meta' => ['video_id' => $party->video->id]
         ]);
 
         $log = $party->logs()->create([

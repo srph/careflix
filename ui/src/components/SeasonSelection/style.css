@@ -12,7 +12,6 @@
   color: var(--color-white);
   background: transparent;
   border: 0;
-  outline: 0;
   cursor: pointer;
 }
 

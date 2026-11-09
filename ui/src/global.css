@@ -30,6 +30,9 @@ html, body {
   --color-green: #65D6AD;
   --color-white: #fff;
   --color-modal-overlay: rgba(0,0,0,0.7);
+  --color-focus: #C2196E;
+  --focus-ring: 2px solid var(--color-focus);
+  --focus-ring-offset: 3px;
   --border-radius: 4px;
   --letter-spacing-subheading: 1px;
   --overlay-fade: linear-gradient(transparent, rgba(0,0,0,0.9));
@@ -90,6 +93,12 @@ h5 {
 
 h6 {
   font-size: var(--font-size-h6);
+}
+
+/* Keyboard focus: one darker-pink ring, 3px out. Rules elsewhere only change the offset where a parent would clip it. */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 p, h1, h2, h3, h4, h5, h6 {

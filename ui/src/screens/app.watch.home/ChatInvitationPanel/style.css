@@ -4,7 +4,7 @@
 .host-invite-heading button { display: grid; place-items: center; width: 32px; height: 32px; margin-left: auto; border-radius: 50%; color: var(--color-black-5); }
 .host-invite-heading button:hover { background: #ffffff14; color: white; }
 .host-invite-search { display: flex; flex: none; align-items: center; gap: 10px; height: 42px; margin: 10px 16px 4px; padding: 0 14px; border: 1px solid #ffffff12; border-radius: 12px; background: var(--color-black-1); color: var(--color-black-5); }
-.host-invite-search:focus-within { border-color: var(--color-primary); }
+.host-invite-search:has(input:focus-visible) { outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 .host-invite-search input { width: 100%; min-width: 0; padding: 0; outline: 0; border: 0; background: transparent; color: white; font: inherit; font-size: 14px; }
 .host-invite-search input::placeholder { color: var(--color-black-5); }
 .host-invite-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 6px 8px; }
@@ -32,4 +32,5 @@ button:hover .host-invite-action.is-cancel { background: #ffffff1f; color: white
 .host-invite-footer .watch-party-code { min-height: 60px; margin: 0; padding: 0 16px 0 20px; border-radius: 0; background: transparent; }
 .host-invite-note { padding: 12px 14px; color: var(--color-black-5); font-size: 13px; }
 .host-invite-note button { border: 0; background: transparent; color: white; cursor: pointer; text-decoration: underline; }
-.host-invite-panel button:focus-visible { outline: 2px solid white; outline-offset: -2px; }
+/* Inset so the scrolling list doesn't clip the ring. */
+.host-invite-panel button:focus-visible { outline-offset: -2px; }

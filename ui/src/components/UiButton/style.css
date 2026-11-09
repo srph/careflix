@@ -14,8 +14,8 @@
   border-radius: var(--border-radius);
   border: 0;
   outline: 2px solid transparent;
-  outline-offset: 4px;
-  transition: filter 200ms ease, box-shadow 200ms ease, outline-color 200ms ease, opacity 200ms ease;
+  outline-offset: var(--focus-ring-offset);
+  transition: background-color 200ms ease, filter 200ms ease, box-shadow 200ms ease, outline-color 200ms ease, opacity 200ms ease;
   cursor: pointer;
 }
 
@@ -50,12 +50,16 @@ a.ui-button {
   text-align: center;
 }
 
-.ui-button:not(:disabled):hover {
+.ui-button:not(.is-primary):not(:disabled):hover {
+  background: rgba(255, 255, 255, .18);
+}
+
+.ui-button.is-primary:not(:disabled):hover {
   filter: brightness(1.12);
 }
 
 .ui-button:focus-visible {
-  outline-color: var(--color-white);
+  outline-color: var(--color-focus);
 }
 
 .ui-button:disabled {

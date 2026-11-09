@@ -33,12 +33,11 @@
 .login-identity-switch { flex: none; color: var(--color-black-5); white-space: nowrap; }
 .login-identity-switch button { border: 0; padding: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; text-decoration-color: #ffffff30; text-underline-offset: 2px; cursor: pointer; }
 .login-identity-switch button:disabled { cursor: wait; }
-.login-identity-switch button:focus-visible, .login-access-continue:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 .login-access-form { display: grid; gap: 12px; }
 .login-access-form label { margin: 0 0 -4px 2px; color: #c5ced6; font-size: 14px; font-weight: 500; }
 .login-access-form input { width: 100%; min-width: 0; height: 52px; padding: 0 16px; border: 1px solid #ffffff1f; border-radius: 14px; background: #18212b; color: #fff; font: 500 17px/1 var(--font-family); letter-spacing: .02em; transition: border-color .15s, box-shadow .15s; }
 .login-access-form input::placeholder { color: #ffffff4d; letter-spacing: 0; }
-.login-access-form input:focus { outline: none; border-color: #ffffff70; box-shadow: 0 0 0 3px #ffffff12; }
+.login-access-form input:focus { border-color: #ffffff70; }
 .login-access-form input:disabled { color: #ffffff88; }
 .login-access-form input[aria-invalid=true] { border-color: #ff6b81; box-shadow: 0 0 0 4px #ff6b8122; animation: access-code-shake .4s; }
 .login-access-error { margin: -4px 0 0 2px; color: #ff8da0; font-size: 13.5px; line-height: 1.4; overflow-wrap: anywhere; }

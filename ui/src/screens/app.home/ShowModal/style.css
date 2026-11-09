@@ -1,5 +1,5 @@
 .show-modal-overlay { background: rgba(5, 7, 10, .8); scrollbar-width: thin; scrollbar-color: var(--color-black-4) transparent; }
-.show-modal {
+.ui-modal.show-modal {
   --show-surface: #111823;
   --show-muted: var(--color-black-5);
   width: 50%;
@@ -20,7 +20,6 @@
 .show-modal[data-starting-style], .show-modal[data-ending-style] { transform: translateY(22px) scale(.97); }
 :where(.show-modal) button:not(.ui-button), .show-modal select { font: inherit; }
 .show-modal a { color: inherit; text-decoration: none; }
-.show-modal button:focus-visible, .show-modal a:focus-visible, .show-modal select:focus-visible { outline: 2px solid var(--color-white); outline-offset: 4px; }
 .show-modal button:disabled { cursor: default; opacity: .6; }
 .show-modal .listing-artwork { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .show-modal-hero { position: relative; display: flex; align-items: flex-end; min-height: 400px; }
@@ -63,7 +62,7 @@
 .show-modal-tabs button:hover, .show-modal-tabs button[aria-selected=true] { color: var(--color-white); }
 .show-modal-tabs button[aria-selected=true]::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--color-primary); }
 .show-modal-pane { padding: 22px 36px 34px; }
-.show-modal-pane:focus-visible { outline: 2px solid var(--color-white); outline-offset: -6px; }
+.show-modal-pane:focus-visible { outline-offset: -6px; }
 .show-modal-status { padding: 14px 36px; color: #ffffffbf; line-height: 1.6; }
 .show-modal-pane .show-modal-status { padding: 0; }
 .show-modal-status button, .show-modal-facts button { padding: 2px 4px; border: 0; background: none; color: var(--color-white); text-decoration: underline; cursor: pointer; }
@@ -99,10 +98,10 @@
 .show-modal-party > i { color: var(--show-muted); }
 .show-modal-more { margin-top: 20px; }
 @media (max-width: 1023px) {
-  .show-modal { width: calc(100% - 48px); }
+  .ui-modal.show-modal { width: calc(100% - 48px); }
 }
 @media (max-width: 639px) {
-  .show-modal { width: 100%; max-width: none; min-height: 100dvh; margin: 0; border-radius: 0; }
+  .ui-modal.show-modal { width: 100%; max-width: none; min-height: 100dvh; margin: 0; border-radius: 0; }
   .show-modal-hero { min-height: 380px; }
   .show-modal-content { height: max(430px, calc(100dvh - 380px)); }
   .show-modal-pending-tabs { padding: 0 24px; }

@@ -36,7 +36,6 @@
   color: var(--color-white);
   border: 0;
   opacity: 0.4;
-  outline: 0;
 }
 
 .toast-float > .item:not(:last-child) {

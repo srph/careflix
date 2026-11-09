@@ -19,11 +19,13 @@ export default function JoinPartyModal() {
   const overlay = useInvitationOverlay()
   const close = () => { if (!joining.current) setOpen(false) }
   return <>
-    <UiPlainButton ref={trigger} className="listing-join" aria-haspopup="dialog" aria-expanded={open} onClick={event => {
-      event.currentTarget.focus()
-      overlay.setExpanded(false)
-      setOpen(true)
-    }}>Join Party</UiPlainButton>
+    <span className="listing-join">
+      <UiButton ref={trigger} variant="primary" round aria-haspopup="dialog" aria-expanded={open} onClick={event => {
+        event.currentTarget.focus()
+        overlay.setExpanded(false)
+        setOpen(true)
+      }}>Join Party</UiButton>
+    </span>
     <UiModal isOpen={open} onClose={close} finalFocus={trigger} ariaLabel="Join a watch party"
       modalClassName="join-party-modal" overlayClassName="join-party-overlay">
       {() => <JoinPartyForm onClose={close} joining={joining} />}

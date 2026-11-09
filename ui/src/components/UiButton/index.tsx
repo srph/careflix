@@ -12,6 +12,7 @@ interface OwnProps {
   round?: boolean
   /** Pink shadow under a primary button. Ignored on the default variant. */
   glow?: boolean
+  ref?: React.Ref<HTMLButtonElement>
 }
 
 type ButtonAttributes =  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'className'>

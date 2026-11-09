@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optimistic Decline Errors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}.mm{display:none}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .copied{color:var(--good);font-weight:600}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:1000px){.pair{grid-template-columns:1fr}}
+.col{min-width:0}
+.cap{margin:0 0 6px 2px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.frame{position:relative;height:580px;margin-top:0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#10171E;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.rail .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-left:6px}
+.rail .lbl:first-child{margin-left:0}
+.rail .grp{display:flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.rail .grp button:hover{color:var(--ink)}
+.rail .grp button.on{background:var(--ink);color:var(--bg)}
+.rail .grp.go button{color:var(--ink)}
+.rail .grp.go button:hover{background:var(--code)}
+.srv{margin-top:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.srv>div{min-height:72px}
+.srv>div+div{min-height:0;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.srv h4{margin:0 0 6px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.log{margin:0;padding:0;list-style:none;font:12.5px/1.65 ui-monospace,Menlo,monospace}
+.log li{display:flex;gap:10px}
+.log li s{text-decoration:none;color:var(--mut);width:42px;flex:none;text-align:right}
+.log .t-ok{color:var(--good)}.log .t-err{color:var(--bad)}.log .t-mut{color:var(--mut)}
+.log .empty{color:var(--mut)}
+.sees{font-size:13.5px;display:flex;flex-direction:column;gap:4px}
+.sees b{font-weight:600}
+.sees .m{color:var(--mut)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:300px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup (Care.tv, Joyce browsing) ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n4:#38444D;--n5:#8899A6;--ez:cubic-bezier(.2,.8,.2,1);
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);height:100%;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h3,.mk p{margin:0}
+.av{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:10.5px;font-style:normal;flex:none}
+.av.s{width:20px;height:20px;font-size:9px}
+.av.l{width:32px;height:32px;font-size:13px}
+/* library skeleton */
+.nav{display:flex;align-items:center;gap:22px;height:60px;padding:0 24px}
+.word{font-weight:800;font-size:18px;letter-spacing:-.02em}
+.word i{font-style:normal;color:var(--pk)}
+.sk{display:block;height:10px;border-radius:5px;background:#ffffff12}
+.navr{margin-left:auto;display:flex;align-items:center;gap:16px}
+.row{padding:20px 24px 0}
+.row>.sk{width:140px;height:12px;margin-bottom:12px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.avs{display:flex;flex:none}.avs .av{box-shadow:0 0 0 2px #15202b}.avs .av+.av{margin-left:-8px}
+.tiles>i{aspect-ratio:16/9;border-radius:6px;background:#ffffff0a}
+
+/* the invitation pill (InvitationModal) */
+.ipw{position:absolute;left:50%;bottom:20px;z-index:5;transform:translateX(-50%);transition:opacity .45s,transform .45s}
+.ipw[hidden]{display:none}
+.ipw.enter{animation:pin .55s cubic-bezier(.2,.9,.3,1.12)}
+@keyframes pin{from{opacity:0;transform:translate(-50%,170%)}}
+.ipw.out{opacity:0;transform:translate(-50%,-10px)}
+.ip{position:relative;overflow:clip;border-radius:20px;background:rgba(21,32,43,.97);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 26px 54px -16px rgba(0,0,0,.85);
+  transition:width .5s var(--ez),height .5s var(--ez),border-radius .45s,filter .4s}
+.ip.noanim{transition:none}
+.ip.open{border-radius:16px}
+.ip.grey{filter:grayscale(.85) brightness(.85)}
+.ipx{position:absolute;top:0;left:0;width:max-content}
+.ip.open .ipx{width:400px}
+.ipx.fin{animation:fin .4s var(--ez)}
+@keyframes fin{from{opacity:0;transform:translateX(24px)}}
+.ln{display:flex;align-items:center;gap:9px;min-height:40px;padding:0 8px}
+.ln>p{flex:1;min-width:0;font-size:13px;color:var(--n5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ln b{color:#fff;font-weight:600}
+.mk .resp{flex:none;min-height:24px;padding:0 12px;border-radius:12px;background:var(--pk);color:#fff;font-size:12px;font-weight:600}
+.mk .resp.gh{background:#ffffff14}
+.mk .resp.gh:hover{background:#ffffff26}
+.mk .resp:disabled{opacity:.6;cursor:wait}
+.cnt{flex:none;color:var(--n5);font-size:12px;font-variant-numeric:tabular-nums}
+.mk .x{flex:none;display:grid;place-items:center;width:28px;height:32px;color:var(--n5);font-size:19px}
+.mk .x:hover{color:#fff}
+.spi{flex:none;display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;animation:spin .8s linear infinite;vertical-align:-2px}
+.spi.g{border-top-color:var(--g);width:14px;height:14px;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.bd{padding-bottom:8px}
+.artw{display:block;width:calc(100% - 14px);margin:2px 7px 0;aspect-ratio:16/9;border-radius:9px;position:relative;overflow:hidden}
+.artw b{position:absolute;left:14px;bottom:10px;font:800 22px/1 'Outfit',sans-serif;letter-spacing:-.02em;color:#fff;text-shadow:0 2px 14px #0008}
+.inf{padding:13px 13px 0}
+.inf h3{font-size:17px;line-height:1.2;font-weight:600}
+.sub{margin-top:5px;font:600 10px 'Work Sans',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--n5)}
+.tl{padding:18px 13px 0}
+.tll{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px;color:var(--n5);font-size:12px}
+.tll b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
+.trk{position:relative;height:20px;margin:0 7px}
+.bar,.segs{position:absolute;top:8px;left:0;right:0;height:4px}
+.bar,.segs>span{overflow:hidden;border-radius:2px;background:rgba(255,255,255,.12)}
+.bar>i,.segs i{display:block;height:100%;border-radius:2px;background:var(--pk)}
+.segs{display:flex;gap:3px}.segs>span{flex:1}
+.ph{position:absolute;top:0;display:flex;transform:translateX(-50%)}
+.ph .av{box-shadow:0 0 0 2px #17222e}.ph .av+.av{margin-left:-6px}
+.snap{margin-top:6px;font-size:10px;color:var(--n5)}
+.err{margin:12px 13px 0;font-size:13px;color:#f7c948}
+.foot{display:flex;align-items:center;gap:8px;margin:14px 8px 0;padding:7px 8px 7px 10px;border-radius:8px;background:#ffffff0a;font-size:12.5px;color:var(--n5)}
+.foot b{color:#fff;font-weight:600}
+.foot>span{flex:1;min-width:0}
+.mk .lnk{flex:none;color:#ff9fcb;font-weight:600;font-size:12.5px}
+.mk .lnk:hover{color:#fff}
+.foot.ok{color:var(--g)}
+.acts{display:flex;gap:8px;padding:18px 8px 0}
+.mk .acts>button{flex:1;min-height:34px;padding:7px 15px;border-radius:8px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:600;text-align:center;transition:background-color .15s}
+.mk .acts>button:hover:not(:disabled){background:rgba(255,255,255,.16)}
+.mk .acts>.pri{background:var(--pk)}
+.mk .acts>.pri:hover:not(:disabled){background:color-mix(in srgb,var(--pk),#fff 16%)}
+.mk .acts>button:disabled{opacity:.5;cursor:wait}
+
+/* D: the note above the pill */
+.chip{position:absolute;left:50%;z-index:6;display:flex;align-items:center;gap:8px;height:32px;padding:0 4px 0 6px;border-radius:16px;white-space:nowrap;
+  background:rgba(21,32,43,.97);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 18px 40px -16px rgba(0,0,0,.85);font-size:12.5px;color:var(--n5);
+  transform:translateX(-50%);transition:bottom .5s var(--ez),opacity .35s,transform .35s}
+.chip[hidden]{display:none}
+.chip.enter{animation:cin .45s var(--ez)}
+@keyframes cin{from{opacity:0;transform:translate(-50%,10px)}}
+.chip b{color:#fff;font-weight:600}
+.chip.ok{color:var(--g);padding-right:12px}
+.chip .x{width:24px;height:28px;font-size:16px}
+
+/* E: the app's own toast (components/Toast) */
+.tst{position:absolute;left:50%;z-index:6;max-width:360px;padding:12px 28px 12px 12px;border-radius:4px;background:var(--pk);color:#fff;font:12px/1.4 'halyard-display','Outfit',sans-serif;
+  transform:translateX(-50%);transition:bottom .5s var(--ez)}
+.tst[hidden]{display:none}
+.tst.enter{animation:cin .35s var(--ez)}
+.tst i{position:absolute;top:10px;right:11px;font-style:normal;opacity:.4}
+
+@media (prefers-reduced-motion:reduce){.ip,.ipw,.chip,.tst{transition:none;animation:none}.ipx.fin,.ipw.enter,.chip.enter,.tst.enter{animation:none}}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+<header class="brief">
+  <div class="eyebrow">Care.tv · Joyce declines an invitation · the pill from b7e1</div>
+  <h1>Declining is instant. What if the server says no?</h1>
+  <div class="cards">
+    <div>Decline hides the invite at once; the request runs behind it.</div>
+    <div>A 403 or 404 means it’s already over, so it counts as declined.</div>
+    <div>If nothing reaches the server, Kier sees “No answer” at expiry.</div>
+    <div>Reload is the real risk: the invite comes back unless her device remembers.</div>
+    <div>Each variation runs twice: one invite, and three waiting in a queue.</div>
+  </div>
+</header>
+<div id="vars"></div>
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from A: what Kier’s sidebar says when a decline never lands.</div>
+    <div><b>Remix</b>Remix C: no Retry, just “It’ll expire on its own” in the line.</div>
+    <div><b>Settle</b>Settle on A, with C’s held line for the last invite.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/d7a4-decline-error-handling.html';
+const FR = {Kier:'#E8368F', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Ade:'#A3E635', Joyce:'#FB923C'};
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const INV = {
+  kier:{n:'Kier', title:'Dune: Part Two', meta:'Movie · 2024 · 2h 46m', who:['Kier','Leo'], at:'1:12:40', right:'1h 33m left', prog:.44,
+    art:'radial-gradient(40% 50% at 72% 30%,#ffe2b0,#ffe2b000 70%),radial-gradient(120% 60% at 30% 110%,#3a1a0e 40%,#3a1a0e00 41%),radial-gradient(140% 70% at 90% 120%,#5a2a14 45%,#5a2a1400 46%),linear-gradient(180deg,#e9a35c,#b4582a 55%,#4a200f)'},
+  mira:{n:'Mira', title:'Severance', meta:'Series · Season 2 · Episode 3', who:['Mira','Ade'], at:'E3, 18:04', right:'Season 2 · 10 episodes', seg:[10, 2, .36],
+    art:'linear-gradient(90deg,#0000 0 46%,#ffffff22 46% 47%,#0000 47%),linear-gradient(180deg,#e8f1f2 0 52%,#9fbcc2 52% 54%,#5d8189 54%,#163039)'},
+  nico:{n:'Nico', title:'The Bear', meta:'Series · Season 3 · Episode 1', who:['Nico'], at:'E1, 31:20', right:'Season 3 · 10 episodes', seg:[10, 0, .9],
+    art:'radial-gradient(45% 55% at 28% 45%,#d0533c66,#d0533c00 70%),linear-gradient(90deg,#0000 0 62%,#ffffff10 62% 63%,#0000 63%),linear-gradient(180deg,#3d3b36,#1a1916 70%,#0c0b0a)'}
+};
+const CTX = {one:['kier'], three:['kier', 'mira', 'nico']};
+const isAre = n => n > 1 ? ' are' : ' is';
+const and = a => a.length < 2 ? a[0] : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+const who = ids => and(ids.map(id => INV[id].n));
+const whoB = ids => and(ids.map(id => `<b>${INV[id].n}</b>`));
+const owners = ids => and(ids.map(id => `<b>${INV[id].n}’s</b>`));
+const invs = ids => ids.length > 1 ? 'invitations' : 'invitation';
+const avs = ids => `<span class="avs">${ids.slice(0, 3).map(id => av(INV[id].n)).join('')}</span>`;
+
+/* ───── each variation decides what Decline does and how a failure shows ───── */
+const VARS = [
+{id:'Now', name:'Waits for the server, error in the card',
+ notes:[['good','Never shows something the server didn’t do.'],['bad','Every decline waits on “Declining…”, three times over with a queue.'],['bad','The error asks her to care about something she’s done with.']],
+ decline(c, id){
+  c.p.busy = 'decline'; c.p.err = null; render(c);
+  req(c, id, ok => {
+    if(ok) return advance(c, id);
+    c.p.busy = null; c.p.err = 'Could not decline this invitation. Please try again.'; render(c);
+  });
+ }},
+{id:'A', name:'Gone at once; retries quietly, then lets it lapse',
+ notes:[['good','Nothing to see. With a queue, the next invite is simply there.'],['good','Her device remembers it, so a reload won’t bring it back.'],['bad','If every retry fails, Kier sees “No answer”, not “Declined”.']],
+ decline(c, id){
+  remember(c, id); advance(c, id);
+  bg(c, id, [2000, 4000], () => log(c, `gave up · ${INV[id].n} expires on its own`, 'mut'));
+ }},
+{id:'B', name:'The pill comes back to say it didn’t go through',
+ notes:[['good','Honest: she learns Kier wasn’t told.'],['bad','One invite: pops back after she’s moved on.'],['bad','Three: cuts in front of the invite she’s reading, then hands it back.']],
+ decline(c, id){ advance(c, id); bg(c, id, [2000], () => comeBack(c, id)); }},
+{id:'C', name:'“Declined” stays until the server agrees',
+ notes:[['good','One invite: the error replaces the line she’s already reading.'],['good','Three: a row in the next card; it becomes the pill’s line once the queue is empty.'],['bad','“Declined” lingers while retries run.']],
+ decline(c, id){
+  const t0 = Date.now();
+  advance(c, id, {hold:true});
+  bg(c, id, [1500], () => {
+    const p = c.p;
+    if(p && p.mode === 'confirm' && p.id === id){ c.p = errP([...(c.foot && !c.foot.ok ? c.foot.ids : []), id]); c.foot = null; }
+    else if(p && p.mode === 'error') p.ids.push(id);
+    else if(p && (p.mode === 'open' || p.mode === 'collapsed')){ if(c.foot && !c.foot.ok) c.foot.ids.push(id); else c.foot = {ids:[id]}; }
+    else c.p = errP([id]);
+    render(c);
+  }, () => {
+    if(c.p && c.p.id === id && c.p.mode === 'confirm') later(c, Math.max(0, 1600 - (Date.now() - t0)), () => gone(c));
+  });
+ }},
+{id:'D', name:'A small note rides above the pill',
+ notes:[['good','Same note for one invite or three; failures add up in one line.'],['good','Sits beside the next invite without taking it over.'],['bad','One more floating thing to stack with the pill.']],
+ decline(c, id){
+  advance(c, id);
+  bg(c, id, [2000], () => { if(c.chip && !c.chip.ok) c.chip.ids.push(id); else c.chip = {ids:[id], enter:true}; render(c); });
+ }},
+{id:'E', name:'The app’s toast, then it lapses',
+ notes:[['good','Reuses the toast the app already has.'],['bad','No Retry; it only informs.'],['bad','Three: each failure is its own toast, stacked on the pill.']],
+ decline(c, id){
+  remember(c, id); advance(c, id);
+  bg(c, id, [2000], () => {
+    const t = c.toast = {text:`Couldn’t decline ${INV[id].n}’s invitation. It’ll expire on its own.`, enter:true}; render(c);
+    later(c, 4000, () => { if(c.toast === t){ c.toast = null; render(c); } });
+  });
+ }}
+];
+
+/* ───── shared flow ───── */
+function later(c, ms, fn){ c.timers.push(setTimeout(fn, ms)); }
+function clear(c){ c.timers.forEach(clearTimeout); c.timers = []; }
+function log(c, text, tone = ''){
+  if(!c.log.length) c.t0 = Date.now();
+  const t = ((Date.now() - c.t0) / 1000).toFixed(1) + 's';
+  c.log.push([t, text, tone]); if(c.log.length > 7) c.log.shift(); renderSrv(c);
+}
+function remember(c, id){ c.hidden.add(id); renderSrv(c); }
+const errP = ids => ({mode:'error', id:ids[0], ids});
+/* POST /api/invitations/:id/decline, 0.9s round trip */
+function req(c, id, cb){
+  const n = c.att[id] = (c.att[id] || 0) + 1;
+  log(c, `POST decline · ${INV[id].n}${n > 1 ? ` (try ${n})` : ''}`);
+  const ok = c.net === 'ok' || (c.net === 'flaky' && n > 1);
+  later(c, 900, () => {
+    if(ok) c.srv[id] = 'declined';
+    log(c, `${ok ? '200 · declined' : '500 · failed'} · ${INV[id].n}`, ok ? 'ok' : 'err');
+    cb(ok);
+  });
+}
+function reqAll(c, ids, done){
+  let left = ids.length; const failed = [];
+  ids.forEach(id => req(c, id, ok => { if(!ok) failed.push(id); if(--left === 0) done(failed); }));
+}
+function bg(c, id, waits, onGiveUp, onOk){
+  let i = 0;
+  const go = () => req(c, id, ok => {
+    if(ok) return onOk && onOk();
+    if(i < waits.length){ const w = waits[i++]; log(c, `retry ${INV[id].n} in ${w / 1000}s`, 'mut'); later(c, w, go); }
+    else onGiveUp && onGiveUp();
+  });
+  go();
+}
+function advance(c, id, o = {}){
+  c.answered++;
+  const next = c.queue.shift();
+  if(next){ c.p = {id:next, mode:'open', idx:c.answered + 1, total:c.total}; return render(c); }
+  c.p = {id, ids:[id], mode:'confirm'}; render(c);
+  if(!o.hold) later(c, 1600, () => { if(c.p && c.p.id === id && c.p.mode === 'confirm') gone(c); });
+}
+function gone(c){
+  if(c.foot && !c.foot.ok && c.foot.ids.length){ c.p = errP(c.foot.ids); c.foot = null; return render(c); }
+  c.foot = null;
+  if(c.bumped){ c.p = c.bumped; c.bumped = null; return render(c); }
+  const next = c.queue.shift();
+  c.p = next ? {id:next, mode:'collapsed', idx:1, total:1} : null;
+  render(c);
+}
+function comeBack(c, id){
+  if(c.p && c.p.mode === 'error'){ c.p.ids.push(id); return render(c); }
+  if(c.p && (c.p.mode === 'open' || c.p.mode === 'collapsed')) c.bumped = {...c.p, busy:null};
+  c.p = errP([id]); render(c);
+}
+const ACT = {
+  open(c){ c.p.mode = 'open'; render(c); },
+  collapse(c){ c.p.mode = 'collapsed'; render(c); },
+  decline(c){ if(!c.p.busy && c.p.mode === 'open') c.V.decline(c, c.p.id); },
+  accept(c){
+    if(c.p.busy) return;
+    log(c, `accept · ${INV[c.p.id].n} (not this study)`, 'mut');
+    c.queue = []; c.bumped = null; c.foot = null; c.p = {id:c.p.id, mode:'joining'}; render(c); later(c, 1400, () => gone(c));
+  },
+  retry(c){
+    const p = c.p; if(p.busy) return;
+    p.busy = 'retry'; render(c);
+    reqAll(c, p.ids, failed => {
+      if(c.p !== p) return;
+      if(failed.length){ p.busy = null; p.ids = failed; p.id = failed[0]; return render(c); }
+      const done = c.p = {id:p.id, ids:p.ids, mode:'confirm'}; render(c);
+      later(c, 1600, () => { if(c.p === done) gone(c); });
+    });
+  },
+  ignore(c){ c.p.ids.forEach(id => remember(c, id)); log(c, `dismissed · ${who(c.p.ids)} lapses`, 'mut'); gone(c); },
+  footRetry(c){
+    const f = c.foot; if(f.busy) return;
+    f.busy = true; render(c);
+    reqAll(c, f.ids, failed => {
+      if(c.foot !== f) return;
+      f.busy = false;
+      if(failed.length) f.ids = failed;
+      else { f.ok = true; later(c, 1400, () => { if(c.foot === f){ c.foot = null; render(c); } }); }
+      render(c);
+    });
+  },
+  chipRetry(c){
+    const ch = c.chip; if(ch.busy) return;
+    ch.busy = true; render(c);
+    reqAll(c, ch.ids, failed => {
+      if(c.chip !== ch) return;
+      ch.busy = false;
+      if(failed.length) ch.ids = failed;
+      else { ch.ok = true; later(c, 1400, () => { if(c.chip === ch){ c.chip = null; render(c); } }); }
+      render(c);
+    });
+  },
+  chipX(c){ c.chip.ids.forEach(id => remember(c, id)); c.chip = null; render(c); }
+};
+const NEEDS = {footRetry:'foot', chipRetry:'chip', chipX:'chip'};
+
+/* ───── rendering ───── */
+function lineHTML(c, p){
+  const v = INV[p.id];
+  if(p.mode === 'collapsed') return `<div class="ln">${av(v.n)}<p><b>${v.n}</b> invited you to watch <b>${v.title}</b></p><button type="button" class="resp" data-act="open">Respond</button></div>`;
+  if(p.mode === 'open') return `<div class="ln">${av(v.n)}<p><b>${v.n}</b> invited you to watch</p>${p.total > 1 ? `<span class="cnt">${p.idx} of ${p.total}</span>` : ''}<button type="button" class="x" data-act="collapse" aria-label="Collapse invitation" ${p.busy ? 'disabled' : ''}>×</button></div>`;
+  if(p.mode === 'confirm') return p.ids.length > 1
+    ? `<div class="ln">${avs(p.ids)}<p>Declined ${owners(p.ids)} invitations</p></div>`
+    : `<div class="ln">${av(v.n)}<p>Declined <b>${v.n}’s</b> invitation to watch <b>${v.title}</b></p></div>`;
+  if(p.mode === 'joining') return `<div class="ln">${av(v.n)}<p>Joining <b>${v.n}</b> to watch <b>${v.title}</b></p><i class="spi g"></i></div>`;
+  if(p.mode === 'error') return `<div class="ln">${p.ids.length > 1 ? avs(p.ids) : av(v.n)}<p>Couldn’t decline ${owners(p.ids)} ${invs(p.ids)}</p>
+    <button type="button" class="resp gh" data-act="retry" ${p.busy ? 'disabled' : ''}>${p.busy ? '<i class="spi"></i>' : 'Retry'}</button>
+    <button type="button" class="x" data-act="ignore" aria-label="Dismiss">×</button></div>`;
+}
+function bodyHTML(c, p){
+  const v = INV[p.id], busy = !!p.busy;
+  const tl = v.seg
+    ? `<div class="segs">${Array.from({length:v.seg[0]}, (_, k) => `<span><i style="width:${k < v.seg[1] ? 100 : k === v.seg[1] ? v.seg[2] * 100 : 0}%"></i></span>`).join('')}</div>`
+    : `<div class="bar"><i style="width:${v.prog * 100}%"></i></div>`;
+  const pos = v.seg ? (v.seg[1] + v.seg[2]) / v.seg[0] : v.prog;
+  const f = c.foot;
+  return `<div class="bd">
+    <div class="artw" style="background:${v.art}"><b>${v.title}</b></div>
+    <div class="inf"><h3>${v.title}</h3><p class="sub">${v.meta}</p></div>
+    <div class="tl"><div class="tll"><span><b>${and(v.who)}</b>${isAre(v.who.length)} at <b>${v.at}</b></span><span>${v.right}</span></div>
+      <div class="trk">${tl}<div class="ph" style="left:${pos * 100}%">${v.who.map(n => av(n, 's')).join('')}</div></div>
+      <p class="snap">Room snapshot</p></div>
+    ${p.err ? `<p class="err" role="alert">${p.err}</p>` : ''}
+    ${f ? (f.ok ? `<div class="foot ok"><span>Declined ${who(f.ids)}’s ${invs(f.ids)}</span></div>`
+      : `<div class="foot">${f.ids.map(id => av(INV[id].n, 's')).join('')}<span>Your ${f.ids.length > 1 ? 'declines' : 'decline'} to ${whoB(f.ids)} didn’t go through</span><button type="button" class="lnk" data-act="footRetry">${f.busy ? '<i class="spi"></i>' : 'Retry'}</button></div>`) : ''}
+    <div class="acts">
+      <button type="button" data-act="decline" ${busy ? 'disabled' : ''}>${p.busy === 'decline' ? 'Declining…' : 'Decline'}</button>
+      <button type="button" class="pri" data-act="accept" ${busy ? 'disabled' : ''}>Accept</button>
+    </div></div>`;
+}
+function render(c){
+  const {wrap, pill, inner, chip, tst} = c.e, p = c.p;
+  if(!p){
+    c.key = null;
+    if(wrap.dataset.on){
+      delete wrap.dataset.on; wrap.classList.remove('enter'); wrap.classList.add('out');
+      later(c, 460, () => { if(!c.p){ wrap.hidden = true; wrap.classList.remove('out'); } });
+    }
+  } else {
+    let fresh = false;
+    if(!wrap.dataset.on){
+      fresh = true; wrap.dataset.on = '1'; wrap.hidden = false; wrap.classList.remove('out', 'enter'); void wrap.offsetWidth; wrap.classList.add('enter');
+      pill.classList.add('noanim');
+    }
+    pill.classList.toggle('open', p.mode === 'open');
+    pill.classList.toggle('grey', p.mode === 'confirm');
+    inner.innerHTML = lineHTML(c, p) + (p.mode === 'open' ? bodyHTML(c, p) : '');
+    if(!fresh && c.key && c.key !== p.id){ inner.classList.remove('fin'); void inner.offsetWidth; inner.classList.add('fin'); }
+    c.key = p.id;
+    pill.style.width = inner.offsetWidth + 'px'; pill.style.height = inner.offsetHeight + 'px';
+    if(fresh){ void pill.offsetWidth; pill.classList.remove('noanim'); }
+  }
+  /* things that float above the pill */
+  const above = p ? 20 + parseFloat(pill.style.height || 40) + 10 : 20;
+  if(c.chip){
+    const ch = c.chip;
+    chip.hidden = false; chip.style.bottom = above + 'px'; chip.classList.toggle('ok', !!ch.ok);
+    chip.innerHTML = ch.ok ? `<span>Declined ${who(ch.ids)}’s ${invs(ch.ids)}</span>`
+      : `${ch.ids.map(id => av(INV[id].n, 's')).join('')}<span>${whoB(ch.ids)} ${ch.ids.length > 1 ? 'weren’t' : 'wasn’t'} told you declined</span><button type="button" class="lnk" data-act="chipRetry">${ch.busy ? '<i class="spi"></i>' : 'Retry'}</button><button type="button" class="x" data-act="chipX" aria-label="Dismiss">×</button>`;
+    if(ch.enter){ ch.enter = false; chip.classList.remove('enter'); void chip.offsetWidth; chip.classList.add('enter'); }
+  } else chip.hidden = true;
+  if(c.toast){
+    tst.hidden = false; tst.style.bottom = above + 'px'; tst.innerHTML = `${esc(c.toast.text)}<i>×</i>`;
+    if(c.toast.enter){ c.toast.enter = false; tst.classList.remove('enter'); void tst.offsetWidth; tst.classList.add('enter'); }
+  } else tst.hidden = true;
+  renderSrv(c);
+}
+function renderSrv(c){
+  c.e.log.innerHTML = c.log.length ? c.log.map(([t, x, tone]) => `<li><s>${t}</s><span class="${tone && 't-' + tone}">${esc(x)}</span></li>`).join('') : '<li class="empty">No requests yet. Press Decline.</li>';
+  c.e.sees.innerHTML = c.all.map(id => {
+    const v = INV[id], st = c.srv[id] === 'declined' ? '“Joyce declined”' : '“Waiting on Joyce”';
+    return `<span>${v.n} sees <b>${st}</b>${c.srv[id] !== 'declined' && c.hidden.has(id) ? ' <span class="m">→ “No answer” at expiry</span>' : ''}</span>`;
+  }).join('') + `<span class="m">Remembered on Joyce’s device: ${c.hidden.size ? who([...c.hidden]) : 'nothing'}</span>`;
+}
+
+/* ───── scenes ───── */
+function reset(c){
+  clear(c);
+  c.all = CTX[c.ctx];
+  c.srv = Object.fromEntries(c.all.map(id => [id, 'pending']));
+  c.hidden = new Set(); c.att = {}; c.log = []; c.t0 = Date.now();
+  c.queue = c.all.slice(1); c.total = c.all.length; c.answered = 0;
+  c.chip = null; c.toast = null; c.foot = null; c.bumped = null;
+  c.e.wrap.removeAttribute('data-on'); c.e.wrap.hidden = true; c.key = null;
+  c.p = {id:c.all[0], mode:'open', idx:1, total:c.total};
+  render(c);
+}
+function reload(c){
+  clear(c);
+  c.p = null; c.chip = null; c.toast = null; c.foot = null; c.bumped = null; render(c);
+  later(c, 700, () => {
+    c.queue = c.all.filter(id => c.srv[id] === 'pending' && !c.hidden.has(id));
+    log(c, `reloaded · ${c.queue.length ? who(c.queue) + ' still pending' : 'nothing pending'}`, 'mut');
+    c.total = c.queue.length; c.answered = 0;
+    if(c.queue.length){ c.p = {id:c.queue.shift(), mode:'collapsed', idx:1, total:c.total}; render(c); }
+  });
+}
+function playDecline(c){
+  if(c.p && c.p.mode === 'open' && !c.p.busy) return ACT.decline(c);
+  reset(c); later(c, 650, () => ACT.decline(c));
+}
+
+/* ───── build the page: each variation, once with one invite and once with three ───── */
+const frameHTML = () => `<div class="frame"><div class="mk">
+  <div class="nav"><span class="word">care<i>.</i>tv</span><i class="sk" style="width:44px"></i><i class="sk" style="width:40px"></i><i class="sk" style="width:50px"></i>
+    <span class="navr"><i class="sk" style="width:110px;height:32px;border-radius:16px"></i>${av('Joyce', 'l')}</span></div>
+  ${[150, 120, 100].map(w => `<div class="row"><i class="sk" style="width:${w}px"></i><div class="tiles">${'<i></i>'.repeat(3)}</div></div>`).join('')}
+  <div class="chip" hidden></div>
+  <div class="tst" hidden></div>
+  <div class="ipw" hidden><div class="ip" role="dialog" aria-label="Watch invitation"><div class="ipx"></div></div></div>
+</div></div>
+<div class="srv"><div><h4>Requests</h4><ul class="log"></ul></div><div><h4>Meanwhile</h4><div class="sees"></div></div></div>`;
+const host = document.getElementById('vars');
+VARS.forEach(V => {
+  const sec = document.createElement('section');
+  sec.className = 'var'; sec.id = 'v-' + V.id.toLowerCase(); sec.dataset.id = V.id; sec.dataset.name = V.name;
+  sec.innerHTML = `<div class="var-h"><span class="id">${V.id}</span><h2>${esc(V.name)}</h2></div>
+    <div class="rail">
+      <span class="lbl">Server</span><div class="grp sel"><button type="button" data-v="fail" class="on">Fails</button><button type="button" data-v="flaky">Fails once</button><button type="button" data-v="ok">Works</button></div>
+      <div class="grp go"><button type="button" data-go="decline">▶ Decline</button><button type="button" data-go="reload">↻ Reload page</button><button type="button" data-go="reset">Reset</button></div>
+    </div>
+    <div class="pair">
+      <div class="col" data-ctx="one"><p class="cap">One invite · Kier</p>${frameHTML()}</div>
+      <div class="col" data-ctx="three"><p class="cap">Three invites · Kier, Mira, Nico</p>${frameHTML()}</div>
+    </div>
+    <div class="notes">${V.notes.map(([k, t]) => `<div class="note ${k}">${esc(t)}</div>`).join('')}</div>`;
+  host.appendChild(sec);
+  const cs = [...sec.querySelectorAll('.col')].map(col => {
+    const q = s => col.querySelector(s);
+    const c = {V, net:'fail', ctx:col.dataset.ctx, timers:[], e:{wrap:q('.ipw'), pill:q('.ip'), inner:q('.ipx'), chip:q('.chip'), tst:q('.tst'), log:q('.log'), sees:q('.sees')}};
+    q('.mk').addEventListener('click', ev => {
+      const b = ev.target.closest('[data-act]'); if(!b || b.disabled) return;
+      const a = b.dataset.act; if(c[NEEDS[a] || 'p']) ACT[a](c);
+    });
+    return c;
+  });
+  const g = sec.querySelector('.grp.sel');
+  g.addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if(!b) return;
+    g.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    cs.forEach(c => { c.net = b.dataset.v; reset(c); });
+  });
+  sec.querySelector('.grp.go').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-go]'); if(!b) return;
+    cs.forEach(c => ({decline:playDecline, reload, reset})[b.dataset.go](c));
+  });
+  cs.forEach(reset);
+});
+
+/* ───── Pick menus ───── */
+const ACTIONS = [
+  ['Explore from this', 'Add variations in this direction', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and apply your changes', id => `Remix ${id} in ${FILE}:`],
+  ['Settle on this', 'Make this the direction', id => `Settle on ${id} in ${FILE}`]
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded', 'false'); } }); }
+function legacyCopy(text){
+  const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(e){} t.remove(); return ok;
+}
+async function copyText(text){
+  try { if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; } } catch(e){}
+  return legacyCopy(text);
+}
+document.querySelectorAll('section.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+  head.appendChild(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  ACTIONS.forEach(([label, hint, make]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem');
+    b.innerHTML = `<b>${label}</b><span>${hint}</span>`;
+    b.addEventListener('click', async () => {
+      const text = make(id); closeAll(); btn.focus();
+      const ok = await copyText(text);
+      out.hidden = false;
+      out.innerHTML = ok ? '<code></code><span class="copied">Copied</span>' : '<input readonly aria-label="Prompt">';
+      if(ok) out.querySelector('code').textContent = text; else { const inp = out.querySelector('input'); inp.value = text; inp.focus(); inp.select(); }
+    });
+    menu.appendChild(b);
+  });
+  head.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const open = menu.hidden; closeAll(p); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', ev => ev.stopPropagation());
+});
+document.addEventListener('click', () => closeAll());
+document.addEventListener('keydown', ev => {
+  if(ev.key !== 'Escape') return;
+  const open = pickers.find(p => !p.menu.hidden);
+  if(open){ closeAll(); open.btn.focus(); }
+});
+
+/* ───── minimap ───── */
+const mm = document.querySelector('.mm');
+const secs = [...document.querySelectorAll('section.var')];
+secs.forEach(sec => {
+  const a = document.createElement('a'); a.href = '#' + sec.id;
+  a.innerHTML = `<i></i><span><b>${sec.dataset.id}</b>${esc(sec.dataset.name)}</span>`;
+  a.addEventListener('click', ev => { ev.preventDefault(); sec.scrollIntoView({behavior:'smooth', block:'start'}); });
+  mm.appendChild(a);
+});
+function syncMM(){
+  let best = 0, bestD = Infinity;
+  secs.forEach((s, k) => { const d = Math.abs(s.getBoundingClientRect().top - 24); if(d < bestD){ bestD = d; best = k; } });
+  [...mm.children].forEach((a, k) => a.classList.toggle('on', k === best));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+</script>
+</body>
+</html>

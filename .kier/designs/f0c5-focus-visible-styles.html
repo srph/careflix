@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Focus Visible Styles</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1280px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1280px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .ok{color:var(--good);font-weight:600}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;font-size:13px;color:var(--mut)}
+.ctl .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.ctl .seg button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;padding:8px 12px;cursor:pointer}
+.ctl .seg button+button{border-left:1px solid var(--line)}
+.ctl .seg button[aria-pressed="true"]{color:var(--ink);background:var(--code);font-weight:600}
+.ctl small{margin-left:auto}
+.frame{position:relative;margin-top:10px;border-radius:14px;overflow:auto hidden;border:1px solid var(--line);background:#090c11;box-shadow:0 30px 60px -40px rgba(0,0,0,.45);scrollbar-width:thin;scrollbar-color:#38444D transparent}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:14px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:260px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup: app slices (listing nav, hero, party cards, Join modal, chat) ───────────── */
+.app{--color-primary:#E8368F;--surf:#090c11;position:relative;min-width:1180px;color:#fff;background:#090c11;font:14px/1.4 'halyard-display','Outfit',sans-serif;-webkit-font-smoothing:antialiased}
+.app *{box-sizing:border-box}
+.app h2,.app h3,.app p{margin:0}
+.app button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.app a{color:inherit;text-decoration:none}
+.app :focus{outline:none}
+.listing-navigation{display:flex;align-items:center;gap:36px;min-height:76px;padding:12px 40px;background:rgba(9,12,17,.95)}
+.listing-logo{border-radius:4px}
+.ui-logo{color:#fff;font:700 20px 'Work Sans',sans-serif}
+.ui-logo::first-letter{color:var(--color-primary)}
+.listing-tabs{display:flex;align-items:center;gap:14px}
+.tab{position:relative;padding:10px 6px !important;border-radius:4px;color:#929296 !important;font-size:15px !important;font-weight:700 !important}
+.tab:hover,.tab[aria-selected=true]{color:#fff !important}
+.tab::after{content:'';position:absolute;bottom:0;left:6px;right:6px;height:2px;border-radius:2px;background:var(--color-primary);transform:scaleX(0);transition:transform .3s}
+.tab[aria-selected=true]::after{transform:scaleX(1)}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.ui-button{display:inline-flex !important;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 16px !important;text-transform:uppercase;font:700 11px/1 'Work Sans',sans-serif !important;letter-spacing:.08em;white-space:nowrap;color:#fff;background:rgba(255,255,255,.1) !important;border-radius:4px;border:0}
+.ui-button.is-l{height:40px;padding:0 20px !important}
+.ui-button.is-round{border-radius:999px}
+.ui-button.is-primary{background:var(--color-primary) !important}
+.ui-button.is-glow{box-shadow:0 10px 30px -8px rgba(232,54,143,.55)}
+.ui-button.is-block{width:100%}
+.ui-button:not(.is-primary):hover{background:rgba(255,255,255,.18) !important}
+.ui-button.is-primary:hover{filter:brightness(1.12)}
+.join.ui-button{height:42px;padding:0 19px !important}
+.srch{display:flex;align-items:center;gap:10px;width:250px;height:42px;padding:0 12px 0 14px;color:#969a9e;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:12px;transition:background .2s,border-color .2s;cursor:text}
+.srch input{flex:1;min-width:0;border:0;background:none;color:#fff;font:inherit;outline:none !important}
+.srch input::placeholder{color:#909196;font-size:13px}
+.srch kbd{padding:2px 5px;border:1px solid #424448;border-radius:4px;font-size:11px;font-family:inherit}
+.srch:is(:focus-within,.is-focus) kbd{display:none}
+.avb{display:grid;width:34px;height:34px;border-radius:50% !important}
+.ui-avatar{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--c,#E8368F);color:#10171E;font:700 12px/1 'Work Sans',sans-serif;font-style:normal;flex:none}
+.board{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:28px;padding:22px 40px 32px}
+.hero{position:relative;height:184px;border-radius:16px;overflow:hidden;box-shadow:0 0 0 1px #ffffff12}
+.art{position:absolute;inset:0}
+.art::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.2;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,#090c11f2 8%,#090c1100 70%)}
+.hero-copy{position:absolute;left:26px;bottom:22px}
+.hero-copy span{color:#ffffffa0;font:700 10.5px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.hero-copy h2{margin:2px 0 14px;font-size:28px;font-weight:800;letter-spacing:-.02em}
+.hero-actions{display:flex;gap:10px}
+.sec-h{display:flex;align-items:center;margin:22px 0 14px}
+.sec-h h2{font-size:22px;font-weight:700;letter-spacing:-.01em}
+.tl{margin-left:auto;display:inline-flex;align-items:center;gap:3px;padding:3px 6px;margin-right:-6px;border-radius:4px;color:#fff;font-size:13.5px;font-weight:600}
+.tl svg{color:var(--color-primary)}
+.party-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pc{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;border-radius:14px;box-shadow:0 0 0 1px #ffffff12}
+.pc-shade{position:absolute;inset:0;background:linear-gradient(0deg,#0a0e14f5 18%,#0a0e1414 95%)}
+.pc-badges{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between}
+.pc-badges span{padding:5px 9px;border-radius:99px;background:#10171ed9;font:700 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.pc-badges i{display:inline-block;width:6px;height:6px;margin-right:5px;border-radius:50%;background:var(--color-primary)}
+.pc-body{position:absolute;bottom:12px;left:14px;right:14px}
+.pc-body h3{font-size:19px;font-weight:700}
+.pc-body p{margin:1px 0 9px;color:#ffffffb3;font-size:12.5px}
+.pc-prog{height:3px;margin-bottom:9px;border-radius:4px;overflow:hidden;background:#ffffff30}
+.pc-prog i{display:block;height:100%;background:var(--color-primary)}
+.pc-mem{display:flex;align-items:center;gap:10px;color:#ffffffb3;font-size:12px}
+.pc-mem .ui-avatar{width:28px;height:28px;font-size:11px;border:2px solid #10171e}
+.avs{display:inline-flex}
+.avs .ui-avatar+.ui-avatar{margin-left:-7px}
+.pc-join{margin-left:auto;color:#fff;opacity:0;transition:opacity .2s}
+.pc:is(:hover,:focus-visible,.is-focus) .pc-join{opacity:1}
+.col-r{display:flex;flex-direction:column;gap:16px}
+.surf{--surf:#15202B;background:#15202B;border:1px solid #ffffff1a}
+.modal{padding:20px 22px 22px;border-radius:18px;box-shadow:0 30px 80px -20px #000}
+.modal-h{display:flex;align-items:center;gap:10px}
+.modal-h h2{flex:1;font-size:20px;font-weight:700;letter-spacing:-.01em}
+.ib{display:grid !important;place-items:center;width:28px;height:28px;border-radius:6px !important;color:#b1bcc7 !important}
+.ib:hover{color:#fff !important}
+.modal p{margin-top:6px;color:#b1bcc7}
+.code{position:relative;display:flex;align-items:center;gap:8px;margin:18px 0;cursor:text}
+.code input{position:absolute;inset:0;width:100%;opacity:0;border:0;cursor:text}
+.cell{display:grid;place-items:center;flex:1;height:54px;border:1px solid #ffffff1f;border-radius:12px;background:#ffffff0f;font-size:24px;font-weight:600;transition:border-color .15s,box-shadow .15s}
+.cell.is-filled{border-color:#ffffff45;background:#ffffff17}
+.code:is(:focus-within,.is-focus) .cell.is-current::after{content:'';width:2px;height:22px;background:#fff;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.sep{flex:none;width:10px;height:2px;border-radius:2px;background:#ffffff40}
+.chat{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:14px}
+.msg{display:flex;gap:10px;font-size:13.5px;line-height:1.45}
+.msg .ui-avatar{width:28px;height:28px;font-size:11px}
+.msg b{display:block;font-size:12.5px;color:#8899a6;font-weight:600}
+.inv{display:flex !important;align-items:center;gap:10px;padding:7px 12px 7px 8px !important;border:1px solid #e8368f33 !important;border-radius:12px;background:#e8368f14 !important;color:#ffd1e6 !important;font-size:13px !important}
+.inv .ui-avatar{width:24px;height:24px;font-size:10px}
+.inv>span:nth-child(2){flex:1}
+.inv small{color:#8899a6;font-variant-numeric:tabular-nums}
+.composer{display:flex;align-items:center;gap:10px}
+.cmp{flex:1;display:flex;align-items:center;height:46px;padding:0 16px;color:#8899a6;background:rgb(37,51,65);border:1px solid transparent;border-radius:25px;transition:background .2s,border-color .2s;cursor:text}
+.cmp input{flex:1;min-width:0;border:0;background:none;color:#fff;font:inherit;outline:none !important}
+.cmp input::placeholder{color:#8899a6}
+.send{width:40px !important;height:40px !important;border-radius:50% !important;background:#ffffff14 !important;color:#fff !important}
+svg.ic{flex:none}
+.glide{display:none}
+
+/* ───────────── Now — what ships today ───────────── */
+.vNow .f:is(:focus-visible,.is-focus){outline:2px solid #fff;outline-offset:5px}
+.vNow .ui-button:is(:focus-visible,.is-focus),.vNow .modal .f:is(:focus-visible,.is-focus){outline-offset:4px}
+.vNow .chat .f:is(:focus-visible,.is-focus){outline-offset:2px}
+.vNow .tab:is(:focus-visible,.is-focus)::after{transform:scaleX(1)}
+.vNow .srch:is(:focus-within,.is-focus){background:#111820;border-color:rgba(255,255,255,.35)}
+.vNow .code:is(:focus-within,.is-focus) .is-current{border-color:#fff;box-shadow:0 0 0 3px #ffffff1f}
+.vNow .cmp:is(:focus-within,.is-focus){background:#10171E;border-color:#1da1f2}
+
+/* ───────────── A — one white ring, 3px out ───────────── */
+.vA .f:is(:focus-visible,.is-focus),
+.vA .fw:is(:focus-within,.is-focus):not(.code),
+.vA .code:is(:focus-within,.is-focus) .is-current,
+.vD.mode-all .f.is-focus,
+.vD.mode-all .fw.is-focus:not(.code),
+.vD.mode-all .code.is-focus .is-current{outline:2px solid #fff;outline-offset:3px}
+
+/* ───────────── B — pink ring with a gap ───────────── */
+.vB .f:is(:focus-visible,.is-focus),
+.vB .fw:is(:focus-within,.is-focus):not(.code),
+.vB .code:is(:focus-within,.is-focus) .is-current{outline:2px solid transparent;box-shadow:0 0 0 2px var(--surf),0 0 0 4px #E8368F}
+
+/* ───────────── B2 / B3 — darker pink, with and without offset ───────────── */
+.app{--focus-pink-dark:#C2196E}
+.vB2 .f:is(:focus-visible,.is-focus),
+.vB2 .fw:is(:focus-within,.is-focus):not(.code),
+.vB2 .code:is(:focus-within,.is-focus) .is-current{outline:2px solid var(--focus-pink-dark);outline-offset:3px}
+.vB3 .f:is(:focus-visible,.is-focus),
+.vB3 .fw:is(:focus-within,.is-focus):not(.code),
+.vB3 .code:is(:focus-within,.is-focus) .is-current{outline:2px solid var(--focus-pink-dark);outline-offset:0}
+
+/* ───────────── C — ring on the edge, soft halo ───────────── */
+.vC .f:is(:focus-visible,.is-focus),
+.vC .fw:is(:focus-within,.is-focus):not(.code),
+.vC .code:is(:focus-within,.is-focus) .is-current{outline:2px solid #fff;outline-offset:0;box-shadow:0 0 0 6px #ffffff26}
+.vC :is(.tab,.tl,.listing-logo):is(:focus-visible,.is-focus){outline-offset:0;box-shadow:0 0 0 4px #ffffff1f;background:#ffffff1f}
+
+/* ───────────── D — one ring glides between stops ───────────── */
+.vD .glide{display:block;position:absolute;z-index:50;left:0;top:0;width:0;height:0;border:2px solid #fff;pointer-events:none;opacity:0;transition:left .34s cubic-bezier(.3,0,0,1),top .34s cubic-bezier(.3,0,0,1),width .34s cubic-bezier(.3,0,0,1),height .34s cubic-bezier(.3,0,0,1),border-radius .34s,opacity .15s}
+.vD .glide.on{opacity:1}
+.vD.mode-all .glide{display:none}
+
+/* ───────────── E — each control focuses its own way ───────────── */
+.vE .f:is(:focus-visible,.is-focus){outline:2px solid #fff;outline-offset:3px}
+.vE .pc{transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.vE .pc:is(:focus-visible,.is-focus){outline:none;transform:scale(1.04);z-index:2;box-shadow:0 0 0 2px #fff,0 26px 50px -16px #000}
+.vE .ui-button:not(.is-primary):is(:focus-visible,.is-focus){outline:none;background:#fff !important;color:#090c11}
+.vE .tab:is(:focus-visible,.is-focus){outline:none;color:#fff !important}
+.vE .tab:is(:focus-visible,.is-focus)::after{transform:scaleX(1);background:#fff}
+.vE .tl:is(:focus-visible,.is-focus){outline:none;text-decoration:underline 2px;text-underline-offset:5px}
+.vE .ib:is(:focus-visible,.is-focus){outline:none;background:#fff !important;color:#090c11 !important}
+.vE .inv:is(:focus-visible,.is-focus){outline:none;border-color:#E8368F !important;background:#e8368f33 !important}
+.vE .srch:is(:focus-within,.is-focus){background:#111820;border-color:#fff}
+.vE .cmp:is(:focus-within,.is-focus){background:#10171E;border-color:#fff}
+.vE .code:is(:focus-within,.is-focus) .is-current{border-color:#fff;box-shadow:0 0 0 3px #ffffff1f}
+
+/* ───────────── F — inner ring, never clipped ───────────── */
+.vF .f:is(:focus-visible,.is-focus),
+.vF .fw:is(:focus-within,.is-focus):not(.code),
+.vF .code:is(:focus-within,.is-focus) .is-current{outline:2px solid #fff;outline-offset:-2px}
+.vF .pc:is(:focus-visible,.is-focus){outline:none}
+.vF .pc:is(:focus-visible,.is-focus)::after{content:'';position:absolute;inset:0;z-index:3;border-radius:inherit;box-shadow:inset 0 0 0 2px #fff;pointer-events:none}
+.vF :is(.tab,.tl,.listing-logo):is(:focus-visible,.is-focus){outline:none;background:#ffffff1f;color:#fff !important}
+
+@media (prefers-reduced-motion:reduce){.app *,.app *::before,.app *::after{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<nav class="mm" id="mm" aria-label="Variations"></nav>
+<main class="doc">
+
+  <section class="brief">
+    <p class="eyebrow">Care.tv · Whole app · Keyboard focus</p>
+    <h1>Focus looks different on every screen.</h1>
+    <div class="cards">
+      <div>One rule for buttons, cards, tabs and fields.</div>
+      <div>Visible on pink, artwork and dark panels.</div>
+      <div>Never clipped inside modals or chat.</div>
+      <div>Keyboard only; mouse clicks stay clean.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="Now" data-name="White outlines, six offsets" data-key="Now">
+    <div class="var-h"><span class="id">Now</span><h2>White outlines, six offsets</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note bad">Offsets drift from 2px to 5px by screen.</div>
+      <div class="note bad">Chat field turns Twitter blue; nothing else does.</div>
+      <div class="note bad">Tabs show a ring and the pink underline.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="A" data-name="One white ring, 3px out" data-key="A">
+    <div class="var-h"><span class="id">A</span><h2>One white ring, 3px out</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">One token; follows every radius.</div>
+      <div class="note good">Reads on pink, art and panels.</div>
+      <div class="note bad">Fields get a ring, not their own look.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="B" data-name="Pink ring with a gap" data-key="B">
+    <div class="var-h"><span class="id">B</span><h2>Pink ring with a gap</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">On brand; the gap lifts it off pink buttons.</div>
+      <div class="note bad">Pink already means live, selected and primary.</div>
+      <div class="note bad">Gap colour must match each surface.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="B2" data-name="Darker pink, 3px out" data-key="B2">
+    <div class="var-h"><span class="id">B2</span><h2>Darker pink, 3px out</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">#C2196E reads as focus, not primary.</div>
+      <div class="note good">The gap keeps it clear of pink buttons.</div>
+      <div class="note bad">Under 3:1 on chat and modal panels.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="B3" data-name="Darker pink, on the edge" data-key="B3">
+    <div class="var-h"><span class="id">B3</span><h2>Darker pink, on the edge</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">Tight; feels like a border, not an overlay.</div>
+      <div class="note bad">Barely shows on pink buttons (1.5:1).</div>
+      <div class="note bad">Hard to spot on dark artwork.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="C" data-name="Ring on the edge, soft halo" data-key="C">
+    <div class="var-h"><span class="id">C</span><h2>Ring on the edge, soft halo</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">Same look as the shipped code cells.</div>
+      <div class="note good">Text targets get a soft fill.</div>
+      <div class="note bad">Halo crowds tight rows like code cells.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="D" data-name="One ring glides between stops" data-key="D">
+    <div class="var-h"><span class="id">D</span><h2>One ring glides between stops</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">You see where focus went.</div>
+      <div class="note good">Same glide as the listing tab underline.</div>
+      <div class="note bad">Needs JS to follow scroll, radius and portals.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="E" data-name="Each control focuses its own way" data-key="E">
+    <div class="var-h"><span class="id">E</span><h2>Each control focuses its own way</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">Cards lift and ghosts invert, TV-style.</div>
+      <div class="note bad">Inverted ghost reads as selected.</div>
+      <div class="note bad">Six rules to keep in sync.</div>
+    </div>
+  </section>
+
+  <section class="var" data-id="F" data-name="Inner ring, never clipped" data-key="F">
+    <div class="var-h"><span class="id">F</span><h2>Inner ring, never clipped</h2></div>
+    <div class="ctl"></div><div class="frame"></div>
+    <div class="notes">
+      <div class="note good">Never clipped or overlapping a neighbour.</div>
+      <div class="note bad">On pink buttons it reads as a border.</div>
+    </div>
+  </section>
+
+  <section class="further">
+    <h2>Further Actions</h2>
+    <div class="cards">
+      <div><b>Explore</b> From B2, three darker pinks side by side.</div>
+      <div><b>Remix</b> A with E's card lift on party cards.</div>
+      <div><b>Settle</b> A: one token for the whole app.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+const FILE = '.kier/designs/f0c5-focus-visible-styles.html';
+const FR = {Joyce:'#F7C948', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8'};
+const SHOWS = {
+  velvet:{t:'Velvet Static', c:['#e8368f','#1b0f3a'], p:'rings'},
+  hollow:{t:'Hollow County', c:['#a3e635','#14240a'], p:'stripes'},
+  orbit:{t:'Orbit Diner', c:['#f7c948','#7a1f4d'], p:'dots'}
+};
+const PARTIES = [
+  {s:'hollow', st:'Watching now', live:true, ty:'Series', det:'Season 2 · The Clerk', p:46, m:['Joyce','Nico','Mira']},
+  {s:'orbit', st:'Last watched 3 days ago', ty:'Series', det:'Season 1 · Last Call', p:21, m:['Leo','Mira']}
+];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const svg = (d, s = 16, w = 2.4) => `<svg class="ic" viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const I = {
+  chev: svg('<path d="m9 6 6 6-6 6"/>', 16, 2.6),
+  search: svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>', 16, 2.2),
+  join: svg('<path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18"/>', 14, 2.4),
+  play: '<svg class="ic" viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>',
+  x: svg('<path d="M6 6l12 12M18 6 6 18"/>', 18, 2.2),
+  send: svg('<path d="M12 19V5M6 11l6-6 6 6"/>', 18, 2.4)
+};
+function art(s){
+  const [a,b] = s.c;
+  switch(s.p){
+    case 'stripes': return `repeating-linear-gradient(180deg, ${a}22 0 2px, ${a}00 2px 12px), radial-gradient(100% 70% at 25% 100%, ${a}bb, ${a}00 62%), linear-gradient(180deg, ${b}, #04060c)`;
+    case 'rings': return `repeating-radial-gradient(circle at 78% 118%, ${a}44 0 2px, ${a}00 2px 20px), radial-gradient(60% 80% at 78% 110%, ${a}dd, ${a}00 70%), linear-gradient(170deg, ${b}, #050508)`;
+    default: return `radial-gradient(${a}77 1.4px, ${a}00 1.7px) 0 0/12px 12px, radial-gradient(60% 55% at 50% 42%, ${a}bb, ${a}00 70%), linear-gradient(180deg, ${b}, #07070a)`;
+  }
+}
+const artwork = id => `<div class="art" style="background:${art(SHOWS[id])}"></div>`;
+const av = n => `<i class="ui-avatar" style="--c:${FR[n]}">${n[0]}</i>`;
+
+const partyCard = p => `<a href="#" class="pc f" data-stop>${artwork(p.s)}<div class="pc-shade"></div>
+  <div class="pc-badges"><span>${p.live ? '<i></i>' : ''}${p.st}</span><span>${p.ty}</span></div>
+  <div class="pc-body"><h3>${esc(SHOWS[p.s].t)}</h3><p>${p.det}</p><div class="pc-prog"><i style="width:${p.p}%"></i></div>
+  <div class="pc-mem"><span class="avs">${p.m.map(av).join('')}</span><span>${p.m.join(', ')}</span><span class="pc-join">Rejoin →</span></div></div></a>`;
+
+function board(){
+  return `<div class="glide"></div>
+  <nav class="listing-navigation">
+    <a href="#" class="listing-logo f" data-stop><span class="ui-logo">Care.tv</span></a>
+    <div class="listing-tabs" role="tablist">${['All','Movies','Series','Parties'].map((l, i) => `<button class="tab f" data-stop role="tab" aria-selected="${i === 0}">${l}</button>`).join('')}</div>
+    <div class="nav-right">
+      <button class="ui-button is-round join f" data-stop>${I.join}Join</button>
+      <label class="srch fw" data-stop>${I.search}<input placeholder="Search movies and shows" aria-label="Search"><kbd>/</kbd></label>
+      <button class="avb f" data-stop aria-label="Account"><i class="ui-avatar">K</i></button>
+    </div>
+  </nav>
+  <div class="board">
+    <div class="col-l">
+      <div class="hero">${artwork('velvet')}<div class="hero-shade"></div>
+        <div class="hero-copy"><span>Movie · 2h 4m</span><h2>Velvet Static</h2>
+          <div class="hero-actions"><button class="ui-button is-primary is-glow is-round is-l f" data-stop>${I.play}Start Party</button><button class="ui-button is-round is-l f" data-stop>Details</button></div></div></div>
+      <div class="sec-h"><h2>Recent parties</h2><a href="#" class="tl f" data-stop>All 12 parties ${I.chev}</a></div>
+      <div class="party-row">${PARTIES.map(partyCard).join('')}</div>
+    </div>
+    <div class="col-r">
+      <div class="modal surf">
+        <div class="modal-h"><h2>Join a watch party</h2><button class="ib f" data-stop aria-label="Close">${I.x}</button></div>
+        <p>Enter the 6-digit code from your host.</p>
+        <label class="code fw" data-stop><input inputmode="numeric" aria-label="Party code">
+          <span class="cell is-filled">4</span><span class="cell is-filled">8</span><span class="cell is-filled">2</span><span class="sep"></span><span class="cell is-current"></span><span class="cell"></span><span class="cell"></span></label>
+        <button class="ui-button is-primary is-l is-block f" data-stop>Join party</button>
+      </div>
+      <div class="chat surf">
+        <div class="msg">${av('Joyce')}<div><b>Joyce</b>okay pressing play in 3… 2…</div></div>
+        <button class="inv f" data-stop><span class="avs">${av('Leo')}</span><span>Waiting on Leo</span><small>0:42</small></button>
+        <div class="composer"><label class="cmp fw" data-stop><input placeholder="Press / to focus" aria-label="Message"></label><button class="ib send f" data-stop aria-label="Send">${I.send}</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ───── per-canvas modes: Walk (scripted focus), All, Off, Try Tab (real :focus-visible) ───── */
+const MODES = [['walk','Walk'],['all','All at once'],['off','Off'],['try','Try Tab']];
+const walkers = [];
+document.querySelectorAll('.var').forEach(sec => {
+  const key = sec.dataset.key;
+  sec.id = 'v-' + key;
+  const frame = sec.querySelector('.frame'), ctl = sec.querySelector('.ctl');
+  frame.innerHTML = `<div class="app v${key} mode-walk">${board()}</div>`;
+  const app = frame.firstElementChild, stops = [...app.querySelectorAll('[data-stop]')], glide = app.querySelector('.glide');
+  ctl.innerHTML = `Focus <span class="seg">${MODES.map(([k, l], i) => `<button data-m="${k}" aria-pressed="${i === 0}">${l}</button>`).join('')}</span><small>Try Tab: click the frame, then press Tab.</small>`;
+  const st = {mode:'walk', i:-1, visible:false};
+
+  const ringTarget = el => el.querySelector('.cell.is-current') || el;
+  function glideTo(el){
+    if(key !== 'D') return;
+    if(!el){ glide.classList.remove('on'); return; }
+    const t = ringTarget(el), r = t.getBoundingClientRect(), a = app.getBoundingClientRect(), pad = 5;
+    const rad = getComputedStyle(t).borderTopLeftRadius;
+    glide.style.left = (r.left - a.left - pad) + 'px';
+    glide.style.top = (r.top - a.top - pad) + 'px';
+    glide.style.width = (r.width + pad * 2) + 'px';
+    glide.style.height = (r.height + pad * 2) + 'px';
+    glide.style.borderRadius = rad.includes('%') ? '999px' : (parseFloat(rad) ? parseFloat(rad) + pad : 6) + 'px';
+    glide.classList.add('on');
+  }
+  const clear = () => stops.forEach(s => s.classList.remove('is-focus'));
+  function step(){
+    if(st.mode !== 'walk' || !st.visible) return;
+    clear();
+    st.i = (st.i + 1) % stops.length;
+    stops[st.i].classList.add('is-focus');
+    glideTo(stops[st.i]);
+  }
+  walkers.push(step);
+  function setMode(m){
+    st.mode = m; st.i = -1;
+    app.className = `app v${key} mode-${m}`;
+    clear(); glideTo(null);
+    if(m === 'all') stops.forEach(s => s.classList.add('is-focus'));
+    if(m === 'walk') step();
+    ctl.querySelectorAll('[data-m]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.m === m)));
+  }
+  ctl.addEventListener('click', e => { const b = e.target.closest('[data-m]'); if(b) setMode(b.dataset.m); });
+  app.addEventListener('click', e => { if(e.target.closest('a')) e.preventDefault(); });
+  app.addEventListener('focusin', e => {
+    if(st.mode === 'walk' || st.mode === 'all') setMode('try');
+    const s = e.target.closest('[data-stop]');
+    const shows = e.target.matches(':focus-visible') || e.target.tagName === 'INPUT';
+    glideTo(s && shows ? s : null);
+  });
+  app.addEventListener('focusout', e => { if(!app.contains(e.relatedTarget)) glideTo(null); });
+  new IntersectionObserver(([en]) => { st.visible = en.isIntersecting; }, {threshold:.3}).observe(frame);
+  const start = new URLSearchParams(location.search).get('mode');
+  if(start && start !== 'walk') setMode(start);
+});
+setInterval(() => walkers.forEach(w => w()), 1100);
+
+/* ───── Pick menus ───── */
+const VERBS = [
+  ['Explore from this', 'More variations in this direction.', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and change something.', id => `Remix ${id} in ${FILE}: `],
+  ['Settle on this', 'Make it the direction.', id => `Settle on ${id} in ${FILE}`]
+];
+const menus = [];
+document.querySelectorAll('.var').forEach(sec => {
+  const id = sec.dataset.id, h = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.className = 'pick-btn'; btn.textContent = 'Pick';
+  btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-haspopup', 'menu');
+  h.appendChild(btn);
+  const menu = document.createElement('div');
+  menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  menu.innerHTML = VERBS.map((x, i) => `<button role="menuitem" data-i="${i}"><b>${x[0]}</b><span>${x[1]}</span></button>`).join('');
+  h.after(menu);
+  const out = document.createElement('div');
+  out.className = 'pick-out'; out.hidden = true;
+  menu.after(out);
+  const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+  menus.push(close);
+  btn.addEventListener('click', () => {
+    const open = menu.hidden;
+    menus.forEach(c => c());
+    menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', async e => {
+    const b = e.target.closest('button[data-i]');
+    if(!b) return;
+    const text = VERBS[Number(b.dataset.i)][2](id);
+    close();
+    out.hidden = false;
+    try{
+      await navigator.clipboard.writeText(text);
+      out.innerHTML = `<code>${esc(text)}</code><span class="ok">Copied</span>`;
+    }catch(err){
+      out.innerHTML = `<input readonly value="${esc(text)}">`;
+      out.querySelector('input').select();
+    }
+  });
+  document.addEventListener('click', e => { if(!h.contains(e.target) && !menu.contains(e.target)) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
+});
+
+/* ───── minimap ───── */
+const vars = [...document.querySelectorAll('.var')];
+document.getElementById('mm').innerHTML = vars.map(v => `<a href="#${v.id}"><i></i><span><b>${v.dataset.id}</b>${v.dataset.name}</span></a>`).join('');
+const links = [...document.querySelectorAll('.mm a')];
+function syncMM(){
+  let best = 0, bd = Infinity;
+  vars.forEach((v, i) => { const d = Math.abs(v.getBoundingClientRect().top - 90); if(d < bd){ bd = d; best = i; } });
+  links.forEach((a, i) => a.classList.toggle('on', i === best));
+}
+addEventListener('scroll', syncMM, {passive:true});
+if(location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView({behavior:'instant'});
+syncMM();
+</script>
+</body>
+</html>

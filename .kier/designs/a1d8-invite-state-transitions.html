@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invite Sidebar States</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Syne:wght@700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}.mm{display:none}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .copied{color:var(--good);font-weight:600}
+.frame{position:relative;height:640px;margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#10171E;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);width:44px}
+.rail .grp{display:flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.rail .grp button:hover{color:var(--ink)}
+.rail .grp button.on{background:var(--ink);color:var(--bg)}
+.rail .grp.fl button::before{content:"▶";font-size:8px;margin-right:6px;vertical-align:1px}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:260px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup (Care.tv room) ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;--ez:cubic-bezier(.2,.8,.2,1);
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);height:100%;position:relative;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk h1,.mk h2,.mk h3,.mk h4,.mk h5,.mk h6,.mk p{margin:0}
+.sub{font-family:'Work Sans',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.art{position:relative;width:100%;height:100%;overflow:hidden}
+.av{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:13px;font-style:normal;flex:none}
+.av.s{width:16px;height:16px;font-size:8px;font-weight:700}
+.room{display:grid;grid-template-columns:1fr 320px;height:100%}
+.pv{position:relative;background:#06090d;container-type:inline-size;min-width:0}
+.pv-ov{position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,9,13,.9),transparent 42%)}
+.ctl{position:absolute;left:0;right:0;bottom:0;padding:0 18px 14px;display:flex;align-items:center;gap:12px}
+.ctl .ic{display:inline-grid;place-items:center;width:22px;height:22px;opacity:.9}
+.ctl .t{font-size:11px;color:#cfd8e0;font-variant-numeric:tabular-nums}
+.seek{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);position:relative}
+.seek i{position:absolute;inset:0 68% 0 0;background:var(--pk);border-radius:3px}
+.seek i::after{content:"";position:absolute;right:-4px;top:-3px;width:9px;height:9px;border-radius:50%;background:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{from{opacity:0;transform:scale(.6)}}
+@keyframes shimmer{from{opacity:.5}to{opacity:1}}
+
+/* chat column */
+.chat{position:relative;display:flex;flex-direction:column;min-height:0;overflow:hidden;background:var(--n2)}
+.cc{display:flex;flex-direction:column;height:100%;min-height:0;transition:opacity .24s}
+.chat.inv .cc{opacity:0;pointer-events:none}
+.cnp{flex:none;display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px}
+.agrp{display:flex}.agrp .av{box-shadow:0 0 0 2px var(--n2)}.agrp .av+.av{margin-left:-8px}
+.mk .cinv{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--n5);color:#fff}
+.pcode{flex:none;display:flex;align-items:center;gap:10px;min-height:40px;margin:0 16px 14px;padding:0 6px 0 14px;border-radius:12px;background:#ffffff0d}
+.pcode>span{color:var(--n5);font:600 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.pcode>em{display:inline-flex;align-items:center;gap:8px;min-height:32px;margin-left:auto;padding:0 8px 0 10px;font-style:normal}
+.pcode b{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.pcode svg{color:var(--n5)}
+.gw{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .4s var(--ez),opacity .3s}
+.gw.on{grid-template-rows:1fr;opacity:1}
+.gw>div{overflow:hidden;min-height:0}
+.mk .ws{display:flex;align-items:center;gap:10px;width:calc(100% - 32px);margin:0 16px 14px;padding:7px 12px 7px 8px;border:1px solid #e8368f33;border-radius:12px;background:#e8368f14;color:#ffd1e6;font-size:13px;transition:background-color .35s,border-color .35s,color .35s}
+.mk .ws.mut{border-color:#ffffff14;background:#ffffff08;color:#d5dde4}
+.wsav{display:flex;flex:none}
+.wst{position:relative;flex:1;min-width:0;height:18px}
+.wst>.ln{position:absolute;inset:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wsr{position:relative;flex:none;height:18px;color:var(--n5);font-size:12px;font-variant-numeric:tabular-nums}
+.wsr>.rz{visibility:hidden;white-space:nowrap}
+.wsr>.ln{position:absolute;inset:0;white-space:nowrap;text-align:right}
+.wsr u{color:#ff9fcb}
+.cmsgs{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;border-top:1px solid var(--n1);overflow:hidden;transition:transform .32s var(--ez)}
+.chat.inv .cmsgs{transform:scale(.96)}
+.cg{display:flex;padding:16px}
+.cg .cav{align-self:flex-end;margin-right:16px}
+.cn{margin:0 0 4px 6px;font-size:12px;color:var(--n5)}
+.cb{display:table;padding:6px 8px;background:var(--n4);border-radius:24px;font-size:14px}
+.cb+.cb{margin-top:4px;border-top-left-radius:0}
+.cg.me{flex-direction:row-reverse}
+.cg.me .cav{margin:0 0 0 16px}
+.cg.me .cb{background:var(--pk);margin-left:auto}
+.ca{display:flex;justify-content:center;padding:8px 16px}
+.cact{display:flex;align-items:center;gap:8px;padding:8px;background:var(--n1);border-radius:4px}
+.cact .sub{color:#c7d2dc}
+.oc{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin:8px 16px;padding:8px;border-radius:12px;background:var(--n1);color:var(--n5);font-size:12px}
+.oc u{color:#ff9fcb;cursor:pointer}
+.cbar{flex:none;padding:16px;display:flex;align-items:center;gap:0}
+.cinp{flex:1;padding:16px;margin-right:16px;border-radius:25px;background:rgb(37,51,65);color:var(--n5);font-size:14px}
+.send{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:var(--n5);font-size:10px}
+
+/* the invite panel (ChatInvitationPanel) */
+.pn{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;min-height:0;visibility:hidden;transition:visibility 0s .2s}
+.pn.on{visibility:visible;transition:none}
+.pn .cz{opacity:0;transform:translateY(12px);transition:opacity .16s,transform .16s}
+.pn.on .cz{opacity:1;transform:none;transition:opacity .38s calc(.11s + var(--i) * .032s),transform .38s calc(.11s + var(--i) * .032s)}
+.pnh{display:flex;align-items:center;gap:8px;flex:none;padding:16px 16px 6px 20px}
+.pnh h3{font-size:17px;font-weight:700}
+.mk .pcl{display:grid;place-items:center;width:32px;height:32px;margin-left:auto;border-radius:50%;color:var(--n5)}
+.mk .pcl:hover{background:#ffffff14;color:#fff}
+.psr{display:flex;flex:none;align-items:center;gap:10px;height:42px;margin:10px 16px 4px;padding:0 14px;border:1px solid #ffffff12;border-radius:12px;background:var(--n1);color:var(--n5)}
+.pin{display:flex;align-items:center;font-size:14px}
+.pq{color:#fff}
+.pin i{display:inline-block;width:1px;height:17px;margin-left:1px;background:#fff;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.pls{position:relative;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 6px 8px;scrollbar-width:thin;transition:opacity .16s}
+.pn:not(.on) .pls{opacity:0}
+.pft{flex:none;min-height:60px;border-top:1px solid var(--n1);display:flex;align-items:center;gap:10px;padding:0 16px 0 20px}
+.pft>span{color:var(--n5);font:600 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.pft>em{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-style:normal}
+.pft b{font-size:14px;font-weight:700}
+.pft svg{color:var(--n5)}
+.plb{padding:16px 14px 8px;color:var(--n5);font:600 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.plb>span{position:relative;display:block;height:14px}
+.plb .ln{position:absolute;inset:0;white-space:nowrap}
+.pnote{padding:12px 14px;color:var(--n5);font-size:13px}
+.pnote u{color:#fff;cursor:pointer}
+.pnote.c{display:flex;flex-direction:column;align-items:center;gap:8px;padding:36px 20px;text-align:center}
+.pnote.c svg{color:#ffffff3a}
+.pls>.ghost{position:absolute;left:6px;right:6px;pointer-events:none}
+.ghost.fly{z-index:2;transform-origin:50% 50%}
+.sp{pointer-events:none}
+.pr{position:relative;display:flex;align-items:center;gap:12px;min-height:60px;padding:10px 14px;border-radius:12px;transition:background-color .2s}
+.pr.cl{cursor:pointer}
+.pr.cl:hover{background:#ffffff0d}
+.pav{position:relative;display:inline-flex;flex:none}
+.dot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:#2ecc71;border:2px solid var(--n2);transition:opacity .2s}
+.pav:has(.bd.ok,.bd.x,.bd.err) .dot{opacity:0}
+@property --p{syntax:'<number>';initial-value:100;inherits:false}
+@property --q{syntax:'<number>';initial-value:0;inherits:false}
+.rg.done{opacity:1;background:conic-gradient(var(--g) calc(var(--q) * 3.6deg),var(--pk) 0)}
+.mk .pac.pok2{height:26px;border-radius:13px;background:rgba(101,214,173,.16);color:var(--g);cursor:default}
+.png{position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--g);pointer-events:none}
+@keyframes drain{from{--p:100}to{--p:0}}
+.rg{position:absolute;inset:-4px;border-radius:50%;opacity:0;pointer-events:none;transition:opacity .35s,background-color .35s;
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 2px),#000 calc(100% - 1.5px))}
+.rg.drain{opacity:1;background:conic-gradient(var(--pk) calc(var(--p) * 3.6deg),#ffffff24 0);animation:drain 1800s linear forwards}
+.rg.spin{opacity:1;background:conic-gradient(var(--pk) 0 28%,#ffffff14 0);animation:spin .9s linear infinite}
+.rg.spin-g{opacity:1;background:conic-gradient(var(--n5) 0 28%,#ffffff14 0);animation:spin .9s linear infinite}
+.rg.ok{opacity:1;background:var(--g)}
+.rg.hollow{opacity:1;background:#ffffff24}
+.bd{position:absolute;right:-4px;bottom:-4px;display:grid;place-items:center;width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 2px var(--n2);transform:scale(0);transition:transform .35s cubic-bezier(.2,.9,.3,1.4),background-color .3s}
+.bd.ok{transform:scale(1);background:var(--g);color:#10171E}
+.bd.x{transform:scale(1);background:var(--n4);color:#fff}
+.bd.err{transform:scale(1);background:#ff6b81;color:#fff}
+.pdt{display:flex;flex:1;min-width:0;flex-direction:column;gap:2px}
+.pdt b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+.pdt em{margin-left:6px;color:var(--n5);font-size:11px;font-style:normal}
+.pst{position:relative;height:16px;color:var(--n5);font-size:12px;font-variant-numeric:tabular-nums}
+.pst>.ln{position:absolute;inset:0;white-space:nowrap}
+.ln.t-err{color:#ff9bad}.ln.t-pk{color:#ff9fcb}.ln.t-ok{color:var(--g)}
+.mk .pac{position:relative;flex:none;width:32px;height:32px;border-radius:16px;overflow:hidden;font-size:12px;font-weight:600;white-space:nowrap;
+  transition:width .35s var(--ez),height .3s var(--ez),background-color .3s,color .3s,opacity .3s}
+.pac>.rz{position:absolute;left:0;top:0;visibility:hidden;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.pac>.ln{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:6px}
+.mk .pac.plus{background:#e8368f26;color:#ff9fcb}
+.mk .pr.cl:hover .pac.plus{background:var(--pk);color:#fff}
+.mk .pac.cancel,.mk .pac.retryc{background:#ffffff0d;color:var(--n5)}
+.mk .pr.cl:hover .pac.cancel,.mk .pr.cl:hover .pac.retryc{background:#ffffff1f;color:#fff}
+.mk .pac.retry{height:30px;border-radius:15px;background:#ffffff0d;color:#fff}
+.mk .pac.pinv{height:28px;border-radius:14px;background:#e8368f26;color:#ff9fcb}
+.mk .pac.pgh{height:28px;border-radius:14px;background:#ffffff0d;color:#fff}
+.mk .pac.ppk{height:28px;border-radius:14px;background:var(--pk);color:#fff}
+.mk .pac.pok{height:28px;border-radius:14px;background:#65d6ad1f;color:var(--g)}
+/* UiButton default variant, size s, round */
+.mk .pac.pub{height:26px;border-radius:13px;background:rgba(255,255,255,.1);color:#fff;font:700 11px/1 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.mk .pr.cl:hover .pac.pub{background:rgba(255,255,255,.18)}
+/* A3b2b–f: fixed-width button, busy shows only a spinner */
+.mk .pac.pub>.ln{transition:opacity .15s}
+.mk .pac.dim>.ln{opacity:.45}
+.dts{display:inline-flex;gap:3px}
+.dts i{width:4px;height:4px;border-radius:50%;background:currentColor;animation:dot 1s ease-in-out infinite}
+.dts i:nth-child(2){animation-delay:.15s}.dts i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,80%,100%{opacity:.3;transform:none}40%{opacity:1;transform:translateY(-2px)}}
+.mk .pac.sweep::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:sweep 1.1s ease-in-out infinite,fadein .3s}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes fadein{from{opacity:0}}
+/* A3b2d2–5: the button leaves in place instead of squeezing; Joined chip */
+.mk .fx .pac.none{width:var(--fw) !important;opacity:0;transform:scale(.85);transition:opacity .25s,transform .3s var(--ez),background-color .3s,color .3s}
+.mk .pac.pjoin{height:26px;border-radius:13px;background:rgba(101,214,173,0);color:var(--g);font:700 11px/1 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:default}
+/* A3b2d3g: the button sinks as it fades */
+.mk .fd .pac.none{width:var(--fw) !important;opacity:0;transform:translateY(10px);transition:opacity .32s ease-in,transform .38s cubic-bezier(.4,0,.6,1),background-color .3s,color .3s}
+/* A3b2d3h–i: a Glimm-style band (hand copy of its look, not the package) */
+.gcv{position:absolute;pointer-events:none;z-index:4}
+.gold{position:absolute;pointer-events:none;z-index:3;background:var(--n2)}
+.mk .pac.none{width:0 !important;opacity:0}
+.mk .pac.busy{cursor:wait}
+/* pill extras for the A3 button explorations */
+.mk .spring .pac{transition:width .5s cubic-bezier(.34,1.5,.5,1),height .3s var(--ez),background-color .3s,color .3s,opacity .3s}
+.chs{display:inline-flex;align-items:center}.chs .spi{margin-right:6px}.ch{display:inline-block;white-space:pre}
+.pic{position:absolute;left:11px;top:50%;width:12px;height:12px;margin-top:-6px;z-index:1;pointer-events:none}
+.pic>b{position:absolute;inset:0;display:grid;place-items:center;transition:transform .4s var(--ez),opacity .25s}
+.pic svg{width:12px;height:12px}
+.pic .pi-s,.pic .pi-r{opacity:0;transform:scale(.4)}
+.pic[data-s="x"] .pi-a{transform:rotate(135deg)}
+.pic[data-s="spin"] .pi-a,.pic[data-s="retry"] .pi-a{opacity:0;transform:scale(.4) rotate(90deg)}
+.pic[data-s="spin"] .pi-s,.pic[data-s="retry"] .pi-r{opacity:1;transform:none}
+.mk .pac.wi>.ln{padding-left:18px}
+.hv{display:inline-grid;place-items:center}.hv>*{grid-area:1/1;display:inline-flex;transition:opacity .2s,transform .25s var(--ez)}
+.hv .h2{opacity:0;transform:translateY(6px)}
+.mk .pr.cl:hover .pac.hov{width:var(--hw) !important;background:#ffffff1f;color:#fff}
+.pr.cl:hover .hv .h1{opacity:0;transform:translateY(-6px) scale(.6)}
+.pr.cl:hover .hv .h2{opacity:1;transform:none}
+.spi{display:inline-block;width:12px;height:12px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+.sk .skav{flex:none;width:32px;height:32px;border-radius:50%;background:#ffffff10}
+.sk .skl{flex:1;display:flex;flex-direction:column;gap:7px}
+.sk .skl i{display:block;width:44%;height:10px;border-radius:5px;background:#ffffff10}
+.sk .skl i+i{width:26%;height:8px}
+.sk{animation:shimmer .9s ease-in-out infinite alternate}
+.sk:nth-child(odd){animation-delay:-.45s}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+<header class="brief">
+  <div class="eyebrow">Care.tv · host’s invite sidebar · ChatInvitationPanel · see c6f3 for layout</div>
+  <h1>Every invite sidebar state, and the move between them.</h1>
+  <div class="cards">
+    <div>Same panel, rows and chat strip as the app; only states and motion change.</div>
+    <div>Click a state to see the move from where you are; Play runs a whole path.</div>
+    <div>Mira is the one being invited. ¼× slows every move.</div>
+  </div>
+</header>
+<div id="vars"></div>
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from A3b2d3h: Glimm bands for Sending and Declined too.</div>
+    <div><b>Remix</b>Remix A3b2d3e: add A3b2d3c’s green sweep on the ring.</div>
+    <div><b>Settle</b>Settle on A3b2d3e and build it into ChatInvitationPanel.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/a1d8-invite-state-transitions.html';
+const FR = {Kier:'#E8368F', Leo:'#65D6AD', Mira:'#C084FC', Nico:'#38BDF8', Ade:'#FB923C', Tess:'#A3E635'};
+const PEOPLE = {kier:{n:'Kier', on:1}, leo:{n:'Leo', on:1}, mira:{n:'Mira', on:1}, nico:{n:'Nico', on:1}, ade:{n:'Ade', on:0}, tess:{n:'Tess', on:0}};
+const RECENTS = ['mira', 'nico', 'ade', 'tess'];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const svg = (d, s = 14, w = 2.2) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const IC = {
+  plus: svg('<path d="M12 5v14M5 12h14"/>'), x: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
+  check: svg('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 13, 2.6), retry: svg('<path d="M4 12a8 8 0 1 0 2.6-5.9"/><path d="M4 4v5h5"/>'),
+  search: svg('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>', 15), userplus: svg('<circle cx="10" cy="8" r="4"/><path d="M2.5 20a7.5 7.5 0 0 1 15 0M19 8v6M16 11h6"/>', 15),
+  copy: svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>', 14, 2),
+  people: svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 19a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.5a5 5 0 0 1 5.5 4.5"/>', 26, 1.6),
+  cloud: svg('<path d="M7 18a4.5 4.5 0 0 1-.6-9 6 6 0 0 1 11.4 1.6A3.8 3.8 0 0 1 17.5 18z"/><path d="M12 11v3M12 16.5v.01"/>', 26, 1.6),
+  play:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
+  vol:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4z"/></svg>'
+};
+const SPIN = '<i class="spi"></i>';
+const DOTS = '<i class="dts"><i></i><i></i><i></i></i>';
+const ART = `repeating-radial-gradient(circle at 50% 118%, #e8368f44 0 2px, #e8368f00 2px 20px), radial-gradient(70% 60% at 50% 110%, #e8368fdd, #e8368f00 70%), linear-gradient(170deg, #1b0f3a, #050508)`;
+const onl = id => PEOPLE[id].on ? 'Online' : 'Offline';
+const secsLeft = s => `${Math.floor(s / 60)}m ${s % 60}s left`;
+const mins = s => `${Math.max(1, Math.ceil(s / 60))}m`;
+const member = (k, id, sub) => ({k, t:'row', id, you: id === 'kier', sub: sub || (id === 'kier' ? 'Host' : 'In the room')});
+const waiting = m => m === 'pending' || m === 'cancelling';
+const IN_PARTY = ['pending', 'cancelling', 'joined'];
+/* where Mira's row sits; A2d lets it lag her state until you look away */
+const place = c => c.V.defer ? c.pm : c.m;
+function matcher(c){ const q = c.q.trim().toLowerCase(); return id => !q || PEOPLE[id].n.toLowerCase().includes(q); }
+
+/* ───── variations: each turns the model into list items, a chat strip and an outcome ───── */
+const VARS = [
+{id:'Now', name:'What ships today', m:{line:'cut', flip:false, cascade:true},
+ notes:[['good','Waiting people sit with the party, so the room reads at a glance.'],['bad','Inviting Mira makes her row vanish from Recents and reappear in Party.'],['bad','Seconds tick on every waiting row, every second.'],['bad','Loading and errors are a grey sentence in an empty list.']],
+ list(c){
+  const ok = matcher(c), m = c.m, it = [];
+  const party = ['kier', 'leo', ...(m === 'joined' ? ['mira'] : [])].filter(ok);
+  const pend = waiting(m) && ok('mira') ? ['mira'] : [];
+  if(party.length || pend.length){
+    it.push({k:'l:party', t:'label', text:'Party'});
+    party.forEach(id => it.push(member('m:' + id, id)));
+    pend.forEach(id => it.push({k:'p:' + id, t:'row', id, ring:'drain', sub: m === 'cancelling' ? 'Cancelling invite…' : secsLeft(c.left),
+      act: m === 'cancelling' ? {k:'cancel busy', h:SPIN} : {k:'cancel', a:'cancel'}}));
+  }
+  const rec = c.list === 'ready' ? RECENTS.filter(id => !party.includes(id) && !pend.includes(id) && ok(id)) : [];
+  if(rec.length){
+    it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'});
+    rec.forEach(id => {
+      if(id !== 'mira' || m === 'idle') return it.push({k:'r:' + id, t:'row', id, sub:onl(id), act:{k:'plus', a: id === 'mira' ? 'invite' : ''}});
+      const r = {k:'r:mira', t:'row', id};
+      if(m === 'sending') Object.assign(r, {sub:'Sending invite…', act:{k:'plus busy', h:SPIN}});
+      if(m === 'sendErr') Object.assign(r, {sub:'Couldn’t send. Try again.', tone:'err', act:{k:'plus', a:'invite'}});
+      if(m === 'declined') Object.assign(r, {sub:'Declined', act:{k:'retry', h:'Ask again', a:'invite'}});
+      if(m === 'expired') Object.assign(r, {sub:'No answer', act:{k:'retry', h:'Ask again', a:'invite'}});
+      it.push(r);
+    });
+  }
+  if(c.list === 'loading') it.push({k:'n:load', t:'note', html:'Loading people…'});
+  if(c.list === 'ready' && !rec.length && !party.length && !pend.length) it.push({k:'n:none', t:'note', html:`No one named “${esc(c.q)}”.`});
+  if(c.list === 'error') it.push({k:'n:err', t:'note', html:'Couldn’t load people. <u data-act="reload">Retry</u>'});
+  return it;
+ },
+ strip(c){ return waiting(c.m) ? {av:av('Mira', 's'), text:'Waiting on Mira', right:mins(c.left)} : null; },
+ outcome(c){
+  if(c.m === 'declined') return `${av('Mira', 's')}<span>Mira declined</span><u data-act="invite">Ask again</u>`;
+  if(c.m === 'expired') return `${av('Mira', 's')}<span>Mira didn’t answer</span><u data-act="invite">Ask again</u>`;
+  return null;
+ }},
+{id:'A', name:'Rows stay put; the button talks', m:{line:'roll', flip:false},
+ notes:[['good','Her row never moves while you’re looking; only its pill and status change.'],['good','The chat strip turns into the answer instead of adding a second card.'],['bad','People you’re waiting on stay mixed into Recents until you reopen.']],
+ list(c){
+  const ok = matcher(c), m = c.m, om = c.openM, it = [];
+  const party = ['kier', 'leo', ...(om === 'joined' ? ['mira'] : [])].filter(ok);
+  const pend = waiting(om) && ok('mira') ? ['mira'] : [];
+  if(party.length || pend.length){
+    it.push({k:'l:party', t:'label', text:'Party'});
+    party.forEach(id => it.push(id === 'mira' ? aRow(c, id) : member(id, id)));
+    pend.forEach(id => it.push(aRow(c, id)));
+  }
+  if(c.list === 'loading'){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); [1, 2, 3, 4].forEach(n => it.push({k:'s' + n, t:'skel'})); }
+  const rec = c.list === 'ready' ? RECENTS.filter(id => !party.includes(id) && !pend.includes(id) && ok(id)) : [];
+  if(rec.length){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); rec.forEach(id => it.push(aRow(c, id))); }
+  if(c.list === 'ready' && !rec.length && !party.length && !pend.length) it.push({k:'n:none', t:'note', cls:'c', html:`${IC.people}No one called “${esc(c.q)}” yet.`});
+  if(c.list === 'error') it.push({k:'n:err', t:'note', cls:'c', html:`${IC.cloud}Couldn’t load people.<u data-act="reload">Try again</u>`});
+  return it;
+ },
+ strip(c){
+  const m = c.m, a = av('Mira', 's');
+  if(waiting(m)) return {av:a, text:'Waiting on Mira', right:mins(c.left)};
+  if(m === 'sending') return {av:a, text:'Inviting Mira…', right:''};
+  if(m === 'declined') return {av:a, text:'Mira declined', right:'<u>Ask again</u>', mut:1, act:'invite'};
+  if(m === 'expired') return {av:a, text:'Mira didn’t answer', right:'<u>Ask again</u>', mut:1, act:'invite'};
+  return null;
+ },
+ outcome(){ return null; }},
+{id:'A2', name:'A’s row, shorter words, today’s groups', m:{line:'roll', flip:false, cascade:true}, eph:true,
+ notes:[['good','Waiting reads “Invited (30m)”; the pill says Invite again, never Ask again.'],['good','Joined, Declined and Expired show for 4 seconds, then the row rests.'],['bad','Inviting still hops her row from Recents to Party, as today.'],['bad','Look away and a decline is gone in 4 seconds.']],
+ list(c){
+  const ok = matcher(c), m = c.m, it = [];
+  const inGroup = IN_PARTY.includes(place(c)), inP = inGroup && ok('mira');
+  const party = ['kier', 'leo'].filter(ok);
+  if(party.length || inP){
+    it.push({k:'l:party', t:'label', text:'Party'});
+    party.forEach(id => it.push(member('m:' + id, id)));
+    if(inP) it.push(a2Row(c, 'mira'));
+  }
+  if(c.list === 'loading'){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); [1, 2, 3, 4].forEach(n => it.push({k:'s' + n, t:'skel'})); }
+  const rec = c.list === 'ready' ? RECENTS.filter(id => !(id === 'mira' && inGroup) && ok(id)) : [];
+  if(rec.length){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); rec.forEach(id => it.push(a2Row(c, id))); }
+  if(c.list === 'ready' && !rec.length && !party.length && !inP) it.push({k:'n:none', t:'note', cls:'c', html:`${IC.people}No one called “${esc(c.q)}” yet.`});
+  if(c.list === 'error') it.push({k:'n:err', t:'note', cls:'c', html:`${IC.cloud}Couldn’t load people.<u data-act="reload">Try again</u>`});
+  return it;
+ },
+ strip(c){
+  const m = c.m, a = av('Mira', 's');
+  if(waiting(m)) return {av:a, text:'Waiting on Mira', right:mins(c.left)};
+  if(m === 'sending') return {av:a, text:'Inviting Mira…', right:''};
+  if(m === 'declined' && c.flash) return {av:a, text:'Mira declined', right:'<u>Invite</u>', mut:1, act:'invite'};
+  if(m === 'expired' && c.flash) return {av:a, text:'Mira’s invite expired', right:'<u>Invite</u>', mut:1, act:'invite'};
+  return null;
+ },
+ outcome(){ return null; }},
+{id:'B', name:'Rows move to where they belong', m:{line:'roll', flip:true},
+ notes:[['good','Invited gets its own group; you watch Mira travel there, then into the room.'],['good','Declining slides her back to the top of Recents with Ask again.'],['bad','A row moving under the cursor can take the click meant for the next one.']],
+ list(c){
+  const ok = matcher(c), m = c.m, it = [];
+  const room = ['kier', 'leo', ...(m === 'joined' ? ['mira'] : [])].filter(ok);
+  const inv = waiting(m) && ok('mira') ? ['mira'] : [];
+  if(room.length){ it.push({k:'l:room', t:'label', text:'In the room'}); room.forEach(id => it.push(id === 'mira' ? {...member('mira', 'mira', 'Just joined'), tone:'ok'} : member(id, id))); }
+  if(inv.length){ it.push({k:'l:inv', t:'label', text:'Invited'}); it.push({k:'mira', t:'row', id:'mira', ring:'drain', sub: m === 'cancelling' ? 'Cancelling…' : `${mins(c.left)} left`, tone: m === 'cancelling' ? '' : 'pk', act: m === 'cancelling' ? {k:'cancel busy', h:SPIN} : {k:'cancel', a:'cancel'}}); }
+  if(c.list === 'loading'){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); [1, 2, 3, 4].forEach(n => it.push({k:'s' + n, t:'skel'})); }
+  const rec = c.list === 'ready' ? RECENTS.filter(id => !room.includes(id) && !inv.includes(id) && ok(id)) : [];
+  if(rec.length){
+    it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'});
+    rec.forEach(id => {
+      const r = {k:id, t:'row', id, sub:onl(id), act:{k:'plus', a: id === 'mira' ? 'invite' : ''}};
+      if(id === 'mira' && m === 'sending') Object.assign(r, {sub:'Sending…', ring:'spin', act:{k:'plus busy', h:SPIN}});
+      if(id === 'mira' && m === 'sendErr') Object.assign(r, {sub:'Couldn’t send. Try again.', tone:'err'});
+      if(id === 'mira' && m === 'declined') Object.assign(r, {sub:'Declined', act:{k:'retry', h:'Ask again', a:'invite'}});
+      if(id === 'mira' && m === 'expired') Object.assign(r, {sub:'No answer', act:{k:'retry', h:'Ask again', a:'invite'}});
+      it.push(r);
+    });
+  }
+  if(c.list === 'ready' && !rec.length && !room.length && !inv.length) it.push({k:'n:none', t:'note', html:`No one named “${esc(c.q)}”.`});
+  if(c.list === 'error') it.push({k:'n:err', t:'note', html:'Couldn’t load people. <u data-act="reload">Retry</u>'});
+  return it;
+ },
+ strip(c){ return waiting(c.m) ? {av:av('Mira', 's'), text:'Waiting on Mira', right:mins(c.left)} : null; },
+ outcome(c){ return VARS[0].outcome(c); }},
+{id:'C', name:'The avatar carries it; the clock stays quiet', m:{line:'roll', flip:false},
+ notes:[['good','One ring shows sending, waiting, joined and declined; no ticking seconds.'],['good','The chat strip wears the same ring, so the panel and chat agree.'],['bad','The state lives in a 32px circle, easy to miss at a glance.']],
+ list(c){
+  const ok = matcher(c), om = c.openM, it = [];
+  const party = ['kier', 'leo', ...(om === 'joined' ? ['mira'] : [])].filter(ok);
+  const pend = waiting(om) && ok('mira') ? ['mira'] : [];
+  if(party.length || pend.length){
+    it.push({k:'l:party', t:'label', text:'Party'});
+    party.forEach(id => it.push(id === 'mira' ? cRow(c, id) : member(id, id)));
+    pend.forEach(id => it.push(cRow(c, id)));
+  }
+  const rec = c.list === 'ready' ? RECENTS.filter(id => !party.includes(id) && !pend.includes(id) && ok(id)) : [];
+  if(rec.length){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); rec.forEach(id => it.push(cRow(c, id))); }
+  if(c.list === 'loading') it.push({k:'n:load', t:'note', html:'Loading people…'});
+  if(c.list === 'ready' && !rec.length && !party.length && !pend.length) it.push({k:'n:none', t:'note', html:`No one named “${esc(c.q)}”.`});
+  if(c.list === 'error') it.push({k:'n:err', t:'note', html:'Couldn’t load people. <u data-act="reload">Retry</u>'});
+  return it;
+ },
+ strip(c){
+  const m = c.m, a = r => `<span class="pav" style="transform:scale(.62);margin:-6px -4px">${av('Mira')}<i class="rg ${r}"></i><i class="bd ${m === 'declined' ? 'x' : ''}">${m === 'declined' ? IC.x : ''}</i></span>`;
+  if(m === 'sending') return {av:a('spin'), text:'Inviting Mira', right:''};
+  if(waiting(m)) return {av:a('drain'), text:'Waiting on Mira', right:''};
+  if(m === 'declined') return {av:a(''), text:'Mira declined', right:'<u>Ask again</u>', mut:1, act:'invite'};
+  if(m === 'expired') return {av:a('hollow'), text:'Mira didn’t answer', right:'<u>Ask again</u>', mut:1, act:'invite'};
+  return null;
+ },
+ outcome(){ return null; }}
+];
+/* A2b–A2e: same rows as A2; only the move between Recents and Party changes */
+{
+  const A2 = VARS.find(v => v.id === 'A2'), base = {list:A2.list, strip:A2.strip, outcome:A2.outcome, eph:true};
+  VARS.splice(VARS.indexOf(A2) + 1, 0,
+    {...base, id:'A2b', name:'Lift and land', m:{line:'roll', flip:false, cascade:true, move:'travel'},
+     notes:[['good','You watch Mira leave Recents and land in Party; nothing else jumps.'],['good','Builds with motion/react: layoutId on her row.'],['bad','The flight crosses rows under your pointer.']]},
+    {...base, id:'A2c', name:'Shrink here, grow there', m:{line:'roll', flip:false, cascade:true, move:'shrink'},
+     notes:[['good','Her old slot closes as the new one opens; neighbours glide.'],['good','AnimatePresence with height auto; no shared layout.'],['bad','Reads as one row out, one row in, not the same person moving.']]},
+    {...base, id:'A2d', name:'Move once you look away', m:{line:'roll', flip:false, cascade:true, move:'shrink'}, defer:true,
+     notes:[['good','Her row stays under your pointer; it moves after you leave the panel.'],['good','Nothing shifts while you aim, so no misclicks.'],['bad','Park the pointer and Invited sits in Recents for a while.']]},
+    {...base, id:'A2e', name:'Jump, then glow where she lands', m:{line:'roll', flip:false, cascade:true, move:'glow'},
+     notes:[['good','Cheapest: today’s jump plus a fading wash on the row.'],['bad','Neighbours still jump; the glow only says where she went.']]},
+    {id:'A3', name:'A’s rows stay put, A2’s words', m:{line:'roll', flip:false}, eph:true, strip:A2.strip, outcome(){ return null; },
+     notes:[['good','Her row never moves while the panel is open; it regroups when you next open it.'],['good','Same words as A2: Invited (30m), Declined, Expired, Invite.'],['bad','While open, Party can lag: she may have joined but still sit in Recents.']],
+     list(c){
+      /* grouped by her state when the panel opened (openM), so nothing moves under the pointer */
+      const ok = matcher(c), om = c.openM, it = [], row = c.V.row || a2Row;
+      const inGroup = IN_PARTY.includes(om) || (c.V.joinMove && c.m === 'joined' && c.jm) || (c.V.joinNow && c.m === 'joined'), inP = inGroup && ok('mira');
+      const mira = () => ({...row(c, 'mira'), k: c.V.joinMove || c.V.joinNow ? (inGroup ? 'p:mira' : 'r:mira') : 'mira'});
+      const party = ['kier', 'leo'].filter(ok);
+      if(party.length || inP){
+        it.push({k:'l:party', t:'label', text:'Party'});
+        party.forEach(id => it.push(member('m:' + id, id)));
+        if(inP) it.push(mira());
+      }
+      if(c.list === 'loading'){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); [1, 2, 3, 4].forEach(n => it.push({k:'s' + n, t:'skel'})); }
+      const rec = c.list === 'ready' ? RECENTS.filter(id => !(id === 'mira' && inGroup) && ok(id)) : [];
+      if(rec.length){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); rec.forEach(id => it.push(id === 'mira' ? mira() : row(c, id))); }
+      if(c.list === 'ready' && !rec.length && !party.length && !inP) it.push({k:'n:none', t:'note', cls:'c', html:`${IC.people}No one called “${esc(c.q)}” yet.`});
+      if(c.list === 'error') it.push({k:'n:err', t:'note', cls:'c', html:`${IC.cloud}Couldn’t load people.<u data-act="reload">Try again</u>`});
+      return it;
+     }}
+  );
+}
+/* A3b–A3f: A3's list; only Mira's button and how it changes differ */
+{
+  const A3 = VARS.find(v => v.id === 'A3'), base = {list:A3.list, strip:A3.strip, outcome:A3.outcome, eph:true, row:a3Row};
+  VARS.splice(VARS.indexOf(A3) + 1, 0,
+    {...base, id:'A3b', name:'Words fade, width springs', m:{line:'roll', flip:false, pill:'fade'}, cls:'spring',
+     notes:[['good','Softest: the label blurs across while the pill springs to its new width.'],['bad','The overshoot can feel playful in a calm list.']]},
+    {...base, id:'A3b2', name:'A3b, one button look', m:{line:'roll', flip:false, pill:'fade'}, cls:'spring', pills:'mono',
+     notes:[['good','Every state is UiButton default (s, round); only words and width change.'],['good','Retry and Cancel stop shouting; the subtext carries the colour.'],['bad','Nothing pink says “act here”, so Invite pulls less.']]},
+    {...base, id:'A3b2b', name:'Fixed width; spinner fades in', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'ring', fixW:84,
+     notes:[['good','The button never resizes; Invite, Cancel and Retry all fit 84px.'],['good','Busy is just a spinner; the label blurs out, the ring blurs in.'],['bad','“Sending” vs “Cancelling” is no longer said; the subtext has to.']]},
+    {...base, id:'A3b2c', name:'Label shrinks into the spinner', m:{line:'roll', flip:false, pill:'shrink'}, pills:'fixed', spin:'ring', fixW:84,
+     notes:[['good','The word collapses to the centre and the ring pops out of it.'],['bad','Every label change pops, not just the busy ones.']]},
+    {...base, id:'A3b2d', name:'Three dots instead of a ring', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84,
+     notes:[['good','Dots read as “working on it”, softer than a ring.'],['bad','Close to the chat’s typing dots; could read as someone typing.']]},
+    {...base, id:'A3b2d2', name:'A green tick lands on her', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'tick',
+     notes:[['good','The countdown ring closes into a full green ring with a tick: the wait is over.'],['good','Cancel fades where it stands; nothing squeezes.'],['bad','The tick is small; the subtext still does most of the telling.']]},
+    {...base, id:'A3b2d3', name:'The button says Joined', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'chip',
+     notes:[['good','The spot you were watching answers: CANCEL turns into a green JOINED.'],['bad','Green words where a button was can look clickable.']]},
+    {...base, id:'A3b2d3b', name:'A tick in the button, then it goes', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'tickbtn', jBeats:[1200],
+     notes:[['good','Where Cancel was, a green tick answers for a beat, then the space empties.'],['good','Subtext keeps Joined, then In the room.'],['bad','For that second, a tick in a button shape can look pressable.']]},
+    {...base, id:'A3b2d3c', name:'The countdown ring completes', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'complete', jBeats:[1400],
+     notes:[['good','Green sweeps round her pink ring: the wait closes the way it was shown.'],['bad','The answer is on the avatar; the button only fades.']]},
+    {...base, id:'A3b2d3d', name:'One beat at a time', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'beats', jBeats:[300, 1500],
+     notes:[['good','Tick in the button first; then the ring sweeps green and Joined rolls in.'],['bad','Takes 1.5s to fully settle.']]},
+    {...base, id:'A3b2d3e', name:'Joined slides out of the button', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'slide',
+     notes:[['good','Cancel fades and Joined travels from the button into the subtext.'],['good','Your eye goes from where you were looking to where the answer stays.'],['bad','Text crossing the row can smear at full speed.']]},
+    {...base, id:'A3b2d3f', name:'A quiet ping', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'ping',
+     notes:[['good','One green pulse off her avatar as the button fades.'],['bad','Edges toward decoration; easy to overdo.']]},
+    {...base, id:'A3b2d3g', name:'The button fades down', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fd',
+     notes:[['good','Cancel sinks as it fades, put away, while Joined rolls up in the subtext.'],['good','Opposite directions read as one swap: the job’s done.'],['bad','Quiet; easy to miss if you look away.']]},
+    {...base, id:'A3b2d3h', name:'A Glimm band brings the news', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', glimm:'row',
+     notes:[['good','A pink-to-mint band crosses her row; Joined is already there behind it.'],['good','Glimm’s look: cosine palette, ripple, 1100ms sweep, 220ms fade.'],['bad','Glimm sweeps the whole screen; one row needs GlimmScope or our own canvas.']]},
+    {...base, id:'A3b2d3i', name:'Glimm hides the regroup', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', glimm:'panel', joinNow:true,
+     notes:[['good','The band runs down the list; behind it she’s already in Party.'],['good','Solves A3’s stale Party without a row flying under your pointer.'],['bad','A whole-panel sweep for one join is a lot.']]},
+    {...base, id:'A3b2d4', name:'Her row lights up', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'wash',
+     notes:[['good','A green wash and a little avatar bounce; hard to miss.'],['bad','The loudest; maybe too much for a routine join.']]},
+    {...base, id:'A3b2d5', name:'Tick, then she moves to Party', m:{line:'roll', flip:false, pill:'fade', move:'travel', cascade:true}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', joined:'tick', joinMove:true,
+     notes:[['good','Joining is the one change worth a move: after the tick she flies to Party.'],['bad','Breaks A3’s rule that nothing moves while the panel is open.']]},
+    {...base, id:'A3b2e', name:'A light sweeps the button', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'sweep', fixW:84,
+     notes:[['good','No icon at all: the empty button shimmers like a loading skeleton.'],['bad','Least obvious as “busy”; can look like a hover glitch.']]},
+    {...base, id:'A3b2f', name:'Spin only if it’s slow', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'ring', fixW:84, delaySpin:true,
+     notes:[['good','The label dims at once; the spinner only shows after 300ms.'],['good','Quick sends never flash a spinner.'],['bad','Two steps, dim then spin, to build and test.']]},
+    {...base, id:'A3c', name:'Squeeze to a spinner', m:{line:'roll', flip:false}, pills:'circle',
+     notes:[['good','Busy states shrink to a circle, so waiting never looks like ready.'],['good','Joined pops a green tick for 4 seconds, then the pill bows out.'],['bad','Three width changes per invite; the row’s edge keeps moving.']]},
+    {...base, id:'A3d', name:'The plus turns into a cross', m:{line:'roll', flip:false, pill:'fade'}, pills:'icon',
+     notes:[['good','One icon carries it: + spins into × for Cancel, a spinner while busy.'],['bad','Every pill gets 18px wider to fit the icon.']]},
+    {...base, id:'A3e', name:'Letters roll one by one', m:{line:'roll', flip:false, pill:'letters'},
+     notes:[['good','Each letter rolls in, so the change is easy to catch.'],['bad','Busiest of the set; showy for a two-word button.']]},
+    {...base, id:'A3f', name:'Tick, hover to cancel', m:{line:'roll', flip:false}, pills:'hover',
+     notes:[['good','Once sent, the pill shrinks to a quiet tick; hover opens it into Cancel.'],['good','Same idea as X’s Following that turns into Unfollow on hover.'],['bad','Touch has no hover, so Cancel hides behind a first tap.']]}
+  );
+}
+function a3Row(c, id){
+  const r = a2Row(c, id), st = c.V.pills, m = c.m;
+  const jo = c.V.joined;
+  if(jo && id === 'mira' && m === 'joined' && c.flash){
+    if(jo === 'chip') return {...r, sub:'In the room', tone:'', act:{k:'pjoin', h:'Joined'}};
+    if(jo === 'tick') return {...r, ring:'ok', badge:'ok'};
+    if(jo === 'wash') return {...r, wash:true};
+    const dt = (performance.now() - c.mAt) * c.rate, tick = {k:'pok2', h:IC.check};
+    if(jo === 'tickbtn') return {...r, act: dt < 1200 ? tick : null};
+    if(jo === 'complete') return {...r, ring: dt < 1400 ? 'done' : ''};
+    if(jo === 'beats'){
+      if(dt < 300) return {...r, sub:`Invited (${mins(c.left)})`, tone:'pk', ring:'drain', act:tick};
+      return {...r, ring: dt < 1500 ? 'done' : '', act: dt < 1500 ? tick : null};
+    }
+    if(jo === 'slide') return {...r, slide:true};
+    if(jo === 'ping') return {...r, ping:true};
+  }
+  if(st === 'circle' && id === 'mira' && m === 'joined' && c.flash) return {...r, act:{k:'pok', h:IC.check, round:1}};
+  if(!st || !r.act) return r;
+  if(st === 'fixed'){
+    const k = r.act.k.replace(/^p(inv|gh|pk|ok)\b/, 'pub');
+    if(!/busy/.test(k)) return {...r, act:{...r.act, k}};
+    if(c.V.delaySpin && performance.now() - c.mAt < 300 / c.rate) return {...r, act:{...r.act, k:k + ' dim', h:{sending:'Invite', cancelling:'Cancel'}[m]}};
+    const sp = c.V.spin;
+    return {...r, act:{...r.act, k:k + (sp === 'sweep' ? ' sweep' : ''), h: sp === 'dots' ? DOTS : sp === 'sweep' ? '' : SPIN}};
+  }
+  if(st === 'mono') return {...r, act:{...r.act, k:r.act.k.replace(/^p(inv|gh|pk|ok)\b/, 'pub')}};
+  if(st === 'icon'){ const h = r.act.h.replace(SPIN, ''); return {...r, act:{...r.act, h, ico:{Invite:'plus', Retry:'retry', Cancel:'x'}[h] || 'spin'}}; }
+  if(id !== 'mira') return r;
+  if(st === 'circle' && (m === 'sending' || m === 'cancelling')) return {...r, act:{...r.act, h:SPIN, round:1}};
+  if(st === 'hover' && m === 'pending') return {...r, act:{k:'pinv hov', h:`<span class="hv"><span class="h1">${IC.check}</span><span class="h2">Cancel</span></span>`, a:'cancel', round:1}};
+  return r;
+}
+function aRow(c, id){
+  if(id !== 'mira') return {k:id, t:'row', id, sub:onl(id), act:{k:'pinv', h:'Invite'}};
+  const r = {k:'mira', t:'row', id};
+  switch(c.m){
+    case 'idle': return {...r, sub:onl(id), act:{k:'pinv', h:'Invite', a:'invite'}};
+    case 'sending': return {...r, sub:onl(id), act:{k:'pinv busy', h:SPIN + 'Sending'}};
+    case 'sendErr': return {...r, sub:'Couldn’t send', tone:'err', act:{k:'ppk', h:'Retry', a:'invite', shake:1}};
+    case 'pending': return {...r, sub:`Invited · ${mins(c.left)} left`, tone:'pk', ring:'drain', act:{k:'pgh', h:'Cancel', a:'cancel'}};
+    case 'cancelling': return {...r, sub:'Invited', tone:'pk', ring:'drain', act:{k:'pgh busy', h:SPIN + 'Cancelling'}};
+    case 'joined': return {...r, sub:'Joined the room', tone:'ok', act:{k:'pok', h:IC.check + 'Joined'}};
+    case 'declined': return {...r, sub:'Declined just now', act:{k:'pgh', h:'Ask again', a:'invite'}};
+    case 'expired': return {...r, sub:'No answer after 30m', act:{k:'pgh', h:'Ask again', a:'invite'}};
+  }
+}
+/* A2: Mira keeps one key per group, so she remounts between Recents and Party (as today) but morphs within Party */
+function a2Row(c, id){
+  if(id !== 'mira') return {k:'r:' + id, t:'row', id, sub:onl(id), act:{k:'pinv', h:'Invite'}};
+  const r = {k: IN_PARTY.includes(place(c)) ? 'p:mira' : 'r:mira', t:'row', id, mv:'mira'}, inv = {k:'pinv', h:'Invite', a:'invite'};
+  switch(c.m){
+    case 'idle': return {...r, sub:onl(id), act:inv};
+    case 'sending': return {...r, sub:onl(id), act:{k:'pinv busy', h:SPIN + 'Sending'}};
+    case 'sendErr': return {...r, sub:'Couldn’t send', tone:'err', act:{k:'ppk', h:'Retry', a:'invite', shake:1}};
+    case 'pending': return {...r, sub:`Invited (${mins(c.left)})`, tone:'pk', ring:'drain', act:{k:'pgh', h:'Cancel', a:'cancel'}};
+    case 'cancelling': return {...r, sub:`Invited (${mins(c.left)})`, tone:'pk', ring:'drain', act:{k:'pgh busy', h:SPIN + 'Cancelling'}};
+    case 'joined': return c.flash ? {...r, sub:'Joined', tone:'ok', act:null} : {...r, sub:'In the room', act:null};
+    case 'declined': return {...r, sub: c.flash ? 'Declined' : onl(id), act:inv};
+    case 'expired': return {...r, sub: c.flash ? 'Expired' : onl(id), act:inv};
+  }
+}
+function cRow(c, id){
+  if(id !== 'mira') return {k:id, t:'row', id, sub:onl(id), act:{k:'plus'}};
+  const r = {k:'mira', t:'row', id};
+  switch(c.m){
+    case 'idle': return {...r, sub:onl(id), act:{k:'plus', a:'invite'}};
+    case 'sending': return {...r, sub:'Sending…', ring:'spin', act:null};
+    case 'sendErr': return {...r, sub:'Didn’t send', tone:'err', badge:'err', act:{k:'retryc', a:'invite'}};
+    case 'pending': return {...r, sub:'Invited', tone:'pk', ring:'drain', act:{k:'cancel', a:'cancel'}};
+    case 'cancelling': return {...r, sub:'Cancelling…', ring:'spin-g', act:null};
+    case 'joined': return {...r, sub:'Joined', tone:'ok', ring:'ok', badge:'ok', act:null};
+    case 'declined': return {...r, sub:'Declined', badge:'x', act:{k:'retryc', a:'invite'}};
+    case 'expired': return {...r, sub:'No answer', ring:'hollow', act:{k:'retryc', a:'invite'}};
+  }
+}
+
+/* ───── scenes and flows ───── */
+const SCENES = {
+  closed:{panel:'closed', list:'ready', q:'', m:'idle'},
+  loading:{panel:'open', list:'loading', q:'', m:'idle'},
+  recents:{panel:'open', list:'ready', q:'', m:'idle'},
+  search:{panel:'open', list:'ready', q:'ni', m:'idle'},
+  nomatch:{panel:'open', list:'ready', q:'zed', m:'idle'},
+  loaderr:{panel:'open', list:'error', q:'', m:'idle'},
+  sending:{panel:'open', list:'ready', q:'', m:'sending'},
+  senderr:{panel:'open', list:'ready', q:'', m:'sendErr'},
+  invited:{panel:'open', list:'ready', q:'', m:'pending'},
+  cancelling:{panel:'open', list:'ready', q:'', m:'cancelling'},
+  joined:{panel:'open', list:'ready', q:'', m:'joined'},
+  declined:{panel:'open', list:'ready', q:'', m:'declined'},
+  noanswer:{panel:'open', list:'ready', q:'', m:'expired'},
+  chatWait:{panel:'closed', list:'ready', q:'', m:'pending'},
+  chatAns:{panel:'closed', list:'ready', q:'', m:'declined'}
+};
+const CHIPS = [
+  ['Panel', [['closed','Closed'],['loading','Loading'],['recents','Recents'],['search','Search'],['nomatch','No match'],['loaderr','Can’t load']]],
+  ['Mira', [['sending','Sending'],['senderr','Can’t send'],['invited','Invited'],['cancelling','Cancelling'],['joined','Joined'],['declined','Declined'],['noanswer','No answer']]],
+  ['Chat', [['chatWait','Waiting'],['chatAns','Answered']]]
+];
+const FLOWS = [
+  ['join','She joins', ['closed', 500, {panel:'open', list:'loading'}, 700, 'recents', 1200, 'sending', 900, 'invited', 2600, 'joined']],
+  ['decline','She declines', ['recents', 1100, 'sending', 900, 'invited', 2400, 'declined', 1800, 'sending', 900, 'invited']],
+  ['close','Close, hear back', ['recents', 1100, 'sending', 900, 'invited', 1500, {panel:'closed'}, 2600, {m:'declined'}, 2600, {panel:'open', list:'loading'}, 600, {list:'ready'}]],
+  ['cancel','Cancel', ['recents', 1100, 'sending', 900, 'invited', 1800, 'cancelling', 900, {m:'idle'}]],
+  ['search','Search', ['recents', 900, {q:'n', list:'loading'}, 260, {q:'ni'}, 500, {list:'ready'}, 1600, {q:'z', list:'loading'}, 240, {q:'ze'}, 240, {q:'zed'}, 500, {list:'ready'}]],
+  ['fail','Send fails', ['recents', 1100, 'sending', 1200, 'senderr']]
+];
+const ACT = {
+  open: [{panel:'open', list:'loading'}, 650, {list:'ready'}],
+  close: [{panel:'closed'}],
+  invite: [{m:'sending'}, 900, {m:'pending'}],
+  cancel: [{m:'cancelling'}, 800, {m:'idle'}],
+  reload: [{list:'loading'}, 700, {list:'ready'}]
+};
+
+/* ───── engine ───── */
+function anim(c, el, kf, o){ const a = el.animate(kf, o); a.playbackRate = c.rate; return a; }
+function applyRate(c){ const f = () => c.stage.getAnimations({subtree:true}).forEach(a => { a.playbackRate = c.rate; }); f(); requestAnimationFrame(f); }
+function later(c, fn, ms){ c.timers.push(setTimeout(fn, ms / c.rate)); }
+function clear(c){ c.timers.forEach(clearTimeout); c.timers = []; }
+function swap(c, box, html, mode, cls = ''){
+  const key = html + '¦' + cls;
+  if(box.dataset.k === key) return;
+  box.dataset.k = key;
+  const rz = box.querySelector(':scope > .rz');
+  if(rz) rz.innerHTML = html;
+  const old = [...box.querySelectorAll(':scope > .ln:not(.out)')];
+  const n = document.createElement('span');
+  n.className = 'ln ' + cls; n.innerHTML = html; box.appendChild(n);
+  if(mode === 'letters' || mode === 'cutL') n.innerHTML = `<span class="chs">${html.split(/(<i class="spi"><\/i>)/).map(t => t.startsWith('<') ? `<span class="ch">${t}</span>` : [...t].map(ch => `<span class="ch">${ch}</span>`).join('')).join('')}</span>`;
+  if(mode === 'cut' || mode === 'cutL' || !old.length){ box.querySelectorAll(':scope > .ln').forEach(e => { if(e !== n) e.remove(); }); return; }
+  if(mode === 'fade'){
+    old.forEach(e => { e.classList.add('out'); anim(c, e, [{opacity:1, filter:'blur(0)'}, {opacity:0, filter:'blur(3px)'}], {duration:170, easing:'ease-in', fill:'forwards'}).finished.then(() => e.remove(), () => e.remove()); });
+    anim(c, n, [{opacity:0, filter:'blur(3px)'}, {opacity:1, filter:'blur(0)'}], {duration:280, delay:70, easing:'ease-out', fill:'backwards'});
+    return;
+  }
+  if(mode === 'slideR'){
+    old.forEach(e => { e.classList.add('out'); anim(c, e, [{opacity:1}, {opacity:0}], {duration:160, fill:'forwards'}).finished.then(() => e.remove(), () => e.remove()); });
+    anim(c, n, [{opacity:0, transform:`translateX(${box.dataset.dx || 120}px)`}, {opacity:1, offset:.35}, {opacity:1, transform:'none'}], {duration:620, delay:40, easing:'cubic-bezier(.2,.8,.2,1)', fill:'backwards'});
+    return;
+  }
+  if(mode === 'shrink'){
+    old.forEach(e => { e.classList.add('out'); anim(c, e, [{opacity:1, transform:'scale(1)'}, {opacity:0, transform:'scale(.3)'}], {duration:200, easing:'ease-in', fill:'forwards'}).finished.then(() => e.remove(), () => e.remove()); });
+    anim(c, n, [{opacity:0, transform:'scale(.3)'}, {opacity:1, transform:'scale(1)'}], {duration:300, delay:150, easing:'cubic-bezier(.34,1.5,.5,1)', fill:'backwards'});
+    return;
+  }
+  if(mode === 'letters'){
+    old.forEach(e => {
+      e.classList.add('out');
+      const ch = [...e.querySelectorAll('.ch')];
+      if(!ch.length){ e.remove(); return; }
+      ch.forEach((x, i) => anim(c, x, [{opacity:1, transform:'none'}, {opacity:0, transform:'translateY(-8px)'}], {duration:150, delay:i * 14, easing:'ease-in', fill:'forwards'}));
+      later(c, () => e.remove(), 160 + ch.length * 14);
+    });
+    n.querySelectorAll('.ch').forEach((x, i) => anim(c, x, [{opacity:0, transform:'translateY(9px)'}, {opacity:1, transform:'none'}], {duration:280, delay:70 + i * 24, easing:'cubic-bezier(.2,.8,.2,1)', fill:'backwards'}));
+    return;
+  }
+  old.forEach(e => {
+    e.classList.add('out');
+    anim(c, e, [{opacity:1, transform:'translateY(0)'}, {opacity:0, transform:'translateY(-7px)'}], {duration:190, easing:'ease-in', fill:'forwards'}).finished.then(() => e.remove(), () => e.remove());
+  });
+  anim(c, n, [{opacity:0, transform:'translateY(7px)'}, {opacity:1, transform:'translateY(0)'}], {duration:300, delay:80, easing:'cubic-bezier(.2,.8,.2,1)', fill:'backwards'});
+}
+function create(it){
+  const el = document.createElement('div');
+  el.dataset.k = it.k;
+  el.dataset.mv = it.mv || '';
+  if(it.t === 'label'){ el.className = 'plb'; el.innerHTML = '<span></span>'; }
+  else if(it.t === 'note'){ el.className = 'pnote'; }
+  else if(it.t === 'skel'){ el.className = 'pr sk'; el.innerHTML = '<span class="skav"></span><span class="skl"><i></i><i></i></span>'; }
+  else {
+    const p = PEOPLE[it.id];
+    el.className = 'pr';
+    el.innerHTML = `<span class="pav">${av(p.n)}${p.on ? '<i class="dot"></i>' : ''}<i class="rg"></i><i class="bd"></i></span>
+      <span class="pdt"><b>${p.n}${it.you ? '<em>You</em>' : ''}</b><small class="pst"></small></span><span class="pac none"><span class="rz"></span></span>`;
+  }
+  return el;
+}
+function update(c, el, it, mode){
+  if(it.t === 'label') return swap(c, el.firstElementChild, it.text, mode);
+  if(it.t === 'note'){ el.className = 'pnote ' + (it.cls || ''); if(el.dataset.h !== it.html){ el.dataset.h = it.html; el.innerHTML = it.html; } return; }
+  if(it.t === 'skel') return;
+  const rg = el.querySelector('.rg'), bd = el.querySelector('.bd'), pac = el.querySelector('.pac'), pst = el.querySelector('.pst');
+  let smode = mode;
+  if(it.slide && mode !== 'cut'){ smode = 'slideR'; pst.dataset.dx = Math.round(pac.getBoundingClientRect().left - pst.getBoundingClientRect().left); }
+  swap(c, pst, it.sub, smode, it.tone ? 't-' + it.tone : '');
+  const rc = 'rg ' + (it.ring || '');
+  if(rg.className !== rc){
+    rg.className = rc;
+    if(it.ring === 'done') anim(c, rg, [{'--q':0}, {'--q':100}], {duration: mode === 'cut' ? 0 : 650, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards'});
+    if(it.ring === 'ok' && mode !== 'cut') anim(c, rg, [{transform:'scale(.7)', opacity:0}, {transform:'scale(1.12)', opacity:1, offset:.6}, {transform:'scale(1)', opacity:1}], {duration:520, easing:'cubic-bezier(.2,.8,.2,1)'});
+  }
+  const pg = it.ping ? '1' : '';
+  if(el.dataset.pg !== pg){
+    el.dataset.pg = pg;
+    if(pg && mode !== 'cut'){
+      const i = document.createElement('i'); i.className = 'png'; el.querySelector('.pav').appendChild(i);
+      anim(c, i, [{transform:'scale(1)', opacity:.9}, {transform:'scale(1.8)', opacity:0}], {duration:900, easing:'cubic-bezier(.2,.8,.2,1)'}).finished.then(() => i.remove(), () => i.remove());
+    }
+  }
+  const w = it.wash ? '1' : '';
+  if(el.dataset.w !== w){
+    el.dataset.w = w;
+    if(w && mode !== 'cut'){
+      anim(c, el, [{backgroundColor:'rgba(101,214,173,.2)'}, {backgroundColor:'rgba(101,214,173,.2)', offset:.3}, {backgroundColor:'rgba(101,214,173,0)'}], {duration:1800, easing:'ease-out'});
+      anim(c, el.querySelector('.pav'), [{transform:'scale(1)'}, {transform:'scale(1.18)', offset:.35}, {transform:'scale(1)'}], {duration:560, easing:'cubic-bezier(.3,1.4,.5,1)'});
+    }
+  }
+  const bc = 'bd ' + (it.badge || '');
+  if(bd.className !== bc){ bd.className = bc; if(it.badge) bd.innerHTML = it.badge === 'ok' ? IC.check : it.badge === 'x' ? svg('<path d="M7 7l10 10M17 7L7 17"/>', 10, 3) : '<b style="font-size:10px">!</b>'; }
+  const a = it.act;
+  el.dataset.act = a && a.a ? a.a : '';
+  el.classList.toggle('cl', !!(a && a.a));
+  /* leaving: keep the last look (font, case, fill) so only opacity and position change */
+  if(!a){ pac.className = 'pac none ' + (pac.dataset.last || ''); return; }
+  pac.dataset.last = a.k.replace(/\bbusy\b/, '').trim() + (a.ico ? ' wi' : '');
+  pac.className = 'pac ' + a.k + (a.ico ? ' wi' : '');
+  /* A3d: one persistent icon that turns + into ×, or hands over to a spinner */
+  let pic = pac.querySelector(':scope > .pic');
+  if(a.ico && !pic){ pic = document.createElement('i'); pic.className = 'pic'; pic.innerHTML = `<b class="pi-a">${IC.plus}</b><b class="pi-s">${SPIN}</b><b class="pi-r">${IC.retry}</b>`; pac.appendChild(pic); }
+  if(pic){ if(a.ico) pic.dataset.s = a.ico; else pic.remove(); }
+  const kind = a.k.split(' ')[0];
+  swap(c, pac, a.h || IC[{plus:'plus', cancel:'x', retryc:'retry'}[kind]] || '', mode === 'cut' ? (c.V.m.pill === 'letters' ? 'cutL' : 'cut') : (c.V.m.pill || mode));
+  const round = a.round || ['plus', 'cancel', 'retryc'].includes(kind);
+  const natural = Math.ceil(pac.querySelector('.rz').getBoundingClientRect().width + 24 + (a.ico ? 18 : 0));
+  pac.style.width = round ? (/^p(inv|gh|pk|ok)$/.test(kind) ? '28px' : '32px') : (c.V.fixW || natural) + 'px';
+  pac.style.setProperty('--hw', natural + 'px');
+  if(c.V.fixW) pac.style.setProperty('--fw', c.V.fixW + 'px');
+  if(a.shake && mode !== 'cut') anim(c, pac, [{transform:'none'}, {transform:'translateX(-4px)'}, {transform:'translateX(4px)'}, {transform:'translateX(-2px)'}, {transform:'none'}], {duration:400, delay:120});
+}
+const isAux = e => e.classList.contains('ghost') || e.classList.contains('sp');
+const EZ = 'cubic-bezier(.2,.8,.2,1)';
+const shut = h => [{height:h + 'px', minHeight:h + 'px', paddingTop:'10px', paddingBottom:'10px'}, {height:'0px', minHeight:'0px', paddingTop:'0px', paddingBottom:'0px'}];
+function reconcile(c, items, fresh){
+  const box = c.e.list, M = c.V.m;
+  if(fresh) box.innerHTML = '';
+  const cur = new Map([...box.children].filter(e => !isAux(e)).map(e => [e.dataset.k, e]));
+  const tops = new Map();
+  cur.forEach((e, k) => tops.set(k, e.offsetTop));
+  const want = new Set(items.map(i => i.k));
+  /* a person leaving one group and arriving in another is a move, not an exit plus an entrance */
+  const arriving = new Set(items.filter(i => i.mv && !cur.has(i.k)).map(i => i.mv));
+  const moves = new Map();
+  cur.forEach((e, k) => {
+    if(want.has(k)) return;
+    if(M.move && !fresh && e.dataset.mv && arriving.has(e.dataset.mv)){
+      moves.set(e.dataset.mv, {el:e, top:e.offsetTop, h:e.offsetHeight});
+      if(M.move === 'glow') e.remove(); else e.classList.add('sp');
+      return;
+    }
+    if(c.forceCut){ e.remove(); return; }
+    const g = e.cloneNode(true);
+    g.classList.add('ghost'); g.style.top = e.offsetTop + 'px';
+    e.remove(); box.appendChild(g);
+    anim(c, g, M.cascade ? [{opacity:1}, {opacity:0, transform:'translateY(12px)'}] : [{opacity:1}, {opacity:0}], {duration: M.cascade ? 160 : 220, fill:'forwards'})
+      .finished.then(() => g.remove(), () => g.remove());
+  });
+  let n = 0, prev = null;
+  items.forEach(it => {
+    let el = cur.get(it.k);
+    const isNew = !el;
+    if(isNew) el = create(it);
+    /* stable order: only move an element that is out of place, so spacers keep their slot */
+    const slot = prev ? prev.nextElementSibling : box.firstElementChild;
+    let nx = slot; while(nx && nx !== el && isAux(nx)) nx = nx.nextElementSibling;
+    if(nx !== el) box.insertBefore(el, slot);
+    prev = el;
+    update(c, el, it, isNew || c.forceCut ? 'cut' : M.line);
+    if(isNew && !c.forceCut && !(it.mv && moves.has(it.mv))){
+      const cascade = fresh || M.cascade;
+      anim(c, el, [{opacity:0, transform:`translateY(${cascade ? 12 : 6}px)`}, {opacity:1, transform:'none'}],
+        {duration: cascade ? 380 : 320, delay: cascade ? 110 + (2 + Math.min(n++, 10)) * 32 : 140, easing:EZ, fill:'backwards'});
+    }
+  });
+  moves.forEach((mo, mv) => {
+    const dest = [...box.children].find(e => !isAux(e) && e.dataset.mv === mv), sp = mo.el;
+    if(!dest){ sp.remove(); return; }
+    const h = dest.offsetHeight, toParty = dest.dataset.k.startsWith('p:');
+    if(M.move === 'glow'){
+      anim(c, dest, [{backgroundColor: toParty ? '#e8368f40' : '#ffffff26'}, {backgroundColor: toParty ? '#e8368f40' : '#ffffff26', offset:.25}, {backgroundColor:'rgba(255,255,255,0)'}], {duration:1800, easing:'ease-out'});
+      return;
+    }
+    sp.style.display = 'none'; const endTop = dest.offsetTop; sp.style.display = '';
+    sp.style.overflow = dest.style.overflow = 'hidden';
+    const done = () => { sp.remove(); };
+    if(M.move === 'shrink'){
+      anim(c, sp, shut(mo.h).map((f, i) => ({...f, opacity: 1 - i})), {duration:320, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards'}).finished.then(done, done);
+      anim(c, dest, shut(h).reverse().map((f, i) => ({...f, opacity:i})), {duration:400, delay:140, easing:EZ, fill:'backwards'})
+        .finished.then(() => { dest.style.overflow = ''; }, () => {});
+      return;
+    }
+    /* travel: the slots close and open while a lifted copy flies between them */
+    const D = 560, fly = dest.cloneNode(true);
+    fly.className = 'pr ghost fly'; fly.style.top = mo.top + 'px'; fly.style.height = h + 'px';
+    box.appendChild(fly);
+    sp.style.visibility = 'hidden'; dest.style.opacity = '0';
+    anim(c, sp, shut(mo.h), {duration:D, easing:EZ, fill:'forwards'}).finished.then(done, done);
+    anim(c, dest, shut(h).reverse(), {duration:D, easing:EZ, fill:'backwards'}).finished.then(() => { dest.style.overflow = ''; }, () => {});
+    const dy = endTop - mo.top, up = '0 16px 32px -12px rgba(0,0,0,.75)', flat = '0 0 0 0 rgba(0,0,0,0)';
+    anim(c, fly, [
+      {transform:'translateY(0) scale(1)', boxShadow:flat, backgroundColor:'rgba(28,41,56,0)'},
+      {transform:`translateY(${dy * .06}px) scale(1.04)`, boxShadow:up, backgroundColor:'rgba(28,41,56,1)', offset:.2},
+      {transform:`translateY(${dy}px) scale(1.04)`, boxShadow:up, backgroundColor:'rgba(28,41,56,1)', offset:.78},
+      {transform:`translateY(${dy}px) scale(1)`, boxShadow:flat, backgroundColor:'rgba(28,41,56,0)'}
+    ], {duration:D + 220, easing:'cubic-bezier(.45,0,.2,1)'}).finished.then(() => { fly.remove(); dest.style.opacity = ''; }, () => { fly.remove(); dest.style.opacity = ''; });
+  });
+  if(M.flip && !fresh) cur.forEach((el, k) => {
+    if(!want.has(k)) return;
+    const dy = tops.get(k) - el.offsetTop;
+    if(Math.abs(dy) > 1) anim(c, el, [{transform:`translateY(${dy}px)`}, {transform:'none'}], {duration:560, easing:EZ});
+  });
+}
+function render(c, opening){
+  const V = c.V, e = c.e, open = c.panel === 'open';
+  e.chat.classList.toggle('inv', open);
+  e.pn.classList.toggle('on', open);
+  if(open){
+    e.pq.textContent = c.q;
+    e.ph.style.display = c.q ? 'none' : '';
+    reconcile(c, V.list(c), opening);
+  }
+  const mem = ['Kier', 'Leo', ...(c.m === 'joined' ? ['Mira'] : [])], mk = mem.join();
+  if(e.agrp.dataset.k !== mk){
+    const grew = e.agrp.dataset.k && mem.length > e.agrp.dataset.k.split(',').length;
+    e.agrp.dataset.k = mk; e.agrp.innerHTML = mem.map(n => av(n)).join('');
+    if(grew) anim(c, e.agrp.lastElementChild, [{transform:'scale(.4)', opacity:0}, {transform:'none', opacity:1}], {duration:420, delay:300, easing:'cubic-bezier(.2,.9,.3,1.4)', fill:'backwards'});
+  }
+  const s = V.strip(c), sm = c.seen ? V.m.line : 'cut';
+  e.wsw.classList.toggle('on', !!s);
+  if(s){
+    if(e.wsav.dataset.k !== s.av){ e.wsav.dataset.k = s.av; e.wsav.innerHTML = s.av; }
+    swap(c, e.wst, s.text, e.wsw.dataset.was ? sm : 'cut');
+    swap(c, e.wsr, s.right || '', e.wsw.dataset.was ? sm : 'cut');
+    e.ws.classList.toggle('mut', !!s.mut);
+    e.ws.dataset.act = s.act || 'open';
+  }
+  e.wsw.dataset.was = s ? '1' : '';
+  const o = V.outcome(c);
+  e.ocw.classList.toggle('on', !!o);
+  if(o && e.oc.dataset.h !== o){ e.oc.dataset.h = o; e.oc.innerHTML = o; }
+  e.actj.classList.toggle('on', c.m === 'joined');
+  c.seen = true;
+  applyRate(c);
+}
+function set(c, patch){
+  const wasOpen = c.panel === 'open', prevM = c.m;
+  Object.assign(c, patch);
+  if(c.m === 'pending' && !waiting(prevM)) c.left = 1799;
+  /* A2: an answer shows for 4s, then the row and strip go back to rest */
+  if('m' in patch && c.m !== prevM){
+    c.mAt = performance.now();
+    c.jm = false; clearTimeout(c.jT);
+    if(c.V.jBeats && c.m === 'joined') c.V.jBeats.forEach(t => later(c, () => render(c, false), t + 20));
+    if(c.V.joinMove && c.m === 'joined') c.jT = setTimeout(() => { c.jm = true; render(c, false); }, 1400 / c.rate);
+    if(c.V.delaySpin && (c.m === 'sending' || c.m === 'cancelling')) later(c, () => render(c, false), 320);
+  }
+  if(c.V.eph && 'm' in patch){
+    clearTimeout(c.fT);
+    c.flash = ['joined', 'declined', 'expired'].includes(c.m);
+    if(c.flash) c.fT = setTimeout(() => { c.flash = false; render(c, false); }, 4000 / c.rate);
+  }
+  const opening = c.panel === 'open' && !wasOpen;
+  if(opening || c.panel === 'closed') c.openM = c.m;
+  if(c.V.defer){
+    clearTimeout(c.pT); c.waitLeave = false;
+    if(c.panel !== 'open' || opening) c.pm = c.m;
+    else if(c.pm !== c.m) c.pT = setTimeout(() => settle(c), 1200 / c.rate);
+  }
+  const sweep = c.V.glimm && c.panel === 'open' && !opening && 'm' in patch && c.m === 'joined' && prevM !== 'joined' ? glimmSnap(c) : null;
+  if(sweep) c.forceCut = true;
+  render(c, opening);
+  c.forceCut = false;
+  if(sweep) glimmRun(c, sweep);
+}
+/* ───── Glimm-style sweep: old view on top, clipped away as a shader band passes; new view behind ───── */
+const GL_PAL = {a:[.655, .525, .62], b:[.255, -.315, -.06]};   /* cosine palette: pink at 0, mint at .5 */
+function glimmSnap(c){
+  const pn = c.e.pn, box = c.e.list, pr = pn.getBoundingClientRect();
+  let src;
+  if(c.V.glimm === 'row') src = [...box.children].find(e => !isAux(e) && e.dataset.mv === 'mira') || [...box.children].find(e => e.querySelector && e.querySelector('b')?.textContent === 'Mira');
+  else src = box;
+  if(!src) return null;
+  const r = src.getBoundingClientRect();
+  const old = src.cloneNode(true);
+  old.classList.add('gold'); old.classList.remove('cl');
+  Object.assign(old.style, {position:'absolute', left:(r.left - pr.left) + 'px', top:(r.top - pr.top) + 'px', width:r.width + 'px', height:r.height + 'px', margin:'0', overflow:'hidden'});
+  if(src === box){ old.scrollTop = box.scrollTop; old.style.padding = getComputedStyle(box).padding; }
+  pn.appendChild(old);
+  return {old, rect:{x:r.left - pr.left, y:r.top - pr.top, w:r.width, h:r.height}, dir: c.V.glimm === 'row' ? 'ltr' : 'ttb'};
+}
+function glimmRun(c, sw){
+  const {old, rect, dir} = sw, pn = c.e.pn, dpr = Math.min(2, devicePixelRatio || 1);
+  const pad = dir === 'ltr' ? {x:0, y:6} : {x:0, y:0};
+  const cv = document.createElement('canvas');
+  cv.className = 'gcv';
+  Object.assign(cv.style, {left:rect.x - pad.x + 'px', top:rect.y - pad.y + 'px', width:rect.w + pad.x * 2 + 'px', height:rect.h + pad.y * 2 + 'px'});
+  cv.width = Math.round((rect.w + pad.x * 2) * dpr); cv.height = Math.round((rect.h + pad.y * 2) * dpr);
+  pn.appendChild(cv);
+  const gl = cv.getContext('webgl', {premultipliedAlpha:true, alpha:true});
+  const done = () => { cv.remove(); old.remove(); };
+  const SWEEP = 1100, OUTRO = 220, TIGHT = dir === 'ltr' ? 9 : 14, W = 2.6 / TIGHT;
+  let prog = null;
+  if(gl){
+    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, `precision mediump float;
+      uniform vec2 res;uniform float p,t,tight,alpha;uniform int dir;uniform vec3 pa,pb;
+      vec3 pal(float x){return pa+pb*cos(6.28318*x);}
+      void main(){
+        vec2 uv=gl_FragCoord.xy/res;
+        float a=dir==0?uv.x:1.-uv.y, b=dir==0?uv.y:uv.x;
+        float rip=sin(b*24.+t*4.)*.018+sin(b*57.-t*6.)*.008;
+        float d=(a+rip)-p, band=exp(-pow(d*tight,2.));
+        vec3 col=pal(a*.55+b*.2+t*.12)*.9;
+        gl_FragColor=vec4(col*band*alpha,band*alpha);
+      }`));
+    gl.linkProgram(prog); gl.useProgram(prog);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(gl.getUniformLocation(prog, 'res'), cv.width, cv.height);
+    gl.uniform1f(gl.getUniformLocation(prog, 'tight'), TIGHT);
+    gl.uniform1i(gl.getUniformLocation(prog, 'dir'), dir === 'ltr' ? 0 : 1);
+    gl.uniform3fv(gl.getUniformLocation(prog, 'pa'), GL_PAL.a); gl.uniform3fv(gl.getUniformLocation(prog, 'pb'), GL_PAL.b);
+  }
+  const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;   /* easeInOutCubic */
+  const t0 = performance.now();
+  const frame = now => {
+    if(!old.isConnected){ cv.remove(); return; }
+    const el = (now - t0) * c.rate, k = Math.min(1, el / SWEEP), pos = -W + (1 + 2 * W) * ease(k);
+    const out = el > SWEEP ? Math.max(0, 1 - (el - SWEEP) / OUTRO) : 1;
+    const cut = Math.max(0, Math.min(100, pos * 100));
+    old.style.clipPath = dir === 'ltr' ? `inset(0 0 0 ${cut}%)` : `inset(${cut}% 0 0 0)`;
+    if(gl){
+      gl.viewport(0, 0, cv.width, cv.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform1f(gl.getUniformLocation(prog, 'p'), pos);
+      gl.uniform1f(gl.getUniformLocation(prog, 't'), el / 1000);
+      gl.uniform1f(gl.getUniformLocation(prog, 'alpha'), out);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    }
+    if(el < SWEEP + OUTRO) requestAnimationFrame(frame); else done();
+  };
+  requestAnimationFrame(frame);
+}
+function settle(c){
+  if(c.pm === c.m) return;
+  if(c.hover){ c.waitLeave = true; return; }
+  c.waitLeave = false; c.pm = c.m; render(c, false);
+}
+function play(c, seq){
+  clear(c);
+  let t = 0;
+  for(const x of seq){
+    if(typeof x === 'number'){ t += x; continue; }
+    const step = x;
+    later(c, () => {
+      if(typeof step === 'string'){ set(c, SCENES[step]); mark(c, step); }
+      else { set(c, step); mark(c, null); }
+    }, t);
+  }
+}
+function mark(c, k){ c.chips.forEach(b => b.classList.toggle('on', b.dataset.s === k)); }
+
+/* ───── build the page ───── */
+const host = document.getElementById('vars');
+const VARS_C = [];
+VARS.forEach(V => {
+  const sec = document.createElement('section');
+  sec.className = 'var'; sec.id = 'v-' + V.id.toLowerCase(); sec.dataset.id = V.id; sec.dataset.name = V.name;
+  sec.innerHTML = `<div class="var-h"><span class="id">${V.id}</span><h2>${esc(V.name)}</h2></div>
+    <div class="frame"><div class="mk"><div class="stage room ${V.cls || ''}">
+      <div class="pv"><div class="art" style="background:${ART}"></div><div class="pv-ov"></div>
+        <div class="ctl"><span class="ic">${IC.play}</span><span class="t">41:12</span><div class="seek"><i></i></div><span class="t">2:04:00</span><span class="ic">${IC.vol}</span></div></div>
+      <aside class="chat">
+        <div class="cc">
+          <div class="cnp"><span class="agrp"></span><button type="button" class="cinv" data-act="open" aria-label="Invite people">${IC.userplus}</button></div>
+          <div class="pcode"><span>Party code</span><em><b>482 913</b>${IC.copy}</em></div>
+          <div class="gw wsw"><div><button type="button" class="ws"><span class="wsav"></span><span class="wst"></span><small class="wsr"><span class="rz"></span></small></button></div></div>
+          <div class="cmsgs">
+            <div class="cg"><span class="cav">${av('Leo')}</span><div><div class="cn">Leo</div><div class="cb">wait go back</div><div class="cb">that was the radio guy</div></div></div>
+            <div class="cg me"><span class="cav">${av('Kier')}</span><div><div class="cb">told you. pausing</div></div></div>
+            <div class="gw actj"><div><div class="ca"><span class="cact">${av('Mira', 's')}<h6 class="sub">Mira joined the party.</h6></span></div></div></div>
+            <div class="gw ocw"><div><div class="oc"></div></div></div>
+          </div>
+          <div class="cbar"><div class="cinp">Press / to focus</div><span class="send">↑</span></div>
+        </div>
+        <section class="pn" aria-label="Invite">
+          <div class="pnh cz" style="--i:0"><h3>Invite</h3><button type="button" class="pcl" data-act="close" aria-label="Close invite">${IC.x}</button></div>
+          <div class="psr cz" style="--i:1">${IC.search}<span class="pin"><span class="pq"></span><i></i><span class="ph" style="margin-left:2px">Search everyone</span></span></div>
+          <div class="pls"></div>
+          <div class="pft cz" style="--i:7"><span>Party code</span><em><b>482 913</b>${IC.copy}</em></div>
+        </section>
+      </aside>
+    </div></div></div>
+    ${CHIPS.map(([g, list]) => `<div class="rail"><span class="lbl">${g}</span><div class="grp st">${list.map(([k, t]) => `<button type="button" data-s="${k}">${t}</button>`).join('')}</div></div>`).join('')}
+    <div class="rail"><span class="lbl">Play</span><div class="grp fl">${FLOWS.map(([k, t]) => `<button type="button" data-f="${k}">${t}</button>`).join('')}</div>
+      <div class="grp rt"><button type="button" class="on" data-r="1">1×</button><button type="button" data-r=".25">¼×</button></div></div>
+    <div class="notes">${V.notes.map(([k, t]) => `<div class="note ${k}">${esc(t)}</div>`).join('')}</div>`;
+  host.appendChild(sec);
+  const st = sec.querySelector('.stage'), q = s => st.querySelector(s);
+  const c = {V, stage:st, panel:'closed', list:'ready', q:'', m:'idle', openM:'idle', left:1799, rate:1, timers:[], seen:false, flash:false, fT:0, mAt:0, jm:false, jT:0, pm:'idle', pT:0, hover:false, waitLeave:false,
+    chips:[...sec.querySelectorAll('[data-s]')],
+    e:{chat:q('.chat'), pn:q('.pn'), list:q('.pls'), pq:q('.pq'), ph:q('.ph'), agrp:q('.agrp'), wsw:q('.wsw'), ws:q('.ws'), wsav:q('.wsav'), wst:q('.wst'), wsr:q('.wsr'),
+       ocw:q('.ocw'), oc:q('.oc'), actj:q('.actj')}};
+  VARS_C.push(c);
+  c.e.pn.addEventListener('pointerenter', () => { c.hover = true; });
+  c.e.pn.addEventListener('pointerleave', () => { c.hover = false; if(c.waitLeave) settle(c); });
+  sec.querySelectorAll('.st').forEach(g => g.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-s]'); if(!b) return;
+    clear(c); set(c, SCENES[b.dataset.s]); mark(c, b.dataset.s);
+  }));
+  sec.querySelector('.fl').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-f]'); if(!b) return;
+    play(c, FLOWS.find(f => f[0] === b.dataset.f)[2]);
+  });
+  sec.querySelector('.rt').addEventListener('click', ev => {
+    const b = ev.target.closest('button'); if(!b) return;
+    b.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    c.rate = +b.dataset.r; applyRate(c);
+  });
+  st.addEventListener('click', ev => {
+    const b = ev.target.closest('[data-act]');
+    if(!b || !b.dataset.act || !ACT[b.dataset.act]) return;
+    mark(c, null); play(c, ACT[b.dataset.act]);
+  });
+  set(c, SCENES.recents); mark(c, 'recents');
+});
+/* a waiting invite counts down once a second */
+setInterval(() => VARS_C.forEach(c => { if(waiting(c.m) && c.left > 0){ c.left--; render(c, false); } }), 1000);
+
+/* ───── Pick menus ───── */
+const ACTIONS = [
+  ['Explore from this', 'Add variations in this direction', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and apply your changes', id => `Remix ${id} in ${FILE}:`],
+  ['Settle on this', 'Make this the direction', id => `Settle on ${id} in ${FILE}`]
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded', 'false'); } }); }
+function legacyCopy(text){
+  const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(e){} t.remove(); return ok;
+}
+async function copyText(text){
+  try { if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; } } catch(e){}
+  return legacyCopy(text);
+}
+document.querySelectorAll('section.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+  head.appendChild(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  ACTIONS.forEach(([label, hint, make]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem');
+    b.innerHTML = `<b>${label}</b><span>${hint}</span>`;
+    b.addEventListener('click', async () => {
+      const text = make(id); closeAll(); btn.focus();
+      const ok = await copyText(text);
+      out.hidden = false;
+      out.innerHTML = ok ? '<code></code><span class="copied">Copied</span>' : '<input readonly aria-label="Prompt">';
+      if(ok) out.querySelector('code').textContent = text; else { const inp = out.querySelector('input'); inp.value = text; inp.focus(); inp.select(); }
+    });
+    menu.appendChild(b);
+  });
+  head.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const open = menu.hidden; closeAll(p); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', ev => ev.stopPropagation());
+});
+document.addEventListener('click', () => closeAll());
+document.addEventListener('keydown', ev => {
+  if(ev.key !== 'Escape') return;
+  const open = pickers.find(p => !p.menu.hidden);
+  if(open){ closeAll(); open.btn.focus(); }
+});
+
+/* ───── minimap ───── */
+const mm = document.querySelector('.mm');
+const secs = [...document.querySelectorAll('section.var')];
+secs.forEach(sec => {
+  const a = document.createElement('a'); a.href = '#' + sec.id;
+  a.innerHTML = `<i></i><span><b>${sec.dataset.id}</b>${esc(sec.dataset.name)}</span>`;
+  a.addEventListener('click', ev => { ev.preventDefault(); sec.scrollIntoView({behavior:'smooth', block:'start'}); });
+  mm.appendChild(a);
+});
+function syncMM(){
+  let best = 0, bestD = Infinity;
+  secs.forEach((s, k) => { const d = Math.abs(s.getBoundingClientRect().top - 24); if(d < bestD){ bestD = d; best = k; } });
+  [...mm.children].forEach((a, k) => a.classList.toggle('on', k === best));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+</script>
+</body>
+</html>

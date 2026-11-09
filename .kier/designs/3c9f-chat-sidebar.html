@@ -45,6 +45,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
 .rail button{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 12px;cursor:pointer}
 .rail button:hover{border-color:var(--mut)}
+.rail button:disabled{opacity:.45;cursor:default}
 .rail .hint{font-size:13px;color:var(--mut);margin-left:auto}
 .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
 .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
@@ -268,19 +269,143 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .e-rail .sep{width:28px;height:1px;background:#ffffff14;margin:4px 0}
 .e-rail .avs{flex-direction:column;--ring:var(--n2)}
 .e-rail .avs .av+.av{margin:-6px 0 0}
+
+/* ── C2 family: flush C, long messages, stronger send ── */
+.c2f .c-hd .avs{margin-right:auto}
+.c2f .c-b{max-width:236px}
+.c2f .field{height:44px;border-radius:22px;padding-right:6px}
+.mk.c2f .fb.send{width:32px;height:32px;background:#e8368f33;color:#ff9fcb;transition:background .2s,color .2s,transform .2s}
+.mk.c2f .fb.send:hover{color:#fff}
+.mk.c2f .fb.send.on{background:var(--pk);color:#fff;transform:scale(1.06)}
+.c-hd .av.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.4)}}
+.c-b.ty{display:flex;align-items:center;gap:4px;height:32px;padding:0 13px}
+.ty i{width:6px;height:6px;border-radius:50%;background:var(--n5);animation:blink 1.2s infinite}
+.ty i:nth-child(2){animation-delay:.15s}.ty i:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-2px)}}
+/* C2b rules */
+.r-act{display:flex;align-items:center;gap:10px;margin:14px 2px;color:var(--n5);font-size:11.5px}
+.r-act::before,.r-act::after{content:"";flex:1;height:1px;background:#ffffff14}
+.r-act>span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.r-act svg{width:10px;height:10px}
+/* C2c fold */
+.f-act{display:flex;flex-direction:column;align-items:center;margin:10px 0}
+.mk .f-sum{display:flex;align-items:center;gap:8px;max-width:100%;padding:4px 6px 4px 6px;border-radius:14px;color:var(--n5);font-size:12px;transition:background .15s}
+.mk .f-sum:hover{background:#ffffff0a}
+.f-sum .avs{--ring:var(--n2)}
+.f-sum .avs .av+.av{margin-left:-5px}
+.f-tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f-n{display:inline-flex;align-items:center;gap:3px;flex:none;height:18px;padding:0 5px 0 7px;border-radius:9px;background:#ffffff12;color:#fff;font-size:11px}
+.f-n svg{width:10px;height:10px;transition:transform .2s}
+.f-sum[aria-expanded="true"] .f-n svg{transform:rotate(180deg)}
+.f-list .c-act{margin:6px 0}
+/* C2d status strip */
+.st-strip{flex:none;display:flex;align-items:center;height:34px;margin:0 12px 4px;padding:0 12px;border-radius:10px;background:#ffffff0a;font-size:12.5px;color:var(--n5)}
+.st-in{display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap}
+.st-in>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.st-in b{color:#fff;font-weight:600}
+.st-in .ic{display:grid;place-items:center;width:16px;color:#fff}
+.st-in .ic svg{width:11px;height:11px}
+.st-in .ic.play{color:var(--pk)}
+.st-in .ty{display:inline-flex;gap:3px}
+.st-in .ty i{width:5px;height:5px}
+/* C2e lane */
+.l-act{display:flex;margin:6px 0 10px;padding-left:32px}
+.l-act.me{justify-content:flex-end;padding-left:0}
+.l-act>span{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 5px;border:1px solid #ffffff1a;border-radius:13px;font-size:12px;color:var(--n5);white-space:nowrap}
+.l-act.me>span{padding:0 10px}
+.l-act svg{width:10px;height:10px}
+
+/* ── C2d2–C2d5: status formats + join hype ── */
+.sx{flex:none;position:relative;overflow:hidden}
+.sx b{color:#fff;font-weight:600}
+.sx .t{font-variant-numeric:tabular-nums}
+.sx .ty{display:inline-flex;gap:3px}
+.sx .ty i{width:5px;height:5px}
+.sx .hp{color:#ff9fcb}
+@keyframes rollIn{from{opacity:0;transform:translateY(100%)}}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}}
+/* C2d2 pill ticker */
+.sx-s2{display:flex;justify-content:center;margin:0 12px 6px}
+.s2{display:inline-flex;align-items:center;gap:8px;max-width:100%;height:30px;padding:0 14px 0 10px;border-radius:15px;background:#ffffff0d;font-size:12.5px;color:var(--n5);white-space:nowrap;animation:rollIn .35s cubic-bezier(.2,.8,.2,1)}
+.s2>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--n5);flex:none}
+.sdot.play{background:var(--pk);box-shadow:0 0 0 3px #e8368f33;animation:live 1.6s ease-in-out infinite}
+@keyframes live{50%{box-shadow:0 0 0 5px #e8368f00}}
+.s2 .av{animation:pop .5s .1s cubic-bezier(.3,1.6,.5,1) both}
+/* C2d3 progress strip */
+.sx-s3{margin:0 12px 6px;padding:8px 12px 9px;border-radius:12px;background:#ffffff0a;font-size:12.5px;color:var(--n5)}
+.s3-top{display:flex;align-items:center;gap:8px;white-space:nowrap;height:18px}
+.s3-top>span.tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;animation:slideIn .3s cubic-bezier(.2,.8,.2,1)}
+.s3-top .ic{display:grid;place-items:center;width:14px;color:#fff;flex:none}
+.s3-top .ic svg{width:10px;height:10px}
+.s3-top .ic.play{color:var(--pk)}
+.s3-top .t{font-size:11.5px}
+.s3-bar{position:relative;height:3px;margin-top:7px;border-radius:2px;background:#ffffff14;overflow:hidden}
+.s3-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--jc,#ffffff66);transition:width .4s,background .4s}
+.sx-s3.play .s3-bar i{background:var(--jc,var(--pk))}
+.s3-top .av{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+/* C2d4 above the composer */
+.sx-s4{height:26px;padding:0 6px;font-size:12px;color:var(--n5)}
+.s4{display:flex;align-items:center;gap:7px;height:100%;white-space:nowrap;animation:slideIn .3s cubic-bezier(.2,.8,.2,1)}
+.s4>span:last-child{overflow:hidden;text-overflow:ellipsis}
+.s4 .ic{display:grid;place-items:center;width:14px;color:var(--n5)}
+.s4 .ic svg{width:10px;height:10px}
+.s4 .ic.play{color:var(--pk)}
+/* C2d5 banner */
+.sx-s5{display:flex;align-items:center;height:34px;margin:0 12px 6px;padding:0 12px;border-radius:12px;background:#ffffff0a;font-size:12.5px;color:var(--n5);transition:height .35s cubic-bezier(.2,.8,.2,1),background .35s}
+.sx-s5.big{height:60px;background:color-mix(in srgb,var(--jc) 16%,transparent)}
+.s5{display:flex;align-items:center;gap:8px;width:100%;white-space:nowrap;animation:fadeIn2 .3s}
+@keyframes fadeIn2{from{opacity:0}}
+.s5>span.tx{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.s5 .ic{display:grid;place-items:center;width:14px;color:#fff}
+.s5 .ic svg{width:10px;height:10px}
+.s5 .ic.play{color:var(--pk)}
+.s5.j{gap:12px}
+.s5.j .av{animation:pop .55s .1s cubic-bezier(.3,1.6,.5,1) both}
+.s5.j b{display:block;font-size:14px}
+.s5.j .hp{display:block;font-size:12.5px;animation:slideIn .35s .25s cubic-bezier(.2,.8,.2,1) both}
+/* ── C2d4b–C2d4d: composer forks ── */
+.al4 .sx-s4{padding:0 0 0 15px}
+.al4 .s4 .ic{width:auto}
+.rr4 .c-bar .field{border-radius:14px}
+.mk.rr4 .fb.send,.mk.lc4 .fb.send{border-radius:10px}
+.lc4 .c-bar{margin:4px 10px 10px;padding:0;border-radius:14px;background:var(--n1);box-shadow:0 0 0 1px #ffffff0f;overflow:hidden}
+.lc4 .sx-s4{height:32px}
+.lc4 .c-bar .field{border:0;border-radius:14px;padding-left:15px;background:var(--n3);box-shadow:0 0 0 1px #ffffff1a}
+.lc4 .c-bar .field:focus-within{box-shadow:0 0 0 1px #ffffff40}
+/* ── C2d4c2–C2d4c3: LayerCard colours ── */
+.lc4b .c-bar{background:var(--n3);box-shadow:0 0 0 1px #ffffff0d}
+.lc4b .c-bar .field{background:var(--n2);box-shadow:0 0 0 1px #ffffff14}
+.lc4c .c-bar{background:#ffffff07;box-shadow:0 0 0 1px #ffffff0a}
+.lc4c .c-bar .field{background:#ffffff0b;box-shadow:0 0 0 1px #ffffff12}
+/* ── C2d4c2b: growing field, focus, pink send ── */
+.mk textarea.ci{flex:1;min-width:0;display:block;min-height:44px;max-height:132px;padding:12px 0;background:none;border:0;outline:0;resize:none;color:#fff;font:inherit;font-size:13.5px;line-height:20px;overflow-y:auto;field-sizing:content;scrollbar-width:thin;scrollbar-color:#ffffff22 transparent}
+.mk textarea.ci::placeholder{color:var(--n5)}
+.ta4 .c-bar .field{height:auto;min-height:44px;align-items:flex-end;padding:0 6px 0 15px;transition:background .15s,box-shadow .15s}
+.ta4 .c-bar .field .fb{margin-bottom:6px}
+.ta4 .c-bar .field:focus-within{background:#111820;box-shadow:0 0 0 1px #ffffff38}
+.ta4 .c-bar{overflow:visible;transition:outline-color .15s}
+.ta4 .c-bar:has(.ci:focus-visible){outline:2px solid #C2196E;outline-offset:3px}
+.mk.ta4 .fb.send{background:var(--pk);color:#fff}
+.mk.ta4 .fb.send:hover{filter:brightness(1.12)}
+.mk.ta4 .fb.send:focus-visible{outline:2px solid #C2196E;outline-offset:3px}
+/* ── C2d4c2b2: focus on the field only ── */
+.ta4b .c-bar:has(.ci:focus-visible){outline:none}
+.ta4b .c-bar .field:has(.ci:focus-visible){outline:2px solid #C2196E;outline-offset:-2px}
+.ta4b .c-bar .field:focus-within{box-shadow:none}
 </style>
 </head>
 <body>
 <nav class="mm" aria-label="Variations"></nav>
 <main class="doc">
 <header class="brief">
-  <div class="eyebrow">Care.tv · Chat sidebar · References from Mobbin</div>
+  <div class="eyebrow">Care.tv · Chat sidebar</div>
   <h1>The chat column spends its height on chrome, not conversation.</h1>
   <div class="cards">
-    <div>Stay in today’s navy and pink.</div>
-    <div>Party code and invite stay one tap away.</div>
-    <div>Activity reads quieter than friends talking.</div>
-    <div>Composer is one line until you type more.</div>
+    <div>Today’s navy and pink.</div>
+    <div>Code and invite one tap away.</div>
+    <div>Activity quieter than talk.</div>
   </div>
 </header>
 
@@ -290,9 +415,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="rail" data-for="now"></div>
   <div class="notes">
     <div class="note good">Bubbles feel personal.</div>
-    <div class="note bad">Faces, code and tip take a third of the height.</div>
-    <div class="note bad">Uppercase activity boxes shout over friends.</div>
-    <div class="note bad">50px field, 24px send.</div>
+    <div class="note bad">Chrome eats a third of the height.</div>
+    <div class="note bad">Activity boxes shout.</div>
   </div>
 </section>
 
@@ -302,9 +426,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk v-a" data-v="a"></div></div>
   <div class="rail" data-for="a"></div>
   <div class="notes">
-    <div class="note good">About twice the lines in the same height.</div>
-    <div class="note good">Activity drops to quiet one-liners.</div>
-    <div class="note bad">Reads like a stranger stream, not three friends.</div>
+    <div class="note good">Twice the lines.</div>
+    <div class="note bad">Reads like a stranger stream.</div>
   </div>
 </section>
 
@@ -314,9 +437,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk v-b" data-v="b"></div></div>
   <div class="rail" data-for="b"></div>
   <div class="notes">
-    <div class="note good">Header shrinks to one control.</div>
-    <div class="note good">Code and invite get room in People.</div>
-    <div class="note bad">Faces leave the screen while you chat.</div>
+    <div class="note good">Header is one control.</div>
+    <div class="note bad">Faces hidden while chatting.</div>
   </div>
 </section>
 
@@ -326,9 +448,170 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk v-c" data-v="c"></div></div>
   <div class="rail" data-for="c"></div>
   <div class="notes">
-    <div class="note good">Closest to today, just calmer.</div>
-    <div class="note good">Time breaks replace per-group clutter.</div>
-    <div class="note bad">Gutters cost 16px of video.</div>
+    <div class="note good">Today, but calmer.</div>
+    <div class="note bad">Gutters cost video width.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2" data-id="C2" data-name="C flush, long messages, stronger send">
+  <div class="var-h"><span class="id">C2</span><h2>C flush, long messages, stronger send</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2"></div></div>
+  <div class="rail" data-for="c2"></div>
+  <div class="notes">
+    <div class="note good">Long messages stay readable.</div>
+    <div class="note good">Send is visible even when empty.</div>
+    <div class="note bad">Centred activity breaks the lane.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2b" data-id="C2b" data-name="Activity as divider rules">
+  <div class="var-h"><span class="id">C2b</span><h2>Activity as divider rules</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2b"></div></div>
+  <div class="rail" data-for="c2b"></div>
+  <div class="notes">
+    <div class="note good">Pauses read as chapter breaks.</div>
+    <div class="note bad">Joins weigh as much as pauses.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2c" data-id="C2c" data-name="Back-to-back activity folds into one line">
+  <div class="var-h"><span class="id">C2c</span><h2>Back-to-back activity folds into one line</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2c"></div></div>
+  <div class="rail" data-for="c2c"></div>
+  <div class="notes">
+    <div class="note good">A run of updates costs one line.</div>
+    <div class="note bad">Details hide behind a tap.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d" data-id="C2d" data-name="Status strip, feed is only talk">
+  <div class="var-h"><span class="id">C2d</span><h2>Status strip, feed is only talk</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2d"></div></div>
+  <div class="rail" data-for="c2d"></div>
+  <div class="notes">
+    <div class="note good">Play state always visible.</div>
+    <div class="note bad">No record of who paused when.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d2" data-id="C2d2" data-name="Status pill rolls like a ticker">
+  <div class="var-h"><span class="id">C2d2</span><h2>Status pill rolls like a ticker</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2d2"></div></div>
+  <div class="rail" data-for="c2d2"></div>
+  <div class="notes">
+    <div class="note good">One line, always centred.</div>
+    <div class="note bad">Rolls a lot during chatter.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d3" data-id="C2d3" data-name="Strip shows where the movie is">
+  <div class="var-h"><span class="id">C2d3</span><h2>Strip shows where the movie is</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2d3"></div></div>
+  <div class="rail" data-for="c2d3"></div>
+  <div class="notes">
+    <div class="note good">Progress and who paused, together.</div>
+    <div class="note bad">Repeats the player’s seeker.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4" data-id="C2d4" data-name="Status sits above the composer">
+  <div class="var-h"><span class="id">C2d4</span><h2>Status sits above the composer</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2d4"></div></div>
+  <div class="rail" data-for="c2d4"></div>
+  <div class="notes">
+    <div class="note good">Typing shows where you’re looking.</div>
+    <div class="note bad">Far from the faces up top.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4b" data-id="C2d4b" data-name="Rounded composer, status on top">
+  <div class="var-h"><span class="id">C2d4b</span><h2>Rounded composer, status on top</h2></div>
+  <div class="frame"><div class="mk c2f rr4 al4" data-v="c2d4b"></div></div>
+  <div class="rail" data-for="c2d4b"></div>
+  <div class="notes">
+    <div class="note good">Status and field read as one unit.</div>
+    <div class="note bad">Less friendly than the pill.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4c" data-id="C2d4c" data-name="LayerCard: a tray holds status and composer">
+  <div class="var-h"><span class="id">C2d4c</span><h2>LayerCard: a tray holds status and composer</h2></div>
+  <div class="frame"><div class="mk c2f lc4 al4" data-v="c2d4c"></div></div>
+  <div class="rail" data-for="c2d4c"></div>
+  <div class="notes">
+    <div class="note good">Status gets a home, not a floating line.</div>
+    <div class="note bad">One more box in the column.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4c2" data-id="C2d4c2" data-name="Tray lifts, field sits in the panel tone">
+  <div class="var-h"><span class="id">C2d4c2</span><h2>Tray lifts, field sits in the panel tone</h2></div>
+  <div class="frame"><div class="mk c2f lc4 lc4b al4" data-v="c2d4c2"></div></div>
+  <div class="rail" data-for="c2d4c2"></div>
+  <div class="notes">
+    <div class="note good">How Kumo layers in dark mode.</div>
+    <div class="note bad">Field reads slightly recessed.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4c2b" data-id="C2d4c2b" data-name="Growing field, seek status, pink send">
+  <div class="var-h"><span class="id">C2d4c2b</span><h2>Growing field, seek status, pink send</h2></div>
+  <div class="frame"><div class="mk c2f lc4 lc4b al4 ta4" data-v="c2d4c2b"></div></div>
+  <div class="rail" data-for="c2d4c2b"></div>
+  <div class="notes">
+    <div class="note good">Drafts grow to six lines, then scroll.</div>
+    <div class="note good">Seeks say which way and where.</div>
+    <div class="note bad">Send looks ready even when empty.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4c2b2" data-id="C2d4c2b2" data-name="C2d4c2b with focus on the field only">
+  <div class="var-h"><span class="id">C2d4c2b2</span><h2>C2d4c2b with focus on the field only</h2></div>
+  <div class="frame"><div class="mk c2f lc4 lc4b al4 ta4 ta4b" data-v="c2d4c2b2"></div></div>
+  <div class="rail" data-for="c2d4c2b2"></div>
+  <div class="notes">
+    <div class="note good">Ring marks exactly where you type.</div>
+    <div class="note bad">Ring sits inside, not 3px out like elsewhere.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4c3" data-id="C2d4c3" data-name="Both layers lift softly">
+  <div class="var-h"><span class="id">C2d4c3</span><h2>Both layers lift softly</h2></div>
+  <div class="frame"><div class="mk c2f lc4 lc4c al4" data-v="c2d4c3"></div></div>
+  <div class="rail" data-for="c2d4c3"></div>
+  <div class="notes">
+    <div class="note good">Closest to the bubbles’ navy.</div>
+    <div class="note bad">Tray and field barely separate.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d4d" data-id="C2d4d" data-name="C2d4 with status aligned to the placeholder">
+  <div class="var-h"><span class="id">C2d4d</span><h2>C2d4 with status aligned to the placeholder</h2></div>
+  <div class="frame"><div class="mk c2f al4" data-v="c2d4d"></div></div>
+  <div class="rail" data-for="c2d4d"></div>
+  <div class="notes">
+    <div class="note good">Icon lines up with what you type.</div>
+    <div class="note bad">Pill curves away from the status.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2d5" data-id="C2d5" data-name="Joins open the strip into a banner">
+  <div class="var-h"><span class="id">C2d5</span><h2>Joins open the strip into a banner</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2d5"></div></div>
+  <div class="rail" data-for="c2d5"></div>
+  <div class="notes">
+    <div class="note good">Joins get a real moment.</div>
+    <div class="note bad">Feed shifts as it grows.</div>
+  </div>
+</section>
+
+<section class="var" id="v-c2e" data-id="C2e" data-name="Activity sits in the person’s lane">
+  <div class="var-h"><span class="id">C2e</span><h2>Activity sits in the person’s lane</h2></div>
+  <div class="frame"><div class="mk c2f" data-v="c2e"></div></div>
+  <div class="rail" data-for="c2e"></div>
+  <div class="notes">
+    <div class="note good">Who did what, at a glance.</div>
+    <div class="note bad">Own chips pass for messages.</div>
   </div>
 </section>
 
@@ -338,9 +621,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk v-d" data-v="d"></div></div>
   <div class="rail" data-for="d"></div>
   <div class="notes">
-    <div class="note good">React without typing in the dark.</div>
-    <div class="note good">Stamps say where in the movie.</div>
-    <div class="note bad">Floating emoji pull eyes off the film.</div>
+    <div class="note good">React without typing.</div>
+    <div class="note bad">Floating emoji distract.</div>
   </div>
 </section>
 
@@ -350,18 +632,17 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <div class="frame"><div class="mk v-e" data-v="e"></div></div>
   <div class="rail" data-for="e"></div>
   <div class="notes">
-    <div class="note good">Closed chat still shows unread and faces.</div>
-    <div class="note good">People gets its own panel.</div>
-    <div class="note bad">Rail always takes 64px from the video.</div>
+    <div class="note good">Closed chat shows unread.</div>
+    <div class="note bad">Rail always costs 64px.</div>
   </div>
 </section>
 
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from C with D’s reaction tray.</div>
-    <div><b>Remix</b>Remix A: keep pink bubbles for your own messages.</div>
-    <div><b>Settle</b>Settle on E if the closed state matters most.</div>
+    <div><b>Explore</b>Explore from C2d4c with the tray tinted on joins.</div>
+    <div><b>Remix</b>Remix C2d4b: keep the circular send.</div>
+    <div><b>Settle</b>Settle on C2d4c to ship the tray.</div>
   </div>
 </section>
 </main>
@@ -369,7 +650,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 <script>
 const FILE = '.kier/designs/3c9f-chat-sidebar.html';
 const ME = 'Kier';
-const C = {Kier:'#E8368F', Joyce:'#F7C948', Mira:'#C084FC'};
+const C = {Kier:'#E8368F', Joyce:'#F7C948', Mira:'#C084FC', Leo:'#65D6AD', Mia:'#38BDF8', John:'#FF7A59'};
 const MEM = ['Kier','Joyce','Mira'];
 const ROLE = {Kier:'Host', Joyce:'Watching', Mira:'Watching'};
 const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -385,6 +666,8 @@ const I = {
   down: svg('<path d="M12 5v14M19 12l-7 7-7-7"/>'),
   smile: svg('<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/>'),
   heart: svg('<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.6 1-1.1a5.5 5.5 0 0 0 0-7.7z"/>'),
+  ff: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5v14l9-7zM12 5v14l9-7z"/></svg>`,
+  rew: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 5v14l-9-7zM12 5v14l-9-7z"/></svg>`,
   play: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>`,
   pause: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>`,
   join: svg('<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>'),
@@ -408,6 +691,31 @@ const SEED = [
   ['msg','Joyce','and why does he have the key',2479,1305],
   ['rx','Mira','😱',2481,1305]
 ];
+const LONG = [
+  ['act','Kier','created the room',0,1262,'create'],
+  ['act','Joyce','joined the room',0,1263,'join'],
+  ['msg','Joyce','ok snacks acquired',0,1263],
+  ['msg','Joyce','start whenever',0,1263],
+  ['msg','Kier','pressing play 🍿',0,1264],
+  ['act','Kier','played the video',0,1264,'play'],
+  ['act','Mira','joined the room with the code',4,1264,'code'],
+  ['msg','Mira','wait did i miss anything',12,1265],
+  ['msg','Joyce','only the cold open. tldr the lighthouse keeper found a key in the sand and refused to tell anyone what it opens, which is exactly what you’d do if you were the villain',40,1265],
+  ['msg','Mira','noooooooooooooooooooooooooooooo',46,1265],
+  ['act','Kier','paused the video',2472,1305,'pause'],
+  ['msg','Kier','ok before we keep going: in episode two he says “the tide always brings things back” and nobody reacted. i think that was the whole clue and we all missed it',2472,1306],
+  ['msg','Joyce','WHO is he',2474,1306],
+  ['msg','Joyce','and why does he have the key',2479,1306]
+];
+const POOL_LONG = [['Mira','okay i rewound it in my head and the key has the same mark as the basement door, the one with the chains. we saw it for like half a second in episode one'],['Joyce','if he turns out to be the brother i need everyone to remember i said it first, at 9:12 pm, in writing, in this chat']];
+const JOINERS = ['Leo','Mia','John'];
+const HYPE = [['just joined.','Let’s fucking go.'],['is here.','Let’s do this.'],['is here.','Time to run it down.'],['is here.','Game on.'],['is here.','We are so back.']];
+const HYPE_BY = {Leo:0, Joyce:1, Mia:2, Mira:3, John:4};
+const hy = l => HYPE[HYPE_BY[l.u] ?? 0];
+const isJoin = l => l.k === 'join' || l.k === 'code';
+const words = (t, o = 0) => t.split(' ').map((w, i) => `<span class="w" style="--i:${i + o}">${w}</span>`).join(' ');
+const C2 = {c2:'line', c2b:'rule', c2c:'fold', c2d:'strip', c2d2:'s2', c2d3:'s3', c2d4:'s4', c2d4b:'s4', c2d4c:'s4', c2d4c2:'s4', c2d4c2b:'s4', c2d4c2b2:'s4', c2d4c3:'s4', c2d4d:'s4', c2d5:'s5', c2e:'lane'};
+const RUNTIME = 6730;
 const POOL = [['Joyce','no because the music'],['Mira','i’m scared'],['Joyce','HE’S BACK'],['Mira','lol stop'],['Joyce','called it'],['Mira','can we go back 10s'],['Joyce','brb refilling'],['Mira','this part is so good']];
 const SHORT = {create:'started the room', join:'joined', code:'joined with the code', play:'played', pause:'paused'};
 const mtime = s => { s = Math.round(s); const h = Math.floor(s/3600), m = Math.floor(s%3600/60), x = String(s%60).padStart(2,'0'); return h ? `${h}:${String(m).padStart(2,'0')}:${x}` : `${m}:${x}`; };
@@ -415,7 +723,7 @@ const clock = m => { const h = Math.floor(m/60) % 24, mm = String(m%60).padStart
 const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${C[n]}">${n[0]}</i>`;
 const avs = (ns, cls = '') => `<span class="avs">${ns.map(n => av(n, cls)).join('')}</span>`;
 const who = n => n === ME ? 'You' : n;
-const actIcon = k => k === 'play' ? I.play : k === 'pause' ? I.pause : k === 'create' ? I.star : I.join;
+const actIcon = (k, dir) => k === 'play' ? I.play : k === 'pause' ? I.pause : k === 'seek' ? (dir === 'back' ? I.rew : I.ff) : k === 'create' ? I.star : I.join;
 const short = (l, at = true) => `${esc(who(l.u))} ${SHORT[l.k]}${at && (l.k === 'play' || l.k === 'pause') ? ` at ${mtime(l.m)}` : ''}`;
 
 function group(logs, withRx){
@@ -432,9 +740,103 @@ function group(logs, withRx){
 /* ── state ── */
 const ST = {};
 let uid = 0;
-function fresh(){
-  return {logs: SEED.map(([t,u,x,m,c,k]) => ({id:++uid, t, u, x, m, c, k})), mt:2481, cm:1305, playing:false, pool:0,
-          tab:'chat', pan:'chat', unread:0, tray:false, draft:'', stuck:true, fresh:new Set()};
+function fresh(v){
+  return {logs: (C2[v] ? LONG : SEED).map(([t,u,x,m,c,k]) => ({id:++uid, t, u, x, m, c, k})), mt:2481, cm:1306, playing:false, pool:0, lpool:0,
+          tab:'chat', pan:'chat', unread:0, tray:false, draft:'', stuck:true, fresh:new Set(),
+          mem:[...MEM], joined:0, open:new Set(), typing:null, flash:null, strip:''};
+}
+
+/* ── C2 family feed ── */
+const LANE = {create:'started the room', join:'joined', code:'joined with the code', play:'played', pause:'paused'};
+const chev = svg('<path d="m6 9 6 6 6-6"/>');
+const ACT = {
+  line: (st, g) => g.items.map(l => `<div class="c-act${fx(st,l)}">${av(l.u,'xxs')}${short(l)}</div>`).join(''),
+  rule: (st, g) => g.items.map(l => `<div class="r-act${fx(st,l)}"><span>${l.k === 'play' || l.k === 'pause' ? actIcon(l.k) : av(l.u,'xxs')}${short(l)}</span></div>`).join(''),
+  fold: (st, g) => {
+    if(g.items.length < 2) return ACT.line(st, g);
+    const key = g.items[0].id, open = st.open.has(key), us = [...new Set(g.items.map(l => l.u))];
+    const nu = g.items.some(l => st.fresh.has(l.id)) ? ' fx' : '';
+    return `<div class="f-act${nu}"><button class="f-sum" data-fold="${key}" aria-expanded="${open}">${avs(us,'xxs')}<span class="f-tx">${open ? `${g.items.length} updates` : g.items.map(l => short(l, false)).join(' · ')}</span><span class="f-n">${g.items.length}${chev}</span></button>${open ? `<div class="f-list">${ACT.line({fresh:new Set()}, g)}</div>` : ''}</div>`;
+  },
+  lane: (st, g) => g.items.map(l => l.u === ME
+    ? `<div class="l-act me${fx(st,l)}"><span>${actIcon(l.k)}${short(l)}</span></div>`
+    : `<div class="l-act${fx(st,l)}"><span>${av(l.u,'xxs')}${short(l)}</span></div>`).join('')
+};
+const typingB = n => `<div class="c-grp fx">${av(n,'s')}<div style="min-width:0"><div class="c-nm">${n}</div><div class="c-l"><div class="c-b ty"><i></i><i></i><i></i></div></div></div></div>`;
+function c2feed(st, mode){
+  let last = -99;
+  const out = group(st.logs).map(g => {
+    const c0 = g.items[0].c, sep = c0 - last >= 10 ? `<div class="c-sep">${clock(c0)}</div>` : '';
+    last = g.items[g.items.length - 1].c;
+    if(g.t === 'act') return mode[0] === 's' ? '' : sep + ACT[mode](st, g);
+    const me = g.u === ME;
+    return sep + `<div class="c-grp${me ? ' me' : ''}">${me ? '' : av(g.u,'s')}<div style="min-width:0">${me ? '' : `<div class="c-nm">${g.u}</div>`}<div class="c-l">${g.items.map(l => `<div class="c-b${fx(st,l)}">${esc(l.x)}</div>`).join('')}</div></div></div>`;
+  });
+  if(st.typing && mode[0] !== 's') out.push(typingB(st.typing));
+  return `<div class="c-feed">${out.join('')}</div>`;
+}
+function stripState(st){
+  if(st.typing) return {k:'typing', u:st.typing};
+  if(st.flash && st.flash.until > Date.now()) return {k:'join', u:st.flash.u};
+  const p = [...st.logs].reverse().find(l => l.k === 'play' || l.k === 'pause' || l.k === 'seek');
+  return p ? {k:p.k, u:p.u, m:p.m, dir:p.dir} : {k:'none'};
+}
+const dots = `<span class="ty"><i></i><i></i><i></i></span>`;
+const hypeOf = u => HYPE[HYPE_BY[u] ?? 0];
+const SX = {
+  s2: x => {
+    if(x.k === 'typing') return `<div class="s2">${dots}<span><b>${x.u}</b> is typing</span></div>`;
+    if(x.k === 'join'){ const [a, b] = hypeOf(x.u); return `<div class="s2">${av(x.u,'xxs')}<span><b>${x.u}</b> ${a} <span class="hp">${b}</span></span></div>`; }
+    if(x.k === 'none') return '';
+    return `<div class="s2"><i class="sdot ${x.k}"></i><span>${x.k === 'pause' ? `Paused at <span class="t">${mtime(x.m)}</span> · <b>${who(x.u)}</b>` : `Playing · <b>${who(x.u)}</b> hit play`}</span></div>`;
+  },
+  s3: (x, st) => {
+    const p = [...st.logs].reverse().find(l => l.k === 'play' || l.k === 'pause'), m = p ? p.m : 0;
+    let tx;
+    if(x.k === 'typing') tx = `${dots}<span class="tx"><b>${x.u}</b> is typing</span>`;
+    else if(x.k === 'join'){ const [a, b] = hypeOf(x.u); tx = `${av(x.u,'xxs')}<span class="tx"><b>${x.u}</b> ${a} <span class="hp">${b}</span></span>`; }
+    else if(p) tx = `<span class="ic ${p.k}">${actIcon(p.k)}</span><span class="tx">${p.k === 'pause' ? 'Paused by' : 'Played by'} <b>${who(p.u)}</b></span>`;
+    else tx = '<span class="tx"></span>';
+    return `<div class="s3-top">${tx}<span class="t">${mtime(m)} / ${mtime(RUNTIME)}</span></div><div class="s3-bar"><i style="width:${(m / RUNTIME * 100).toFixed(1)}%"></i></div>`;
+  },
+  s4: x => {
+    if(x.k === 'seek') return `<div class="s4"><span class="ic">${actIcon('seek', x.dir)}</span><span><b>${who(x.u)}</b> ${x.dir === 'back' ? 'jumped back' : 'skipped ahead'} to <span class="t">${mtime(x.m)}</span></span></div>`;
+    if(x.k === 'typing') return `<div class="s4">${dots}<span><b>${x.u}</b> is typing</span></div>`;
+    if(x.k === 'join'){ const [a, b] = hypeOf(x.u); return `<div class="s4">${av(x.u,'xxs')}<span><b>${x.u}</b> ${a} <span class="hp">${b}</span></span></div>`; }
+    if(x.k === 'none') return '';
+    return `<div class="s4"><span class="ic ${x.k}">${actIcon(x.k)}</span><span>${x.k === 'pause' ? `<b>${who(x.u)}</b> paused at <span class="t">${mtime(x.m)}</span>` : `<b>${who(x.u)}</b> pressed play`}</span></div>`;
+  },
+  s5: x => {
+    if(x.k === 'typing') return `<div class="s5">${dots}<span class="tx"><b>${x.u}</b> is typing</span></div>`;
+    if(x.k === 'join'){ const [a, b] = hypeOf(x.u); return `<div class="s5 j">${av(x.u,'m')}<span class="tx"><b>${x.u} ${a}</b><span class="hp">${b}</span></span></div>`; }
+    if(x.k === 'none') return '';
+    return `<div class="s5"><span class="ic ${x.k}">${actIcon(x.k)}</span><span class="tx">${x.k === 'pause' ? `Paused · <span class="t">${mtime(x.m)}</span>` : 'Playing'}</span>${av(x.u,'xxs')}</div>`;
+  }
+};
+function renderStrip(el){
+  const v = el.dataset.v, st = ST[v], s = el.querySelector('[data-strip]'), mode = C2[v];
+  if(!s) return;
+  if(SX[mode]){
+    const x = stripState(st), h = SX[mode](x, st);
+    if(h === st.strip && s.firstChild) return;
+    st.strip = h;
+    s.innerHTML = h;
+    s.classList.toggle('big', x.k === 'join');
+    s.classList.toggle('play', x.k === 'play');
+    if(x.k === 'join') s.style.setProperty('--jc', C[x.u]); else s.style.removeProperty('--jc');
+    if(mode === 's5' && st.stuck){ const f = el.querySelector('[data-feed]'); const t0 = performance.now(); const pin = () => { f.scrollTop = f.scrollHeight; if(performance.now() - t0 < 420) requestAnimationFrame(pin); }; requestAnimationFrame(pin); }
+    return;
+  }
+  let h;
+  if(st.typing) h = `<span class="ty"><i></i><i></i><i></i></span><span><b>${st.typing}</b> is typing</span>`;
+  else if(st.flash && st.flash.until > Date.now()) h = `${av(st.flash.u,'xxs')}<span>${st.flash.text}</span>`;
+  else {
+    const p = [...st.logs].reverse().find(l => l.k === 'play' || l.k === 'pause');
+    h = p ? `<span class="ic ${p.k}">${actIcon(p.k)}</span><span>${p.k === 'pause' ? `Paused at ${mtime(p.m)} by <b>${who(p.u)}</b>` : `Playing · <b>${who(p.u)}</b> pressed play`}</span>` : '';
+  }
+  if(h === st.strip && s.firstChild) return;
+  st.strip = h;
+  s.innerHTML = `<div class="st-in fx">${h}</div>`;
 }
 
 /* ── feeds ── */
@@ -476,13 +878,14 @@ const FEED = {
   d(st){ return FEED.c(st, {rx:true, mt:true}); },
   e(st){ return FEED.c(st); }
 };
+Object.entries(C2).forEach(([v, mode]) => { FEED[v] = st => c2feed(st, mode); });
 
 /* ── shells ── */
 const VIDEO = `<div class="vd"><div class="t1"><span class="sk c"></span><span class="sk b"></span></div><span class="sk ctr"></span><div class="bot"><span class="sk c"></span><span class="sk tm"></span><span class="seek"><i></i></span><span class="sk tm"></span><span class="sk c"></span></div></div>`;
 const codeChip = () => `<button class="chip" data-act="copy" aria-label="Copy party code 482 913"><span class="num">482 913</span><span class="copy-t">${I.copy}</span><span class="copied-t">${I.check}</span></button>`;
 const inviteBtn = () => `<button class="icb" aria-label="Invite people">${I.uplus}</button>`;
 const feedw = (st, v) => `<div class="feedw"><div class="feed" data-feed></div>${v === 'd' ? '<div class="d-fl"></div>' : ''}</div>`;
-const field = (ph, extra = '') => `<label class="field"><input class="ci" placeholder="${ph}" autocomplete="off">${extra}<button class="fb send" data-act="send" aria-label="Send">${I.up}</button></label>`;
+const field = (ph, extra = '', ta = false) => `<label class="field">${ta ? `<textarea class="ci" rows="1" placeholder="${ph}" aria-label="Message"></textarea>` : `<input class="ci" placeholder="${ph}" autocomplete="off">`}${extra}<button class="fb send" data-act="send" aria-label="Send">${I.up}</button></label>`;
 const people = () => `<div class="b-pp"><span class="gl sub">In the room · ${MEM.length}</span>${MEM.map(n => `<div class="pr"><span class="avp">${av(n,'m')}<i class="pd"></i></span><div class="pn"><b>${who(n)}</b><small>${ROLE[n]}</small></div></div>`).join('')}<button class="ubtn">${I.uplus}Invite people</button><div class="b-code"><span class="sub">Party code</span><div class="row"><b class="num">482 913</b><button data-act="copy"><span class="copy-t">${I.copy}</span><span class="copied-t">${I.check}</span>Copy</button></div><p>Friends type this on Care.tv to join.</p></div></div>`;
 
 const SHELL = {
@@ -499,6 +902,8 @@ const SHELL = {
       <nav class="e-rail"><button data-pan="chat" class="${open === 'chat' ? 'on' : ''}">${I.chat}Chat${badge}</button><button data-pan="people" class="${open === 'people' ? 'on' : ''}">${I.users}People</button><button data-pan="people" data-inv>${I.uplus}Invite</button><span class="sep"></span>${avs(MEM,'s')}</nav></div>`;
   }
 };
+const c2shell = (mode, ta) => st => `<div class="rm">${VIDEO}<div class="col"><div class="c-hd" data-hd>${avs(st.mem,'s')}${codeChip()}${inviteBtn()}</div>${mode === 'strip' ? '<div class="st-strip" data-strip></div>' : mode[0] === 's' && mode !== 's4' ? `<div class="sx sx-${mode}" data-strip></div>` : ''}${feedw(st)}<div class="c-bar">${mode === 's4' ? '<div class="sx sx-s4" data-strip></div>' : ''}${field('Message', `<button class="fb" aria-label="Emoji">${I.smile}</button>`, ta)}</div></div></div>`;
+Object.entries(C2).forEach(([v, mode]) => { SHELL[v] = c2shell(mode, v.startsWith('c2d4c2b')); });
 const UNREAD = {now: () => `<button class="unr" data-act="bottom">You have unread messages ${I.down}</button>`};
 const unreadPill = v => (UNREAD[v] || (() => `<button class="unr pill-unr" data-act="bottom">New messages ${I.down}</button>`))();
 
@@ -509,6 +914,7 @@ function renderFeed(el, v){
   if(!f) return;
   f.innerHTML = FEED[v](st);
   st.fresh.clear();
+  renderStrip(el);
   if(st.stuck) f.scrollTop = f.scrollHeight;
   const w = f.parentElement, old = w.querySelector('.unr');
   if(old) old.remove();
@@ -519,7 +925,7 @@ function render(el){
   const v = el.dataset.v, st = ST[v];
   const focused = el.contains(document.activeElement) && document.activeElement.classList.contains('ci');
   el.innerHTML = SHELL[v](st);
-  const inp = el.querySelector('input.ci');
+  const inp = el.querySelector('.ci');
   if(inp){ inp.value = st.draft; syncSend(el); if(focused) inp.focus(); }
   renderFeed(el, v);
 }
@@ -543,7 +949,7 @@ function tick(st, s){ st.mt += s; st.cm += 1; }
 function send(el){
   const v = el.dataset.v, st = ST[v], text = st.draft.trim();
   if(!text) return;
-  st.draft = ''; const inp = el.querySelector('input.ci'); if(inp) inp.value = '';
+  st.draft = ''; const inp = el.querySelector('.ci'); if(inp){ inp.value = ''; autosize(inp); }
   syncSend(el); tick(st, 6);
   push(el, {t:'msg', u:ME, x:text, m:st.mt, c:st.cm});
 }
@@ -564,13 +970,61 @@ function react(el, e, u = ME){
   push(el, {t:'rx', u, x:e, m:st.mt, c:st.cm});
 }
 
+function incomingLong(el){
+  const st = ST[el.dataset.v], [u, x] = POOL_LONG[st.lpool++ % POOL_LONG.length];
+  tick(st, 14);
+  push(el, {t:'msg', u, x, m:st.mt, c:st.cm});
+}
+function typing(el){
+  const v = el.dataset.v, st = ST[v];
+  if(st.typing) return;
+  st.typing = 'Joyce'; st.stuck = atBottom(el.querySelector('[data-feed]'));
+  renderFeed(el, v);
+  setTimeout(() => {
+    if(ST[v] !== st) return;
+    st.typing = null; tick(st, 8);
+    push(el, {t:'msg', u:'Joyce', x:'okay i have a theory and you’re not going to like it', m:st.mt, c:st.cm});
+  }, 2400);
+}
+function join(el){
+  const v = el.dataset.v, st = ST[v], u = JOINERS[st.joined];
+  if(!u) return;
+  st.joined++; st.mem.push(u); tick(st, 3);
+  const a = el.querySelector('[data-hd] .avs');
+  a.outerHTML = avs(st.mem,'s');
+  el.querySelector('[data-hd] .avs .av:last-child').classList.add('pop');
+  st.flash = {u, text:`<b>${u}</b> joined with the code`, until:Date.now() + 3200};
+  setTimeout(() => { if(ST[v] === st) renderStrip(el); }, 3300);
+  push(el, {t:'act', u, x:'joined the room with the code', k:'code', m:st.mt, c:st.cm});
+  const r = document.querySelector(`.rail[data-for="${v}"] [data-r="join"]`);
+  if(r){ r.textContent = JOINERS[st.joined] ? `${JOINERS[st.joined]} joins` : 'Everyone’s here'; r.disabled = !JOINERS[st.joined]; }
+}
+
+const FIELD_SIZING = CSS.supports('field-sizing', 'content');
+function autosize(t){
+  if(FIELD_SIZING || t.tagName !== 'TEXTAREA') return;
+  t.style.height = 'auto';
+  t.style.height = Math.min(t.scrollHeight, 132) + 'px';
+}
+function seek(el){
+  const st = ST[el.dataset.v], back = (st.seekN = (st.seekN || 0) + 1) % 2 === 1;
+  st.mt = Math.max(0, back ? st.mt - 154 : st.mt + 638); st.cm += 1;
+  push(el, {t:'act', u:'Mira', x:'seeked', k:'seek', dir: back ? 'back' : 'ahead', m:st.mt, c:st.cm});
+}
+function draft(el){
+  const t = el.querySelector('.ci'); if(!t) return;
+  t.value = 'ok hear me out. the key opens the lighthouse, not the basement.\nthe keeper knew the whole time.\nthat’s why he never left the island.\nand that’s why the brother came back.';
+  t.dispatchEvent(new Event('input', {bubbles:true}));
+  t.focus(); t.setSelectionRange(t.value.length, t.value.length);
+}
+
 /* ── wiring ── */
 const MK = {};
 document.querySelectorAll('.mk[data-v]').forEach(el => {
-  const v = el.dataset.v; ST[v] = fresh(); MK[v] = el; render(el);
-  el.addEventListener('input', e => { if(e.target.classList.contains('ci')){ ST[v].draft = e.target.value; syncSend(el); } });
+  const v = el.dataset.v; ST[v] = fresh(v); MK[v] = el; render(el);
+  el.addEventListener('input', e => { if(e.target.classList.contains('ci')){ ST[v].draft = e.target.value; autosize(e.target); syncSend(el); } });
   el.addEventListener('keydown', e => {
-    if(e.target.classList.contains('ci') && e.key === 'Enter'){ e.preventDefault(); send(el); }
+    if(e.target.classList.contains('ci') && e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(el); }
     if(e.target.classList.contains('ci') && e.key === 'Escape') e.target.blur();
   });
   el.addEventListener('click', e => {
@@ -581,6 +1035,7 @@ document.querySelectorAll('.mk[data-v]').forEach(el => {
     if(act === 'bottom'){ const f = el.querySelector('[data-feed]'); f.scrollTo({top:f.scrollHeight, behavior:'smooth'}); return; }
     if(act === 'tray'){ st.tray = !st.tray; const t = el.querySelector('.d-tray'); t.classList.toggle('on', st.tray); b.classList.toggle('on', st.tray); b.setAttribute('aria-expanded', st.tray); const f = el.querySelector('[data-feed]'); if(st.stuck) f.scrollTop = f.scrollHeight; return; }
     if(b.dataset.rx){ react(el, b.dataset.rx); return; }
+    if(b.dataset.fold){ const k = +b.dataset.fold; st.open.has(k) ? st.open.delete(k) : st.open.add(k); const f = el.querySelector('[data-feed]'), top = f.scrollTop; st.stuck = atBottom(f); renderFeed(el, v); if(!st.stuck) f.scrollTop = top; return; }
     if(b.dataset.tab){ st.tab = b.dataset.tab; if(st.tab === 'chat'){ st.unread = 0; st.stuck = true; } render(el); return; }
     if(act === 'shut'){ st.pan = null; render(el); return; }
     if(b.dataset.pan){ const p = b.dataset.pan; st.pan = st.pan === p && !b.hasAttribute('data-inv') ? null : p; if(st.pan === 'chat'){ st.unread = 0; st.stuck = true; } render(el); return; }
@@ -594,13 +1049,24 @@ function syncRail(v){
 }
 document.querySelectorAll('.rail[data-for]').forEach(r => {
   const v = r.dataset.for, el = MK[v];
-  r.innerHTML = `<button data-r="msg">Friend sends a message</button><button data-r="toggle">Mira plays</button>${v === 'd' ? '<button data-r="rx">Joyce reacts</button>' : ''}<button data-r="reset">Reset</button><span class="hint">${v === 'e' ? 'Close the panel, then send a message.' : v === 'b' ? 'Switch to People, then send a message.' : 'Type and press Enter. Scroll up, then send one.'}</span>`;
+  const c2 = !!C2[v];
+  const draw = () => {
+    r.innerHTML = c2
+      ? `<button data-r="msg">Friend sends a message</button><button data-r="long">Long message</button><button data-r="type">Joyce types</button><button data-r="join">Leo joins</button><button data-r="toggle">Mira plays</button>${v.startsWith('c2d4c2b') ? '<button data-r="seek">Mira seeks</button><button data-r="draft">Long draft</button>' : ''}<button data-r="reset">Reset</button><span class="hint">${v.startsWith('c2d4c2b') ? 'Shift+Enter for a new line.' : v === 'c2c' ? 'Tap a folded line to open it.' : v.startsWith('c2d') ? 'Try Leo joins and Joyce types.' : 'Joins and plays show the activity style.'}</span>`
+      : `<button data-r="msg">Friend sends a message</button><button data-r="toggle">Mira plays</button>${v === 'd' ? '<button data-r="rx">Joyce reacts</button>' : ''}<button data-r="reset">Reset</button><span class="hint">${v === 'e' ? 'Close the panel, then send a message.' : v === 'b' ? 'Switch to People, then send a message.' : 'Type and press Enter. Scroll up, then send one.'}</span>`;
+  };
+  draw();
   r.addEventListener('click', e => {
     const b = e.target.closest('button'); if(!b) return;
     if(b.dataset.r === 'msg') incoming(el);
+    if(b.dataset.r === 'long') incomingLong(el);
+    if(b.dataset.r === 'type') typing(el);
+    if(b.dataset.r === 'join') join(el);
     if(b.dataset.r === 'toggle') toggle(el);
+    if(b.dataset.r === 'seek') seek(el);
+    if(b.dataset.r === 'draft') draft(el);
     if(b.dataset.r === 'rx') react(el, ['😂','🔥','😭','👀'][Math.floor(Math.random() * 4)], 'Joyce');
-    if(b.dataset.r === 'reset'){ ST[v] = fresh(); render(el); syncRail(v); }
+    if(b.dataset.r === 'reset'){ ST[v] = fresh(v); render(el); draw(); }
   });
 });
 

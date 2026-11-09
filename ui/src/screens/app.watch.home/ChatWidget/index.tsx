@@ -7,7 +7,9 @@ import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationPanel from '../ChatInvitationPanel'
 import useHostInvitations from '../ChatInvitationPanel/useHostInvitations'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import ChatWidgetTip from '../ChatWidgetTip'
+import ChatStatus from '../ChatStatus'
+import { isJoinActivity } from '../ChatStatus/status'
+import useTypingStatus from './useTypingStatus'
 import PartyCode from '../PartyCode'
 
 import { usePropRef } from '~/hooks/usePropRef'
@@ -23,6 +25,7 @@ import { usePusher } from '~/hooks/usePusher'
 import { useWindowVisibility } from '~/hooks/useWindowVisibility'
 import useWindowSize from '~/hooks/useWindowSize'
 import getStandardFormattedDateTime from '~/utils/date/getStandardFormattedDateTime'
+import { differenceInMinutes, format, parse } from 'date-fns-v1'
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
@@ -126,6 +129,11 @@ const reducer = (state: State, action: Action) => {
   }
 }
 
+// Hype lines stay up this long after a friend arrives.
+const JOIN_FLASH_MS = 3200
+// A time divider appears after this long without messages.
+const TIME_BREAK_MINUTES = 10
+
 const init: State = {
   logs: [],
   message: { text: '' },
@@ -158,6 +166,11 @@ function ChatWidget(props: Props) {
   // One-off flag used to check if it's a message sent through pusher
   const isReceivingRef = useRef<boolean>(true)
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
+  const typing = useTypingStatus(props.party.id, auth.data)
+  // A friend who just arrived; the status row shows their hype line for a few seconds.
+  const [joined, setJoined] = useState<AppUser | null>(null)
+  const joinedTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  useEffect(() => () => clearTimeout(joinedTimer.current), [])
 
   useAsyncEffect(
     async () => {
@@ -214,6 +227,15 @@ function ChatWidget(props: Props) {
       type: 'logs:push',
       payload: { log: event.log }
     })
+
+    const activity = event.log.type === 'activity' ? event.log.activity : null
+    if (isJoinActivity(activity) && String(activity.user.id) !== String(auth.data.id)) {
+      setJoined(activity.user)
+      clearTimeout(joinedTimer.current)
+      joinedTimer.current = setTimeout(() => setJoined(null), JOIN_FLASH_MS)
+    }
+
+    if (event.log.type === 'message') typing.clear(event.log.message.user.id)
 
     if (!isWindowVisible && event.log.type === 'message') {
       // Let's play a sound if the user receives a message while switched to another tab.
@@ -278,6 +300,7 @@ function ChatWidget(props: Props) {
   }, [height])
 
   function handleInput(evt: React.FormEvent<HTMLTextAreaElement>) {
+    if (evt.currentTarget.value.trim()) typing.notify()
     dispatch({
       type: 'chat:input',
       payload: { input: evt.currentTarget.value }
@@ -312,6 +335,7 @@ function ChatWidget(props: Props) {
     }
 
     isReceivingRef.current = false
+    typing.sent()
 
     dispatch({
       type: 'chat:init',
@@ -340,8 +364,9 @@ function ChatWidget(props: Props) {
     })
   }
 
+  // Activity lines live in the status row, so the list only groups messages.
   const grouped = useMemo(() => {
-    return groupPartyLogs(state.logs)
+    return groupPartyLogs(state.logs.filter(log => log.type === 'message'))
   }, [state.logs])
 
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -389,13 +414,14 @@ function ChatWidget(props: Props) {
         <div className="watch-screen-canopy">
           <UiAvatarGroup users={props.party.members} />
 
+          <PartyCode code={props.party.join_code} chip />
+
           <UiPlainButton type="button" className="invite" ref={inviteButton}
             aria-label="Invite people" aria-expanded={props.isInvitationOpen} onClick={props.onOpenInvitationModal}>
             <i className="fa fa-user-plus" aria-hidden="true" />
           </UiPlainButton>
         </div>
 
-        <PartyCode code={props.party.join_code} />
         {invitations.pending.length > 0 && <UiPlainButton type="button" className="host-invite-waiting" onClick={props.onOpenInvitationModal}>
           <span className="host-invite-waiting-avatars">{invitations.pending.slice(0, 3).map(invitation => <UiAvatar key={invitation.id} user={invitation.recipient} size="sm" />)}</span>
           <span>Waiting on {invitations.pending.map(invitation => invitation.recipient.name).join(', ')}</span>
@@ -404,51 +430,29 @@ function ChatWidget(props: Props) {
         <motion.div className="watch-screen-chat-messages-container" initial={false}
           animate={{ scale: props.isInvitationOpen && !reducedMotion ? .96 : 1 }} transition={{ duration: reducedMotion ? 0 : .32, ease: [.2, .8, .2, 1] }}>
           <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
-            <ChatWidgetTip />
-
             {grouped.map((group, i) => {
-              if (group.type === 'activity') {
-                return (
-                  <div className="watch-screen-activity-group" key={i}>
-                    {group.logs.map(log => (
-                      <div className="activity" key={log.id}>
-                        <div className="avatar">
-                          <UiAvatar user={log.activity.user} size="sm" />
-                        </div>
-
-                        <h6 className="ui-subheading">
-                          {log.activity.user.name} {log.activity.text}.
-                        </h6>
-                      </div>
-                    ))}
-                  </div>
-                )
-              }
-
               const isSelf = group.user.id === auth.data.id
+              const previous = grouped[i - 1]
+              // Mark the time at the start and after a quiet stretch, instead of stamping every message.
+              const showTime = !previous || differenceInMinutes(parse(group.logs[0].created_at), parse(last(previous.logs).created_at)) >= TIME_BREAK_MINUTES
 
               return (
-                <div
-                  className={cx('watch-screen-chat-group', {
-                    'is-self': isSelf
-                  })}
-                  key={i}>
-                  <div className="avatar">
-                    <UiAvatar user={group.user} />
-                  </div>
+                <React.Fragment key={i}>
+                  {showTime && <div className="watch-screen-chat-time">{format(parse(group.logs[0].created_at), 'h:mm A')}</div>}
+                  <div className={cx('watch-screen-chat-group', { 'is-self': isSelf })}>
+                    {!isSelf && <div className="avatar"><UiAvatar user={group.user} /></div>}
 
-                  <div className="messages">
-                    {!isSelf && <div className="name">{group.user.name}</div>}
+                    <div className="messages">
+                      {!isSelf && <div className="name">{group.user.name}</div>}
 
-                    <div className="list">
-                      {group.logs.map(log => (
-                        <div className="message" key={log.id}>
-                          <div className="inner">{log.message.text}</div>
-                        </div>
-                      ))}
+                      <div className="list">
+                        {group.logs.map(log => (
+                          <div className="message" key={log.id}>{log.message.text}</div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </React.Fragment>
               )
             })}
             {invitations.outcomes.map(invitation => <div className="host-invite-outcome" key={invitation.id}>
@@ -461,22 +465,22 @@ function ChatWidget(props: Props) {
           </div>
 
           {hasUnreadMessages && (
-            <div className="watch-screen-chatbar-unread-note" onClick={handleClickUnreadMessages}>
-              <UiPlainButton type="button" className="note">
-                You have unread messages
-                <span className="icon">
-                  <i className="fa fa-angle-down" />
-                </span>
-              </UiPlainButton>
-            </div>
+            <UiPlainButton type="button" className="watch-screen-chatbar-unread-note" onClick={handleClickUnreadMessages}>
+              New messages
+              <i className="fa fa-arrow-down" aria-hidden="true" />
+            </UiPlainButton>
           )}
         </motion.div>
 
+        {/* A tray in the LayerCard style: the status row on top, the composer card flush below it. */}
         <div className="watch-screen-chatbar">
+          <ChatStatus logs={state.logs} typing={typing.names} joined={joined} meId={auth.data.id} />
+
           <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
             <textarea
               rows={1}
-              placeholder={`Press / to focus`}
+              placeholder="Message"
+              aria-label="Message"
               value={state.message.text}
               ref={inputRef}
               onChange={handleInput}
@@ -484,8 +488,8 @@ function ChatWidget(props: Props) {
               className="textarea"
             />
 
-            <UiPlainButton className="button" disabled={!isSubmittable} ref={buttonRef}>
-              <i className="fa fa-arrow-up" />
+            <UiPlainButton className="button" disabled={!isSubmittable} ref={buttonRef} aria-label="Send message">
+              <i className="fa fa-arrow-up" aria-hidden="true" />
             </UiPlainButton>
           </form>
         </div>

@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import UiPlainButton from '~/components/UiPlainButton'
 import { toast } from '~/components/Toast'
 
-export default function PartyCode({ code }: { code?: string }) {
+// `chip` is the compact header version in the chat; the default row with its label sits in the invite panel.
+export default function PartyCode({ code, chip = false }: { code?: string, chip?: boolean }) {
   const [copied, setCopied] = useState(false)
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
   useEffect(() => {
@@ -37,8 +38,8 @@ export default function PartyCode({ code }: { code?: string }) {
     }
   }
 
-  return <div className="watch-party-code">
-    <span>Party code</span>
+  return <div className={chip ? 'watch-party-code is-chip' : 'watch-party-code'}>
+    {!chip && <span>Party code</span>}
     <UiPlainButton type="button" aria-label={`Copy party code ${code.slice(0, 3)} ${code.slice(3)}`} onClick={copy}>
       <b>{code.slice(0, 3)} {code.slice(3)}</b>
       <i className={`fa ${copied ? 'fa-check is-copied' : 'fa-copy'}`} aria-hidden="true" />

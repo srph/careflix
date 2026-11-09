@@ -1,0 +1,21 @@
+/* The tray's header row. Its left edge lines up with the composer's placeholder. */
+.watch-screen-chat-status { display: flex; align-items: center; height: 32px; padding: 0 12px 0 15px; overflow: hidden; color: var(--color-black-5); font-size: 12px; }
+.watch-screen-chat-status > .line { display: flex; align-items: center; gap: 7px; min-width: 0; white-space: nowrap; animation: chat-status-in .3s cubic-bezier(.2, .8, .2, 1); }
+.watch-screen-chat-status .text { overflow: hidden; text-overflow: ellipsis; }
+.watch-screen-chat-status b { color: var(--color-white); font-weight: 600; }
+.watch-screen-chat-status .time { font-variant-numeric: tabular-nums; }
+.watch-screen-chat-status .kicker { color: #ff9fcb; }
+.watch-screen-chat-status .icon { flex: none; font-size: 10px; }
+.watch-screen-chat-status .icon.is-playing { color: var(--color-primary); }
+.watch-screen-chat-status .ui-avatar { flex: none; }
+.watch-screen-chat-status .dots { display: inline-flex; flex: none; gap: 3px; }
+.watch-screen-chat-status .dots > i { width: 5px; height: 5px; border-radius: 50%; background: var(--color-black-5); animation: chat-status-dot 1.2s infinite; }
+.watch-screen-chat-status .dots > i:nth-child(2) { animation-delay: .15s; }
+.watch-screen-chat-status .dots > i:nth-child(3) { animation-delay: .3s; }
+
+@keyframes chat-status-in { from { opacity: 0; transform: translateY(6px); } }
+@keyframes chat-status-dot { 0%, 60%, 100% { opacity: .35; transform: none; } 30% { opacity: 1; transform: translateY(-2px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-screen-chat-status > .line, .watch-screen-chat-status .dots > i { animation: none; }
+}

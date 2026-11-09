@@ -1,23 +1,36 @@
+/**
+ * .watch-screen-canopy: faces, party code chip and invite in one row.
+ */
 .watch-screen-canopy {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px;
+  gap: 8px;
+  padding: 12px 12px 8px 14px;
   background: var(--color-black-2);
-  border-bottom: 1px solid var(--color-black-1);
 }
 
+.watch-screen-canopy > .ui-avatar-group { margin-right: auto; }
+.watch-screen-canopy .ui-avatar-group > .avatar:not(:last-child) { margin-right: -8px; }
+.watch-screen-canopy .ui-avatar { width: 24px; height: 24px; font-size: 10px; box-shadow: 0 0 0 2px var(--color-black-2); }
+/* Presence dots sized for the smaller header faces. */
+.watch-screen-canopy .ui-presence-avatar > .status { right: -2px; bottom: -2px; width: 10px; height: 10px; }
+
 .watch-screen-canopy > .invite {
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 32px;
-  width: 32px;
+  height: 30px;
+  width: 30px;
+  font-size: 13px;
   color: var(--color-white);
-  background: var(--color-black-5);
+  background: #ffffff14;
   border-radius: 50%;
+  transition: background .2s;
 }
+
+.watch-screen-canopy > .invite:hover { background: #ffffff26; }
 
 /**
  * .watch-screen-chat
@@ -35,24 +48,23 @@
 }
 
 .watch-screen-chat-content { display: flex; flex: 1; flex-direction: column; min-height: 0; }
-.host-invite-waiting { display: flex; flex: none; align-items: center; gap: 10px; margin: 0 16px 14px; padding: 7px 12px 7px 8px; border: 1px solid #e8368f33; border-radius: 12px; background: #e8368f14; color: #ffd1e6; font-size: 13px; text-align: left; }
+.host-invite-waiting { display: flex; flex: none; align-items: center; gap: 10px; margin: 0 12px 10px; padding: 7px 12px 7px 8px; border: 1px solid #e8368f33; border-radius: 12px; background: #e8368f14; color: #ffd1e6; font-size: 13px; text-align: left; }
 .host-invite-waiting-avatars { display: flex; flex: none; }
 .host-invite-waiting-avatars .ui-avatar + .ui-avatar { margin-left: -8px; box-shadow: 0 0 0 2px var(--color-black-2); }
 .host-invite-waiting > span:nth-child(2) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .host-invite-waiting small { color: var(--color-black-5); font-variant-numeric: tabular-nums; }
-.host-invite-outcome { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 8px 16px; padding: 8px; border-radius: 12px; background: var(--color-black-1); color: var(--color-black-5); font-size: 12px; }
+.host-invite-outcome { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 8px 4px; padding: 8px; border-radius: 12px; background: var(--color-black-1); color: var(--color-black-5); font-size: 12px; }
 .host-invite-outcome button { color: #ff9fcb; text-decoration: underline; }
 .host-invite-outcome small { width: 100%; color: #ff9bad; }
-.host-invite-waiting:focus-visible { outline: 2px solid white; outline-offset: 2px; }
 
 @media (min-width: 640px) {
   .watch-screen-chat {
     flex-shrink: 0;
     position: absolute;
     top: 0;
-    right: -240px;
+    right: calc(-1 * var(--player-chat-pane-width));
     bottom: 0;
-    width: 240px;
+    width: var(--player-chat-pane-width);
     transition: 200ms all ease;
   }
 
@@ -61,16 +73,9 @@
   }
 }
 
-@media (min-width: 992px) {
-  .watch-screen-chat {
-    right: -320px;
-  }
-
-  .watch-screen-chat.is-chat-open {
-    width: 320px;
-  }
-}
-
+/**
+ * Messages: friends on the left with a small face and name, yours in pink on the right.
+ */
 .watch-screen-chat-messages-container {
   position: relative;
   min-height: 0;
@@ -79,28 +84,30 @@
 
 .watch-screen-chat-messages {
   height: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
+  padding: 2px 12px 8px;
   background: var(--color-black-2);
 }
 
+.watch-screen-chat-time {
+  margin: 14px 0 6px;
+  font-size: 11.5px;
+  color: var(--color-black-5);
+  text-align: center;
+}
+
 .watch-screen-chat-group {
-  padding: 16px;
   display: flex;
+  gap: 8px;
+  margin: 8px 0;
 }
 
-.watch-screen-chat-group > .avatar {
-  align-self: flex-end;
-  margin-right: 16px;
-}
-
-.watch-screen-chat-group > .messages {
-  /* display: flex;
-  flex-direction: column; */
-}
+.watch-screen-chat-group > .avatar { flex: none; margin-top: 19px; }
+.watch-screen-chat-group > .avatar .ui-avatar { width: 24px; height: 24px; font-size: 10px; }
+.watch-screen-chat-group > .messages { min-width: 0; max-width: 80%; }
 
 .watch-screen-chat-group > .messages > .name {
-  margin-left: 6px;
-  margin-bottom: 4px;
+  margin: 0 0 2px 4px;
   font-size: 12px;
   color: var(--color-black-5);
 }
@@ -108,183 +115,139 @@
 .watch-screen-chat-group > .messages > .list {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
-.watch-screen-chat-group > .messages > .list > .message {
-  display: flex;
+.watch-screen-chat-group .message {
+  max-width: 100%;
+  padding: 7px 12px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: var(--color-black-3);
+  border-radius: 18px;
 }
 
-.watch-screen-chat-group > .messages > .list > .message > .inner {
-  flex-grow: 0;
-  display: inline-block;
-  padding: 6px 8px;
-  background: var(--color-black-4);
-  border-radius: 24px;
-}
+/* Tighten the corners where bubbles from the same person meet. */
+.watch-screen-chat-group .message:not(:last-child) { border-bottom-left-radius: 6px; }
+.watch-screen-chat-group .message + .message { border-top-left-radius: 6px; }
 
-.watch-screen-chat-group > .messages > .list > .message:not(:last-child) > .inner {
-  margin-bottom: 4px;
-}
-
-.watch-screen-chat-group > .messages > .list > .message:not(:first-child) > .inner {
-  border-top-left-radius: 0;
-}
-
-.watch-screen-chat-group > .messages > .list > .message:not(:last-child) > .inner {
-  border-bottom-left-radius: 0;
-}
-
-.watch-screen-chat-group.is-self {
-  flex-direction: row-reverse;
-  margin-left: auto;
-}
-
-.watch-screen-chat-group.is-self > .avatar {
-  margin-right: 0;
-  margin-left: 16px;
-}
-
-.watch-screen-chat-group.is-self > .messages > .list > .message {
-  margin-left: auto;
-}
-
-.watch-screen-chat-group.is-self > .messages > .list > .message > .inner {
-  background: var(--color-primary);
-}
-
-.watch-screen-chat-group.is-self > .messages > .list > .message:not(:first-child) > .inner {
-  border-top-left-radius: 24px;
-  border-top-right-radius: 0px;
-}
-
-.watch-screen-chat-group.is-self > .messages > .list > .message:not(:last-child) > .inner {
-  border-bottom-left-radius: 24px;
-  border-bottom-right-radius: 0;
-}
-
-.watch-screen-activity-group {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.watch-screen-activity-group > .activity {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px;
-  background: var(--color-black-1);
-  border-radius: var(--border-radius);
-}
-
-.watch-screen-activity-group > .activity:not(:last-child) {
-  margin-bottom: 4px;
-}
-
-.watch-screen-activity-group > .activity > .avatar {
-  margin-right: 8px;
-}
+.watch-screen-chat-group.is-self { justify-content: flex-end; }
+.watch-screen-chat-group.is-self > .messages > .list { align-items: flex-end; }
+.watch-screen-chat-group.is-self .message { background: var(--color-primary); border-radius: 18px; }
+.watch-screen-chat-group.is-self .message:not(:last-child) { border-bottom-right-radius: 6px; }
+.watch-screen-chat-group.is-self .message + .message { border-top-right-radius: 6px; }
 
 /**
- * .watch-screen-chatbar
+ * .watch-screen-chatbar: a LayerCard-style tray. The status row sits on the tray,
+ * the composer is a card flush along its bottom.
  */
 .watch-screen-chatbar {
   flex-shrink: 0;
-  padding: 16px;
-  background: var(--color-black-2);
-  border-top: 1px solid var(--color-black-1);
+  margin: 4px 10px 10px;
+  background: var(--color-black-3);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px #ffffff0d;
 }
 
-/**
- * .watch-screen-chatbar-input
- */
 .watch-screen-chatbar-input {
   position: relative;
   display: flex;
-
+  align-items: flex-end;
+  gap: 4px;
+  min-height: 44px;
   /* sanitize.css puts a margin to forms */
   margin: 0;
+  padding: 0 6px 0 15px;
+  background: var(--color-black-2);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px #ffffff14;
+  transition: background .15s;
+}
+
+.watch-screen-chatbar-input:focus-within { background: #111820; }
+
+/* The focus ring belongs to the field (text and send), drawn inside because the field is flush with the tray. */
+.watch-screen-chatbar-input:has(> .textarea:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.watch-screen-chatbar-input > .textarea {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  min-height: 44px;
+  max-height: 132px;
+  padding: 12px 0;
+  font: inherit;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: var(--color-white);
+  background: none;
+  border: 0;
+  outline: 0;
+  resize: none;
+  overflow-y: auto;
+}
+
+.watch-screen-chatbar-input > .textarea:focus-visible { outline: none; }
+.watch-screen-chatbar-input > .textarea::placeholder { color: var(--color-black-5); }
+
+/* Grow with the message where supported; elsewhere stay one line tall and scroll. */
+@supports (field-sizing: content) {
+  .watch-screen-chatbar-input > .textarea { field-sizing: content; }
+}
+
+@supports not (field-sizing: content) {
+  .watch-screen-chatbar-input > .textarea { height: 44px; }
 }
 
 .watch-screen-chatbar-input > .button {
   flex-shrink: 0;
-  align-self: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
-  width: 24px;
-  font-size: 10px;
+  height: 32px;
+  width: 32px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--color-white);
   background: var(--color-primary);
-  border-radius: 50%;
-  transition: 100ms background ease;
+  border-radius: 10px;
+  transition: filter .15s;
 }
 
-.watch-screen-chatbar-input > .button:disabled {
-  background: var(--color-black-5);
-  cursor: not-allowed;
-}
-
-.watch-screen-chatbar-input > .textarea {
-  display: block;
-  margin-right: 16px;
-  padding: 16px;
-  width: 100%;
-  color: var(--color-black-5);
-  outline: 0;
-  /* @TODO - Maybe update --color-black-4 in the future */
-  background: rgb(37, 51, 65);
-  border: 1px solid transparent;
-  border-radius: 25px;
-  resize: none;
-}
-
-.watch-screen-chatbar-input > .textarea:focus {
-  background: var(--color-black-1);
-  border-color: rgb(29, 161, 242);
-}
+.watch-screen-chatbar-input > .button:hover:not(:disabled) { filter: brightness(1.12); }
+.watch-screen-chatbar-input > .button:disabled { cursor: default; }
 
 /**
  * .watch-screen-chatbar-unread-note
  */
 .watch-screen-chatbar-unread-note {
   position: absolute;
-  bottom: 16px;
-  text-align: center;
-  left: 16px;
-  right: 16px;
-}
-
-.watch-screen-chatbar-unread-note > .note {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 12px;
-  text-align: center;
-  background: var(--color-black-5);
-  border-radius: var(--border-radius);
-  box-shadow: 4px 0 8px rgba(0,0,0,0.5);
-}
-
-.watch-screen-chatbar-unread-note > .note > .icon {
-  margin-left: 8px;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--color-black-1);
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px -8px #000;
 }
 
 .chat-notification-audio {
   display: none;
 }
 
-/* Auto-size where supported; the native one-row field remains usable elsewhere. */
-.watch-screen-chatbar-input > .textarea {
-  min-height: 50px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-@supports (field-sizing: content) {
-  .watch-screen-chatbar-input > .textarea { field-sizing: content; }
-}
-
-@supports not (field-sizing: content) {
-  .watch-screen-chatbar-input > .textarea { height: 50px; }
+@media (prefers-reduced-motion: reduce) {
+  .watch-screen-canopy > .invite, .watch-screen-chatbar-input, .watch-screen-chatbar-input > .button { transition: none; }
 }

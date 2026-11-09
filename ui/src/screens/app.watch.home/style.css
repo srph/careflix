@@ -40,19 +40,7 @@
   }
 
   .watch-screen-video.is-chat-open {
-    width: calc(100% - var(--player-chat-pane-width-portrait));
-  }
-}
-
-@media (min-width: 992px) {
-  .watch-screen-video {
-    width: 100%;
-  }
-}
-
-@media (min-width: 992px) {
-  .watch-screen-video.is-chat-open {
-    width: calc(100% - var(--player-chat-pane-width-desktop));
+    width: calc(100% - var(--player-chat-pane-width));
   }
 }
 

@@ -106,7 +106,9 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await expect(panel.getByText('Host 👑', { exact: true })).toBeVisible()
   await expect(panel.getByText('(You)', { exact: true })).toBeVisible()
   await expect(page.getByRole('dialog')).toHaveCount(0)
-  await expect(page.locator('.watch-screen-chat-content')).toHaveCSS('opacity', '0')
+  // The panel is a solid sheet over the chat, which stays put underneath but can't be reached.
+  await expect(page.locator('.watch-screen-chat-content')).toHaveAttribute('inert', '')
+  await expect(panel).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
   const bounds = await panel.boundingBox()
   const chatBounds = await page.locator('.watch-screen-chat').boundingBox()
   expect(bounds!.width).toBe(chatBounds!.width)
@@ -132,6 +134,18 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await expect(panel.getByRole('option').last().locator('..')).toHaveCSS('opacity', '1')
   await page.screenshot({ path: test.info().outputPath('b5b2-pending.png') })
   await input.press('Escape')
+  // The list fades out with the rest of the panel instead of vanishing after it.
+  const opacity = (selector: string) => {
+    let element = document.querySelector(selector) as HTMLElement | null, value = 1
+    while (element) { value *= Number(getComputedStyle(element).opacity); element = element.parentElement }
+    return value
+  }
+  const closing = await page.waitForFunction(fn => {
+    const read = new Function(`return (${fn})`)() as (selector: string) => number
+    return document.querySelector('.host-invite-heading') && read('.host-invite-heading') < .7
+      ? read('.host-invite-person') : null
+  }, opacity.toString(), { polling: 'raf' })
+  expect(await closing.jsonValue()).toBeLessThan(.9)
   await expect(panel).toHaveCount(0)
   await expect(trigger).toBeFocused()
   await expect(composer).toHaveValue('Keep this draft')
@@ -228,8 +242,11 @@ test('search ignores late responses and request failures have working retries', 
   fixture.failures.search = 3
   await input.fill('Ava')
   await expect(panel.getByRole('alert')).toContainText('Couldn’t search for “Ava”.', { timeout: 8000 })
+  let answer: () => void
+  fixture.heldSearches.set('Ava', new Promise<void>(resolve => { answer = resolve }))
   await panel.getByRole('button', { name: 'Retry', exact: true }).click()
   await expect(panel.locator('.host-invite-skeletons')).toBeVisible()
+  answer!()
   await expect(panel.getByRole('option', { name: 'Invite Ava' })).toBeVisible()
   // A search already answered comes back at once from the cache.
   const searches = fixture.searches.length
@@ -247,7 +264,9 @@ test('reduced motion keeps the inline panel usable at every viewport', async ({ 
   const panel = page.getByRole('region', { name: 'Invite', exact: true })
   await expect(panel.getByRole('combobox', { name: 'Search for your friends by username' })).toBeFocused()
   await expect(panel.locator('.host-invite-note')).toHaveCount(0)
-  await expect(page.locator('.watch-screen-chat-content')).toHaveCSS('opacity', '0')
+  // The panel is a solid sheet over the chat, which stays put underneath but can't be reached.
+  await expect(page.locator('.watch-screen-chat-content')).toHaveAttribute('inert', '')
+  await expect(panel).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
   await expect(panel.locator('.host-invite-heading')).toHaveCSS('transform', 'none')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   const footer = await panel.locator('.host-invite-footer').boundingBox()

@@ -1,7 +1,7 @@
 import './style.css'
 import { useEffect, useRef, useState } from 'react'
 import { Autocomplete } from '@base-ui/react/autocomplete'
-import { AnimatePresence, HTMLMotionProps, motion, useIsPresent, useReducedMotion } from 'motion/react'
+import { AnimatePresence, motion, useIsPresent, useReducedMotion } from 'motion/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '~/contexts/Auth'
 import { usePartyContext } from '~/screens/app.watch/Context'
@@ -14,6 +14,7 @@ import { InviteRow, inviteRow } from './inviteRow'
 import { inviteSearchKey, useInviteRecentsQuery, useInviteSearchQuery } from './queries'
 import { searchView } from './searchView'
 import RollingText from './RollingText'
+import { CONTENT_FADE, PANEL_FADE } from './motion'
 
 type Placement = { group: 'party' | 'recents'; member: boolean }
 
@@ -80,30 +81,31 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
     ? view.kind === 'results' ? view.users : []
     : [...partyRows.filter(({ placement }) => !placement.member).map(({ user }) => user), ...recentRows]
 
-  // Rows that show up later fade in together where the skeletons were.
+  // Only entrances live down here. Leaving is one fade of the whole sheet (see the section below), so nothing
+  // inside needs an exit, and the list needs no AnimatePresence of its own: a nested one either holds its
+  // children on screen through the panel's exit or, with propagate, mounts a second copy as it goes.
+  // Rows that show up later fade in where the skeletons were.
   const arrive = {
     initial: { opacity: 0 },
-    animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .22 } },
-    exit: { opacity: 0, transition: { duration: reducedMotion ? 0 : .16 } }
+    animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .22 } }
   }
-  // When the panel opens, everything in it steps in on one staircase timed from the open, so Recents land on
-  // their step however soon their data comes. After that, or once a search has run, late rows just arrive.
+  // When the panel opens, everything in it steps in on one staircase timed from the open (starting once the
+  // sheet is up), so Recents land on their step however soon their data comes. After that, or once a search
+  // has run, late rows just arrive.
   const openedAt = useRef(performance.now())
   const groupsCascade = useRef(true)
   if (trimmed) groupsCascade.current = false
   const cascade = (index: number) => {
-    const delay = .11 + index * .032 - (performance.now() - openedAt.current) / 1000
+    const delay = PANEL_FADE + index * .032 - (performance.now() - openedAt.current) / 1000
     return groupsCascade.current && delay > 0 ? {
       initial: { opacity: 0, y: reducedMotion ? 0 : 12 },
-      animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .38, delay: reducedMotion ? 0 : delay } },
-      exit: { opacity: 0, y: reducedMotion ? 0 : 12, transition: { duration: reducedMotion ? 0 : .16 } }
+      animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .38, delay: reducedMotion ? 0 : delay } }
     } : arrive
   }
-  // Groups, the skeleton and each answer swap as whole lists.
-  const swap = {
+  // The groups, the skeleton and each answer are whole lists: the new one fades in where the last one was.
+  const fadeIn = {
     initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: reducedMotion ? 0 : .24, delay: reducedMotion ? 0 : .06 } },
-    exit: { opacity: 0, transition: { duration: reducedMotion ? 0 : .16 } }
+    animate: { opacity: 1, transition: { duration: reducedMotion ? 0 : .24 } }
   }
 
   function person(user: AppUser, motionProps: object) {
@@ -127,71 +129,59 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
   }
 
   return <motion.section className="host-invite-panel" aria-label="Invite" inert={!present}
-    initial="hidden" animate="visible" exit="hidden"
-    variants={{ hidden: {}, visible: {} }}
+    initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: reducedMotion ? 0 : PANEL_FADE } }}
+    exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : PANEL_FADE, delay: reducedMotion ? 0 : CONTENT_FADE } }}
     onKeyDownCapture={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose() }
     }}>
-    <motion.div className="host-invite-heading" {...cascade(0)}>
-      <h3>Invite</h3>
-      <UiPlainButton type="button" onClick={onClose} aria-label="Close invite"><i className="fa fa-close" aria-hidden="true" /></UiPlainButton>
+    {/* The mirror of opening: what's on the sheet goes first, then the empty sheet fades to the chat. */}
+    <motion.div className="host-invite-content" exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : CONTENT_FADE } }}>
+      <motion.div className="host-invite-heading" {...cascade(0)}>
+        <h3>Invite</h3>
+        <UiPlainButton type="button" onClick={onClose} aria-label="Close invite"><i className="fa fa-close" aria-hidden="true" /></UiPlainButton>
+      </motion.div>
+      <Autocomplete.Root inline open items={items} filter={null} value={text}
+        onValueChange={(value, details) => { if (details.reason !== 'item-press') setText(value.slice(0, 100)) }}
+        itemToStringValue={user => user.name}>
+        <motion.label className="host-invite-search" {...cascade(1)}>
+          <i className="fa fa-search" aria-hidden="true" />
+          <Autocomplete.Input ref={input} placeholder="Search for your friends by username" aria-label="Search for your friends by username" maxLength={100} autoComplete="off" spellCheck={false} />
+        </motion.label>
+        <div className="host-invite-list" ref={list} aria-busy={view?.kind === 'skeleton' || (!view && recentsPending)}>
+          <Autocomplete.List>
+            {/* A new key swaps the whole list at once. The groups skip the fade when the panel opens: their rows
+                cascade in instead. */}
+            {!view ? <motion.div key={viewKey} {...(groupsCascade.current ? {} : fadeIn)}>
+                {partyRows.length > 0 && <Autocomplete.Group>
+                  <motion.div {...cascade(2)}><Autocomplete.GroupLabel className="host-invite-label">Party</Autocomplete.GroupLabel></motion.div>
+                  {partyRows.map(({ user, placement }, index) => placement.member
+                    ? <motion.div className="host-invite-person user-item" key={user.id} {...cascade(3 + index)}>
+                      <UiPresenceAvatar user={invitations.withPresence(user)} />
+                      <span className="host-invite-details"><b>{user.name}{String(user.id) === String(auth.data.id) && <em>(You)</em>}</b>
+                        <small>{String(user.id) === hostId ? 'Host 👑' : 'In the room'}</small></span>
+                    </motion.div>
+                    : person(user, cascade(3 + index)))}
+                </Autocomplete.Group>}
+                {(recentsPending || recentRows.length > 0) && <Autocomplete.Group className="host-invite-group">
+                  <motion.div {...cascade(4)}><Autocomplete.GroupLabel className="host-invite-label">Recents</Autocomplete.GroupLabel></motion.div>
+                  {recentsPending && <motion.div key="skeletons" {...cascade(5)}><InviteSkeletons /></motion.div>}
+                  {recentRows.map((user, index) => person(user, cascade(5 + index)))}
+                </Autocomplete.Group>}
+                {recentsFailed && <p className="host-invite-note" role="alert">Couldn’t load people. <button type="button" onClick={() => recents.refetch()}>Retry</button></p>}
+              </motion.div>
+              : <motion.div key={viewKey} className="host-invite-results" {...fadeIn}>
+                {view.kind === 'skeleton' && <InviteSkeletons />}
+                {view.kind === 'results' && view.users.map(user => person(user, {}))}
+                {view.kind === 'empty' && <p className="host-invite-line">No one named “{term}”.</p>}
+                {view.kind === 'error' && <p className="host-invite-line" role="alert">Couldn’t search for “{term}”.&nbsp;<button type="button" onClick={() => search.refetch()}>Retry</button></p>}
+              </motion.div>}
+          </Autocomplete.List>
+          {invitations.historyError && <p className="host-invite-note" role="alert">Couldn’t load invite updates. <button type="button" onClick={invitations.refreshHistory}>Retry</button></p>}
+        </div>
+      </Autocomplete.Root>
+      <motion.div className="host-invite-footer" {...cascade(7)}><PartyCode code={party.join_code} /></motion.div>
     </motion.div>
-    <Autocomplete.Root inline open items={items} filter={null} value={text}
-      onValueChange={(value, details) => { if (details.reason !== 'item-press') setText(value.slice(0, 100)) }}
-      itemToStringValue={user => user.name}>
-      <motion.label className="host-invite-search" {...cascade(1)}>
-        <i className="fa fa-search" aria-hidden="true" />
-        <Autocomplete.Input ref={input} placeholder="Search for your friends by username" aria-label="Search for your friends by username" maxLength={100} autoComplete="off" spellCheck={false} />
-      </motion.label>
-      <div className="host-invite-list" ref={list} aria-busy={view?.kind === 'skeleton' || (!view && recentsPending)}>
-        <Autocomplete.List>
-          {/* popLayout lifts the outgoing list out of flow, so the next one fades in where it was. The groups
-              skip that fade when the panel opens (their rows cascade in instead); initial={false} on the
-              presence itself would also stop that cascade. */}
-          <AnimatePresence mode="popLayout">
-            {!view && <InviteView key={viewKey} {...swap} initial={groupsCascade.current ? false : swap.initial}>
-              {partyRows.length > 0 && <Autocomplete.Group>
-                <motion.div {...cascade(2)}><Autocomplete.GroupLabel className="host-invite-label">Party</Autocomplete.GroupLabel></motion.div>
-                {partyRows.map(({ user, placement }, index) => placement.member
-                  ? <motion.div className="host-invite-person user-item" key={user.id} {...cascade(3 + index)}>
-                    <UiPresenceAvatar user={invitations.withPresence(user)} />
-                    <span className="host-invite-details"><b>{user.name}{String(user.id) === String(auth.data.id) && <em>(You)</em>}</b>
-                      <small>{String(user.id) === hostId ? 'Host 👑' : 'In the room'}</small></span>
-                  </motion.div>
-                  : person(user, cascade(3 + index)))}
-              </Autocomplete.Group>}
-              {(recentsPending || recentRows.length > 0) && <Autocomplete.Group className="host-invite-group">
-                <motion.div {...cascade(4)}><Autocomplete.GroupLabel className="host-invite-label">Recents</Autocomplete.GroupLabel></motion.div>
-                {/* Only the skeletons sit in presence: popLayout lifts them out of flow as they fade, so the rows
-                    take their place; rows that left and came back inside it would render twice. */}
-                <AnimatePresence mode="popLayout" propagate>
-                  {recentsPending && <motion.div key="skeletons" {...cascade(5)} exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : .18 } }}>
-                    <InviteSkeletons />
-                  </motion.div>}
-                </AnimatePresence>
-                {recentRows.map((user, index) => person(user, cascade(5 + index)))}
-              </Autocomplete.Group>}
-              {recentsFailed && <p className="host-invite-note" role="alert">Couldn’t load people. <button type="button" onClick={() => recents.refetch()}>Retry</button></p>}
-            </InviteView>}
-            {view && <InviteView key={viewKey} className="host-invite-results" {...swap}>
-              {view.kind === 'skeleton' && <InviteSkeletons />}
-              {view.kind === 'results' && view.users.map(user => person(user, {}))}
-              {view.kind === 'empty' && <p className="host-invite-line">No one named “{term}”.</p>}
-              {view.kind === 'error' && <p className="host-invite-line" role="alert">Couldn’t search for “{term}”.&nbsp;<button type="button" onClick={() => search.refetch()}>Retry</button></p>}
-            </InviteView>}
-          </AnimatePresence>
-        </Autocomplete.List>
-        {invitations.historyError && <p className="host-invite-note" role="alert">Couldn’t load invite updates. <button type="button" onClick={invitations.refreshHistory}>Retry</button></p>}
-      </div>
-    </Autocomplete.Root>
-    <motion.div className="host-invite-footer" {...cascade(7)}><PartyCode code={party.join_code} /></motion.div>
   </motion.section>
-}
-
-/** One whole list (the groups, the skeleton or an answer); the one on its way out can't be reached. */
-function InviteView(props: HTMLMotionProps<'div'>) {
-  const present = useIsPresent()
-  return <motion.div inert={!present} {...props} />
 }
 
 function InviteSkeletons() {

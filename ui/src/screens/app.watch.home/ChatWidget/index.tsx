@@ -6,7 +6,7 @@ import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationPanel from '../ChatInvitationPanel'
 import useHostInvitations from '../ChatInvitationPanel/useHostInvitations'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { AnimatePresence } from 'motion/react'
 import ChatStatus from '../ChatStatus'
 import { isJoinActivity } from '../ChatStatus/status'
 import useTypingStatus from './useTypingStatus'
@@ -149,7 +149,6 @@ const init: State = {
 function ChatWidget(props: Props) {
   const auth = useAuth()
   const invitations = useHostInvitations()
-  const reducedMotion = useReducedMotion()
   const inviteButton = useRef<HTMLButtonElement>(null)
   const wasInvitationOpen = useRef(false)
   useEffect(() => {
@@ -409,9 +408,8 @@ function ChatWidget(props: Props) {
       className={cx('watch-screen-chat', {
         'is-chat-open': props.isChatOpen
       })}>
-      <motion.div className="watch-screen-chat-content" inert={props.isInvitationOpen}
-        initial={false} animate={{ opacity: props.isInvitationOpen ? 0 : 1 }}
-        transition={{ duration: reducedMotion ? 0 : .24 }}>
+      {/* The invite panel is a solid sheet over this, so the chat stays put underneath; it only can't be reached. */}
+      <div className="watch-screen-chat-content" inert={props.isInvitationOpen}>
         <div className="watch-screen-canopy">
           <UiAvatarGroup users={props.party.members} />
 
@@ -424,8 +422,7 @@ function ChatWidget(props: Props) {
         </div>
 
         <InviteStrip invitations={invitations} onOpen={props.onOpenInvitationModal} />
-        <motion.div className="watch-screen-chat-messages-container" initial={false}
-          animate={{ scale: props.isInvitationOpen && !reducedMotion ? .96 : 1 }} transition={{ duration: reducedMotion ? 0 : .32, ease: [.2, .8, .2, 1] }}>
+        <div className="watch-screen-chat-messages-container">
           <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
             {grouped.map((group, i) => {
               const isSelf = group.user.id === auth.data.id
@@ -460,7 +457,7 @@ function ChatWidget(props: Props) {
               <i className="fa fa-arrow-down" aria-hidden="true" />
             </UiPlainButton>
           )}
-        </motion.div>
+        </div>
 
         {/* A tray in the LayerCard style: the status row on top, the composer card flush below it. */}
         <div className="watch-screen-chatbar">
@@ -486,7 +483,7 @@ function ChatWidget(props: Props) {
 
         <ReactionRow onReact={props.onReact} />
 
-      </motion.div>
+      </div>
       <AnimatePresence>
         {props.isInvitationOpen && <ChatInvitationPanel key="host-invites" invitations={invitations} onClose={props.onCloseInvitationModal} />}
       </AnimatePresence>

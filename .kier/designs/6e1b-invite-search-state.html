@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invite Search State</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}.mm{display:none}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .copied{color:var(--good);font-weight:600}
+.frame{position:relative;height:600px;margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#10171E;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+.rail .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-left:6px}
+.rail .lbl:first-child{margin-left:0}
+.rail .grp{display:flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--mut);background:none;border:0;border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.rail .grp button:hover{color:var(--ink)}
+.rail .grp button.on{background:var(--ink);color:var(--bg)}
+.rail .grp.fl button::before{content:"▶";font-size:8px;margin-right:6px;vertical-align:1px}
+.log{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:30px;margin-top:10px;font:12px/1.3 ui-monospace,Menlo,monospace}
+.log .cnt{font-weight:700;padding:5px 9px;border-radius:8px;background:var(--ink);color:var(--bg)}
+.log .ev{padding:5px 9px;border-radius:8px;background:var(--card);border:1px solid var(--line)}
+.log .ev.ip{border-style:dashed;color:var(--mut)}
+.log .ev s{text-decoration:none;color:var(--mut);margin-right:6px}
+.log .hint{color:var(--mut)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.sm{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px 10px}
+.sm-h{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.sm-h h3{margin:0;font-size:15px;font-weight:600}
+.sm-h span{font-size:13px;color:var(--mut)}
+.sm-svg{display:block;width:100%;height:auto;margin-top:6px;font-family:inherit}
+.sm-svg .nd{cursor:pointer}
+.sm-svg .nd rect{fill:var(--bg);stroke:var(--line);stroke-width:1.5;transition:fill .25s,stroke .25s}
+.sm-svg .nd:hover rect{stroke:var(--mut)}
+.sm-svg .nd .t{fill:var(--ink);font-size:14px;font-weight:600}
+.sm-svg .nd .d{fill:var(--mut);font-size:12px}
+.sm-svg .nd.on rect{fill:var(--ink);stroke:var(--ink)}
+.sm-svg .nd.on .t,.sm-svg .nd.on .d{fill:var(--bg)}
+.sm-svg .cl{fill:none;stroke:var(--line);stroke-width:1.5;stroke-dasharray:5 5;transition:stroke .25s}
+.sm-svg .cl.on{stroke:var(--ink)}
+.sm-svg .ct{fill:var(--mut);font:600 10.5px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase}
+.sm-svg .eg path{fill:none;stroke:var(--mut);stroke-width:1.5;transition:stroke .2s,stroke-width .2s}
+.sm-svg .eg text{fill:var(--mut);font-size:12px}
+.sm-svg .eg.hot path{stroke:var(--ink);stroke-width:2.5}
+.sm-svg .eg.hot text{fill:var(--ink);font-weight:600}
+.sm-svg .ar{fill:var(--mut)}.sm-svg .ar.k{fill:var(--ink)}
+.mk .rty{border:0;padding:0;background:transparent;color:#fff;font:inherit;text-decoration:underline;cursor:pointer}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:260px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup (Care.tv room, invite panel) ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n4:#38444D;--n5:#8899A6;
+  font-family:'halyard-display','Outfit',sans-serif;color:#fff;background:var(--n1);height:100%;position:relative;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4}
+.mk *{box-sizing:border-box}
+.room{display:grid;grid-template-columns:1fr 320px;height:100%}
+.pv{position:relative;background:#06090d;min-width:0}
+.pv::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 40% 40%,#1c2938,transparent 70%)}
+.ctl{position:absolute;left:0;right:0;bottom:0;padding:0 18px 16px;display:flex;align-items:center;gap:12px}
+.ctl i{display:block;width:18px;height:18px;border-radius:4px;background:#ffffff1f}
+.seek{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.18);position:relative}
+.seek::after{content:"";position:absolute;inset:0 68% 0 0;background:var(--pk);border-radius:3px}
+.chat{position:relative;display:flex;flex-direction:column;min-height:0;overflow:hidden;background:var(--n2)}
+.pn{position:absolute;inset:0;display:flex;flex-direction:column;min-height:0}
+.pnh{display:flex;align-items:center;gap:8px;flex:none;padding:16px 16px 6px 20px}
+.pnh h3{margin:0;font-size:17px;font-weight:700}
+.pcl{display:grid;place-items:center;width:32px;height:32px;margin-left:auto;border-radius:50%;color:var(--n5)}
+.psr{display:flex;flex:none;align-items:center;gap:10px;height:42px;margin:10px 16px 4px;padding:0 14px;border:1px solid #ffffff12;border-radius:12px;background:var(--n1);color:var(--n5)}
+.psr:focus-within{outline:3px solid #C2196E;outline-offset:0}
+.psr input{width:100%;min-width:0;padding:0;outline:0;border:0;background:transparent;color:#fff;font:inherit;font-size:14px}
+.psr input::placeholder{color:var(--n5)}
+.fic{position:relative;flex:none;width:14px;height:14px}
+.fic>*{position:absolute;inset:0;transition:opacity .2s,transform .25s cubic-bezier(.2,.8,.2,1)}
+.fic .spi{width:13px;height:13px;margin:.5px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite;opacity:0;transform:scale(.5)}
+.fic.busy svg{opacity:0;transform:scale(.5)}
+.fic.busy .spi{opacity:1;transform:none}
+@keyframes spin{to{rotate:360deg}}
+.pls{position:relative;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 6px 8px;scrollbar-width:thin}
+.pls>.ghost{position:absolute;left:6px;right:6px;pointer-events:none}
+.plb{padding:16px 14px 8px;color:var(--n5);font:600 11px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.pr{display:flex;align-items:center;gap:12px;min-height:60px;padding:10px 14px;border-radius:12px}
+.pr.cl{cursor:pointer}
+.pr.cl:hover{background:#ffffff0d}
+.pav{position:relative;display:inline-flex;flex:none}
+.av{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:13px;font-style:normal}
+.dot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;background:#2ecc71;border:2px solid var(--n2)}
+.pdt{display:flex;flex:1;min-width:0;flex-direction:column;gap:2px}
+.pdt b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:600}
+.pdt em{margin-left:6px;color:var(--n5);font-size:11px;font-style:normal;font-weight:400}
+.pst{height:16px;color:var(--n5);font-size:12px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.t-pk{color:#ff9fcb}
+.pub{display:grid;place-items:center;flex:none;width:76px;height:26px;border-radius:13px;background:rgba(255,255,255,.1);color:#fff;font:700 11px/1 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.pr.cl:hover .pub{background:rgba(255,255,255,.18)}
+.sk{display:flex;align-items:center;gap:12px;min-height:60px;padding:10px 14px;animation:shimmer .9s ease-in-out infinite alternate}
+.sk:nth-child(odd){animation-delay:-.45s}
+.sk>i{flex:none;width:32px;height:32px;border-radius:50%;background:#ffffff10}
+.sk>span{flex:1;display:flex;flex-direction:column;gap:7px}
+.sk>span>i{display:block;width:44%;height:10px;border-radius:5px;background:#ffffff10}
+.sk>span>i+i{width:26%;height:8px}
+@keyframes shimmer{from{opacity:.5}to{opacity:1}}
+.pnote{padding:12px 14px;color:var(--n5);font-size:13px}
+/* A: one line, one slot — the same height and inset as a row */
+.pstat{display:flex;align-items:center;min-height:60px;padding:10px 14px;color:var(--n5);font-size:13px}
+.rl{position:relative;display:block;flex:1;height:18px;overflow:hidden}
+.rl>span{position:absolute;inset:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pft{flex:none;min-height:60px;border-top:1px solid var(--n1);display:flex;align-items:center;gap:10px;padding:0 16px 0 20px}
+.pft>span{color:var(--n5);font:600 10px 'Work Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.pft>b{margin-left:auto;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.pft svg{color:var(--n5)}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+<header class="brief">
+  <div class="eyebrow">Care.tv · watch party · invite panel · search</div>
+  <h1>Invite search should show results and hold still.</h1>
+  <div class="cards">
+    <div>Only the search state changes. The empty-query Party and Recents view stays as it is.</div>
+    <div>Type in the mockup or play a path. The strip under it logs every block that appears or leaves.</div>
+    <div>Joyce and Kier are in the room. Mira has a pending invite.</div>
+  </div>
+</header>
+
+<section class="var" id="v-now" data-id="Now" data-name="Two groups, everything re-arrives">
+  <div class="var-h"><span class="id">Now</span><h2>Two groups, everything re-arrives</h2></div>
+  <div class="frame"></div>
+  <div class="notes">
+    <div class="note bad">Search splits results into Party and People, so Joyce sits apart from everyone else.</div>
+    <div class="note bad">Each keystroke clears People, so the list empties before anything loads.</div>
+    <div class="note bad">The heading comes and goes with the skeleton, then the note drops in where it was.</div>
+  </div>
+</section>
+
+<section class="var" id="v-a" data-id="A" data-name="One list, one slot, loading in the field">
+  <div class="var-h"><span class="id">A</span><h2>One list, one slot, loading in the field</h2></div>
+  <div class="frame"></div>
+  <div class="notes">
+    <div class="note good">While you search there are no headings. “In the room” and “Invited (24m)” in the subtext say who’s already in.</div>
+    <div class="note good">Rows filter on each keystroke and stay put. Results that arrive are only added below.</div>
+    <div class="note good">The search icon turns into a spinner, and no skeleton shows mid-search.</div>
+    <div class="note good">“Searching…” and “No one named” are one line in a row’s slot, and the text rolls in place.</div>
+  </div>
+</section>
+
+<section class="var" id="v-b" data-id="B" data-name="Search is its own list, swapped whole">
+  <div class="var-h"><span class="id">B</span><h2>Search is its own list, swapped whole</h2></div>
+  <div class="frame"></div>
+  <div class="notes">
+    <div class="note good">Results are exactly what the server returned, labelled from the room: “In the room”, “Invited (24m)”, Invite.</div>
+    <div class="note good">One rule: while a search is loading, the skeleton shows. No spinner and no timers.</div>
+    <div class="note good">Every search goes skeleton → answer, as two crossfades in the same place.</div>
+    <div class="note bad">Each pause in typing turns the list back into a skeleton, even when the new answer barely changes it.</div>
+  </div>
+  <div class="sm">
+    <div class="sm-h"><h3>B’s state machine</h3><span>Follows B’s canvas live. Click a state to put the canvas there.</span></div>
+    <svg class="sm-svg" viewBox="0 0 1240 384" role="img" aria-label="State machine for B"></svg>
+  </div>
+</section>
+
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from B: keep the last answer with a spinner (keepPreviousData) next to skeleton-every-time.</div>
+    <div><b>Remix</b>Remix B: show “Searching…” on the first keystroke instead of leaving the groups up.</div>
+    <div><b>Settle</b>Settle on B and build it into ChatInvitationPanel and useHostInvitations.</div>
+  </div>
+</section>
+</main>
+
+<script>
+const FILE = '.kier/designs/6e1b-invite-search-state.html';
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+
+/* ───── data ───── */
+const P = (id, n, c, on, x = {}) => ({id, n, c, on, ...x});
+const MEMBERS = [P('kier','Kier','#FFC6A5',1,{host:1,you:1}), P('joyce','Joyce','#B8E0D2',1)];
+const INVITED = [P('mira','Mira','#F7B2D9',1,{st:'Invited (24m)'})];
+const RECENTS = [P('theo','Theo','#C9B6F2',1), P('sam','Sam','#A8D8F0',0), P('priya','Priya','#FFE29A',1), P('jonah','Jonah','#F5B7A5',0)];
+// Like the API: a query searches everyone but you (room members included), ordered by name; no query returns recents.
+const DIRECTORY = [...RECENTS, MEMBERS[1], ...INVITED, P('joel','Joel Kim','#BDE3A8',1), P('josie','Josie','#F2C6E0',0), P('joaquin','Joaquin','#A9C8F5',1), P('nadia','Nadia','#FFD3A0',0), P('ravi','Ravi','#C4E9DF',1)]
+  .sort((a, b) => a.n.localeCompare(b.n));
+const PARTY_IDS = new Set([...MEMBERS, ...INVITED].map(u => u.id));
+const server = q => q ? DIRECTORY.filter(u => u.n.toLowerCase().includes(q.toLowerCase())) : RECENTS;
+
+const SEARCH_SVG = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>';
+const COPY_SVG = '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="5" width="9" height="9" rx="2"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg>';
+
+function rowHTML(u, kind){
+  const st = u.host ? 'Host 👑' : kind === 'member' ? 'In the room' : kind === 'invited' ? u.st : u.on ? 'Online' : 'Offline';
+  const btn = kind === 'member' ? '' : `<span class="pub">${kind === 'invited' ? 'Undo' : 'Invite'}</span>`;
+  return `<div class="pr${kind === 'member' ? '' : ' cl'}"><span class="pav"><i class="av" style="--c:${u.c}">${esc(u.n[0])}</i>${u.on ? '<i class="dot"></i>' : ''}</span>` +
+    `<span class="pdt"><b>${esc(u.n)}${u.you ? '<em>(You)</em>' : ''}</b><span class="pst${kind === 'invited' ? ' t-pk' : ''}">${st}</span></span>${btn}</div>`;
+}
+const SKEL = [0,1,2,3].map(() => '<div class="sk"><i></i><span><i></i><i></i></span></div>').join('');
+
+/* ───── motion helpers (scaled by the canvas speed) ───── */
+const EZ = 'cubic-bezier(.2,.8,.2,1)';
+const fadeIn = (d, delay = 0, y = 0) => (el, S) => el.animate([{opacity:0, transform:`translateY(${y}px)`}, {opacity:1, transform:'none'}], {duration:d*S, delay:delay*S, fill:'backwards', easing:EZ});
+const fadeOut = d => (el, S) => el.animate([{opacity:1}, {opacity:0}], {duration:d*S, fill:'forwards', easing:'ease-in'});
+
+/* ───── variations ─────
+   Each returns the list's blocks for the canvas state. A block: {key, html, kind, label, enter, exit, roll}. */
+const kindOf = u => MEMBERS.includes(u) ? 'member' : INVITED.includes(u) ? 'invited' : 'user';
+
+function nowBlocks(c){
+  // Mirrors ChatInvitationPanel today: Party filters locally, People waits for the search.
+  const q = c.q.trim().toLowerCase(), match = u => !q || u.n.toLowerCase().includes(q);
+  const party = [...MEMBERS, ...INVITED].filter(match);
+  const recents = c.users.filter(u => !PARTY_IDS.has(u.id));
+  const shown = c.pending ? [] : recents;
+  const B = [];
+  if(party.length){
+    B.push({key:'lab-p', kind:'label', label:'PARTY', html:'<div class="plb">Party</div>', enter:fadeIn(380, 110 + 2*32, 12)});
+    party.forEach((u, i) => B.push({key:'u-'+u.id, kind:'row', html:rowHTML(u, kindOf(u)), enter:fadeIn(380, 110 + (3+i)*32, 12)}));
+  }
+  if(c.placeholder || shown.length){
+    const t = q ? 'People' : 'Recents';
+    B.push({key:'lab-r', kind:'label', label:t.toUpperCase(), html:`<div class="plb">${t}</div>`, enter:fadeIn(380, 110 + 4*32, 12)});
+    if(c.placeholder) B.push({key:'skel', kind:'skel', label:'skeleton', html:SKEL, enter:fadeIn(220), exit:fadeOut(180)});
+    shown.forEach(u => B.push({key:'u-'+u.id, kind:'row', html:rowHTML(u, 'user'), enter:fadeIn(220)}));
+  }
+  if(!c.pending && !recents.length && !party.length && q){
+    const t = `No one named “${c.q}”.`;
+    B.push({key:'note', kind:'note', label:'“No one named”', html:`<p class="pnote" style="margin:0">${esc(t)}</p>`, enter:fadeIn(320, 240, 6), exit:fadeOut(120)});
+  }
+  c.busyIcon = false;
+  return B;
+}
+
+function aBlocks(c){
+  const q = c.q.trim().toLowerCase(), match = u => !q || u.n.toLowerCase().includes(q);
+  const rowIn = fadeIn(220, 0, 4), rowOut = fadeOut(140);
+  const B = [];
+  c.busyIcon = c.placeholder;
+  if(!q){
+    // Unchanged grouped view; recents come from cache so clearing is instant.
+    B.push({key:'lab-p', kind:'label', label:'PARTY', html:'<div class="plb">Party</div>', enter:fadeIn(220), exit:rowOut});
+    [...MEMBERS, ...INVITED].forEach(u => B.push({key:'u-'+u.id, kind:'row', html:rowHTML(u, kindOf(u)), enter:rowIn, exit:rowOut}));
+    B.push({key:'lab-r', kind:'label', label:'RECENTS', html:'<div class="plb">Recents</div>', enter:fadeIn(220), exit:rowOut});
+    c.users.filter(u => !PARTY_IDS.has(u.id)).forEach(u => B.push({key:'u-'+u.id, kind:'row', html:rowHTML(u, 'user'), enter:rowIn, exit:rowOut}));
+    return B;
+  }
+  // One flat list: people already known match instantly, the search only adds below.
+  const seen = new Set(), rows = [];
+  [...MEMBERS, ...INVITED, ...c.users].forEach(u => { if(match(u) && !seen.has(u.id)){ seen.add(u.id); rows.push(u); } });
+  rows.forEach(u => B.push({key:'u-'+u.id, kind:'row', html:rowHTML(u, kindOf(u)), enter:rowIn, exit:rowOut}));
+  if(!rows.length){
+    const mode = c.loading ? 'searching' : 'none';
+    const text = mode === 'searching' ? `Searching for “${c.q}”…` : `No one named “${c.q}”.`;
+    B.push({key:'status', kind:'status', label:'“'+text.split(' “')[0]+'”', mode, text, enter:fadeIn(220), exit:fadeOut(140), roll:true});
+  }
+  return B;
+}
+
+function bBlocks(c){
+  // A plain react-query search, keyed by the term, with no keepPreviousData:
+  //   a term without a cached answer (typing, debouncing, fetching, Retry) → skeleton
+  //   data / isError → the whole set crossfades in where the skeleton was
+  // A cached term (inside staleTime) answers at once. No spinner, no timers.
+  const term = c.q.trim(), out = fadeOut(160), inn = fadeIn(240, 60);
+  if(!term) c.view = null;
+  else if(c.resultsFor === term){
+    const err = c.errorFor === term, ids = err ? '!err' : c.users.map(u => u.id).join();
+    if(!c.view || c.view.q !== term || c.view.ids !== ids) c.view = {q:term, ids, error:err, users:err ? [] : c.users, gen:(c.view ? c.view.gen : 0) + 1};
+  }
+  c.busyIcon = false;
+  const B = [];
+  if(!term){
+    const opening = !c.cache[''];
+    B.push({key:'g-lab-p', kind:'label', label:'PARTY', html:'<div class="plb">Party</div>', enter:inn, exit:out});
+    [...MEMBERS, ...INVITED].forEach(u => B.push({key:'g-'+u.id, kind:'row', html:rowHTML(u, kindOf(u)), enter:inn, exit:out}));
+    if(opening && !c.placeholder) return B;
+    B.push({key:'g-lab-r', kind:'label', label:'RECENTS', html:'<div class="plb">Recents</div>', enter:inn, exit:out});
+    if(opening) B.push({key:'g-skel', kind:'skel', label:'skeleton', html:SKEL, enter:inn, exit:out});
+    else c.cache[''].forEach(u => B.push({key:'g-'+u.id, kind:'row', html:rowHTML(u, 'user'), enter:inn, exit:out}));
+    return B;
+  }
+  if(!c.view || c.view.q !== term || c.loading){
+    B.push({key:'s-skel', kind:'skel', label:'skeleton', html:SKEL, enter:inn, exit:out});
+    return B;
+  }
+  const g = 'r' + c.view.gen + '-';
+  c.view.users.forEach(u => B.push({key:g+u.id, kind:'row', html:rowHTML(u, kindOf(u)), enter:inn, exit:out}));
+  if(c.view.error)
+    B.push({key:g+'err', kind:'status', label:'“Couldn’t search”', html:`<div class="pstat">Couldn’t search for “${esc(c.view.q)}”.&nbsp;<button class="rty" data-retry>Retry</button></div>`, enter:inn, exit:out});
+  else if(!c.view.users.length)
+    B.push({key:g+'none', kind:'status', label:'“No one named”', html:`<div class="pstat">${esc(`No one named “${c.view.q}”.`)}</div>`, enter:inn, exit:out});
+  return B;
+}
+function bState(c){
+  if(!c.q.trim()) return {s:c.cache[''] ? 'groups' : 'opening'};
+  if(!c.view || c.view.q !== c.q.trim() || c.loading) return {s:'skeleton'};
+  return {s:c.view.error ? 'error' : c.view.users.length ? 'results' : 'empty'};
+}
+
+const VARS = [
+  {sec:'v-now', blocks:nowBlocks, clear:true, flip:false},
+  {sec:'v-a', blocks:aBlocks, clear:false, flip:true, cache:true},
+  {sec:'v-b', blocks:bBlocks, clear:false, flip:false, cache:true, fresh:true, failToggle:true, onRender:c => syncMachine(c)}
+];
+
+/* ───── canvas ───── */
+function build(v){
+  const sec = document.getElementById(v.sec), frame = sec.querySelector('.frame');
+  frame.innerHTML = `<div class="mk"><div class="room"><div class="pv"><div class="ctl"><i></i><div class="seek"></div><i></i></div></div>
+    <aside class="chat"><section class="pn" aria-label="Invite">
+      <div class="pnh"><h3>Invite</h3><span class="pcl"><svg viewBox="0 0 16 16" width="14" height="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></span></div>
+      <label class="psr"><span class="fic">${SEARCH_SVG}<span class="spi"></span></span><input placeholder="Search for your friends by username" aria-label="Search for your friends by username" maxlength="100" autocomplete="off" spellcheck="false"></label>
+      <div class="pls"></div>
+      <div class="pft"><span>Party code</span><b>482 913</b>${COPY_SVG}</div>
+    </section></aside></div></div>`;
+  const rail = document.createElement('div'); rail.className = 'rail';
+  rail.innerHTML = `<span class="lbl">Play</span><div class="grp fl"><button data-f="jo">“jo”</button><button data-f="jox">“jox” · no one</button><button data-f="clear">“jo”, then clear</button></div>
+    <span class="lbl">Server</span><div class="grp lat"><button data-l="150">150ms</button><button data-l="500" class="on">500ms</button><button data-l="1200">1.2s</button></div>
+    <span class="lbl">Speed</span><div class="grp spd"><button data-s="1" class="on">1×</button><button data-s="4">¼×</button></div>` +
+    (v.failToggle ? `<span class="lbl">Search</span><div class="grp fail"><button data-x="0" class="on">Works</button><button data-x="1">Fails</button></div>` : '');
+  const log = document.createElement('div'); log.className = 'log';
+  frame.after(rail); rail.after(log);
+  const c = {v, frame, ls:frame.querySelector('.pls'), inp:frame.querySelector('input'), fic:frame.querySelector('.fic'), log,
+    q:'', users:RECENTS, loading:false, shownAt:null, S:1, lat:500, els:new Map(), timers:new Set(), cache:{'':RECENTS}, req:0, events:[], t0:0, lastInput:0,
+    view:null, resultsFor:'', errorFor:null, hold:false, fail:false};
+  if(v.failToggle) rail.querySelector('.fail').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; c.fail = b.dataset.x === '1'; on(b); });
+  c.ls.addEventListener('click', e => { if(e.target.closest('[data-retry]')){ c.hold = false; search(c, 0); } });
+  c.inp.addEventListener('input', () => {
+    c.hold = false;
+    if(performance.now() - c.lastInput > 2000) resetLog(c);
+    c.lastInput = performance.now(); setQuery(c, c.inp.value);
+  });
+  rail.querySelector('.lat').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; c.lat = +b.dataset.l; on(b); });
+  rail.querySelector('.spd').addEventListener('click', e => { const b = e.target.closest('button'); if(!b) return; c.S = +b.dataset.s; on(b); });
+  rail.querySelector('.fl').addEventListener('click', e => { const b = e.target.closest('button'); if(b) play(c, b.dataset.f); });
+  render(c, true);
+  log.innerHTML = '<span class="hint">Play a path or type to log what moves.</span>';
+  return c;
+}
+const on = b => [...b.parentNode.children].forEach(x => x.classList.toggle('on', x === b));
+const T = (c, fn, ms) => { const id = setTimeout(() => { c.timers.delete(id); fn(); }, ms * c.S); c.timers.add(id); return id; };
+const now = c => performance.now() / c.S;
+
+/* the hook: debounce, request, steady loading (no placeholder under 300ms, held 400ms once shown) */
+function setQuery(c, q){
+  c.q = q.slice(0, 100);
+  if(c.v.clear) c.users = [];
+  else if(c.v.cache && c.cache[c.q.trim()]){
+    c.users = c.cache[c.q.trim()]; c.resultsFor = c.q.trim(); c.errorFor = null;
+    if(c.v.fresh){ clearTimeout(c.debT); c.req++; c.loading = false; render(c); return; }
+  }
+  search(c, c.q.trim() ? 250 : 0);
+}
+function search(c, debounce){
+  c.loading = true;
+  clearTimeout(c.debT); c.timers.delete(c.debT);
+  const id = ++c.req, term = c.q.trim();
+  c.debT = T(c, () => T(c, () => {
+    if(id !== c.req || c.hold) return;
+    if(c.fail && term){ c.errorFor = term; }
+    else { c.users = server(term); c.cache[term] = c.users; c.errorFor = null; }
+    c.resultsFor = term; c.loading = false; render(c);
+  }, c.lat), debounce);
+  render(c);
+}
+function steady(c){
+  if(c._l === c.loading && c._s === c.shownAt) return;
+  c._l = c.loading; c._s = c.shownAt;
+  clearTimeout(c.sT); c.timers.delete(c.sT);
+  if(c.loading){ if(c.shownAt === null) c.sT = T(c, () => { c.shownAt = now(c); render(c); }, 300); }
+  else if(c.shownAt !== null) c.sT = T(c, () => { c.shownAt = null; render(c); }, Math.max(0, 400 - (now(c) - c.shownAt)));
+}
+
+function render(c, silent){
+  steady(c);
+  c.placeholder = c.shownAt !== null; c.pending = c.loading || c.placeholder;
+  const blocks = c.v.blocks(c);
+  c.fic.classList.toggle('busy', !!c.busyIcon);
+  reconcile(c, blocks, silent);
+  if(c.v.onRender) c.v.onRender(c);
+}
+
+/* keyed list diff: leavers become absolute ghosts, survivors FLIP when the variation asks for it */
+function reconcile(c, blocks, silent){
+  const box = c.ls, S = c.S, pos = new Map();
+  c.els.forEach((el, k) => pos.set(k, el.offsetTop));
+  const keys = new Set(blocks.map(b => b.key)), prev = c.sig || [];
+  const left = [];
+  c.els.forEach((el, k) => { if(!keys.has(k)) left.push([k, el]); });
+  left.forEach(([k, el]) => {
+    c.els.delete(k);
+    if(el._exit && !silent){
+      el.classList.add('ghost'); el.style.top = pos.get(k) + 'px'; box.appendChild(el);
+      el._exit(el, S).onfinish = () => el.remove();
+    } else el.remove();
+  });
+  const rolled = [];
+  blocks.forEach((b, i) => {
+    let el = c.els.get(b.key); const fresh = !el;
+    if(fresh){ el = document.createElement('div'); el.dataset.k = b.key; }
+    if(b.roll){
+      if(fresh){ el.innerHTML = `<div class="pstat"><span class="rl"><span>${esc(b.text)}</span></span></div>`; }
+      else if(el._mode !== b.mode){ roll(el, b.text, S); rolled.push(b); }
+      else el.querySelector('.rl>span:last-child').textContent = b.text;
+      el._mode = b.mode;
+    } else if(el._html !== b.html){ el.innerHTML = b.html; el._html = b.html; }
+    el._exit = b.exit;
+    if(box.children[i] !== el) box.insertBefore(el, box.children[i] || null);
+    c.els.set(b.key, el);
+    if(fresh && b.enter && !silent) b.enter(el, S);
+  });
+  let moved = 0;
+  if(c.v.flip && !silent) c.els.forEach((el, k) => {
+    if(!pos.has(k)) return;
+    const d = pos.get(k) - el.offsetTop;
+    if(Math.abs(d) > .5){ moved++; el.animate([{transform:`translateY(${d}px)`}, {transform:'none'}], {duration:300*S, easing:EZ}); }
+  });
+  c.sig = blocks;
+  if(!silent) logChange(c, prev, blocks, moved, rolled);
+}
+function roll(el, text, S){
+  const rl = el.querySelector('.rl'), old = rl.lastElementChild, nu = document.createElement('span');
+  nu.textContent = text; rl.appendChild(nu);
+  old.animate([{transform:'none', opacity:1}, {transform:'translateY(-100%)', opacity:0}], {duration:260*S, easing:EZ, fill:'forwards'}).onfinish = () => old.remove();
+  nu.animate([{transform:'translateY(100%)', opacity:0}, {transform:'none', opacity:1}], {duration:300*S, delay:40*S, easing:EZ, fill:'backwards'});
+}
+
+/* ───── what-moved log ───── */
+function resetLog(c){ c.events = []; c.t0 = now(c); drawLog(c); }
+function logChange(c, prev, next, moved, rolled){
+  if(!c.t0) return;
+  const pk = new Map(prev.map(b => [b.key, b])), nk = new Map(next.map(b => [b.key, b]));
+  const parts = [];
+  const rowsOut = prev.filter(b => b.kind === 'row' && !nk.has(b.key)).length, rowsIn = next.filter(b => b.kind === 'row' && !pk.has(b.key)).length;
+  prev.forEach(b => { if(b.kind !== 'row' && !nk.has(b.key)) parts.push('−' + b.label); });
+  if(rowsOut) parts.push(`−${rowsOut} row${rowsOut > 1 ? 's' : ''}`);
+  next.forEach(b => { if(b.kind !== 'row' && !pk.has(b.key)) parts.push('+' + b.label); });
+  if(rowsIn) parts.push(`+${rowsIn} row${rowsIn > 1 ? 's' : ''}`);
+  if(moved) parts.push(`${moved} slide${moved > 1 ? '' : 's'} up`);
+  const swaps = next.filter(b => b.kind === 'label' && pk.has(b.key) && pk.get(b.key).label !== b.label);
+  const t = Math.round(now(c) - c.t0);
+  if(parts.length) c.events.push({t, text:parts.join(', ')});
+  swaps.forEach(b => c.events.push({t, text:`${pk.get(b.key).label} → ${b.label}`, ip:1}));
+  rolled.forEach(b => c.events.push({t, text:`rolls to ${b.label}`, ip:1}));
+  drawLog(c);
+}
+function drawLog(c){
+  const n = c.events.filter(e => !e.ip).length;
+  c.log.innerHTML = `<span class="cnt">${n} layout change${n === 1 ? '' : 's'}</span>` +
+    c.events.map(e => `<span class="ev${e.ip ? ' ip' : ''}"><s>${(e.t/1000).toFixed(2)}s</s>${esc(e.text)}${e.ip ? ' · in place' : ''}</span>`).join('');
+}
+
+/* ───── scripted paths ───── */
+function reset(c){
+  c.timers.forEach(clearTimeout); c.timers.clear(); c.req++;
+  c.q = ''; c.inp.value = ''; c.users = RECENTS; c.loading = false; c.shownAt = null; c._l = c._s = undefined;
+  c.cache = {'':RECENTS}; c.view = null; c.resultsFor = ''; c.errorFor = null; c.hold = false;
+  c.ls.querySelectorAll('.ghost').forEach(g => g.remove());
+  c.t0 = 0; render(c, true);
+}
+function typeText(c, text, at){
+  [...text].forEach((ch, i) => T(c, () => { c.inp.value += ch; setQuery(c, c.inp.value); }, at + i * 110));
+  return at + text.length * 110;
+}
+function play(c, f){
+  reset(c);
+  T(c, () => {
+    resetLog(c);
+    const end = typeText(c, f === 'jox' ? 'jox' : 'jo', 0);
+    if(f === 'clear') T(c, () => { c.inp.value = ''; setQuery(c, ''); }, end + 1700);
+  }, 350);
+}
+
+/* ───── B's state machine ───── */
+const SM_NODES = [
+  ['opening',  20, 150, 'Opening',  'recents query · unchanged'],
+  ['groups',  270, 150, 'Groups',   'Party + Recents'],
+  ['skeleton',540, 150, 'Skeleton', 'loading, no cached answer'],
+  ['results', 850,  52, 'Results',  'rows, room-labelled'],
+  ['empty',   850, 150, 'No one',   'one line, row slot'],
+  ['error',   850, 248, 'Error',    'one line + Retry']
+];
+const SM_EDGES = [
+  ['og', 'M190,182 H262', [226,172,'recents land']],
+  ['gs', 'M440,172 H532', [486,162,'type']],
+  ['sg', 'M540,194 H448', [494,212,'clear']],
+  ['sr', 'M710,168 C782,168 782,84 842,84', [776,112,'answer']],
+  ['se', 'M710,182 H842', [770,174,'no one']],
+  ['sx', 'M710,196 C782,196 782,280 842,280', [776,262,'fails']],
+  ['cg', 'M935,332 C935,378 355,378 355,222', [645,376,'clear · back to the groups']],
+  ['cs', 'M830,300 C760,330 640,300 625,222', [707,322,'type again / Retry']]
+];
+(function drawMachine(){
+  const svg = document.querySelector('.sm-svg');
+  const arrow = k => `<marker id="ar${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ar${k ? ' k' : ''}" d="M0,0 L10,5 L0,10 z"/></marker>`;
+  let h = `<defs>${arrow('')}${arrow('k')}</defs>`;
+  h += `<rect class="cl" x="830" y="14" width="210" height="318" rx="16"/><text class="ct" x="846" y="38">Answer</text>`;
+  SM_EDGES.forEach(([id, d, ...labels]) => {
+    const anchor = 'middle';
+    h += `<g class="eg" data-e="${id}"><path d="${d}" marker-end="url(#ar)"/>${labels.map(([x, y, t]) => `<text x="${x}" y="${y}" text-anchor="${anchor}">${esc(t)}</text>`).join('')}</g>`;
+  });
+  SM_NODES.forEach(([id, x, y, t, d]) => {
+    h += `<g class="nd" data-s="${id}" tabindex="0" role="button" aria-label="Show ${t}"><rect x="${x}" y="${y}" width="170" height="64" rx="12"/><text class="t" x="${x+16}" y="${y+27}">${t}</text><text class="d" x="${x+16}" y="${y+46}">${esc(d)}</text></g>`;
+  });
+  svg.innerHTML = h;
+  const go = el => { const c = CANVASES.find(x => x.v.sec === 'v-b'); jump(c, el.dataset.s); };
+  svg.addEventListener('click', e => { const n = e.target.closest('.nd'); if(n) go(n); });
+  svg.addEventListener('keydown', e => { const n = e.target.closest('.nd'); if(n && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); go(n); } });
+})();
+const EDGE_FOR = {'opening>groups':'og', 'groups>skeleton':'gs', 'skeleton>groups':'sg', 'skeleton>results':'sr', 'skeleton>empty':'se', 'skeleton>error':'sx',
+  'results>groups':'cg', 'empty>groups':'cg', 'error>groups':'cg', 'results>skeleton':'cs', 'empty>skeleton':'cs', 'error>skeleton':'cs'};
+const CLUSTER = new Set(['results', 'empty', 'error']);
+function syncMachine(c){
+  const svg = document.querySelector('.sm-svg'); if(!svg) return;
+  const st = bState(c), prev = c.smPrev;
+  svg.querySelectorAll('.nd').forEach(n => n.classList.toggle('on', n.dataset.s === st.s));
+  svg.querySelector('.cl').classList.toggle('on', CLUSTER.has(st.s));
+  const hot = prev && prev.s !== st.s && !c.smQuiet ? EDGE_FOR[prev.s + '>' + st.s] : null;
+  if(hot){
+    svg.querySelectorAll('.eg').forEach(g => g.classList.toggle('hot', g.dataset.e === hot));
+    clearTimeout(c.smT); c.smT = setTimeout(() => svg.querySelectorAll('.eg.hot').forEach(g => g.classList.remove('hot')), 1400);
+  }
+  svg.querySelectorAll('.eg path').forEach(p => p.setAttribute('marker-end', p.parentNode.classList.contains('hot') ? 'url(#ark)' : 'url(#ar)'));
+  c.smPrev = st;
+}
+/* put B's canvas straight into a state */
+function jump(c, s){
+  c.smQuiet = true; reset(c); resetLog(c);
+  document.querySelectorAll('.sm-svg .eg.hot').forEach(g => g.classList.remove('hot'));
+  const typeNow = q => { c.inp.value = q; setQuery(c, q); };
+  if(s === 'opening'){ c.cache = {}; c.users = []; search(c, 0); }
+  else if(s === 'skeleton'){ c.hold = true; typeNow('jo'); }
+  else if(s === 'results'){ c.cache.jo = server('jo'); typeNow('jo'); }
+  else if(s === 'empty'){ c.cache.jox = []; typeNow('jox'); }
+  else if(s === 'error'){ c.inp.value = c.q = 'jo'; c.resultsFor = c.errorFor = 'jo'; render(c); }
+  c.smQuiet = false;
+  c.inp.focus({preventScroll:true});
+}
+
+const CANVASES = VARS.map(build);
+
+/* ───── Pick menus ───── */
+const ACTIONS = [
+  ['Explore from this', 'Add variations in this direction', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and apply your changes', id => `Remix ${id} in ${FILE}:`],
+  ['Settle on this', 'Make this the direction', id => `Settle on ${id} in ${FILE}`]
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded', 'false'); } }); }
+function legacyCopy(text){
+  const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(e){} t.remove(); return ok;
+}
+async function copyText(text){
+  try { if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; } } catch(e){}
+  return legacyCopy(text);
+}
+document.querySelectorAll('section.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+  head.appendChild(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  ACTIONS.forEach(([label, hint, make]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem');
+    b.innerHTML = `<b>${label}</b><span>${hint}</span>`;
+    b.addEventListener('click', async () => {
+      const text = make(id); closeAll(); btn.focus();
+      const ok = await copyText(text);
+      out.hidden = false;
+      out.innerHTML = ok ? '<code></code><span class="copied">Copied</span>' : '<input readonly aria-label="Prompt">';
+      if(ok) out.querySelector('code').textContent = text; else { const inp = out.querySelector('input'); inp.value = text; inp.focus(); inp.select(); }
+    });
+    menu.appendChild(b);
+  });
+  head.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const open = menu.hidden; closeAll(p); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', ev => ev.stopPropagation());
+});
+document.addEventListener('click', () => closeAll());
+document.addEventListener('keydown', ev => {
+  if(ev.key !== 'Escape') return;
+  const open = pickers.find(p => !p.menu.hidden);
+  if(open){ closeAll(); open.btn.focus(); }
+});
+
+/* ───── minimap ───── */
+const mm = document.querySelector('.mm');
+const secs = [...document.querySelectorAll('section.var')];
+secs.forEach(sec => {
+  const a = document.createElement('a'); a.href = '#' + sec.id;
+  a.innerHTML = `<i></i><span><b>${sec.dataset.id}</b>${esc(sec.dataset.name)}</span>`;
+  a.addEventListener('click', ev => { ev.preventDefault(); sec.scrollIntoView({behavior:'smooth', block:'start'}); });
+  mm.appendChild(a);
+});
+function syncMM(){
+  let best = 0, bestD = Infinity;
+  secs.forEach((s, k) => { const d = Math.abs(s.getBoundingClientRect().top - 24); if(d < bestD){ bestD = d; best = k; } });
+  [...mm.children].forEach((a, k) => a.classList.toggle('on', k === best));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+</script>
+</body>
+</html>

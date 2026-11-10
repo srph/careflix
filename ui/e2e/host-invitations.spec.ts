@@ -221,11 +221,15 @@ test('search ignores late responses and request failures have working retries', 
   let release: () => void
   fixture.heldSearches.set('Joy', new Promise<void>(resolve => { release = resolve }))
   const input = page.getByRole('combobox', { name: 'Search for your friends by username' })
+  const searchSent = page.waitForRequest(request => request.url().includes('search=Joy'))
   await input.fill('Joy')
-  // Search is its own list: the skeleton replaces the groups at once, with no headings.
+  // The list follows the search query, which waits out the debounce: the groups stay while you type...
+  await expect(panel.getByText('Party', { exact: true })).toBeVisible()
+  await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)
+  // ...then the search goes out and its own list (no headings) shows the skeleton until it answers.
+  await searchSent
   await expect(panel.locator('.host-invite-skeletons')).toBeVisible()
   await expect(panel.getByText('Party', { exact: true })).toHaveCount(0)
-  await page.waitForRequest(request => request.url().includes('search=Joy'))
   await input.fill('Leo')
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
   await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)

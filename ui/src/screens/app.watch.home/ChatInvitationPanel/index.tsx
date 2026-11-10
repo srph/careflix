@@ -36,7 +36,8 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
   const list = useRef<HTMLDivElement>(null)
   useEffect(() => { input.current?.focus({ preventScroll: true }) }, [])
 
-  // With text in the field the panel shows only that search's answer; empty, it shows Party and Recents.
+  // The list shows the search query's state, and the query runs on the debounced term: while you type,
+  // whatever's on screen stays until the search goes out. With no term it shows Party and Recents.
   const [text, setText] = useState('')
   const [debounced, setDebounced] = useState('')
   const trimmed = text.trim()
@@ -44,11 +45,12 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
     const timer = setTimeout(() => setDebounced(trimmed), trimmed ? DEBOUNCE_MS : 0)
     return () => clearTimeout(timer)
   }, [trimmed])
-  // A term that's already cached answers at once instead of waiting out the debounce.
+  // An emptied field goes back to the groups at once, and a term that's already cached answers at once,
+  // instead of waiting out the debounce.
   const term = !trimmed ? '' : client.getQueryData(inviteSearchKey(party.id, trimmed)) ? trimmed : debounced
   const recents = useInviteRecentsQuery(party.id)
   const search = useInviteSearchQuery(party.id, term)
-  const view = trimmed ? searchView(trimmed, term, search) : null
+  const view = term ? searchView(search) : null
   const viewKey = !view ? 'groups' : view.kind === 'skeleton' ? 'search' : `search-${view.kind}-${term}`
   useEffect(() => { list.current?.scrollTo({ top: 0 }) }, [viewKey])
 
@@ -63,7 +65,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
   const people = new Map<string, AppUser>(Array.from(invitations.history.values(), invitation => [String(invitation.recipient.id), invitation.recipient]))
   recents.data?.forEach(user => people.set(String(user.id), user))
   party.members.forEach(member => people.set(String(member.id), member))
-  if (!trimmed) {
+  if (!view) {
     const place = (id: string, group: Placement['group']) => {
       if (!placements.current.has(id)) placements.current.set(id, { group, member: memberIds.has(id) })
     }
@@ -94,7 +96,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
   // has run, late rows just arrive.
   const openedAt = useRef(performance.now())
   const groupsCascade = useRef(true)
-  if (trimmed) groupsCascade.current = false
+  if (view) groupsCascade.current = false
   const cascade = (index: number) => {
     const delay = PANEL_FADE + index * .032 - (performance.now() - openedAt.current) / 1000
     return groupsCascade.current && delay > 0 ? {

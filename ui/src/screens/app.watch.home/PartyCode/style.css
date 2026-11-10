@@ -6,7 +6,8 @@
 .watch-party-code i { color: var(--color-black-5); font-size: 14px; }
 .watch-party-code .is-copied { color: #65d6ad; }
 .watch-party-code-icon { display: inline-grid; place-items: center; width: 16px; height: 16px; }
-.watch-party-code-icon > i { grid-area: 1 / 1; }
+/* Keep each icon on its own layer: centred in the cell it sits on a half pixel, and without this it snaps a pixel over the moment the spring ends. */
+.watch-party-code-icon > i { grid-area: 1 / 1; will-change: transform; }
 .watch-party-code-feedback { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* Chip: the code and a copy icon in the chat header. */

@@ -10,6 +10,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import ChatStatus from '../ChatStatus'
 import { isJoinActivity } from '../ChatStatus/status'
 import useTypingStatus from './useTypingStatus'
+import useTransientState from '~/hooks/useTransientState'
 import PartyCode from '../PartyCode'
 
 import { usePropRef } from '~/hooks/usePropRef'
@@ -168,9 +169,7 @@ function ChatWidget(props: Props) {
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
   const typing = useTypingStatus(props.party.id, auth.data)
   // A friend who just arrived; the status row shows their hype line for a few seconds.
-  const [joined, setJoined] = useState<AppUser | null>(null)
-  const joinedTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
-  useEffect(() => () => clearTimeout(joinedTimer.current), [])
+  const [joined, showJoined] = useTransientState<AppUser | null>(null, JOIN_FLASH_MS)
 
   useAsyncEffect(
     async () => {
@@ -230,9 +229,7 @@ function ChatWidget(props: Props) {
 
     const activity = event.log.type === 'activity' ? event.log.activity : null
     if (isJoinActivity(activity) && String(activity.user.id) !== String(auth.data.id)) {
-      setJoined(activity.user)
-      clearTimeout(joinedTimer.current)
-      joinedTimer.current = setTimeout(() => setJoined(null), JOIN_FLASH_MS)
+      showJoined(activity.user)
     }
 
     if (event.log.type === 'message') typing.clear(event.log.message.user.id)

@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reaction Cooldown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}.mm{display:none}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.cards code{font:12.5px ui-monospace,Menlo,monospace;background:var(--code);padding:1px 5px;border-radius:5px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.var-h .from{font-size:13px;color:var(--mut)}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .copied{color:var(--good);font-weight:600}
+.states{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px}
+.states figure{margin:0}
+.states figcaption{margin-top:6px;font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.frame{position:relative;height:460px;margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#10171E;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.rail .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-left:6px}
+.rail .lbl:first-child{margin-left:0}
+.rail .grp{display:flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:none;border:0;border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.rail .grp button:hover{background:var(--code)}
+.pm{display:inline-flex;align-items:center;gap:8px;margin-left:auto;font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums}
+.pm .cells{display:flex;gap:2px}
+.pm .cells i{width:7px;height:14px;border-radius:2px;background:var(--line)}
+.pm .cells i.on{background:var(--ink)}
+.pm .cells.full i.on{background:var(--bad)}
+.pm b{color:var(--ink);font-weight:600}
+.pm .rj.bad{color:var(--bad)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:300px}
+.mm a.on span{color:var(--ink)}
+
+/* ───────────── Mockup: the Care.tv watch room ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;--ez:cubic-bezier(.2,.8,.2,1);
+  position:relative;background:var(--n2);color:#fff;font-family:'halyard-display','Outfit',sans-serif;font-size:14px;line-height:1.4;-webkit-font-smoothing:antialiased}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit;-webkit-tap-highlight-color:transparent}
+.mk p{margin:0}
+.mk .av{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:10.5px;font-style:normal;flex:none}
+.mk.room{display:grid;grid-template-columns:minmax(0,1fr) 320px;height:100%;overflow:hidden;background:var(--n1)}
+.mk.sp{width:320px;padding:30px 0 2px;border-radius:12px;border:1px solid var(--line)}
+
+/* video column */
+.mk .vid{position:relative;min-width:0;background:#000;overflow:hidden}
+.mk .still{position:absolute;inset:0;background:
+  radial-gradient(14% 24% at 74% 30%,#ffd9a0 0%,#f2a65a66 35%,transparent 72%),
+  radial-gradient(50% 70% at 72% 38%,#c9874a2e,transparent 70%),
+  linear-gradient(180deg,#24344b 0%,#172536 52%,#0c141d 100%)}
+.mk .still::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 90% at 50% 45%,transparent 55%,#000b)}
+.mk .subt{position:absolute;left:0;right:0;bottom:9%;z-index:1;text-align:center;font:600 19px/1.3 'Outfit',sans-serif;text-shadow:0 1px 3px #000,0 0 12px #000a}
+.mk .fx{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;container-type:size}
+
+/* floats, as built in ReactionLayer */
+.mk .fl{position:absolute;bottom:18px;right:calc(24px + var(--x) * min(260px, 35cqw));animation:rRise var(--d) var(--ease) forwards,rFade var(--d) linear forwards}
+.mk .fl>.drift{display:flex;flex-direction:column;align-items:center;animation:rDrift var(--d) ease-in-out forwards}
+.mk .fl .emoji{display:block;font-size:var(--size);line-height:1;filter:drop-shadow(0 3px 8px #0008);animation:rPop .6s cubic-bezier(.34,1.56,.64,1) backwards}
+.mk .fl .name{max-width:120px;margin-top:5px;padding:3px 9px;overflow:hidden;border-radius:11px;background:#fff;box-shadow:0 3px 10px -2px #0008;color:#10171E;font-size:11.5px;font-weight:700;line-height:1.2;text-overflow:ellipsis;white-space:nowrap;animation:rName .4s cubic-bezier(.34,1.4,.64,1) .18s backwards}
+.mk .fl .name b{color:var(--pk);font-weight:800}
+.mk .fl .name b.pop{display:inline-block;animation:bdPop .3s var(--ez)}
+.mk .fl .emoji.pulse{animation:bdPop .28s var(--ez)}
+@keyframes rRise{from{transform:translateY(0)}to{transform:translateY(calc(-1 * min(var(--rise) * 1cqh, 300px)))}}
+@keyframes rFade{0%{opacity:0}5%{opacity:1}60%{opacity:1}100%{opacity:0}}
+@keyframes rDrift{0%{transform:none}50%{transform:translateX(var(--drift)) rotate(var(--tilt))}100%{transform:translateX(var(--drift-end)) rotate(calc(var(--tilt) * -.5))}}
+@keyframes rPop{from{transform:scale(0)}}
+@keyframes rName{from{opacity:0;transform:translateY(-8px) scale(.6)}}
+
+/* chat column (ChatWidget) */
+.mk .chat{position:relative;display:flex;flex-direction:column;min-height:0;background:var(--n2)}
+.mk .cano{display:flex;align-items:center;gap:8px;padding:12px 12px 8px 14px}
+.mk .faces{display:flex;margin-right:auto}
+.mk .cf{position:relative;display:inline-flex}
+.mk .cf+.cf{margin-left:-8px}
+.mk .cf .av{box-shadow:0 0 0 2px var(--n2)}
+.mk .cf .dot{position:absolute;right:-2px;bottom:-2px;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:0 0 0 2px var(--n2)}
+.mk .code{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px 0 12px;border-radius:15px;background:#ffffff0d;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mk .code i{color:var(--n5)}
+.mk .cbtn{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#ffffff14;font-size:13px;flex:none}
+.mk .msgs{flex:1;min-height:0;overflow:hidden;padding:2px 12px 8px;display:flex;flex-direction:column;justify-content:flex-end}
+.mk .mg{display:flex;gap:8px;margin:8px 0}
+.mk .mg>.av{margin-top:19px}
+.mk .mg .nm{margin:0 0 2px 4px;font-size:12px;color:var(--n5)}
+.mk .msg{display:inline-block;padding:7px 12px;font-size:13.5px;background:var(--n3);border-radius:18px}
+.mk .mg.me{justify-content:flex-end}
+.mk .mg.me .msg{background:var(--pk)}
+.mk .cbar{flex:none;margin:4px 10px 10px;background:var(--n3);border-radius:14px;box-shadow:0 0 0 1px #ffffff0d}
+.mk .st{display:flex;align-items:center;gap:7px;height:32px;padding:0 6px 0 15px;font-size:12px;color:var(--n5);white-space:nowrap;overflow:hidden}
+.mk .st b{color:#fff;font-weight:600}
+.mk .st>.fa{flex:none;font-size:10px;color:var(--pk)}
+.mk .inp{display:flex;align-items:center;gap:4px;height:44px;padding:0 6px 0 15px;background:var(--n2);border-radius:14px;box-shadow:0 0 0 1px #ffffff14;color:var(--n5);font-size:13.5px}
+.mk .inp span{flex:1}
+.mk .send{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--pk);color:#fff;font-size:13px}
+
+/* ───── the reaction row (ReactionRow), shared ───── */
+.mk .qrow{position:relative;flex:none;display:flex;justify-content:space-between;margin:-4px 14px 8px}
+.mk .qrow>button{position:relative;display:grid;place-items:center;width:40px;height:36px;border-radius:10px;font-size:20px;line-height:1}
+.mk .qrow>button>.e{display:block;transition:transform .34s cubic-bezier(.34,1.56,.64,1),opacity .2s,filter .2s}
+@media (hover:hover){.mk .qrow>button:hover>.e{transform:scale(1.22)}}
+.mk .qrow>button:active>.e,.mk .qrow>button.press>.e{transform:scale(.86);transition:transform .18s cubic-bezier(.3,0,.5,1),opacity .2s,filter .2s}
+.mk .qrow>button:focus-visible{outline:3px solid #C2196E;outline-offset:0}
+.mk .qrow .bd,.mk .qrow .bar,.mk .qrow .tp{display:none}
+/* the shared "not yet" wobble on a denied tap */
+.mk .qrow>button.no{animation:no .32s ease-in-out}
+@keyframes no{20%{transform:translateX(-3px)}45%{transform:translateX(3px)}70%{transform:translateX(-2px)}}
+
+/* A · MOBA ability cooldown: a clockwise sweep uncovers every emoji */
+.mk .v-A>button::after{content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  background:conic-gradient(transparent calc((1 - var(--cd, 0)) * 1turn), rgba(9,13,18,.72) 0);opacity:0;transition:opacity .12s}
+.mk .v-A.cool>button::after{opacity:1}
+.mk .v-A.cool>button>.e{opacity:.5;filter:grayscale(1);transform:scale(.9)}
+.mk .v-A.flash>button>.e{animation:ready .45s cubic-bezier(.34,1.56,.64,1)}
+.mk .v-A.flash>button::before{content:"";position:absolute;inset:0;border-radius:10px;box-shadow:inset 0 0 0 1.5px #fff;animation:ring .45s ease-out forwards;pointer-events:none}
+@keyframes ready{40%{transform:scale(1.28)}}
+@keyframes ring{from{opacity:.9}to{opacity:0;transform:scale(1.15)}}
+
+/* B · ability charges: five segments that spend and refill one at a time */
+.mk .v-B .bar{display:flex;gap:3px;position:absolute;left:8px;right:8px;bottom:-5px;height:3px;opacity:0;transition:opacity .3s}
+.mk .v-B.show .bar{opacity:1;transition:opacity .15s}
+.mk .v-B .bar i{flex:1;border-radius:2px;background:linear-gradient(90deg,#fff calc(var(--f, 1) * 100%),#ffffff1f 0)}
+.mk .v-B.empty>button>.e{opacity:.55}
+.mk .v-B.shake{animation:no .32s ease-in-out}
+
+/* C · weapon overheat: a heat line fills, locks for 2s when full */
+.mk .v-C .bar{display:block;position:absolute;left:8px;right:8px;bottom:-5px;height:3px;border-radius:2px;background:#ffffff14;overflow:hidden;opacity:calc(var(--h, 0) * 4);transition:opacity .2s}
+.mk .v-C .bar i{display:block;height:100%;width:calc(var(--h, 0) * 100%);border-radius:2px;background:#fff;transition:background .2s}
+.mk .v-C.hot .bar i{background:var(--pk)}
+.mk .v-C.oh .bar{opacity:1}
+.mk .v-C.oh .bar i{background:var(--pk);animation:pulse .5s ease-in-out infinite alternate}
+.mk .v-C.oh>button>.e{opacity:.45;filter:grayscale(1);transform:scale(.9)}
+@keyframes pulse{to{opacity:.45}}
+
+/* D · fighting-game combo counter: never blocks, taps become ×N */
+.mk .v-D .bd{display:block;position:absolute;top:-7px;right:-5px;z-index:2;min-width:22px;height:17px;padding:0 5px;border-radius:9px;background:var(--pk);color:#fff;font-size:10.5px;font-weight:800;line-height:17px;text-align:center;font-variant-numeric:tabular-nums;opacity:0;transform:scale(.4);transition:opacity .15s,transform .2s var(--ez);pointer-events:none}
+.mk .v-D>button.cmb .bd{opacity:1;transform:none}
+.mk .v-D>button.cmb .bd.pop{animation:bdPop .28s var(--ez)}
+@keyframes bdPop{40%{transform:scale(1.35)}}
+
+/* E · charged attack: hold to swell one big float; taps run out */
+.mk .v-E>button::before{content:"";position:absolute;left:50%;top:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;
+  background:conic-gradient(var(--pk) calc(var(--c, 0) * 1turn),#ffffff1f 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 2.5px),#000 calc(100% - 2px));opacity:0;transition:opacity .12s}
+.mk .v-E>button.chg::before{opacity:1}
+.mk .v-E>button.chg>.e{transform:scale(calc(1 + var(--c, 0) * .45));transition:none}
+.mk .v-E .tp{display:block;position:absolute;left:50%;bottom:calc(100% + 8px);z-index:4;padding:5px 10px;border-radius:9px;background:#fff;color:#10171E;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 6px 16px -6px #000a;pointer-events:none;
+  opacity:0;transform:translate(-50%,4px) scale(.92);transition:opacity .15s,transform .2s var(--ez)}
+.mk .v-E.hint .tp{opacity:1;transform:translate(-50%,0)}
+.mk .v-E.hint>button>.e{opacity:.55}
+.mk .v-E>button.big>.e{animation:ready .4s cubic-bezier(.34,1.56,.64,1)}
+
+/* F · bump: the emoji just squashes, and dims while out */
+.mk .v-F>button>.e{opacity:calc(.35 + var(--f, 1) * .65)}
+.mk .v-F.dim>button>.e{transform:scale(.88)}
+.mk .v-F>button.no{animation:none}
+.mk .v-F>button.no>.e{animation:bump .34s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bump{30%{transform:scale(1.08,.78) translateY(2px)}65%{transform:scale(.94,1.06)}}
+
+@media (prefers-reduced-motion:reduce){
+  .mk .fl{animation:rFade var(--d) linear forwards}
+  .mk .fl>.drift,.mk .fl .emoji,.mk .fl .name{animation:none}
+  .mk .qrow *,.mk .qrow{animation:none!important}
+}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+<header class="brief">
+  <div class="eyebrow">Care.tv · watch party reactions · follows e7a2-watch-party-reactions.html</div>
+  <h1>Let people mash reactions without tripping Pusher’s limit.</h1>
+  <div class="cards">
+    <div>Pusher accepts 10 client events a second per connection.</div>
+    <div>Past that, events get <code>4301</code> and are dropped. No lockout; the next second is fresh.</div>
+    <div>Typing pings spend the same 10.</div>
+    <div>Running out should feel like a game, not an error.</div>
+  </div>
+</header>
+<div id="vars"></div>
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from D: let a big combo grow the float your friends see.</div>
+    <div><b>Remix</b>Remix D: add F’s bump once even combos are capped.</div>
+    <div><b>Settle</b>Settle on D. One event carries the count, so the limit never shows.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/7c4e-reaction-cooldown.html';
+const FR = {Kier:'#E8368F', Leo:'#65D6AD', Mira:'#C084FC', Joyce:'#FB923C'};
+const FRIENDS = ['Leo', 'Mira', 'Joyce'];
+const RX = ['😂', '😱', '😭', '❤️', '🔥', '👀'];
+const EASES = ['cubic-bezier(.22,.61,.36,1)', 'cubic-bezier(.33,.7,.4,1)', 'cubic-bezier(.17,.5,.3,1)'];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const av = n => `<i class="av" style="--c:${FR[n]}">${n[0]}</i>`;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const restart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+const now = () => performance.now();
+const bucket = (cap, ms) => ({tok:cap, cap, ms, lt:now()});
+const refill = (b, t) => { b.tok = Math.min(b.cap, b.tok + (t - b.lt) / b.ms); b.lt = t; };
+
+/* Each variation: how a tap spends Pusher's budget (logic), and how the row shows it (view → paint). */
+const VARS = [
+  {id:'Now', name:'Every tap sends, nothing stops you', from:'Built today',
+   states:[['Every tap sends', {}]],
+   notes:[['good', 'Instant, nothing in the way.'], ['bad', 'Mash past 10 a second and friends silently miss the rest.']],
+   L:{init:() => ({}), tap(c, s, i, t){ c.send(t); c.float(i); }, view:() => ({})}},
+
+  {id:'A', name:'Ability cooldown sweep', from:'MOBA / MMO hotbars',
+   states:[['Ready', {cool:false, cd:0}], ['Cooling', {cool:true, cd:.75}], ['Almost back', {cool:true, cd:.2}]],
+   notes:[['good', 'Everyone knows a sweep means “wait a beat”.'], ['good', 'Seven fast taps, then 1.2s; the row flashes when it’s back.'], ['bad', 'No warning before it locks.']],
+   L:{
+     init:() => ({b:bucket(6, 300), cd:0, flash:0}),
+     tick(c, s, t){ if(s.cd){ s.b.lt = t; if(t >= s.cd){ s.cd = 0; s.b.tok = s.b.cap; s.flash = t + 450; } } else refill(s.b, t); },
+     tap(c, s, i, t){ if(s.cd) return c.deny(i); s.b.tok -= 1; c.send(t); c.float(i); if(s.b.tok < 1) s.cd = t + 1200; },
+     view:(s, t) => ({cool:!!s.cd, cd:s.cd ? clamp((s.cd - t) / 1200) : 0, flash:t < s.flash})}},
+
+  {id:'B', name:'Charges that refill one by one', from:'Hero shooter dashes',
+   states:[['Full (hidden)', {segs:[1,1,1,1,1], show:false}], ['Spending', {segs:[1,1,.4,0,0], show:true}], ['Empty', {segs:[.6,0,0,0,0], show:true, empty:true}]],
+   notes:[['good', 'You see how many you have before you run out.'], ['good', 'Bar hides when full, so a calm room sees nothing.'], ['bad', 'A meter under emoji is one more thing to read.']],
+   L:{
+     init:() => ({b:bucket(5, 400), seen:-1e9}),
+     tick(c, s, t){ refill(s.b, t); if(s.b.tok < s.b.cap) s.seen = t; },
+     tap(c, s, i, t){ if(s.b.tok < 1){ c.deny(i); c.shake(); return; } s.b.tok -= 1; c.send(t); c.float(i); },
+     view:(s, t) => ({segs:[0,1,2,3,4].map(k => clamp(s.b.tok - k)), show:s.b.tok < s.b.cap || t - s.seen < 700, empty:s.b.tok < 1})}},
+
+  {id:'C', name:'Overheat, then a short lockout', from:'Shooter overheat',
+   states:[['Cool', {h:0}], ['Hot', {h:.78, hot:true}], ['Overheated', {h:.6, hot:true, oh:true}]],
+   notes:[['good', 'Light tapping never fills it.'], ['bad', 'A 2s lockout feels like punishment mid-laugh.'], ['bad', 'Pink line alone may read as a bug.']],
+   L:{
+     init:() => ({h:0, lt:now(), oh:0}),
+     tick(c, s, t){ const dt = (t - s.lt) / 1000; s.lt = t; if(s.oh){ if(t >= s.oh){ s.oh = 0; s.h = 0; } else s.h = clamp((s.oh - t) / 2000); } else s.h = clamp(s.h - dt * .45); },
+     tap(c, s, i, t){ if(s.oh) return c.deny(i); s.h += .16; c.send(t); c.float(i); if(s.h >= 1){ s.h = 1; s.oh = t + 2000; } },
+     view:s => ({h:s.h, hot:s.h > .6, oh:!!s.oh})}},
+
+  {id:'D', name:'Combo counter: taps become ×N', from:'Fighting-game hit counter',
+   states:[['Ready', {badge:null}], ['Combo', {badge:{i:0, n:7}}], ['New combo', {badge:{i:4, n:3}}]],
+   notes:[['good', 'Never blocks. Mash all you like.'], ['good', 'Sends once, then the count at most twice a second.'], ['good', 'One float counts up, so a mash doesn’t bury the picture.'], ['good', 'Friends see “Leo ×12”, which is more fun than 12 floats.']],
+   L:{
+     init:() => ({i:-1, n:0, last:-1e9, pend:false, lastSend:-1e9}),
+     tick(c, s, t){ if(s.pend && t - s.lastSend >= 500){ c.send(t); s.lastSend = t; s.pend = false; } },
+     tap(c, s, i, t){
+       const same = s.i === i && t - s.last < 900;
+       s.n = same ? s.n + 1 : 1;
+       if(!same){ s.i = i; if(t - s.lastSend >= 150){ c.send(t); s.lastSend = t; s.pend = false; } else s.pend = true; }
+       else s.pend = true;
+       s.last = t; c.popBadge(i);
+       // One float per combo, like friends see: its count climbs; a fresh one rises every 1.4s.
+       if(same && s.el?.isConnected && t - s.elAt < 1400){ s.el.querySelector('.name').innerHTML = `You <b class="pop">×${s.n}</b>`; restart(s.el.querySelector('.emoji'), 'pulse'); }
+       else { s.el = spawn(c, RX[i], 'You', s.n); s.elAt = t; }
+     },
+     view:(s, t) => ({badge:s.n > 1 && t - s.last < 900 ? {i:s.i, n:s.n} : null})}},
+
+  {id:'E', name:'Hold to charge one big reaction', from:'Charged attacks',
+   states:[['Ready', {}], ['Charging', {chg:{i:1, c:.6}}], ['Out of taps', {hint:true}]],
+   notes:[['good', 'Big moments get a big emoji instead of a pile.'], ['good', 'A hold is one event, however long.'], ['bad', 'Holding is hidden until you run out of taps.']],
+   L:{
+     init:() => ({b:bucket(4, 500), down:null, hint:0}),
+     tick(c, s, t){ refill(s.b, t); },
+     down(c, s, i, t){ s.down = {i, t}; },
+     up(c, s, t){
+       const d = s.down; s.down = null; if(!d) return;
+       const held = t - d.t;
+       if(held < 200) return this.tap(c, s, d.i, t);
+       c.send(t); c.float(d.i, 0, clamp((held - 200) / 900)); c.big(d.i); s.hint = 0;
+     },
+     tap(c, s, i, t){ if(s.b.tok < 1){ c.deny(i); s.hint = t + 2400; return; } s.b.tok -= 1; c.send(t); c.float(i); },
+     view:(s, t) => ({chg:s.down && t - s.down.t > 200 ? {i:s.down.i, c:clamp((t - s.down.t - 200) / 900)} : null, hint:t < s.hint})}},
+
+  {id:'F', name:'Out of taps? The emoji just bumps', from:'Locked-door bump',
+   states:[['Ready', {f:1}], ['Out', {f:.3, dim:true}]],
+   notes:[['good', 'Quietest; no new parts, just the row.'], ['good', 'Dims as it runs low and brightens as it refills.'], ['bad', 'Easy to miss why your tap did nothing.']],
+   L:{
+     init:() => ({b:bucket(5, 333)}),
+     tick(c, s, t){ refill(s.b, t); },
+     tap(c, s, i, t){ if(s.b.tok < 1) return c.deny(i); s.b.tok -= 1; c.send(t); c.float(i); },
+     view:s => ({f:clamp(s.b.tok), dim:s.b.tok < 1})}},
+];
+
+/* ───── markup ───── */
+const rowHTML = id => `<div class="qrow v-${id}" role="group" aria-label="Reactions">${RX.map((e, i) =>
+  `<button type="button" data-rx="${i}" aria-label="React ${e}"><span class="e">${e}</span><b class="bd"></b></button>`).join('')}${
+  id === 'B' ? `<div class="bar">${'<i></i>'.repeat(5)}</div>` : ''}${id === 'C' ? '<div class="bar"><i></i></div>' : ''}${id === 'E' ? '<span class="tp">Out of taps. Hold one to go big</span>' : ''}</div>`;
+const barHTML = `<div class="cbar"><div class="st"><i class="fa fa-play"></i><span><b>Leo</b> played at 41:12</span></div><div class="inp"><span>Message</span><span class="send"><i class="fa fa-arrow-up"></i></span></div></div>`;
+const msg = (who, text) => who === 'Kier'
+  ? `<div class="mg me"><div><span class="msg">${text}</span></div></div>`
+  : `<div class="mg">${av(who)}<div><p class="nm">${who}</p><span class="msg">${text}</span></div></div>`;
+const roomHTML = id => `<div class="mk room">
+  <div class="vid"><div class="still"></div><div class="subt">We are not doing this again.</div><div class="fx"></div></div>
+  <aside class="chat">
+    <div class="cano"><div class="faces">${['Leo', 'Mira', 'Joyce', 'Kier'].map(n => `<span class="cf">${av(n)}<i class="dot"></i></span>`).join('')}</div>
+      <span class="code"><b>482 913</b><i class="fa fa-clone"></i></span><span class="cbtn"><i class="fa fa-user-plus"></i></span></div>
+    <div class="msgs">${msg('Leo', 'ok who picked this')}${msg('Mira', 'SHH it’s starting')}${msg('Kier', 'told you it was good')}${msg('Joyce', 'wait is that the brother??')}</div>
+    ${barHTML}${rowHTML(id)}
+  </aside>
+</div>`;
+
+function paint(id, row, v){
+  const bs = row.querySelectorAll(':scope>button');
+  if(id === 'A'){ row.classList.toggle('cool', v.cool); row.style.setProperty('--cd', v.cd.toFixed(3)); if(v.flash && !row.classList.contains('flash')) row.classList.add('flash'); else if(!v.flash) row.classList.remove('flash'); }
+  if(id === 'B'){ row.querySelectorAll('.bar i').forEach((el, k) => el.style.background = `linear-gradient(90deg,#fff ${v.segs[k] * 100}%,#ffffff1f 0)`); row.classList.toggle('show', v.show); row.classList.toggle('empty', !!v.empty); }
+  if(id === 'C'){ row.style.setProperty('--h', v.h.toFixed(3)); row.classList.toggle('hot', !!v.hot); row.classList.toggle('oh', !!v.oh); }
+  if(id === 'D') bs.forEach((b, k) => { const on = !!v.badge && v.badge.i === k; b.classList.toggle('cmb', on); if(on) b.querySelector('.bd').textContent = '×' + v.badge.n; });
+  if(id === 'E'){ bs.forEach((b, k) => { const on = !!v.chg && v.chg.i === k; b.classList.toggle('chg', on); b.style.setProperty('--c', on ? v.chg.c.toFixed(3) : 0); }); row.classList.toggle('hint', !!v.hint); }
+  if(id === 'F'){ row.style.setProperty('--f', v.f.toFixed(3)); row.classList.toggle('dim', !!v.dim); }
+}
+
+/* ───── mount ───── */
+document.getElementById('vars').innerHTML = VARS.map(v => `<section class="var" id="v-${v.id}" data-id="${v.id}" data-name="${esc(v.name)}">
+  <div class="var-h"><span class="id">${v.id}</span><h2>${esc(v.name)}</h2><span class="from">${esc(v.from)}</span></div>
+  <div class="states">${v.states.map(([l]) => `<figure><div class="mk sp">${barHTML}${rowHTML(v.id)}</div><figcaption>${esc(l)}</figcaption></figure>`).join('')}</div>
+  <div class="frame">${roomHTML(v.id)}</div>
+  <div class="rail"><span class="lbl">Simulate</span><div class="grp"><button type="button" data-sim="mash">Mash 😂 for 2s</button><button type="button" data-sim="friends">Friends react</button><button type="button" data-sim="reset">Reset</button></div>
+    <span class="lbl">Try</span><span class="rail-hint" style="font-size:13px;color:var(--mut)">${v.id === 'E' ? 'Hold an emoji' : 'Tap fast'}</span>
+    <span class="pm" aria-live="off"><span>Pusher, last second</span><span class="cells">${'<i></i>'.repeat(10)}</span><b class="n">0</b>/10 · <b class="rj">0</b> rejected</span></div>
+  <div class="notes">${v.notes.map(([t, x]) => `<div class="note ${t}">${x}</div>`).join('')}</div>
+</section>`).join('');
+
+const cs = [];
+document.querySelectorAll('section.var').forEach((sec, k) => {
+  const v = VARS[k], id = v.id, L = v.L;
+  sec.querySelectorAll('.sp .qrow').forEach((row, j) => { paint(id, row, v.states[j][1]); row.querySelectorAll('button').forEach(b => b.tabIndex = -1); });
+  const root = sec.querySelector('.room'), row = root.querySelector('.qrow'), fx = root.querySelector('.fx');
+  const pm = sec.querySelector('.pm');
+  const c = {id, L, row, fx, sends:[], rejected:0, visible:false, timers:[]};
+  c.s = L.init();
+  c.btn = i => row.children[i];
+  c.send = t => { c.sends = c.sends.filter(x => t - x < 1000); if(c.sends.length >= 10) c.rejected++; else c.sends.push(t); };
+  c.float = (i, n = 0, big = null) => spawn(c, RX[i], 'You', n, big);
+  c.deny = i => restart(c.btn(i), 'no');
+  c.shake = () => restart(row, 'shake');
+  c.popBadge = i => { const bd = c.btn(i).querySelector('.bd'); restart(bd, 'pop'); };
+  c.big = i => restart(c.btn(i), 'big');
+  c.paintMeter = t => {
+    c.sends = c.sends.filter(x => t - x < 1000);
+    const n = c.sends.length, cells = pm.querySelector('.cells');
+    cells.querySelectorAll('i').forEach((el, j) => el.classList.toggle('on', j < n));
+    cells.classList.toggle('full', n >= 10);
+    pm.querySelector('.n').textContent = n;
+    const rj = pm.querySelector('.rj'); rj.textContent = c.rejected; rj.classList.toggle('bad', c.rejected > 0);
+  };
+  cs.push(c);
+
+  const tap = i => L.tap.call(L, c, c.s, i, now());
+  if(L.down){
+    row.addEventListener('pointerdown', ev => { const b = ev.target.closest('button'); if(!b) return; ev.preventDefault(); b.setPointerCapture?.(ev.pointerId); L.down(c, c.s, +b.dataset.rx, now()); });
+    row.addEventListener('pointerup', () => L.up.call(L, c, c.s, now()));
+    row.addEventListener('pointercancel', () => { c.s.down = null; });
+    row.addEventListener('click', ev => { const b = ev.target.closest('button'); if(b && ev.detail === 0) tap(+b.dataset.rx); });
+  } else {
+    row.addEventListener('click', ev => { const b = ev.target.closest('button'); if(b) tap(+b.dataset.rx); });
+  }
+  sec.querySelectorAll('[data-sim]').forEach(b => b.addEventListener('click', () => sim(c, b.dataset.sim)));
+});
+
+function spawn(c, emoji, name, n = 0, big = null){
+  const r = Math.random, bt = (a, b) => a + r() * (b - a), side = r() < .5 ? -1 : 1;
+  const el = document.createElement('div');
+  el.className = 'fl';
+  const size = big != null ? 36 + big * 36 : bt(26, 34);
+  el.style.cssText = `--x:${r()};--d:${big != null ? bt(3.8, 4.4) : bt(2.6, 3.6)}s;--rise:${bt(50, 75)};--size:${size}px;--drift:${side * bt(8, 22)}px;--drift-end:${-side * bt(0, 16)}px;--tilt:${side * bt(0, 6)}deg;--ease:${pick(EASES)}`;
+  el.innerHTML = `<span class="drift"><span class="emoji">${emoji}</span><span class="name">${esc(name)}${n > 1 ? ` <b>×${n}</b>` : ''}</span></span>`;
+  el.addEventListener('animationend', ev => { if(ev.target === el) el.remove(); });
+  c.fx.appendChild(el);
+  while(c.fx.children.length > 24) c.fx.firstChild.remove();
+  return el;
+}
+
+function later(c, ms, fn){ c.timers.push(setTimeout(fn, ms)); }
+function sim(c, k){
+  if(k === 'reset'){
+    c.timers.forEach(clearTimeout); c.timers = []; c.fx.innerHTML = ''; c.sends = []; c.rejected = 0; c.s = c.L.init();
+    return;
+  }
+  if(k === 'mash'){
+    for(let j = 0; j < 30; j++) later(c, j * 66, () => {
+      restart(c.btn(0), 'press'); later(c, 60, () => c.btn(0).classList.remove('press'));
+      c.L.tap.call(c.L, c, c.s, 0, now());
+    });
+  }
+  if(k === 'friends'){
+    FRIENDS.forEach((f, j) => {
+      const e = pick(RX);
+      if(c.id === 'D'){
+        // One event per combo: the float arrives once, and its count climbs.
+        later(c, j * 380, () => {
+          const el = spawn(c, e, f, 0), top = 4 + Math.floor(Math.random() * 9);
+          const nm = el.querySelector('.name');
+          for(let n = 2; n <= top; n++) later(c, (n - 1) * 130, () => { nm.innerHTML = `${esc(f)} <b class="pop">×${n}</b>`; });
+        });
+      } else {
+        const times = 1 + Math.floor(Math.random() * 3);
+        for(let n = 0; n < times; n++) later(c, j * 380 + n * 220, () => spawn(c, e, f));
+      }
+    });
+  }
+}
+
+/* one loop for all rooms on screen */
+const io = new IntersectionObserver(es => es.forEach(en => { const c = cs.find(x => x.root === en.target || x.row.closest('.frame') === en.target); if(c) c.visible = en.isIntersecting; }));
+document.querySelectorAll('.frame').forEach(f => io.observe(f));
+(function loop(){
+  const t = now();
+  cs.forEach(c => {
+    if(!c.visible) return;
+    c.L.tick?.call(c.L, c, c.s, t);
+    paint(c.id, c.row, c.L.view(c.s, t));
+    c.paintMeter(t);
+  });
+  requestAnimationFrame(loop);
+})();
+
+/* ───── Pick menus ───── */
+const ACTIONS = [
+  ['Explore from this', 'Add variations in this direction', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and apply your changes', id => `Remix ${id} in ${FILE}:`],
+  ['Settle on this', 'Make this the direction', id => `Settle on ${id} in ${FILE}`]
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded', 'false'); } }); }
+function legacyCopy(text){
+  const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(e){} t.remove(); return ok;
+}
+async function copyText(text){
+  try { if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; } } catch(e){}
+  return legacyCopy(text);
+}
+document.querySelectorAll('section.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+  head.appendChild(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  ACTIONS.forEach(([label, hint, make]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem');
+    b.innerHTML = `<b>${label}</b><span>${hint}</span>`;
+    b.addEventListener('click', async () => {
+      const text = make(id); closeAll(); btn.focus();
+      const ok = await copyText(text);
+      out.hidden = false;
+      out.innerHTML = ok ? '<code></code><span class="copied">Copied</span>' : '<input readonly aria-label="Prompt">';
+      if(ok) out.querySelector('code').textContent = text; else { const inp = out.querySelector('input'); inp.value = text; inp.focus(); inp.select(); }
+    });
+    menu.appendChild(b);
+  });
+  head.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const open = menu.hidden; closeAll(p); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', ev => ev.stopPropagation());
+});
+document.addEventListener('click', () => closeAll());
+document.addEventListener('keydown', ev => {
+  if(ev.key !== 'Escape') return;
+  const open = pickers.find(p => !p.menu.hidden);
+  if(open){ closeAll(); open.btn.focus(); }
+});
+
+/* ───── minimap ───── */
+const mm = document.querySelector('.mm');
+const secs = [...document.querySelectorAll('section.var')];
+secs.forEach(sec => {
+  const a = document.createElement('a'); a.href = '#' + sec.id;
+  a.innerHTML = `<i></i><span><b>${sec.dataset.id}</b>${esc(sec.dataset.name)}</span>`;
+  a.addEventListener('click', ev => { ev.preventDefault(); sec.scrollIntoView({behavior:'smooth', block:'start'}); });
+  mm.appendChild(a);
+});
+function syncMM(){
+  let best = 0, bestD = Infinity;
+  secs.forEach((s, k) => { const d = Math.abs(s.getBoundingClientRect().top - 24); if(d < bestD){ bestD = d; best = k; } });
+  [...mm.children].forEach((a, k) => a.classList.toggle('on', k === best));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+</script>
+</body>
+</html>

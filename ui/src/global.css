@@ -48,6 +48,7 @@ html, body {
   --zindex-you-were-watching-dismiss: 103;
   --zindex-player-overlay: 500;
   --zindex-player-overlay-elements: 501;
+  --zindex-player-reactions: 540;
   --zindex-player-subtitles: 550;
   --zindex-player-state-buffered-indicator: 600;
   --zindex-player-volume-control: 700;

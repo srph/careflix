@@ -254,3 +254,43 @@
 @media (prefers-reduced-motion: reduce) {
   .watch-screen-canopy > .invite, .watch-screen-chatbar-input, .watch-screen-chatbar-input > .button { transition: none; }
 }
+
+/**
+ * .watch-screen-reactions: one-tap emoji under the composer. No hover box; the emoji itself grows, and dips while pressed.
+ */
+.watch-screen-reactions {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  margin: -4px 14px 8px;
+}
+
+.watch-screen-reactions > .reaction {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.watch-screen-reactions > .reaction > .emoji {
+  display: block;
+  transition: transform .34s cubic-bezier(.34, 1.56, .64, 1);
+}
+
+@media (hover: hover) {
+  .watch-screen-reactions > .reaction:hover > .emoji { transform: scale(1.22); }
+}
+
+.watch-screen-reactions > .reaction:focus-visible > .emoji { transform: scale(1.22); }
+
+.watch-screen-reactions > .reaction:active > .emoji {
+  transform: scale(.86);
+  transition: transform .18s cubic-bezier(.3, 0, .5, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .watch-screen-reactions > .reaction > .emoji { transition: none; }
+}

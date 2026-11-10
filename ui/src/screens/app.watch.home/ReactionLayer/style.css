@@ -1,0 +1,98 @@
+/**
+ * .reaction-layer: emoji float up the right side of the picture, each with the sender's name in a white pill.
+ */
+.reaction-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: var(--zindex-player-reactions);
+}
+
+/* The lane is the space floats rise through; it shrinks from below while the controls are up. */
+.reaction-layer > .lane {
+  position: absolute;
+  inset: 0 0 0 0;
+  container-type: size;
+  transition: bottom .2s ease;
+}
+
+.reaction-layer.is-lifted > .lane { bottom: 72px; }
+
+@media (min-width: 640px) {
+  .reaction-layer.is-lifted > .lane { bottom: 96px; }
+}
+
+.reaction-float {
+  position: absolute;
+  bottom: 18px;
+  right: calc(24px + var(--x) * min(260px, 35cqw));
+  animation: reaction-rise var(--d) var(--ease) forwards, reaction-fade var(--d) linear forwards;
+}
+
+.reaction-float > .drift {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: reaction-drift var(--d) ease-in-out forwards;
+}
+
+.reaction-float .emoji {
+  display: block;
+  font-size: var(--size);
+  line-height: 1;
+  filter: drop-shadow(0 3px 8px #0008);
+  animation: reaction-pop .6s cubic-bezier(.34, 1.56, .64, 1) backwards;
+}
+
+.reaction-float .name {
+  max-width: 120px;
+  margin-top: 5px;
+  padding: 3px 9px;
+  overflow: hidden;
+  border-radius: 11px;
+  background: var(--color-white);
+  box-shadow: 0 3px 10px -2px #0008;
+  color: var(--color-black-1);
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  animation: reaction-name-in .4s cubic-bezier(.34, 1.4, .64, 1) .18s backwards;
+}
+
+@keyframes reaction-rise {
+  from { transform: translateY(0); }
+  to { transform: translateY(calc(-1 * min(var(--rise) * 1cqh, 300px))); }
+}
+
+/* Holds full strength for most of the path, then melts out from 60%. */
+@keyframes reaction-fade {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes reaction-drift {
+  0% { transform: none; }
+  50% { transform: translateX(var(--drift)) rotate(var(--tilt)); }
+  100% { transform: translateX(var(--drift-end)) rotate(calc(var(--tilt) * -.5)); }
+}
+
+@keyframes reaction-pop {
+  from { transform: scale(0); }
+}
+
+@keyframes reaction-name-in {
+  from { opacity: 0; transform: translateY(-8px) scale(.6); }
+}
+
+/* Still fades (that's what clears each float), but no rise, drift or pop. */
+@media (prefers-reduced-motion: reduce) {
+  .reaction-float { animation: reaction-fade var(--d) linear forwards; }
+  .reaction-float > .drift,
+  .reaction-float .emoji,
+  .reaction-float .name { animation: none; }
+}

@@ -11,6 +11,8 @@ import ChatStatus from '../ChatStatus'
 import { isJoinActivity } from '../ChatStatus/status'
 import useTypingStatus from './useTypingStatus'
 import InviteStrip from './InviteStrip'
+import ReactionRow from './ReactionRow'
+import type { Reaction } from '../useReactions'
 import useTransientState from '~/hooks/useTransientState'
 import PartyCode from '../PartyCode'
 
@@ -63,6 +65,7 @@ interface Props {
   isKeyboardInfoOpen: boolean
   onOpenInvitationModal: () => void
   onCloseInvitationModal: () => void
+  onReact: (emoji: Reaction) => void
 }
 
 interface GroupedLog {
@@ -480,6 +483,8 @@ function ChatWidget(props: Props) {
             </UiPlainButton>
           </form>
         </div>
+
+        <ReactionRow onReact={props.onReact} />
 
       </motion.div>
       <AnimatePresence>

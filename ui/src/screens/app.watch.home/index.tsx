@@ -11,10 +11,13 @@ import SeasonSelectionModal from './SeasonSelectionModal'
 import MobileTitleBar from './MobileTitleBar'
 import PlayerStateBufferedIndicator from './PlayerStateBufferedIndicator'
 import KeyboardInfoModal from './KeyboardInfoModal'
+import ReactionLayer from './ReactionLayer'
+import useReactions from './useReactions'
 
 import useUpdateEffect from '~/hooks/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
+import { useAuth } from '~/contexts/Auth'
 import { useBufferState } from '~/hooks/useBufferState'
 import { useMediaMode } from '~/hooks/useMediaMode'
 import { useRouterBlock } from '~/hooks/useRouterBlock'
@@ -191,6 +194,8 @@ const reducer = (state: State, action: Action): State => {
  */
 function AppWatchHome(props: ReactComponentWrapper) {
   const context = usePartyContext()
+  const auth = useAuth()
+  const reactions = useReactions(context.party, auth.data)
   const { registerPlayer } = useInvitationOverlay()
 
   useEffect(() => {
@@ -532,6 +537,8 @@ function AppWatchHome(props: ReactComponentWrapper) {
             <SubtitleSlot video={context.party.video} isEnabled={state.isSubtitleEnabled} isPlayerOpen={state.isOpen} time={state.time} />
           )}
 
+          <ReactionLayer floats={reactions.floats} isLifted={state.isOpen} onDone={reactions.remove} />
+
           <PlayerModal
             party={context.party}
             time={state.time}
@@ -576,6 +583,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           isKeyboardInfoOpen={state.isKeyboardInfoOpen}
           onOpenInvitationModal={handleInvitationOpen}
           onCloseInvitationModal={handleInvitationClose}
+          onReact={reactions.send}
         />
       </div>
 

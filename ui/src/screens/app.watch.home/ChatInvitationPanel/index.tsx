@@ -80,19 +80,24 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
     ? view.kind === 'results' ? view.users : []
     : [...partyRows.filter(({ placement }) => !placement.member).map(({ user }) => user), ...recentRows]
 
-  // Party rows cascade in when the panel opens; coming back from a search, the groups fade in as one.
-  const groupsCascade = useRef(true)
-  if (trimmed) groupsCascade.current = false
-  const cascade = (index: number) => ({
-    initial: groupsCascade.current ? { opacity: 0, y: reducedMotion ? 0 : 12 } : false as const,
-    animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .38, delay: reducedMotion ? 0 : .11 + index * .032 } },
-    exit: { opacity: 0, y: reducedMotion ? 0 : 12, transition: { duration: reducedMotion ? 0 : .16 } }
-  })
-  // Rows fade in together where the skeletons were.
+  // Rows that show up later fade in together where the skeletons were.
   const arrive = {
     initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: reducedMotion ? 0 : .22 } },
+    animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .22 } },
     exit: { opacity: 0, transition: { duration: reducedMotion ? 0 : .16 } }
+  }
+  // When the panel opens, everything in it steps in on one staircase timed from the open, so Recents land on
+  // their step however soon their data comes. After that, or once a search has run, late rows just arrive.
+  const openedAt = useRef(performance.now())
+  const groupsCascade = useRef(true)
+  if (trimmed) groupsCascade.current = false
+  const cascade = (index: number) => {
+    const delay = .11 + index * .032 - (performance.now() - openedAt.current) / 1000
+    return groupsCascade.current && delay > 0 ? {
+      initial: { opacity: 0, y: reducedMotion ? 0 : 12 },
+      animate: { opacity: 1, y: 0, transition: { duration: reducedMotion ? 0 : .38, delay: reducedMotion ? 0 : delay } },
+      exit: { opacity: 0, y: reducedMotion ? 0 : 12, transition: { duration: reducedMotion ? 0 : .16 } }
+    } : arrive
   }
   // Groups, the skeleton and each answer swap as whole lists.
   const swap = {
@@ -140,9 +145,11 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
       </motion.label>
       <div className="host-invite-list" ref={list} aria-busy={view?.kind === 'skeleton' || (!view && recentsPending)}>
         <Autocomplete.List>
-          {/* popLayout lifts the outgoing list out of flow, so the next one fades in where it was. */}
-          <AnimatePresence mode="popLayout" initial={false}>
-            {!view && <InviteView key={viewKey} {...swap}>
+          {/* popLayout lifts the outgoing list out of flow, so the next one fades in where it was. The groups
+              skip that fade when the panel opens (their rows cascade in instead); initial={false} on the
+              presence itself would also stop that cascade. */}
+          <AnimatePresence mode="popLayout">
+            {!view && <InviteView key={viewKey} {...swap} initial={groupsCascade.current ? false : swap.initial}>
               {partyRows.length > 0 && <Autocomplete.Group>
                 <motion.div {...cascade(2)}><Autocomplete.GroupLabel className="host-invite-label">Party</Autocomplete.GroupLabel></motion.div>
                 {partyRows.map(({ user, placement }, index) => placement.member
@@ -158,11 +165,11 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
                 {/* Only the skeletons sit in presence: popLayout lifts them out of flow as they fade, so the rows
                     take their place; rows that left and came back inside it would render twice. */}
                 <AnimatePresence mode="popLayout" propagate>
-                  {recentsPending && <motion.div key="skeletons" {...arrive} exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : .18 } }}>
+                  {recentsPending && <motion.div key="skeletons" {...cascade(5)} exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : .18 } }}>
                     <InviteSkeletons />
                   </motion.div>}
                 </AnimatePresence>
-                {recentRows.map(user => person(user, arrive))}
+                {recentRows.map((user, index) => person(user, cascade(5 + index)))}
               </Autocomplete.Group>}
               {recentsFailed && <p className="host-invite-note" role="alert">Couldn’t load people. <button type="button" onClick={() => recents.refetch()}>Retry</button></p>}
             </InviteView>}

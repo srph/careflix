@@ -477,7 +477,8 @@ const VARS = [
         party.forEach(id => it.push(member('m:' + id, id)));
         if(inP) it.push(mira());
       }
-      if(c.list === 'loading'){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); [1, 2, 3, 4].forEach(n => it.push({k:'s' + n, t:'skel'})); }
+      /* steady loading (A3b2d3g2): no skeleton for a quick load; once shown it stays long enough to read */
+      if(c.list === 'loading' && (!c.V.loadFix || c.skOn)){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); [1, 2, 3, 4].forEach(n => it.push({k:'s' + n, t:'skel'})); }
       const rec = c.list === 'ready' ? RECENTS.filter(id => !(id === 'mira' && inGroup) && ok(id)) : [];
       if(rec.length){ it.push({k:'l:rec', t:'label', text: c.q ? 'People' : 'Recents'}); rec.forEach(id => it.push(id === 'mira' ? mira() : row(c, id))); }
       if(c.list === 'ready' && !rec.length && !party.length && !inP) it.push({k:'n:none', t:'note', cls:'c', html:`${IC.people}No one called “${esc(c.q)}” yet.`});
@@ -516,6 +517,8 @@ const VARS = [
      notes:[['good','One green pulse off her avatar as the button fades.'],['bad','Edges toward decoration; easy to overdo.']]},
     {...base, id:'A3b2d3g', name:'The button fades down', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fd',
      notes:[['good','Cancel sinks as it fades, put away, while Joined rolls up in the subtext.'],['good','Opposite directions read as one swap: the job’s done.'],['bad','Quiet; easy to miss if you look away.']]},
+    {...base, id:'A3b2d3g2', name:'Undo, no ring, steady loading', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:76, cls:'fd', undo:true, noRing:true, loadFix:true,
+     notes:[['good','Undo, not Cancel; the button fits INVITE, UNDO and RETRY at 76px.'],['good','No ring on her avatar; “Invited (30m)” carries the expiry.'],['good','Loads under 300ms show no skeleton; once shown it stays 400ms, then rows fade in where the skeletons were.'],['bad','Rarely, a 300–700ms load now takes 700ms.']]},
     {...base, id:'A3b2d3h', name:'A Glimm band brings the news', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', glimm:'row',
      notes:[['good','A pink-to-mint band crosses her row; Joined is already there behind it.'],['good','Glimm’s look: cosine palette, ripple, 1100ms sweep, 220ms fade.'],['bad','Glimm sweeps the whole screen; one row needs GlimmScope or our own canvas.']]},
     {...base, id:'A3b2d3i', name:'Glimm hides the regroup', m:{line:'roll', flip:false, pill:'fade'}, pills:'fixed', spin:'dots', fixW:84, cls:'fx', glimm:'panel', joinNow:true,
@@ -539,7 +542,10 @@ const VARS = [
   );
 }
 function a3Row(c, id){
-  const r = a2Row(c, id), st = c.V.pills, m = c.m;
+  let r = a2Row(c, id);
+  const st = c.V.pills, m = c.m;
+  if(c.V.undo && r.act && r.act.h === 'Cancel') r = {...r, act:{...r.act, h:'Undo'}};
+  if(c.V.noRing && r.ring === 'drain') r = {...r, ring:''};
   const jo = c.V.joined;
   if(jo && id === 'mira' && m === 'joined' && c.flash){
     if(jo === 'chip') return {...r, sub:'In the room', tone:'', act:{k:'pjoin', h:'Joined'}};
@@ -790,6 +796,11 @@ function reconcile(c, items, fresh){
       return;
     }
     if(c.forceCut){ e.remove(); return; }
+    if(c.V.loadFix && e.classList.contains('sk')){
+      const g = e.cloneNode(true); g.classList.add('ghost'); g.style.top = e.offsetTop + 'px'; e.remove(); box.appendChild(g);
+      anim(c, g, [{opacity:1}, {opacity:0}], {duration:180, fill:'forwards'}).finished.then(() => g.remove(), () => g.remove());
+      return;
+    }
     const g = e.cloneNode(true);
     g.classList.add('ghost'); g.style.top = e.offsetTop + 'px';
     e.remove(); box.appendChild(g);
@@ -808,6 +819,7 @@ function reconcile(c, items, fresh){
     prev = el;
     update(c, el, it, isNew || c.forceCut ? 'cut' : M.line);
     if(isNew && !c.forceCut && !(it.mv && moves.has(it.mv))){
+      if(c.V.loadFix && !fresh){ anim(c, el, [{opacity:0}, {opacity:1}], {duration:220, easing:'ease-out', fill:'backwards'}); return; }
       const cascade = fresh || M.cascade;
       anim(c, el, [{opacity:0, transform:`translateY(${cascade ? 12 : 6}px)`}, {opacity:1, transform:'none'}],
         {duration: cascade ? 380 : 320, delay: cascade ? 110 + (2 + Math.min(n++, 10)) * 32 : 140, easing:EZ, fill:'backwards'});
@@ -885,7 +897,19 @@ function render(c, opening){
 }
 function set(c, patch){
   const wasOpen = c.panel === 'open', prevM = c.m;
+  if(c.V.loadFix){
+    clearTimeout(c.lT2);
+    if(patch.list === 'ready' && c.list === 'loading' && c.skOn){
+      const wait = 400 / c.rate - (performance.now() - c.skAt);
+      if(wait > 0){ patch = {...patch}; delete patch.list; c.lT2 = setTimeout(() => set(c, {list:'ready'}), wait); }
+    }
+  }
+  const prevList = c.list;
   Object.assign(c, patch);
+  if(c.V.loadFix && c.list !== prevList){
+    clearTimeout(c.lT); c.skOn = false;
+    if(c.list === 'loading') c.lT = setTimeout(() => { c.skOn = true; c.skAt = performance.now(); render(c, false); }, 300 / c.rate);
+  }
   if(c.m === 'pending' && !waiting(prevM)) c.left = 1799;
   /* A2: an answer shows for 4s, then the row and strip go back to rest */
   if('m' in patch && c.m !== prevM){
@@ -1040,7 +1064,7 @@ VARS.forEach(V => {
     <div class="notes">${V.notes.map(([k, t]) => `<div class="note ${k}">${esc(t)}</div>`).join('')}</div>`;
   host.appendChild(sec);
   const st = sec.querySelector('.stage'), q = s => st.querySelector(s);
-  const c = {V, stage:st, panel:'closed', list:'ready', q:'', m:'idle', openM:'idle', left:1799, rate:1, timers:[], seen:false, flash:false, fT:0, mAt:0, jm:false, jT:0, pm:'idle', pT:0, hover:false, waitLeave:false,
+  const c = {V, stage:st, panel:'closed', list:'ready', q:'', m:'idle', openM:'idle', left:1799, rate:1, timers:[], seen:false, flash:false, fT:0, mAt:0, skOn:false, skAt:0, lT:0, lT2:0, jm:false, jT:0, pm:'idle', pT:0, hover:false, waitLeave:false,
     chips:[...sec.querySelectorAll('[data-s]')],
     e:{chat:q('.chat'), pn:q('.pn'), list:q('.pls'), pq:q('.pq'), ph:q('.ph'), agrp:q('.agrp'), wsw:q('.wsw'), ws:q('.ws'), wsav:q('.wsav'), wst:q('.wst'), wsr:q('.wsr'),
        ocw:q('.ocw'), oc:q('.oc'), actj:q('.actj')}};

@@ -48,14 +48,17 @@
 }
 
 .watch-screen-chat-content { display: flex; flex: 1; flex-direction: column; min-height: 0; }
-.host-invite-waiting { display: flex; flex: none; align-items: center; gap: 10px; margin: 0 12px 10px; padding: 7px 12px 7px 8px; border: 1px solid #e8368f33; border-radius: 12px; background: #e8368f14; color: #ffd1e6; font-size: 13px; text-align: left; }
+.host-invite-waiting-slot { flex: none; overflow: hidden; }
+.host-invite-waiting { display: flex; width: calc(100% - 24px); align-items: center; gap: 10px; margin: 0 12px 10px; padding: 7px 12px 7px 8px; border: 1px solid #e8368f33; border-radius: 12px; background: #e8368f14; color: #ffd1e6; font-size: 13px; text-align: left; transition: background-color .35s, border-color .35s, color .35s; }
 .host-invite-waiting-avatars { display: flex; flex: none; }
 .host-invite-waiting-avatars .ui-avatar + .ui-avatar { margin-left: -8px; box-shadow: 0 0 0 2px var(--color-black-2); }
-.host-invite-waiting > span:nth-child(2) { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.host-invite-waiting small { color: var(--color-black-5); font-variant-numeric: tabular-nums; }
-.host-invite-outcome { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 8px 4px; padding: 8px; border-radius: 12px; background: var(--color-black-1); color: var(--color-black-5); font-size: 12px; }
-.host-invite-outcome button { color: #ff9fcb; text-decoration: underline; }
-.host-invite-outcome small { width: 100%; color: #ff9bad; }
+.host-invite-waiting.is-muted { border-color: #ffffff14; background: #ffffff08; color: #d5dde4; }
+.host-invite-waiting-text, .host-invite-waiting-right { position: relative; height: 18px; line-height: 18px; }
+.host-invite-waiting-text { flex: 1; min-width: 0; }
+.host-invite-waiting-right { flex: none; min-width: 40px; color: var(--color-black-5); font-size: 12px; font-variant-numeric: tabular-nums; }
+.host-invite-waiting-text > span, .host-invite-waiting-right > span { position: absolute; inset: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.host-invite-waiting-right > span { text-align: right; }
+.host-invite-waiting-right .is-action { color: #ff9fcb; text-decoration: underline; }
 
 @media (min-width: 640px) {
   .watch-screen-chat {

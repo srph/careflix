@@ -5,8 +5,15 @@ import usePresence from '~/hooks/usePresence'
 import { useNow } from '~/hooks/useNow'
 import { usePartyContext } from '~/screens/app.watch/Context'
 
-type State = {
+/** How long Joined, Declined or Expired shows before the row goes back to rest. */
+export const ANSWER_MS = 4000
+
+export type InviteAnswer = 'joined' | 'declined' | 'expired'
+
+export type State = {
   history: AppPartyInvitation[]
+  /** Answers this tab saw arrive, by recipient id; each one shows for ANSWER_MS. */
+  answers: Record<string, { kind: 'joined' | 'declined'; at: number }>
   users: AppUser[]
   query: string
   loading: boolean
@@ -16,7 +23,8 @@ type State = {
   errors: Record<string, string>
 }
 type Action =
-  | { type: 'history'; invitations: AppPartyInvitation[] }
+  | { type: 'history'; invitations: AppPartyInvitation[]; at: number }
+  | { type: 'prune'; at: number }
   | { type: 'history-error'; failed: boolean }
   | { type: 'query'; query: string }
   | { type: 'loading' }
@@ -36,9 +44,33 @@ function mergeHistory(current: AppPartyInvitation[], incoming: AppPartyInvitatio
   return Array.from(byPerson.values())
 }
 
-function reducer(state: State, action: Action): State {
+// Note an answer when a waiting invite we already had turns into Joined or Declined; a new invite clears it.
+function noteAnswers(state: State, history: AppPartyInvitation[], at: number) {
+  const previous = new Map(state.history.map(invitation => [String(invitation.recipient.id), invitation]))
+  let answers = state.answers
+  for (const invitation of history) {
+    const id = String(invitation.recipient.id)
+    const before = previous.get(id)
+    if (!before || before === invitation) continue
+    if (String(before.id) !== String(invitation.id)) {
+      if (answers[id]) { answers = { ...answers }; delete answers[id] }
+    } else if (before.action === 'pending' && (invitation.action === 'accepted' || invitation.action === 'declined')) {
+      answers = { ...answers, [id]: { kind: invitation.action === 'accepted' ? 'joined' : 'declined', at } }
+    }
+  }
+  return answers
+}
+
+export function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'history': return { ...state, history: mergeHistory(state.history, action.invitations) }
+    case 'history': {
+      const history = mergeHistory(state.history, action.invitations)
+      return { ...state, history, answers: noteAnswers(state, history, action.at) }
+    }
+    case 'prune': {
+      const answers = Object.fromEntries(Object.entries(state.answers).filter(([, answer]) => answer.at + ANSWER_MS > action.at))
+      return { ...state, answers }
+    }
     case 'history-error': return { ...state, historyError: action.failed }
     case 'query': return { ...state, query: action.query, users: [], loading: true, searchError: false }
     case 'loading': return { ...state, loading: true, searchError: false }
@@ -54,11 +86,12 @@ function reducer(state: State, action: Action): State {
 export default function useHostInvitations(isOpen: boolean) {
   const context = usePartyContext()
   const [state, dispatch] = useReducer(reducer, {
-    history: context.party.invitations || [], users: [], query: '', loading: true,
+    history: context.party.invitations || [], answers: {}, users: [], query: '', loading: true,
     searchError: false, historyError: false, busy: {}, errors: {}
   })
   const [attempt, retrySearch] = useReducer(value => value + 1, 0)
   const operations = useRef(new Set<string>())
+  const sendingTo = useRef(new Map<string, AppUser>())
   const presence = usePresence('presence-chat')
   const now = useNow({ interval: 1000 }).getTime()
   const channel = `private-party.${context.party.id}`
@@ -67,11 +100,11 @@ export default function useHostInvitations(isOpen: boolean) {
     const [error, response] = await axios.get(`/api/parties/${context.party.id}/invitations`)
     const failed = Boolean(error) || !Array.isArray(response?.data)
     dispatch({ type: 'history-error', failed })
-    if (!failed) dispatch({ type: 'history', invitations: response.data })
+    if (!failed) dispatch({ type: 'history', at: Date.now(), invitations: response.data })
   }
   useEffect(() => { refreshHistory() }, [context.party.id])
   useEffect(() => {
-    dispatch({ type: 'history', invitations: context.party.invitations || [] })
+    dispatch({ type: 'history', at: Date.now(), invitations: context.party.invitations || [] })
   }, [context.party.invitations])
 
   useEffect(() => {
@@ -90,19 +123,19 @@ export default function useHostInvitations(isOpen: boolean) {
 
   usePusher(channel, 'pusher:subscription_succeeded', refreshHistory)
   usePusher(channel, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
-    dispatch({ type: 'history', invitations: [event.invitation] })
+    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
     context.onInvite(event.invitation)
   })
   usePusher(channel, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
-    dispatch({ type: 'history', invitations: [event.invitation] })
+    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
     context.onCancel(event.invitation)
   })
   usePusher(channel, 'invitation.declined', (event: { invitation: AppPartyInvitation }) => {
-    dispatch({ type: 'history', invitations: [event.invitation] })
+    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
     context.onDecline(event.invitation)
   })
   usePusher(channel, 'invitation.accepted', (event: { invitation: AppPartyInvitation; member: AppPartyMember }) => {
-    dispatch({ type: 'history', invitations: [event.invitation] })
+    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
     context.onAccept(event.invitation, event.member)
   })
 
@@ -110,19 +143,39 @@ export default function useHostInvitations(isOpen: boolean) {
   const members = new Set(context.party.members.map(member => String(member.id)))
   const pending = state.history.filter(invitation => invitation.action === 'pending' &&
     Date.parse(invitation.expires_at) > now && !members.has(String(invitation.recipient.id)))
-  const outcomes = state.history.filter(invitation => !members.has(String(invitation.recipient.id)) &&
-    (invitation.action === 'declined' || (invitation.action === 'pending' && Date.parse(invitation.expires_at) <= now)))
+
+  useEffect(() => {
+    const ends = Object.values(state.answers).map(answer => answer.at + ANSWER_MS)
+    if (!ends.length) return
+    const timer = setTimeout(() => dispatch({ type: 'prune', at: Date.now() }), Math.max(0, Math.min(...ends) - Date.now()))
+    return () => clearTimeout(timer)
+  }, [state.answers])
+
+  /** Joined, Declined or Expired while it's fresh; an expiry counts from expires_at, so an old one never shows. */
+  function answer(id: string): InviteAnswer | null {
+    if (state.answers[id]) return state.answers[id].kind
+    const invitation = history.get(id)
+    if (invitation?.action !== 'pending' || members.has(id)) return null
+    const end = Date.parse(invitation.expires_at)
+    return end <= now && now - end < ANSWER_MS ? 'expired' : null
+  }
+  // Fresh Declined and Expired answers, for the chat strip.
+  const answered = state.history.filter(invitation => ['declined', 'expired'].includes(answer(String(invitation.recipient.id))))
+  const pendingIds = new Set(pending.map(invitation => String(invitation.recipient.id)))
+  const sending = Array.from(sendingTo.current.values()).filter(user => state.busy[String(user.id)] && !pendingIds.has(String(user.id)))
 
   async function invite(user: AppUser) {
     const id = String(user.id)
     if (operations.current.has(id) || members.has(id) || pending.some(invitation => String(invitation.recipient.id) === id)) return
     operations.current.add(id)
+    sendingTo.current.set(id, user)
     dispatch({ type: 'busy', id, busy: true })
     const [error, response] = await axios.post(`/api/parties/${context.party.id}/invitations/send`, { recipient_id: user.id })
     operations.current.delete(id)
-    dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t send. Try again.' : '' })
+    sendingTo.current.delete(id)
+    dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t send' : '' })
     if (!error) {
-      dispatch({ type: 'history', invitations: [response.data] })
+      dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
       context.onInvite(response.data)
     }
   }
@@ -134,14 +187,14 @@ export default function useHostInvitations(isOpen: boolean) {
     dispatch({ type: 'busy', id, busy: true })
     const [error, response] = await axios.post(`/api/invitations/${invitation.id}/cancel`)
     operations.current.delete(id)
-    dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t cancel. Try again.' : '' })
+    dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t undo' : '' })
     if (error) { refreshHistory(); return }
-    dispatch({ type: 'history', invitations: [response.data] })
+    dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
     context.onCancel(response.data)
   }
 
   return {
-    ...state, now, pending, outcomes, history, invite, cancel, refreshHistory, retrySearch,
+    ...state, now, pending, answered, sending, history, answer, invite, cancel, refreshHistory, retrySearch,
     setQuery: (query: string) => dispatch({ type: 'query', query: query.slice(0, 100) }),
     withPresence: (user: AppUser) => presence ? { ...user, is_online: presence.has(String(user.id)) } : user
   }
@@ -149,7 +202,8 @@ export default function useHostInvitations(isOpen: boolean) {
 
 export type HostInvitations = ReturnType<typeof useHostInvitations>
 
-export function remainingTime(invitation: AppPartyInvitation, now: number) {
-  const seconds = Math.min(invitation.duration || 1800, Math.max(0, Math.ceil((Date.parse(invitation.expires_at) - now) / 1000)))
-  return seconds >= 60 ? `${Math.floor(seconds / 60)}m ${seconds % 60}s` : `${seconds}s`
+/** Whole minutes left on an invite, rounded up and never below 1m, e.g. "30m". */
+export function minutesLeft(invitation: AppPartyInvitation, now: number) {
+  const seconds = Math.min(invitation.duration || 1800, Math.max(0, (Date.parse(invitation.expires_at) - now) / 1000))
+  return `${Math.max(1, Math.ceil(seconds / 60))}m`
 }

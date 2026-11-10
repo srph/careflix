@@ -10,6 +10,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import ChatStatus from '../ChatStatus'
 import { isJoinActivity } from '../ChatStatus/status'
 import useTypingStatus from './useTypingStatus'
+import InviteStrip from './InviteStrip'
 import useTransientState from '~/hooks/useTransientState'
 import PartyCode from '../PartyCode'
 
@@ -419,11 +420,7 @@ function ChatWidget(props: Props) {
           </UiPlainButton>
         </div>
 
-        {invitations.pending.length > 0 && <UiPlainButton type="button" className="host-invite-waiting" onClick={props.onOpenInvitationModal}>
-          <span className="host-invite-waiting-avatars">{invitations.pending.slice(0, 3).map(invitation => <UiAvatar key={invitation.id} user={invitation.recipient} size="sm" />)}</span>
-          <span>Waiting on {invitations.pending.map(invitation => invitation.recipient.name).join(', ')}</span>
-          <small>{Math.max(1, Math.floor((Math.min(...invitations.pending.map(invitation => Date.parse(invitation.expires_at))) - invitations.now) / 60000))}m</small>
-        </UiPlainButton>}
+        <InviteStrip invitations={invitations} onOpen={props.onOpenInvitationModal} />
         <motion.div className="watch-screen-chat-messages-container" initial={false}
           animate={{ scale: props.isInvitationOpen && !reducedMotion ? .96 : 1 }} transition={{ duration: reducedMotion ? 0 : .32, ease: [.2, .8, .2, 1] }}>
           <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
@@ -452,13 +449,6 @@ function ChatWidget(props: Props) {
                 </React.Fragment>
               )
             })}
-            {invitations.outcomes.map(invitation => <div className="host-invite-outcome" key={invitation.id}>
-              <UiAvatar user={invitation.recipient} size="sm" />
-              <span>{invitation.recipient.name} {invitation.action === 'declined' ? 'declined' : 'didn’t answer'}</span>
-              <UiPlainButton type="button" disabled={invitations.busy[String(invitation.recipient.id)]}
-                onClick={() => invitations.invite(invitation.recipient)}>Ask again</UiPlainButton>
-              {invitations.errors[String(invitation.recipient.id)] && <small role="alert">{invitations.errors[String(invitation.recipient.id)]}</small>}
-            </div>)}
           </div>
 
           {hasUnreadMessages && (

@@ -1,4 +1,4 @@
-import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
 import axios from '~/lib/axios'
 import { get } from '~/lib/query/get'
@@ -30,11 +30,9 @@ export function useMyPartiesQuery(show?: AppShow) {
   })
 }
 
-/** With `keepPrevious`, the last term's results stand in (`isPlaceholderData`) until this term's arrive. */
-export function useListingSearchQuery(term: string, keepPrevious = false) {
+export function useListingSearchQuery(term: string) {
   const { data: user, isAuthenticated } = useAuth()
   return useQuery({
-    placeholderData: keepPrevious ? keepPreviousData : undefined,
     queryKey: ['listing', user?.id, 'search', term],
     queryFn: async ({ signal }) => {
       const [titles, parties] = await Promise.all([

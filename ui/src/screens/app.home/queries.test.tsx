@@ -59,21 +59,17 @@ describe('listing queries', () => {
     expect(axios.get).toHaveBeenCalledWith('/api/me/parties', expect.objectContaining({ params: { q: 'moon', per_page: 4 } }))
   })
 
-  it('keeps the previous term’s results only when asked to', async () => {
-    let release: () => void
+  it('starts pending on a new term instead of keeping the previous term’s results', async () => {
     vi.mocked(axios.get).mockResolvedValueOnce([null, { data: page }] as any).mockResolvedValueOnce([null, { data: page }] as any)
-      .mockImplementation(() => new Promise(resolve => { release = () => resolve([null, { data: page }] as any) }))
+      .mockImplementation(() => new Promise(() => {}))
     const { wrapper } = setup()
-    const hook = renderHook(({ term, keep }) => useListingSearchQuery(term, keep), { wrapper, initialProps: { term: 'moo', keep: true } })
+    const hook = renderHook(({ term }) => useListingSearchQuery(term), { wrapper, initialProps: { term: 'moo' } })
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
-    const previous = hook.result.current.data
-    hook.rerender({ term: 'moon', keep: true })
-    expect(hook.result.current.data).toBe(previous)
-    expect(hook.result.current.isPlaceholderData).toBe(true)
-    hook.rerender({ term: 'moonl', keep: false })
+    hook.rerender({ term: 'moon' })
     expect(hook.result.current.data).toBeUndefined()
     expect(hook.result.current.isPending).toBe(true)
-    release()
+    hook.rerender({ term: 'moo' })
+    expect(hook.result.current.data).toBeDefined()
   })
 
   it('invalidates history and search after creating a party, then enters its room', async () => {

@@ -27,16 +27,14 @@ function SearchSkeleton() {
 export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: AppShow) => void }) {
   const [text, setText] = useState('')
   const [term, setTerm] = useState('')
-  // Whether the rows on screen belong to what's being typed now; emptying the field starts over with a skeleton.
-  const [keep, setKeep] = useState(false)
   const [open, setOpen] = useState(false)
   const input = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
   const trimmed = text.trim()
-  const query = useListingSearchQuery(term, keep)
-  const current = Boolean(trimmed) && term === trimmed
-  const failed = current && query.isError
-  const results = trimmed && !failed && (keep || current) ? query.data : undefined
+  const query = useListingSearchQuery(term)
+  // Data (fresh or cached) wins, then the error, otherwise a skeleton.
+  const results = trimmed ? query.data : undefined
+  const failed = Boolean(trimmed) && !results && query.isError
   const loading = Boolean(trimmed) && !results && !failed
   const groups: SearchGroup[] = results ? [
     { value: 'Titles' as const, items: results.titles.map(show => ({ key: `title-${show.id}`, show, party: null })) },
@@ -61,13 +59,8 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
     return () => document.removeEventListener('keydown', shortcut)
   }, [])
 
-  function change(value: string) {
-    setText(value)
-    setKeep(Boolean(value.trim()) && (keep || (current && query.isSuccess && !query.isPlaceholderData)))
-  }
-
   function select(option: SearchOption) {
-    change('')
+    setText('')
     if (option.party) navigate(`/watch/${option.party.id}`)
     else onShowSelect(option.show)
   }
@@ -81,7 +74,7 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
   // Base UI opens on ↑/↓ even when the field is empty; with no query there's nothing to show, so stay closed.
   return <Autocomplete.Root items={groups} filter={null} value={text} autoHighlight open={open && Boolean(trimmed)}
     onOpenChange={next => setOpen(next && Boolean(input.current?.value.trim()))}
-    onValueChange={(value, details) => { if (details.reason !== 'item-press') change(value) }}
+    onValueChange={(value, details) => { if (details.reason !== 'item-press') setText(value) }}
     itemToStringValue={(option: SearchOption) => option.show.title}>
     <Autocomplete.InputGroup className="listing-search">
       <i className="fa fa-search" aria-hidden="true" />

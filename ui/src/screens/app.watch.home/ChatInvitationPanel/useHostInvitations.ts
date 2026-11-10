@@ -14,10 +14,6 @@ export type State = {
   history: AppPartyInvitation[]
   /** Answers this tab saw arrive, by recipient id; each one shows for ANSWER_MS. */
   answers: Record<string, { kind: 'joined' | 'declined'; at: number }>
-  users: AppUser[]
-  query: string
-  loading: boolean
-  searchError: boolean
   historyError: boolean
   busy: Record<string, boolean>
   errors: Record<string, string>
@@ -26,9 +22,6 @@ type Action =
   | { type: 'history'; invitations: AppPartyInvitation[]; at: number }
   | { type: 'prune'; at: number }
   | { type: 'history-error'; failed: boolean }
-  | { type: 'query'; query: string }
-  | { type: 'loading' }
-  | { type: 'results'; users: AppUser[]; failed: boolean }
   | { type: 'busy'; id: string; busy: boolean; error?: string }
 
 // A late search/snapshot/event must never undo a newer invitation or its answer.
@@ -72,9 +65,6 @@ export function reducer(state: State, action: Action): State {
       return { ...state, answers }
     }
     case 'history-error': return { ...state, historyError: action.failed }
-    case 'query': return { ...state, query: action.query, users: [], loading: true, searchError: false }
-    case 'loading': return { ...state, loading: true, searchError: false }
-    case 'results': return { ...state, users: action.users, loading: false, searchError: action.failed }
     case 'busy': return {
       ...state,
       busy: { ...state.busy, [action.id]: action.busy },
@@ -83,13 +73,11 @@ export function reducer(state: State, action: Action): State {
   }
 }
 
-export default function useHostInvitations(isOpen: boolean) {
+export default function useHostInvitations() {
   const context = usePartyContext()
   const [state, dispatch] = useReducer(reducer, {
-    history: context.party.invitations || [], answers: {}, users: [], query: '', loading: true,
-    searchError: false, historyError: false, busy: {}, errors: {}
+    history: context.party.invitations || [], answers: {}, historyError: false, busy: {}, errors: {}
   })
-  const [attempt, retrySearch] = useReducer(value => value + 1, 0)
   const operations = useRef(new Set<string>())
   const sendingTo = useRef(new Map<string, AppUser>())
   const presence = usePresence('presence-chat')
@@ -106,20 +94,6 @@ export default function useHostInvitations(isOpen: boolean) {
   useEffect(() => {
     dispatch({ type: 'history', at: Date.now(), invitations: context.party.invitations || [] })
   }, [context.party.invitations])
-
-  useEffect(() => {
-    if (!isOpen) return
-    let active = true
-    dispatch({ type: 'loading' })
-    const timer = setTimeout(async () => {
-      const [error, response] = await axios.get(`/api/parties/${context.party.id}/invitations/search`, {
-        params: state.query.trim() ? { search: state.query.trim() } : {}
-      })
-      const failed = Boolean(error) || !Array.isArray(response?.data)
-      if (active) dispatch({ type: 'results', users: failed ? [] : response.data, failed })
-    }, state.query.trim() ? 250 : 0)
-    return () => { active = false; clearTimeout(timer) }
-  }, [context.party.id, isOpen, state.query, attempt])
 
   usePusher(channel, 'pusher:subscription_succeeded', refreshHistory)
   usePusher(channel, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
@@ -194,8 +168,7 @@ export default function useHostInvitations(isOpen: boolean) {
   }
 
   return {
-    ...state, now, pending, answered, sending, history, answer, invite, cancel, refreshHistory, retrySearch,
-    setQuery: (query: string) => dispatch({ type: 'query', query: query.slice(0, 100) }),
+    ...state, now, pending, answered, sending, history, answer, invite, cancel, refreshHistory,
     withPresence: (user: AppUser) => presence ? { ...user, is_online: presence.has(String(user.id)) } : user
   }
 }

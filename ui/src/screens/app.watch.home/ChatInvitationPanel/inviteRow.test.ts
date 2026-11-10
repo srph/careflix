@@ -24,6 +24,7 @@ describe('invite row', () => {
   it('says each answer, then rests', () => {
     expect(row({ member: true, answer: 'joined' })).toMatchObject({ status: 'Joined', tone: 'success', action: null })
     expect(row({ member: true })).toMatchObject({ status: 'In the room', action: null })
+    expect(row({ member: true, host: true })).toMatchObject({ status: 'Host 👑', action: null })
     expect(row({ answer: 'declined' })).toMatchObject({ status: 'Declined', action: 'invite' })
     expect(row({ answer: 'expired' })).toMatchObject({ status: 'Expired', action: 'invite' })
   })

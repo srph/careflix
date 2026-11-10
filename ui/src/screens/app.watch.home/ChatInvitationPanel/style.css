@@ -7,7 +7,12 @@
 .host-invite-search:has(input:focus-visible) { outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
 .host-invite-search input { width: 100%; min-width: 0; padding: 0; outline: 0; border: 0; background: transparent; color: white; font: inherit; font-size: 14px; }
 .host-invite-search input::placeholder { color: var(--color-black-5); }
-.host-invite-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 6px 8px; }
+.host-invite-list { position: relative; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 6px 8px; }
+/* Search has no headings, so its rows start just under the field. */
+.host-invite-results { padding-top: 6px; }
+/* No one, or a failed search: one line in a row's slot, where the skeleton was. */
+.host-invite-line { display: flex; align-items: center; min-height: 60px; margin: 0; padding: 10px 14px; color: var(--color-black-5); font-size: 13px; }
+.host-invite-line button { padding: 0; border: 0; background: transparent; color: white; font: inherit; cursor: pointer; text-decoration: underline; }
 .host-invite-label { display: block; padding: 16px 14px 8px; color: var(--color-black-5); font: 600 11px var(--font-family-subheading); letter-spacing: .08em; text-transform: uppercase; }
 .host-invite-person { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 60px; padding: 10px 14px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; text-align: left; }
 button.host-invite-person { cursor: pointer; }

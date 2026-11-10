@@ -25,6 +25,7 @@ async function room(page: Page, options: { history?: ReturnType<typeof invitatio
   const failures = { search: 0, send: 0, cancel: 0, history: 0 }
   const heldSearches = new Map<string, Promise<void>>()
   const sent: number[] = []
+  const searches: string[] = []
   let socket: WebSocketRoute
   const emit = (event: string, data: object) => socket.send(JSON.stringify({ channel: 'private-party.880', event, data: JSON.stringify(data) }))
   await page.context().addCookies([{ name: 'app_token', value: 'host-invite-fixture', url: test.info().project.use.baseURL as string }])
@@ -59,8 +60,11 @@ async function room(page: Page, options: { history?: ReturnType<typeof invitatio
     if (path.endsWith('/invitations')) body = Array.from(history.values())
     if (path.endsWith('/search')) {
       const query = url.searchParams.get('search') || ''
+      searches.push(query)
       await heldSearches.get(query)
-      body = !query && options.noRecents ? [] : people.filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
+      // Like the API: recents leave the room out; a search covers everyone but the viewer.
+      body = !query ? (options.noRecents ? [] : people)
+        : [mira, ...people].filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
     }
     if (path.endsWith('/send')) {
       const id = route.request().postDataJSON().recipient_id
@@ -81,7 +85,7 @@ async function room(page: Page, options: { history?: ReturnType<typeof invitatio
   })
   await page.goto('/watch/880')
   await expect(page.getByRole('button', { name: 'Invite people' })).toBeVisible()
-  return { errors, emit, failures, sent, heldSearches, history }
+  return { errors, emit, failures, sent, searches, heldSearches, history }
 }
 
 test('B5b2 replaces chat in place, supports keyboard invites, and preserves the chat draft', async ({ page }) => {
@@ -100,7 +104,7 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await expect(panel.getByText('Party', { exact: true })).toBeVisible()
   await expect(panel.getByText('Recents', { exact: true })).toBeVisible()
   await expect(panel.getByText('Host 👑', { exact: true })).toBeVisible()
-  await expect(panel.getByText('You', { exact: true })).toBeVisible()
+  await expect(panel.getByText('(You)', { exact: true })).toBeVisible()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(page.locator('.watch-screen-chat-content')).toHaveCSS('opacity', '0')
   const bounds = await panel.boundingBox()
@@ -111,16 +115,18 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await page.screenshot({ path: test.info().outputPath('b5b2-recents.png') })
 
   await input.fill('Joyce')
-  await expect(panel.getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
+  // Wait for the answer itself: the groups fading out still hold a (now inert) Joyce row.
+  await expect(panel.locator('.host-invite-results').getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
   await input.press('ArrowDown')
   await input.press('Enter')
   await expect(panel.getByRole('option', { name: 'Undo invite to Joyce' })).toContainText('Invited (30m)')
-  // Rows stay where they were while the panel is open.
-  await expect(panel.locator('.host-invite-group').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
+  await expect(panel.locator('.host-invite-results').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
   expect(fixture.sent).toEqual([joyce.id])
   await expect(input).toHaveValue('Joyce')
   await input.fill('')
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
+  // Back in the groups, rows stay where they were while the panel is open.
+  await expect(panel.locator('.host-invite-group').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
   await panel.getByRole('button', { name: 'Copy party code 048 291' }).click()
   await expect(panel.getByRole('status')).toHaveText('Party code copied')
   await expect(panel.getByRole('option').last().locator('..')).toHaveCSS('opacity', '1')
@@ -180,10 +186,11 @@ test('live declines, expiry, acceptance, and duplicate events update the panel a
 
 test('search ignores late responses and request failures have working retries', async ({ page }) => {
   const fixture = await room(page)
-  fixture.failures.search = 1
+  // The first try and Query's two retries all fail.
+  fixture.failures.search = 3
   await page.getByRole('button', { name: 'Invite people' }).click()
   const panel = page.getByRole('region', { name: 'Invite', exact: true })
-  await expect(panel.getByRole('alert')).toContainText('Couldn’t load people')
+  await expect(panel.getByRole('alert')).toContainText('Couldn’t load people', { timeout: 8000 })
   await panel.getByRole('button', { name: 'Retry', exact: true }).click()
   await expect(panel.getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
   fixture.failures.send = 1
@@ -201,19 +208,35 @@ test('search ignores late responses and request failures have working retries', 
   fixture.heldSearches.set('Joy', new Promise<void>(resolve => { release = resolve }))
   const input = page.getByRole('combobox', { name: 'Search for your friends by username' })
   await input.fill('Joy')
-  await page.waitForRequest(request => request.url().includes('search=Joy'))
-  // A slow search shows skeletons after 300ms instead of flashing them.
+  // Search is its own list: the skeleton replaces the groups at once, with no headings.
   await expect(panel.locator('.host-invite-skeletons')).toBeVisible()
+  await expect(panel.getByText('Party', { exact: true })).toHaveCount(0)
+  await page.waitForRequest(request => request.url().includes('search=Joy'))
   await input.fill('Leo')
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
   await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)
-  const lateResponse = page.waitForResponse(response => response.url().includes('search=Joy'))
   release!()
-  await lateResponse
+  await page.waitForTimeout(300)
   await expect(panel.getByRole('option')).toHaveCount(1)
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
+  // People in the room come back from the search like anyone else; their subtext says so.
+  await input.fill('Mi')
+  await expect(panel.getByRole('option', { name: 'Mira, in the room' })).toContainText('In the room')
   await input.fill('Nobody')
   await expect(panel.getByText('No one named “Nobody”.')).toBeVisible()
+  // A search that fails says so where the rows would be, and Retry runs it again.
+  fixture.failures.search = 3
+  await input.fill('Ava')
+  await expect(panel.getByRole('alert')).toContainText('Couldn’t search for “Ava”.', { timeout: 8000 })
+  await panel.getByRole('button', { name: 'Retry', exact: true }).click()
+  await expect(panel.locator('.host-invite-skeletons')).toBeVisible()
+  await expect(panel.getByRole('option', { name: 'Invite Ava' })).toBeVisible()
+  // A search already answered comes back at once from the cache.
+  const searches = fixture.searches.length
+  await input.fill('Leo')
+  await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
+  await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)
+  expect(fixture.searches.length).toBe(searches)
   expect(fixture.errors).toEqual([])
 })
 

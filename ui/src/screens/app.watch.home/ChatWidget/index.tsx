@@ -145,7 +145,7 @@ const init: State = {
 
 function ChatWidget(props: Props) {
   const auth = useAuth()
-  const invitations = useHostInvitations(props.isInvitationOpen)
+  const invitations = useHostInvitations()
   const reducedMotion = useReducedMotion()
   const inviteButton = useRef<HTMLButtonElement>(null)
   const wasInvitationOpen = useRef(false)

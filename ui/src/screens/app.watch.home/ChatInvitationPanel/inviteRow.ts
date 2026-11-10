@@ -5,6 +5,8 @@ export type InviteRowInput = {
   online: boolean
   /** Already in the room. */
   member: boolean
+  /** Started the room. */
+  host?: boolean
   /** Has an invite still waiting on an answer. */
   waiting: boolean
   /** A send or undo is in flight. */
@@ -26,10 +28,11 @@ export type InviteRow = {
 }
 
 /** What one person's row says and offers in the host's invite panel. */
-export function inviteRow({ name, online, member, waiting, busy, error, answer, minutes }: InviteRowInput): InviteRow {
+export function inviteRow({ name, online, member, host, waiting, busy, error, answer, minutes }: InviteRowInput): InviteRow {
   const presence = online ? 'Online' : 'Offline'
   if (member) return answer === 'joined'
     ? { status: 'Joined', tone: 'success', action: null, busy: false, label: `${name} joined` }
+    : host ? { status: 'Host 👑', tone: '', action: null, busy: false, label: `${name}, host, in the room` }
     : { status: 'In the room', tone: '', action: null, busy: false, label: `${name}, in the room` }
   if (waiting) return {
     status: !busy && error ? error : `Invited (${minutes})`, tone: !busy && error ? 'error' : 'pink',

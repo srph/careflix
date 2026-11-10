@@ -4,7 +4,7 @@ import { ANSWER_MS, reducer, State } from './useHostInvitations'
 const mira = { id: 7, name: 'Mira' } as AppUser
 const invite = (id: number, action: AppPartyInvitation['action']) => ({ id, action, recipient: mira, expires_at: '2026-11-10T12:30:00Z' }) as AppPartyInvitation
 const start = (history: AppPartyInvitation[]): State => ({
-  history, answers: {}, users: [], query: '', loading: false, searchError: false, historyError: false, busy: {}, errors: {}
+  history, answers: {}, historyError: false, busy: {}, errors: {}
 })
 
 describe('invite answers', () => {

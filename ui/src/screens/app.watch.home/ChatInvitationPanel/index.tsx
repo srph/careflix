@@ -117,7 +117,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
       itemToStringValue={user => user.name}>
       <motion.label className="host-invite-search" {...cascade(1)}>
         <i className="fa fa-search" aria-hidden="true" />
-        <Autocomplete.Input ref={input} placeholder="Search everyone" aria-label="Search everyone" maxLength={100} autoComplete="off" spellCheck={false} />
+        <Autocomplete.Input ref={input} placeholder="Search for your friends by username" aria-label="Search for your friends by username" maxLength={100} autoComplete="off" spellCheck={false} />
       </motion.label>
       <div className="host-invite-list" aria-busy={loading.pending}>
         <Autocomplete.List>
@@ -126,8 +126,8 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
             {partyRows.map(({ user, placement }, index) => placement.member
               ? <motion.div className="host-invite-person user-item" key={user.id} {...cascade(3 + index)}>
                 <UiPresenceAvatar user={invitations.withPresence(user)} />
-                <span className="host-invite-details"><b>{user.name}{String(user.id) === String(auth.data.id) && <em>You</em>}</b>
-                  <small>{String(user.id) === String(party.creator?.id) ? 'Host' : 'In the room'}</small></span>
+                <span className="host-invite-details"><b>{user.name}{String(user.id) === String(auth.data.id) && <em>(You)</em>}</b>
+                  <small>{String(user.id) === String(party.creator?.id) ? 'Host 👑' : 'In the room'}</small></span>
               </motion.div>
               : person(user, cascade(3 + index)))}
           </Autocomplete.Group>}

@@ -66,9 +66,9 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
   }
 
   function highlight(value: string) {
-    const index = value.toLocaleLowerCase().indexOf(trimmed.toLocaleLowerCase())
-    if (index < 0 || !trimmed) return value
-    return <>{value.slice(0, index)}<mark>{value.slice(index, index + trimmed.length)}</mark>{value.slice(index + trimmed.length)}</>
+    const index = value.toLocaleLowerCase().indexOf(term.toLocaleLowerCase())
+    if (index < 0 || !term) return value
+    return <>{value.slice(0, index)}<mark>{value.slice(index, index + term.length)}</mark>{value.slice(index + term.length)}</>
   }
 
   // Base UI opens on ↑/↓ even when the field is empty; with no query there's nothing to show, so stay closed.
@@ -92,7 +92,7 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
           </Autocomplete.Status>
           {loading && <SearchSkeleton />}
           <Autocomplete.Empty className="listing-search-empty">
-            {results && <p>No matches for “{trimmed}”.</p>}
+            {results && <p>No matches for “{term}”.</p>}
           </Autocomplete.Empty>
           <Autocomplete.List aria-label="Search results" aria-busy={loading}>
             {(group: SearchGroup) => <Autocomplete.Group key={group.value} items={group.items}>

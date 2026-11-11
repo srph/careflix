@@ -380,7 +380,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
   <h2>Further Actions</h2>
   <div class="cards">
     <div><b>Explore</b>Explore from A5d: how the preview works with the keyboard and on touch.</div>
-    <div><b>Remix</b>Remix A5b2b: let each close-up play a few seconds of the party.</div>
+    <div><b>Remix</b>Remix A5b2b2b: let each close-up play a few seconds of the party.</div>
     <div><b>Settle</b>Settle on A5d for help that never leaves the picture.</div>
   </div>
 </section>
@@ -570,6 +570,10 @@ const LVL_RX = {head:'Activity on the video', tip:'Activity',
 /* A5b2b · same words, new heading, a bell for the button, and a menu that grows out of it */
 const LVL_POP = {...LVL_RX, head:'Activity Overlay', tip:'Activity Overlay', pop:true,
   ic:{all:'fa-bell', act:'fa-bell-o', off:'fa-bell-slash'}};
+/* A5b2b2 · same menu, tuned motion: fade in from .6, fade down to .8, quicker, in-out expo */
+const LVL_POP2 = {...LVL_POP, pop:{from:.6, to:.8, drop:8, inMs:200, outMs:150, ease:'cubic-bezier(1,0,0,1)'}};
+/* A5b2b2b · same open; close is a plain fade, no scale, no drift */
+const LVL_POP3 = {...LVL_POP, pop:{from:.6, to:1, drop:0, inMs:200, outMs:150, ease:'cubic-bezier(1,0,0,1)'}};
 const LVL_ACT = {head:'Activity on the video', tip:'Activity',
   all:{label:'Everything', desc:'Messages, joins and pauses.', toast:'Showing everything'},
   act:{label:'Just joins and pauses', desc:'Who came in and who paused. No messages.', toast:'Showing joins and pauses only'},
@@ -644,15 +648,18 @@ function menuA5(c, open){
     m.hidden = !open; c.room.classList.toggle('menu', open);
   } else {
     /* origin-aware: scale from the button's centre, wherever it sits relative to the menu */
+    const P = typeof c.L.pop === 'object' ? c.L.pop : null;
     c.pop5?.cancel(); c.pop5 = null;
     if(open){
       m.hidden = false; c.room.classList.add('menu');
       const b = c.cb.getBoundingClientRect(), r = m.getBoundingClientRect();
       m.style.transformOrigin = `${(b.left + b.width / 2 - r.left) / r.width * 100}% ${(b.top + b.height / 2 - r.top) / r.height * 100}%`;
-      c.pop5 = m.animate([{opacity:0, transform:'scale(.4)'}, {opacity:1, offset:.45}, {opacity:1, transform:'none'}],
+      c.pop5 = P ? m.animate([{opacity:0, transform:`scale(${P.from})`}, {opacity:1, transform:'none'}], {duration:P.inMs, easing:P.ease})
+        : m.animate([{opacity:0, transform:'scale(.4)'}, {opacity:1, offset:.45}, {opacity:1, transform:'none'}],
         {duration:260, easing:'cubic-bezier(.2,.9,.25,1)'});
     } else if(!m.hidden){
-      c.pop5 = m.animate([{opacity:1, transform:'none'}, {opacity:0, transform:'scale(.55)'}],
+      c.pop5 = P ? m.animate(P.to === 1 && !P.drop ? [{opacity:1}, {opacity:0}] : [{opacity:1, transform:'none'}, {opacity:0, transform:`translateY(${P.drop}px) scale(${P.to})`}], {duration:P.outMs, easing:P.ease, fill:'forwards'})
+        : m.animate([{opacity:1, transform:'none'}, {opacity:0, transform:'scale(.55)'}],
         {duration:160, easing:'cubic-bezier(.4,0,.9,.6)', fill:'forwards'});
       c.pop5.onfinish = () => { m.hidden = true; c.room.classList.remove('menu'); c.pop5.cancel(); c.pop5 = null; };
     }
@@ -753,6 +760,14 @@ const VARS = [
   {id:'A5b2b', name:'Activity Overlay: bell button, menu grows from it', from:'A5b2', dot:true, hint:'Open the bell left of chat, then pick or press Escape to watch it shrink back',
    notes:[['good', 'The menu grows out of the bell and shrinks back into it.'], ['good', 'Bell, outline bell, crossed bell: the button shows the level.'], ['bad', 'A bell can read as notifications, not the picture.']],
    H:{mount(c){ mountLvl(c, 'rows', LVL_POP); }, push:LvlH.push, typing:LvlH.typing, rxOff:c => c.lvl !== 'all'}},
+
+  {id:'A5b2b2', name:'Activity Overlay with a quicker fade-in, fade-down menu', from:'A5b2b', dot:true, hint:'Open and close the bell a few times; compare with A5b2b above',
+   notes:[['good', 'Opens from 60% with a fade, closes to 80% fading down: 200ms in, 150ms out.'], ['good', 'In-out expo (1, 0, 0, 1) snaps through the middle.'], ['bad', 'Expo in-out holds still for the first frames, so a click can feel a beat late.']],
+   H:{mount(c){ mountLvl(c, 'rows', LVL_POP2); }, push:LvlH.push, typing:LvlH.typing, rxOff:c => c.lvl !== 'all'}},
+
+  {id:'A5b2b2b', name:'Activity Overlay menu that grows open and fades shut', from:'A5b2b2', dot:true, hint:'Open the bell, then pick or press Escape; compare the close with A5b2b2',
+   notes:[['good', 'Opens from 60% with a fade in 200ms; closes with a fade only in 150ms.'], ['good', 'The close stays put, so it feels calmer once you’ve picked.'], ['bad', 'Open and close no longer mirror each other.']],
+   H:{mount(c){ mountLvl(c, 'rows', LVL_POP3); }, push:LvlH.push, typing:LvlH.typing, rxOff:c => c.lvl !== 'all'}},
 
   {id:'A5c', name:'Activity menu with ⓘ for a preview modal', from:'A5, renamed Activity', dot:true, hint:'Open the menu, then the ⓘ beside the heading',
    notes:[['good', 'Big, readable previews with a line each.'], ['good', 'The menu stays short once you know it.'], ['bad', 'A modal is heavy for a three-way setting.'], ['bad', 'The ⓘ is easy to miss.']],

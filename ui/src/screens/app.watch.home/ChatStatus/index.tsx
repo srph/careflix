@@ -48,7 +48,7 @@ function ChatStatus({ logs, typing, joined, meId }: Props) {
   }
 
   return (
-    <div className="watch-screen-chat-status" role="status">
+    <div data-testid="chat-status" className="watch-screen-chat-status" role="status">
       {line && <div className="line" key={key}>{line}</div>}
     </div>
   )

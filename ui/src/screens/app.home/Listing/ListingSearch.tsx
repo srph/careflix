@@ -10,7 +10,7 @@ type SearchOption = { key: string; show: AppShow; party: AppParty | null }
 type SearchGroup = { value: 'Titles' | 'Parties'; items: SearchOption[] }
 
 function SearchSkeleton() {
-  return <div className="listing-search-loading" aria-hidden="true">
+  return <div data-testid="search-skeleton" className="listing-search-loading" aria-hidden="true">
     {[{ label: 'Titles', widths: [68, 52, 60] }, { label: 'Parties', widths: [58, 72] }].map(({ label, widths }) => <Fragment key={label}>
       <div className="listing-search-group">{label}</div>
       {widths.map((width, index) => <div className="listing-search-skeleton-row" key={index}>
@@ -76,7 +76,7 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
     onOpenChange={next => setOpen(next && Boolean(input.current?.value.trim()))}
     onValueChange={(value, details) => { if (details.reason !== 'item-press') setText(value) }}
     itemToStringValue={(option: SearchOption) => option.show.title}>
-    <Autocomplete.InputGroup className="listing-search">
+    <Autocomplete.InputGroup data-testid="search" className="listing-search">
       <i className="fa fa-search" aria-hidden="true" />
       <Autocomplete.Input ref={input} aria-label="Search titles and parties" placeholder="Search titles & parties"
         autoComplete="off" maxLength={200} />
@@ -85,13 +85,13 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
     </Autocomplete.InputGroup>
     <Autocomplete.Portal>
       <Autocomplete.Positioner className="listing-search-positioner" align="end" sideOffset={8} collisionPadding={16}>
-        <Autocomplete.Popup className="listing-search-dropdown">
-          <Autocomplete.Status className="listing-search-status">
+        <Autocomplete.Popup data-testid="search-dropdown" className="listing-search-dropdown">
+          <Autocomplete.Status data-testid="search-status" className="listing-search-status">
             {loading && <span className="listing-search-loading-label">Searching titles and parties…</span>}
             {failed && <div role="alert">Unable to search. <button type="button" onClick={() => { void query.refetch() }}>Retry</button></div>}
           </Autocomplete.Status>
           {loading && <SearchSkeleton />}
-          <Autocomplete.Empty className="listing-search-empty">
+          <Autocomplete.Empty data-testid="search-empty" className="listing-search-empty">
             {results && <p>No matches for “{term}”.</p>}
           </Autocomplete.Empty>
           <Autocomplete.List aria-label="Search results" aria-busy={loading}>

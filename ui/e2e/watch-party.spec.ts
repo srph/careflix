@@ -51,9 +51,9 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
 
   await page.goto(`/watch/${party.id}`)
   await expect.poll(() => subscriptions.has(room)).toBe(true)
-  await expect(page.locator('.watch-screen-canopy .ui-presence-avatar.is-online')).toHaveCount(1)
+  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(1)
   await page.locator('video').evaluate(video => video.dispatchEvent(new Event('loadeddata')))
-  await expect(page.locator('.subtitle-slot .subtitle')).toHaveText('Watching together')
+  await expect(page.getByTestId('subtitle')).toHaveText('Watching together')
   expect(subtitlePaths).toEqual([`/api/videos/${video.id}/subtitle`])
   await page.locator('video').evaluate((video: HTMLVideoElement) => {
     video.currentTime = 2
@@ -62,21 +62,21 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
 
   // Search results arrive after presence; stale API flags must not overwrite the roster.
   loadSearch()
-  await page.locator('.watch-screen-canopy button.invite').click()
-  const friend = (name: string) => page.locator('.user-item').filter({ hasText: name }).locator('.ui-presence-avatar')
-  await expect(friend(online.name)).toHaveClass(/is-online/)
-  await expect(friend(offline.name)).not.toHaveClass(/is-online/)
+  await page.getByRole('button', { name: 'Invite people' }).click()
+  const friend = (name: string) => page.getByTestId('invite-person').filter({ hasText: name }).getByTestId('presence-avatar')
+  await expect(friend(online.name)).toHaveAttribute('data-online', 'true')
+  await expect(friend(offline.name)).toHaveAttribute('data-online', 'false')
   emit('presence-chat', 'pusher_internal:member_removed', { user_id: String(online.id) })
-  await expect(friend(online.name)).not.toHaveClass(/is-online/)
+  await expect(friend(online.name)).toHaveAttribute('data-online', 'false')
   await page.keyboard.press('Escape')
 
   emit(room, 'pusher_internal:member_removed', { user_id: String(online.id) })
-  await expect(page.locator('.watch-screen-canopy .ui-presence-avatar.is-online')).toHaveCount(0)
+  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(0)
   emit(room, 'pusher_internal:member_added', { user_id: String(offline.id), user_info: {} })
-  await expect(page.locator('.watch-screen-canopy .ui-presence-avatar.is-online')).toHaveCount(1)
+  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(1)
   // A replacement subscription roster must clear stale online members, too.
   emit(room, 'pusher_internal:subscription_succeeded', roster([viewer.id]))
-  await expect(page.locator('.watch-screen-canopy .ui-presence-avatar.is-online')).toHaveCount(0)
+  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(0)
   expect(await page.locator('video').evaluate((video: HTMLVideoElement) => video.currentTime)).toBe(2)
 
   const sync = () => emit(`private-party.${party.id}`, 'state', { state: { current_time: 3, is_playing: false } })

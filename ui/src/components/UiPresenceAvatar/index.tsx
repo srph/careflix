@@ -15,7 +15,7 @@ function UiPresenceAvatar(props: Props) {
 
   return (
     <div
-      className={cx('ui-presence-avatar', {
+      data-testid="presence-avatar" data-online={Boolean(isActive)} className={cx('ui-presence-avatar', {
         'is-sm': props.size === 'sm',
         'is-m': props.size === 'm',
         'is-l': props.size === 'l',

@@ -18,7 +18,7 @@ function ReactionLayer(props: Props) {
         {props.floats.map(float => (
           <div
             key={float.id}
-            className="reaction-float"
+            className="reaction-float" data-testid="reaction-float"
             style={{
               '--x': float.path.x,
               '--d': `${float.path.duration}s`,
@@ -33,7 +33,7 @@ function ReactionLayer(props: Props) {
               if (event.target === event.currentTarget) props.onDone(float.id)
             }}>
             <span className="drift">
-              <span className="emoji">{float.emoji}</span>
+              <span className="emoji" data-testid="reaction-emoji">{float.emoji}</span>
               <span className="name">{float.name}</span>
             </span>
           </div>

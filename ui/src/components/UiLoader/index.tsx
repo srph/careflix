@@ -12,7 +12,7 @@ interface Props {
  */
 function UiLoader(props: Props) {
   return (
-    <div className={cx('ui-loader', { 'is-large': props.size === 'large' })}>
+    <div data-testid="loader" className={cx('ui-loader', { 'is-large': props.size === 'large' })}>
       <img src={asset_loader} alt="Loading..." />
     </div>
   )

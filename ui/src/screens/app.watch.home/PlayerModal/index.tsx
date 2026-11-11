@@ -169,7 +169,7 @@ function PlayerModal({ party, ...props }: Props) {
     <div>
       <AnimatePresence initial={false}>
       {props.isOpen && (
-        <motion.div className="watch-player-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+        <motion.div data-testid="player-chrome" className="watch-player-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
           <div className="watch-player-overlay" ref={overlayRef} onClick={handleClickOverlay} />
 
           <Link to="/" className="watch-player-browse">
@@ -179,12 +179,12 @@ function PlayerModal({ party, ...props }: Props) {
             Back to Browse
           </Link>
 
-          <div className="watch-player-mobile-actions">
-            <UiPlainButton className="action" onClick={handleBackward}>
+          <div data-testid="player-mobile-actions" className="watch-player-mobile-actions">
+            <UiPlainButton className="action" aria-label="Rewind by 10 seconds" onClick={handleBackward}>
               <i className="fa fa-backward" />
             </UiPlainButton>
 
-            <UiPlainButton className="toggle" onClick={props.onPlay}>
+            <UiPlainButton className="toggle" aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
               {props.isPlaying ? (
                 <i className="fa fa-pause" />
               ) : (
@@ -194,7 +194,7 @@ function PlayerModal({ party, ...props }: Props) {
               )}
             </UiPlainButton>
 
-            <UiPlainButton className="action" onClick={handleForward}>
+            <UiPlainButton className="action" aria-label="Forward by 10 seconds" onClick={handleForward}>
               <i className="fa fa-forward" />
             </UiPlainButton>
           </div>
@@ -202,7 +202,7 @@ function PlayerModal({ party, ...props }: Props) {
           <div className="watch-player-contents">
             {/* The Activity Overlay menu sits over the seek bar, so the bar and its times step aside, like for the volume. */}
             {!isVolumeControlOpen && !isActivityMenuOpen && (isRemainingTimeTooltipOpen || !isTooltipOpen) && (
-              <div className="watch-player-controls">
+              <div data-testid="player-controls" className="watch-player-controls">
                 <div className="time">
                   {toReadableTime(props.time, {
                     max: party.video.duration > 3600 ? 'hh' : 'mm'
@@ -228,7 +228,7 @@ function PlayerModal({ party, ...props }: Props) {
               </div>
             )}
 
-            <div className="watch-player-modal-actions">
+            <div data-testid="player-actions" className="watch-player-modal-actions">
               <div className="section">
                 <PlayerTooltip
                   text={props.isPlaying ? 'Pause' : 'Play'}
@@ -236,7 +236,7 @@ function PlayerModal({ party, ...props }: Props) {
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
                   <div className="watch-player-modal-action-item is-control">
-                    <UiPlainButton className="icon" onClick={props.onPlay}>
+                    <UiPlainButton className="icon" aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
                       {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
                     </UiPlainButton>
                   </div>
@@ -248,7 +248,7 @@ function PlayerModal({ party, ...props }: Props) {
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
                   <div className="watch-player-modal-action-item is-control">
-                    <UiPlainButton className="icon" onClick={handleBackward}>
+                    <UiPlainButton className="icon" aria-label="Rewind by 10 seconds" onClick={handleBackward}>
                       <i className="fa fa-backward" />
                     </UiPlainButton>
                   </div>
@@ -260,7 +260,7 @@ function PlayerModal({ party, ...props }: Props) {
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
                   <div className="watch-player-modal-action-item is-control">
-                    <UiPlainButton className="icon" onClick={handleForward}>
+                    <UiPlainButton className="icon" aria-label="Forward by 10 seconds" onClick={handleForward}>
                       <i className="fa fa-forward" />
                     </UiPlainButton>
                   </div>
@@ -306,7 +306,7 @@ function PlayerModal({ party, ...props }: Props) {
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
                   <div className="watch-player-modal-action-item is-keyboard-icon">
-                    <UiPlainButton className="icon" onClick={props.onOpenKeyboardInfo}>
+                    <UiPlainButton className="icon" aria-label="View keyboard shortcuts" onClick={props.onOpenKeyboardInfo}>
                       <i className="fa fa-keyboard-o" />
                     </UiPlainButton>
                   </div>
@@ -322,7 +322,7 @@ function PlayerModal({ party, ...props }: Props) {
                       className={cx('watch-player-modal-action-item', {
                         'is-subtitle-disabled': !props.isSubtitleEnabled
                       })}>
-                      <UiPlainButton className="icon" onClick={props.onToggleSubtitle}>
+                      <UiPlainButton className="icon" aria-label={props.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'} onClick={props.onToggleSubtitle}>
                         <i className="fa fa-align-center" />
                       </UiPlainButton>
                     </div>
@@ -336,7 +336,7 @@ function PlayerModal({ party, ...props }: Props) {
                     onOpen={handleOpenTooltip}
                     onClose={handleCloseTooltip}>
                     <div className="watch-player-modal-action-item" onClick={props.onOpenSeasonSelection}>
-                      <UiPlainButton className="icon">
+                      <UiPlainButton className="icon" aria-label="Open Episode Selection">
                         <i className="fa fa-list-ol" />
                       </UiPlainButton>
                     </div>
@@ -349,7 +349,7 @@ function PlayerModal({ party, ...props }: Props) {
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
                   <div className="watch-player-modal-action-item is-fs-icon" onClick={toggleIsFullsceen}>
-                    <UiPlainButton className="icon">
+                    <UiPlainButton className="icon" aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}>
                       {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
                     </UiPlainButton>
                   </div>
@@ -376,7 +376,7 @@ function PlayerModal({ party, ...props }: Props) {
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
                   <div className="watch-player-modal-action-item is-chat-icon">
-                    <UiPlainButton className="icon" onClick={props.onToggleChat}>
+                    <UiPlainButton className="icon" aria-label={props.isChatOpen ? 'Close Chat' : 'Open Chat'} onClick={props.onToggleChat}>
                       {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
                     </UiPlainButton>
                   </div>

@@ -10,6 +10,6 @@ type Props = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
 
 // Announce loading once on the containing region; individual shapes are decorative.
 export default function UiSkeleton({ className, width, height, radius, style, ...props }: Props) {
-  return <div {...props} className={cx('ui-skeleton', className)}
+  return <div data-testid="skeleton" {...props} className={cx('ui-skeleton', className)}
     style={{ width, height, borderRadius: radius, ...style }} aria-hidden="true" />
 }

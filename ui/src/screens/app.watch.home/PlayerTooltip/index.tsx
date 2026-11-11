@@ -44,7 +44,7 @@ export default function PlayerTooltip({ padding = 32, ...props }: Props) {
       <Tooltip.Portal>
         <Tooltip.Positioner side="top" align={props.align === 'left' ? 'start' : 'end'} sideOffset={padding}
           className="app-watch-player-tooltip-popover-container">
-          <Tooltip.Popup className="app-watch-player-tooltip-popover">{props.text}</Tooltip.Popup>
+          <Tooltip.Popup className="app-watch-player-tooltip-popover" data-testid="player-tooltip">{props.text}</Tooltip.Popup>
         </Tooltip.Positioner>
       </Tooltip.Portal>
     </Tooltip.Root>

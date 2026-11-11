@@ -3,7 +3,7 @@ import Artwork from './Artwork'
 import { showMeta } from './format'
 
 export default function ShowCard({ show, onDetails }: { show: AppShow; onDetails: (show: AppShow) => void }) {
-  return <div className="listing-show-card">
+  return <div data-testid="show-card" className="listing-show-card">
     <UiPlainButton className="listing-show-trigger" onClick={event => { event.currentTarget.focus(); onDetails(show) }} aria-label={`Details for ${show.title}`}>
       <div className="listing-show-thumbnail"><Artwork src={show.preview_image} /></div>
       <h3>{show.title}</h3><span>{showMeta(show)}</span>

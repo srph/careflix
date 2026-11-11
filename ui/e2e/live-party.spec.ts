@@ -17,11 +17,11 @@ async function mediaReady(page: Page) {
 }
 
 async function sendMessage(page: Page, text: string) {
-  await page.locator('textarea').fill(text)
+  await page.getByPlaceholder('Message').fill(text)
   // Wait for the input update to render before the key handler clicks the
   // existing native submit button (which is disabled while the text is empty).
-  await expect(page.locator('.watch-screen-chatbar button')).toBeEnabled()
-  await page.locator('textarea').press('Enter')
+  await expect(page.getByRole('button', { name: 'Send message' })).toBeEnabled()
+  await page.getByPlaceholder('Message').press('Enter')
 }
 
 test('live invitations, presence, chat, playback, seek, episodes and reconnect', async ({ browser, baseURL }, info) => {
@@ -79,7 +79,7 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await Promise.all([pageA.goto(`/watch/${party.id}`), pageB.goto('/')])
     await mediaReady(pageA)
     await expect.poll(() => subscriptionsB.has(`private-user.${profileB.id}`)).toBe(true)
-    await pageA.locator('.watch-screen-canopy button.invite').click()
+    await pageA.getByRole('button', { name: 'Invite people' }).click()
     console.info('Live party: loaded both accounts; sending invitation')
     await pageA.getByPlaceholder('Search for a friend to invite...').fill(profileB.name)
     await pageA.getByRole('dialog').getByRole('button', { name: 'Invite', exact: true }).click()
@@ -92,28 +92,28 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await pageA.keyboard.press('Escape')
     await expect.poll(() => subscriptionsA.has(`presence-chat-party.${party.id}`)).toBe(true)
     await expect.poll(() => subscriptionsB.has(`presence-chat-party.${party.id}`)).toBe(true)
-    await expect(pageA.locator('.watch-screen-canopy .ui-presence-avatar.is-online')).toHaveCount(1)
+    await expect(pageA.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(1)
 
     const message = `Migration chat ${Date.now()}`
     await sendMessage(pageA, message)
-    await expect(pageB.locator('.message .inner').getByText(message, { exact: true })).toBeVisible()
-    await expect(pageB.locator('.message .inner').getByText(message, { exact: true })).toHaveCount(1)
+    await expect(pageB.getByTestId('chat-messages').getByText(message, { exact: true })).toBeVisible()
+    await expect(pageB.getByTestId('chat-messages').getByText(message, { exact: true })).toHaveCount(1)
 
-    await pageB.locator('.watch-screen-chat-messages').evaluate(element => { element.scrollTop = 0 })
+    await pageB.getByTestId('chat-messages').evaluate(element => { element.scrollTop = 0 })
     const unread = `Unread ${Date.now()}`
     await sendMessage(pageA, unread)
     await expect(pageB.getByRole('button', { name: 'You have unread messages' })).toBeVisible()
     await pageB.getByRole('button', { name: 'You have unread messages' }).click()
     await expect(pageB.getByRole('button', { name: 'You have unread messages' })).not.toBeVisible()
-    await expect(pageB.locator('.message .inner').getByText(unread, { exact: true })).toBeInViewport()
+    await expect(pageB.getByTestId('chat-messages').getByText(unread, { exact: true })).toBeInViewport()
     console.info('Live party: chat delivery, unread state and scrolling verified')
 
     await revealControls(pageA)
-    await pageA.locator('.watch-player-modal-actions button:has(.fa-play)').click()
+    await pageA.getByTestId('player-actions').getByRole('button', { name: 'Play', exact: true }).click()
     await expect.poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(false)
     await expect.poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(0.5)
     await revealControls(pageA)
-    await pageA.locator('.watch-player-modal-actions button:has(.fa-pause)').click()
+    await pageA.getByTestId('player-actions').getByRole('button', { name: 'Pause', exact: true }).click()
     await expect.poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(true)
 
     const seeks: { current_time: number }[] = []
@@ -123,7 +123,7 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await revealControls(pageA)
     const slider = pageA.getByRole('slider', { name: 'Playback position' })
     const thumb = await slider.boundingBox()
-    const track = await pageA.locator('.app-watch-player-seeker .ui-input-slider-track').boundingBox()
+    const track = await pageA.getByTestId('player-seeker').getByTestId('slider-track').boundingBox()
     if (!thumb || !track) throw new Error('Seek slider bounds missing')
     await pageA.mouse.move(thumb.x + thumb.width / 2, thumb.y + thumb.height / 2)
     await pageA.mouse.down()
@@ -143,15 +143,15 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     }
     const cueTime = Math.ceil((seconds(cue[1]) + seconds(cue[2])) / 2)
     await api(a.token, `/api/parties/${party.id}/state`, 'PUT', { is_playing: false, current_time: cueTime })
-    await expect(pageA.locator('.subtitle-slot .subtitle').first()).toBeVisible()
+    await expect(pageA.getByTestId('subtitle').first()).toBeVisible()
     await revealControls(pageA)
-    await pageA.locator('.watch-player-modal-actions button:has(.fa-align-center)').click()
-    await expect(pageA.locator('.subtitle-slot .subtitle')).toHaveCount(0)
-    await pageA.locator('.watch-player-modal-actions button:has(.fa-align-center)').click()
-    await expect(pageA.locator('.subtitle-slot .subtitle').first()).toBeVisible()
+    await pageA.getByTestId('player-actions').getByRole('button', { name: /subtitles$/ }).click()
+    await expect(pageA.getByTestId('subtitle')).toHaveCount(0)
+    await pageA.getByTestId('player-actions').getByRole('button', { name: /subtitles$/ }).click()
+    await expect(pageA.getByTestId('subtitle').first()).toBeVisible()
 
     await revealControls(pageA)
-    await pageA.locator('.watch-player-modal-actions button:has(.fa-list-ol)').click()
+    await pageA.getByTestId('player-actions').getByRole('button', { name: 'Open Episode Selection' }).click()
     await pageA.getByRole('dialog').getByRole('button', { name: new RegExp(episodes[1].title) }).click()
     await expect(pageA.locator('video')).toHaveAttribute('src', episodes[1].video_url)
     await expect.poll(() => eventsB.includes('video-changed')).toBe(true)
@@ -174,8 +174,8 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await expect.poll(() => subscriptionsB.has(`private-party.${party.id}`), { timeout: 30_000 }).toBe(true)
     const reconnectedMessage = `Reconnected ${Date.now()}`
     await sendMessage(pageA, reconnectedMessage)
-    await expect(pageB.locator('.message .inner').getByText(reconnectedMessage, { exact: true })).toBeVisible()
-    await expect(pageB.locator('.message .inner').getByText(reconnectedMessage, { exact: true })).toHaveCount(1)
+    await expect(pageB.getByTestId('chat-messages').getByText(reconnectedMessage, { exact: true })).toBeVisible()
+    await expect(pageB.getByTestId('chat-messages').getByText(reconnectedMessage, { exact: true })).toHaveCount(1)
 
     const nextParty = await api(a.token, '/api/parties', 'POST', { show_video_id: episodes[0].id })
     await api(a.token, `/api/parties/${nextParty.id}/invitations/send`, 'POST', { recipient_id: profileB.id })

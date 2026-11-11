@@ -21,7 +21,7 @@ interface Props {
 function ActivityMenu(props: Props) {
   return (
     <Menu.Root onOpenChange={open => props.onOpenChange(open)}>
-      <Menu.Trigger render={<UiPlainButton className="icon" aria-label="Activity Overlay" />}>
+      <Menu.Trigger render={<UiPlainButton className="icon" aria-label="Activity Overlay" data-level={props.level} />}>
         <i className={cx('fa', ACTIVITY_COPY[props.level].icon)} aria-hidden="true" />
       </Menu.Trigger>
 

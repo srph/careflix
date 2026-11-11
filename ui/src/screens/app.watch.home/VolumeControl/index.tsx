@@ -30,7 +30,7 @@ function VolumeControl(props: Props) {
 
   return (
     <div
-      className={cx('app-watch-volume-control-action', {
+      data-testid="volume-control" className={cx('app-watch-volume-control-action', {
         'is-muted': props.isMuted
       })}
       onMouseEnter={onMouseEnter}
@@ -41,7 +41,7 @@ function VolumeControl(props: Props) {
           align="left"
           onOpen={props.onOpenTooltip}
           onClose={props.onCloseTooltip}>
-          <UiPlainButton onClick={props.onToggleMute}>
+          <UiPlainButton aria-label={props.isMuted ? 'Unmute' : 'Mute'} onClick={props.onToggleMute}>
             <i className="fa fa-volume-up" />
           </UiPlainButton>
         </PlayerTooltip>

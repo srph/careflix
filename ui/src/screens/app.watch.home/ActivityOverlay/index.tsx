@@ -91,7 +91,7 @@ function ActivityOverlay(props: Props) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -24, transition: { duration: 0.26, ease: [0.4, 0, 1, 1] } }}
               transition={{ duration: 0.32, ease: EASE }}>
-              <button type="button" className="line" data-age={count - 1 - i} onClick={props.onOpenChat}>
+              <button type="button" className="line" data-testid="activity-line" data-age={count - 1 - i} onClick={props.onOpenChat}>
                 <LineContent log={line.log} />
               </button>
             </motion.div>
@@ -106,9 +106,9 @@ function ActivityOverlay(props: Props) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
               transition={{ duration: 0.32, ease: EASE }}>
-              <button type="button" className="line is-typing" data-age={0} onClick={props.onOpenChat}>
+              <button type="button" className="line is-typing" data-testid="activity-line" data-age={0} onClick={props.onOpenChat}>
                 <span className="dots" aria-hidden="true"><i /><i /><i /></span>
-                <span className="text"><b>{typer.subject}</b> {typer.verb}</span>
+                <span className="text" data-testid="activity-text"><b>{typer.subject}</b> {typer.verb}</span>
               </button>
             </motion.div>
           )}
@@ -119,7 +119,7 @@ function ActivityOverlay(props: Props) {
         {toast && (
           <motion.div
             key={toast}
-            className="activity-overlay-toast"
+            className="activity-overlay-toast" data-testid="activity-toast"
             role="status"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,7 +138,7 @@ function LineContent({ log }: { log: AppPartyLog }) {
   if (log.type === 'message') {
     return <>
       <UiAvatar user={log.message.user} />
-      <span className="text"><b>{log.message.user.name}</b> {log.message.text}</span>
+      <span className="text" data-testid="activity-text"><b>{log.message.user.name}</b> {log.message.text}</span>
     </>
   }
 
@@ -146,13 +146,13 @@ function LineContent({ log }: { log: AppPartyLog }) {
   if (isJoinActivity(activity)) {
     return <>
       <UiAvatar user={activity.user} />
-      <span className="text"><b>{activity.user.name}</b> {hypeFor(activity.user.id)[0]}</span>
+      <span className="text" data-testid="activity-text"><b>{activity.user.name}</b> {hypeFor(activity.user.id)[0]}</span>
     </>
   }
 
   return <>
     <span className="icon" aria-hidden="true"><i className={cx('fa', activityIcon(activity))} /></span>
-    <span className="text"><b>{activity.user.name}</b> <ActivitySaid activity={activity} /></span>
+    <span className="text" data-testid="activity-text"><b>{activity.user.name}</b> <ActivitySaid activity={activity} /></span>
   </>
 }
 

@@ -405,12 +405,12 @@ function ChatWidget(props: Props) {
 
   return (
     <div
-      className={cx('watch-screen-chat', {
+      data-testid="chat-pane" data-open={props.isChatOpen} className={cx('watch-screen-chat', {
         'is-chat-open': props.isChatOpen
       })}>
       {/* The invite panel is a solid sheet over this, so the chat stays put underneath; it only can't be reached. */}
-      <div className="watch-screen-chat-content" inert={props.isInvitationOpen}>
-        <div className="watch-screen-canopy">
+      <div data-testid="chat-content" className="watch-screen-chat-content" inert={props.isInvitationOpen}>
+        <div data-testid="chat-canopy" className="watch-screen-canopy">
           <UiAvatarGroup users={props.party.members} />
 
           <PartyCode code={props.party.join_code} chip />
@@ -423,7 +423,7 @@ function ChatWidget(props: Props) {
 
         <InviteStrip invitations={invitations} onOpen={props.onOpenInvitationModal} />
         <div className="watch-screen-chat-messages-container">
-          <div className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
+          <div data-testid="chat-messages" className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
             {grouped.map((group, i) => {
               const isSelf = group.user.id === auth.data.id
               const previous = grouped[i - 1]
@@ -432,8 +432,8 @@ function ChatWidget(props: Props) {
 
               return (
                 <React.Fragment key={i}>
-                  {showTime && <div className="watch-screen-chat-time">{format(parse(group.logs[0].created_at), 'h:mm A')}</div>}
-                  <div className={cx('watch-screen-chat-group', { 'is-self': isSelf })}>
+                  {showTime && <div data-testid="chat-time" className="watch-screen-chat-time">{format(parse(group.logs[0].created_at), 'h:mm A')}</div>}
+                  <div data-testid="chat-group" data-self={isSelf} className={cx('watch-screen-chat-group', { 'is-self': isSelf })}>
                     {!isSelf && <div className="avatar"><UiAvatar user={group.user} /></div>}
 
                     <div className="messages">
@@ -441,7 +441,7 @@ function ChatWidget(props: Props) {
 
                       <div className="list">
                         {group.logs.map(log => (
-                          <div className="message" key={log.id}>{log.message.text}</div>
+                          <div data-testid="chat-message" className="message" key={log.id}>{log.message.text}</div>
                         ))}
                       </div>
                     </div>
@@ -460,10 +460,10 @@ function ChatWidget(props: Props) {
         </div>
 
         {/* A tray in the LayerCard style: the status row on top, the composer card flush below it. */}
-        <div className="watch-screen-chatbar">
+        <div data-testid="chat-tray" className="watch-screen-chatbar">
           <ChatStatus logs={state.logs} typing={typing.names} joined={joined} meId={auth.data.id} />
 
-          <form onSubmit={handleMessage} className="watch-screen-chatbar-input">
+          <form onSubmit={handleMessage} className="watch-screen-chatbar-input" data-testid="chat-composer">
             <textarea
               rows={1}
               placeholder="Message"

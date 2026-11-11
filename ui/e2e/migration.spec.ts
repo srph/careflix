@@ -32,7 +32,7 @@ test('guest home and login show the Discord splash', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
     await expect(page.getByRole('textbox')).toHaveCount(0)
     await expect(page).toHaveTitle('Watch together - Care.tv')
-    const fonts = await page.locator('.login-splash').evaluate(element => ({
+    const fonts = await page.getByRole('main').evaluate(element => ({
       splash: getComputedStyle(element).fontFamily,
       app: getComputedStyle(document.body).fontFamily,
     }))
@@ -112,9 +112,9 @@ test('authenticated settings preserve the heading and back navigation', async ({
   await page.goto('/settings/profile')
   await expect(page).toHaveURL(/\/settings\/profile$/)
   await expect(page).toHaveTitle(/Care.tv$/)
-  await expect(page.locator('.ui-navigation')).toContainText('Account Settings')
+  await expect(page.getByTestId('navigation')).toContainText('Account Settings')
   // The existing mobile layout hides the text and leaves an icon-only link.
-  await page.locator('.ui-navigation .is-back a').click()
+  await page.getByTestId('navigation').getByRole('link', { name: 'Go Back' }).click()
   await expect(page).toHaveURL(/\/settings$/)
 })
 
@@ -227,14 +227,14 @@ test('an invalid restored session returns to an interactive login', async ({ pag
 test('reduced motion disables falling reactions', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/login')
-  await expect(page.locator('.login-reactions')).toHaveCSS('display', 'none')
+  await expect(page.getByTestId('login-reactions')).toHaveCSS('display', 'none')
   await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
 })
 
 test('unmatched URLs retain the existing authenticated app shell', async ({ page }) => {
   await authenticatedCatalog(page)
   await page.goto('/migration-unknown-route')
-  await expect(page.locator('.ui-navigation')).toBeVisible()
+  await expect(page.getByTestId('navigation')).toBeVisible()
   await expect(page.getByRole('link', { name: 'Care.tv', exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Unexpected Application Error!' })).not.toBeVisible()
 })

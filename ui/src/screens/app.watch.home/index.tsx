@@ -504,12 +504,12 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
       <div className="watch-screen">
         <div
-          className={cx('watch-screen-video', {
+          data-testid="video-pane" className={cx('watch-screen-video', {
             'has-overlay': changeEpisodeBuffer,
             'is-chat-open': state.isChatOpen
           })}>
           <div
-            className="container"
+            data-testid="video-stage" className="container"
             style={
               state.isInitialized
                 ? {}

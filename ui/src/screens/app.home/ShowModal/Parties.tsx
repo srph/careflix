@@ -18,7 +18,7 @@ function usePartyMembers(party: AppParty) {
 
 export function LiveRoom({ party }: { party: AppParty }) {
   const { members, names } = usePartyMembers(party)
-  return <div className="show-modal-live">
+  return <div data-testid="live-room" className="show-modal-live">
     <span className="show-modal-live-label"><i />Live</span>
     <UiAvatarGroup users={members} size="sm" />
     <p>Your room{names && <> with <b>{names}</b></>} <span className="show-modal-position">· {partyPosition(party)}</span></p>
@@ -28,7 +28,7 @@ export function LiveRoom({ party }: { party: AppParty }) {
 
 function PartyRow({ party }: { party: AppParty }) {
   const { members, names } = usePartyMembers(party)
-  return <Link className="show-modal-party" to={`/watch/${party.id}`} aria-label={`Rejoin ${party.video?.show?.title}${names ? ` with ${names}` : ''}`}>
+  return <Link data-testid="party-row" className="show-modal-party" to={`/watch/${party.id}`} aria-label={`Rejoin ${party.video?.show?.title}${names ? ` with ${names}` : ''}`}>
     <UiAvatarGroup users={members} size="sm" />
     <b className="show-modal-party-names">You{names && `, ${names}`}</b>
     <span className="show-modal-party-position">{partyPosition(party)}</span>

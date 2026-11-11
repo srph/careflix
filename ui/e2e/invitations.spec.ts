@@ -69,34 +69,34 @@ test('pill opens, advances without collapsing, and shows episode segments', asyn
   await setup(page)
   await page.goto('/')
   await expect(dialog(page)).toContainText('Kier invited you to watch Velvet Static')
-  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '1')
+  await expect(dialog(page).getByTestId('invitation-beam')).toHaveCSS('opacity', '1')
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0)
   await page.screenshot({ path: test.info().outputPath('invitation-pill.png') })
   await open(page)
-  await expect(dialog(page).locator('.invitation-count')).toHaveText('1 of 3')
+  await expect(dialog(page).getByTestId('invitation-count')).toHaveText('1 of 3')
   await expect(page.getByRole('button', { name: 'Collapse invitation' })).toBeFocused()
-  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '0')
+  await expect(dialog(page).getByTestId('invitation-beam')).toHaveCSS('opacity', '0')
   await expect(dialog(page).getByRole('img', { name: /Room snapshot: 41:12/ })).toBeVisible()
   await page.screenshot({ path: test.info().outputPath('invitation-expanded.png') })
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
   await expect(dialog(page).getByRole('heading', { name: 'Paper Moons' })).toBeVisible()
-  await expect(dialog(page).locator('.invitation-count')).toHaveText('2 of 3')
+  await expect(dialog(page).getByTestId('invitation-count')).toHaveText('2 of 3')
   await expect(page.getByRole('button', { name: 'Respond', exact: true })).toHaveCount(0)
-  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '0')
+  await expect(dialog(page).getByTestId('invitation-beam')).toHaveCSS('opacity', '0')
   await expect(page.getByRole('button', { name: 'Collapse invitation' })).toBeFocused()
-  await expect(dialog(page).locator('.invitation-body')).toHaveCSS('opacity', '1')
-  await expect(dialog(page).locator('.invitation-content')).toHaveCSS('transform', 'none')
+  await expect(dialog(page).getByTestId('invitation-body')).toHaveCSS('opacity', '1')
+  await expect(dialog(page).getByTestId('invitation-content')).toHaveCSS('transform', 'none')
   await page.screenshot({ path: test.info().outputPath('invitation-next.png') })
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
   await expect(dialog(page).getByRole('heading', { name: 'The Understudies' })).toBeVisible()
-  await expect(dialog(page).locator('.invitation-segments > span')).toHaveCount(3)
+  await expect(dialog(page).getByTestId('invitation-segments').locator('span')).toHaveCount(3)
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: 'Respond', exact: true })).toBeFocused()
-  await expect(dialog(page).locator('.incoming-invitation')).not.toHaveClass(/is-expanded/)
+  await expect(dialog(page).getByTestId('invitation-card')).toHaveAttribute('data-expanded', 'false')
   await open(page)
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
   await expect(dialog(page)).toContainText('Declined Nico’s invitation to watch The Understudies')
-  await expect(dialog(page).locator('.incoming-invitation')).not.toHaveClass(/is-expanded/)
+  await expect(dialog(page).getByTestId('invitation-card')).toHaveAttribute('data-expanded', 'false')
   await expect(dialog(page)).not.toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })
@@ -110,8 +110,8 @@ test('expiration stays visible, Dismiss skips stale invites, and cancellation up
   await page.clock.fastForward(6000)
   await expect(dialog(page)).toContainText('Kier’s invitation expired')
   await expect(dialog(page).getByRole('heading', { name: 'Velvet Static' })).toHaveCSS('color', 'oklch(0.868 0.007 39.5)')
-  await expect(dialog(page).locator('.ui-subheading')).toHaveText('Kier’s invitation expired')
-  await expect(dialog(page).locator('.ui-subheading')).toHaveCSS('color', 'rgb(247, 201, 72)')
+  await expect(dialog(page).getByTestId('invitation-meta')).toHaveText('Kier’s invitation expired')
+  await expect(dialog(page).getByTestId('invitation-meta')).toHaveCSS('color', 'rgb(247, 201, 72)')
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0)
   await expect(page.getByRole('button', { name: /re-invite/i })).toHaveCount(0)
   await page.getByRole('button', { name: 'Dismiss', exact: true }).click()
@@ -143,10 +143,10 @@ test('failed actions retry and another invite preserves a request in flight', as
   emit('invitation.received', invite(1))
   emit('invitation.received', invite(1))
   emit('invitation.cancelled', { id: 999999 })
-  await expect(dialog(page).locator('.invitation-count')).toHaveText('1 of 2')
+  await expect(dialog(page).getByTestId('invitation-count')).toHaveText('1 of 2')
   release!()
   await expect(dialog(page).getByRole('heading', { name: 'Paper Moons' })).toBeVisible()
-  await expect(dialog(page).locator('.invitation-count')).toHaveText('2 of 2')
+  await expect(dialog(page).getByTestId('invitation-count')).toHaveText('2 of 2')
   expect(attempts).toBe(2)
 })
 
@@ -163,11 +163,11 @@ test('the last decline waits for success, shows its confirmation pill, then dism
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Declining…' })).toBeDisabled()
   await expect(dialog(page)).not.toContainText('Declined Kier')
-  await expect(dialog(page).locator('.incoming-invitation')).toHaveClass(/is-expanded/)
+  await expect(dialog(page).getByTestId('invitation-card')).toHaveAttribute('data-expanded', 'true')
 
   release!()
   await expect(dialog(page)).toContainText('Declined Kier’s invitation to watch Velvet Static')
-  await expect.poll(async () => (await dialog(page).locator('.incoming-invitation').boundingBox()).height).toBeCloseTo(40, 0)
+  await expect.poll(async () => (await dialog(page).getByTestId('invitation-card').boundingBox()).height).toBeCloseTo(40, 0)
   await expect(page.getByRole('button', { name: 'Respond', exact: true })).toHaveCount(0)
   await page.screenshot({ path: test.info().outputPath('invitation-declined.png') })
   await expect(dialog(page)).not.toBeVisible()
@@ -190,20 +190,20 @@ test('accepting with multiple invitations clears the declined queue, docks, and 
   await expect.poll(() => subscriptions.has(`private-party.${parties[1].id}`)).toBe(true)
   await expect.poll(() => subscriptions.has(`private-party.${parties[0].id}`)).toBe(false)
   await expect(dialog(page)).toContainText('You’re in with Mira')
-  await expect(dialog(page).locator('.incoming-invitation')).toHaveClass(/is-docked/)
-  const joinedLine = dialog(page).locator('.incoming-invitation > .invitation-line')
+  await expect(dialog(page).getByTestId('invitation-card')).toHaveAttribute('data-docked', 'true')
+  const joinedLine = dialog(page).getByTestId('invitation-card').getByTestId('invitation-line')
   await expect(joinedLine.getByText('You’re in with Mira')).toBeVisible()
   await expect.poll(async () => {
     const pill = await dialog(page).boundingBox()
-    const player = await page.locator('.watch-screen-video').boundingBox()
+    const player = await page.getByTestId('video-pane').boundingBox()
     return Math.abs(pill.y - player.y - 20)
   }).toBeLessThan(2)
   const joinedBounds = await joinedLine.boundingBox()
-  const cardBounds = await dialog(page).locator('.incoming-invitation').boundingBox()
+  const cardBounds = await dialog(page).getByTestId('invitation-card').boundingBox()
   expect(joinedBounds.y).toBeGreaterThanOrEqual(cardBounds.y)
   expect(joinedBounds.y + joinedBounds.height).toBeLessThanOrEqual(cardBounds.y + cardBounds.height + 1)
   const leaving = page.evaluate(() => new Promise<{ opacity: number; y: number; elapsed: number }[]>(resolve => {
-    const popup = document.querySelector<HTMLElement>('.incoming-invitation-position')!
+    const popup = document.querySelector<HTMLElement>('[data-testid="invitation-popup"]')!
     const frames = []
     const observer = new MutationObserver(() => {
       if (!popup.hasAttribute('data-ending-style')) return
@@ -234,7 +234,7 @@ test('reduced motion retains queue behavior and disables beam animation', async 
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await setup(page)
   await page.goto('/')
-  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('animation-name', 'none')
+  await expect(dialog(page).getByTestId('invitation-beam')).toHaveCSS('animation-name', 'none')
   await open(page)
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
   await expect(dialog(page).getByRole('heading', { name: 'Paper Moons' })).toBeVisible()
@@ -246,20 +246,20 @@ test('expand and collapse animate height, width, and corners without scaling the
   short.party = { ...short.party, video: { ...short.party.video, show: { ...short.party.video.show, title: 'X' } } }
   await setup(page, [short])
   await page.goto('/')
-  const card = dialog(page).locator('.incoming-invitation')
-  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '1')
+  const card = dialog(page).getByTestId('invitation-card')
+  await expect(dialog(page).getByTestId('invitation-beam')).toHaveCSS('opacity', '1')
   const collapsedHeight = (await card.boundingBox()).height
   const collapsedWidth = (await card.boundingBox()).width
 
   const sample = (expanded: boolean) => page.evaluate(isExpanded => new Promise<{ height: number; width: number; radius: number; scaleX: number; scaleY: number; avatarHeight: number }[]>(resolve => {
-    const card = document.querySelector<HTMLElement>('.incoming-invitation')!
+    const card = document.querySelector<HTMLElement>('[data-testid="invitation-card"]')!
     const observer = new MutationObserver(() => {
-      if (card.classList.contains('is-expanded') !== isExpanded) return
+      if ((card.dataset.expanded === 'true') !== isExpanded) return
       observer.disconnect()
       const frames = []
       const started = performance.now()
       const record = () => {
-        const avatar = card.querySelector<HTMLElement>('.invitation-line > .ui-avatar')!
+        const avatar = card.querySelector<HTMLElement>('[data-testid="invitation-line"] > [data-testid="avatar"]')!
         const transform = getComputedStyle(card).transform
         const matrix = transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transform)
         frames.push({ height: card.getBoundingClientRect().height, width: card.getBoundingClientRect().width, radius: parseFloat(getComputedStyle(card).borderTopLeftRadius), scaleX: matrix.a, scaleY: matrix.d, avatarHeight: avatar.getBoundingClientRect().height })
@@ -268,7 +268,7 @@ test('expand and collapse animate height, width, and corners without scaling the
       }
       record()
     })
-    observer.observe(card, { attributes: true, attributeFilter: ['class'] })
+    observer.observe(card, { attributes: true, attributeFilter: ['data-expanded'] })
   }), expanded)
 
   const expanding = sample(true)
@@ -298,7 +298,7 @@ test('expand and collapse animate height, width, and corners without scaling the
   await page.setViewportSize({ width: 390, height: 320 })
   await open(page)
   await page.getByRole('button', { name: 'Accept', exact: true }).scrollIntoViewIfNeeded()
-  await expect(card.locator(':scope > .invitation-line')).toBeInViewport()
+  await expect(card.getByTestId('invitation-line')).toBeInViewport()
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toBeInViewport()
   const bounds = await card.boundingBox()
   expect(bounds.y).toBeGreaterThanOrEqual(0)
@@ -308,15 +308,15 @@ test('expand and collapse animate height, width, and corners without scaling the
 test('opening fades the preview after a delay while the next invite slides in separately', async ({ page }) => {
   await setup(page)
   await page.goto('/')
-  await expect(dialog(page).locator('.invitation-beam')).toHaveCSS('opacity', '1')
+  await expect(dialog(page).getByTestId('invitation-beam')).toHaveCSS('opacity', '1')
 
   const sample = (transition: 'open' | 'next') => page.evaluate(kind => new Promise<{ elapsed: number; bodyOpacity: number; contentOpacity: number; x: number }[]>(resolve => {
-    const card = document.querySelector<HTMLElement>('.incoming-invitation')!
-    const body = card.querySelector<HTMLElement>('.invitation-body')!
+    const card = document.querySelector<HTMLElement>('[data-testid="invitation-card"]')!
+    const body = card.querySelector<HTMLElement>('[data-testid="invitation-body"]')!
     const previous = body.firstElementChild
     const frames = []
     const observer = new MutationObserver(() => {
-      if (kind === 'open' ? !card.classList.contains('is-expanded') : body.firstElementChild === previous) return
+      if (kind === 'open' ? card.dataset.expanded !== 'true' : body.firstElementChild === previous) return
       observer.disconnect()
       const started = performance.now()
       const record = () => {
@@ -329,7 +329,7 @@ test('opening fades the preview after a delay while the next invite slides in se
       }
       record()
     })
-    observer.observe(kind === 'open' ? card : body, kind === 'open' ? { attributes: true, attributeFilter: ['class'] } : { childList: true })
+    observer.observe(kind === 'open' ? card : body, kind === 'open' ? { attributes: true, attributeFilter: ['data-expanded'] } : { childList: true })
   }), transition)
 
   // Both first opening and reopening use the delayed fade, without a slide.
@@ -345,7 +345,7 @@ test('opening fades the preview after a delay while the next invite slides in se
     expect(frames.every(frame => Math.abs(frame.x) < 0.01 && frame.contentOpacity === 1)).toBe(true)
     if (attempt === 0) {
       await page.getByRole('button', { name: 'Collapse invitation' }).click()
-      await expect(dialog(page).locator('.invitation-body')).toHaveCSS('opacity', '0')
+      await expect(dialog(page).getByTestId('invitation-body')).toHaveCSS('opacity', '0')
     }
   }
 

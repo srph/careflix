@@ -69,15 +69,15 @@ async function room(page) {
 
 test('the status row follows playback, typing and arrivals while the list stays conversation', async ({ page }) => {
   const fixture = await room(page)
-  const status = page.locator('.watch-screen-chat-status')
-  const messages = page.locator('.watch-screen-chat-messages')
+  const status = page.getByTestId('chat-status')
+  const messages = page.getByTestId('chat-messages')
 
   await expect(status).toHaveText('You paused at 41:12')
   // Activity no longer interrupts the conversation; time marks the start and the quiet stretch.
   await expect(messages).not.toContainText('paused')
-  await expect(page.locator('.watch-screen-chat-time')).toHaveText(['9:03 PM', '9:45 PM'])
-  await expect(page.locator('.watch-screen-chat-group.is-self .message')).toHaveText('pressing play 🍿')
-  await expect(page.locator('.watch-screen-canopy').getByRole('button', { name: 'Copy party code 482 913' })).toBeVisible()
+  await expect(page.getByTestId('chat-time')).toHaveText(['9:03 PM', '9:45 PM'])
+  await expect(page.locator('[data-testid="chat-group"][data-self="true"]').getByTestId('chat-message')).toHaveText('pressing play 🍿')
+  await expect(page.getByTestId('chat-canopy').getByRole('button', { name: 'Copy party code 482 913' })).toBeVisible()
 
   fixture.emit(channel, 'log', { log: activity(mira, 'seeked', '2026-11-10 21:46:00', { seconds: 2327, from_seconds: 2481 }) })
   await expect(status).toHaveText('Mira jumped back to 38:47')
@@ -100,7 +100,7 @@ test('the status row follows playback, typing and arrivals while the list stays 
 test('the composer grows, pings typing, keeps its ring on the field, and sends with Enter', async ({ page }) => {
   const fixture = await room(page)
   const composer = page.getByRole('textbox', { name: 'Message' })
-  const field = page.locator('.watch-screen-chatbar-input')
+  const field = page.getByTestId('chat-composer')
 
   await composer.focus()
   await page.keyboard.type('ok hear me out')
@@ -108,7 +108,7 @@ test('the composer grows, pings typing, keeps its ring on the field, and sends w
   expect(fixture.sent.find(event => event.event === 'client-typing')).toMatchObject({ channel, data: { user: { id: viewer.id, name: viewer.name } } })
 
   await expect(field).toHaveCSS('outline-style', 'solid')
-  await expect(page.locator('.watch-screen-chatbar')).toHaveCSS('outline-style', 'none')
+  await expect(page.getByTestId('chat-tray')).toHaveCSS('outline-style', 'none')
   await expect(composer).toHaveCSS('outline-style', 'none')
 
   await page.keyboard.press('Shift+Enter')

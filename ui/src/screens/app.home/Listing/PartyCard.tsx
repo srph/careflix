@@ -12,7 +12,7 @@ export default function PartyCard({ party, style }: { party: AppParty; style?: C
   const names = others.length ? others.map(member => member.name).join(', ') : 'Just you'
   const progress = Math.min(100, Math.max(0, party.video.duration ? Number(party.current_time) / party.video.duration * 100 : 0))
   const active = party.members?.some(member => Number(member.pivot?.is_active) === 1)
-  return <Link className="listing-party-card" style={style} to={`/watch/${party.id}`} aria-label={`Rejoin ${show.title}`}>
+  return <Link data-testid="party-card" className="listing-party-card" style={style} to={`/watch/${party.id}`} aria-label={`Rejoin ${show.title}`}>
     <Artwork src={party.video.preview_image || show.preview_image} />
     <div className="listing-party-shade" />
     <div className="listing-party-badges"><span className={active ? 'is-live' : ''}>{active && <i />} {partyStatus(party)}</span><span>{show.title_type === 'movie' ? 'Movie' : 'Series'}</span></div>

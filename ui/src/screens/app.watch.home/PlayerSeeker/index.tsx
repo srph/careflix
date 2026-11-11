@@ -42,7 +42,7 @@ function PlayerSeeker(props: Props) {
 
   return (
     <div
-      className="slider app-watch-player-seeker"
+      data-testid="player-seeker" className="slider app-watch-player-seeker"
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}>

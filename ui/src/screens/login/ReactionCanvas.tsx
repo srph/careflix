@@ -206,5 +206,5 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
       refresh.current = () => {}
     }
   }, [stage, reducedMotion, resting])
-  return <canvas ref={canvas} className="login-reactions" aria-hidden="true" />
+  return <canvas ref={canvas} className="login-reactions" data-testid="login-reactions" aria-hidden="true" />
 }

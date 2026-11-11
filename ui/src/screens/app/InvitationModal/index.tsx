@@ -233,7 +233,7 @@ export default function InvitationModal() {
       if (expanded) collapse()
     }}>
       <Dialog.Portal>
-        <Dialog.Popup className={cx('incoming-invitation-position', { 'is-confirmation': docked || declined, 'is-exit-down': declined || Boolean(state.dismissed) })} initialFocus={false}
+        <Dialog.Popup data-testid="invitation-popup" className={cx('incoming-invitation-position', { 'is-confirmation': docked || declined, 'is-exit-down': declined || Boolean(state.dismissed) })} initialFocus={false}
           aria-label="Watch invitation" style={position}>
           {invitation && header(false, true)}
           {pillWidth !== null && <motion.div initial={false} animate={{
@@ -244,8 +244,8 @@ export default function InvitationModal() {
             height: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
             width: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
             borderRadius: { duration: reducedMotion ? 0 : 0.45 },
-          }} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
-            <BorderBeam className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"
+          }} data-testid="invitation-card" data-expanded={Boolean(expanded)} data-docked={Boolean(docked)} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
+            <BorderBeam data-testid="invitation-beam" className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"
               size={docked ? 'pulse-inner' : 'line'} colorVariant={docked ? 'mono' : 'candy'} theme="dark"
               duration={docked ? 4 : 3.1} strength={1} brightness={docked ? 1 : 1.3}
               saturation={1.2} glowSize={1} hueRange={docked ? 0 : 30} staticColors={docked}
@@ -253,15 +253,15 @@ export default function InvitationModal() {
             {invitation && <>
               {header(expanded)}
               {/* Keep the preview mounted so the container clips it during collapse. */}
-              <div ref={setBody} className="invitation-body" inert={!expanded} aria-hidden={!expanded}>
-                <motion.div key={invitation.id} className="invitation-content"
+              <div ref={setBody} className="invitation-body" data-testid="invitation-body" inert={!expanded} aria-hidden={!expanded}>
+                <motion.div key={invitation.id} className="invitation-content" data-testid="invitation-content"
                   initial={expanded && !reducedMotion ? { opacity: 0, x: 32 } : false} animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
                   {video && <>
                     <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
                     <div className="invitation-info">
                       <h3>{video.show.title}</h3>
-                      <p className="ui-subheading">{status === 'expired' ? `${invitation.sender.name}’s invitation expired`
+                      <p className="ui-subheading" data-testid="invitation-meta">{status === 'expired' ? `${invitation.sender.name}’s invitation expired`
                         : <>{video.show.title_type === 'series' ? `Series · ${getVideoDetails(video)}` : showMeta(video.show)}{video.show.title_type === 'movie' && <> · {durationLabel(video.duration)}</>}</>}</p>
                     </div>
                     <RoomTimeline party={party} invalid={!pending} expanded={expanded} />
@@ -285,7 +285,7 @@ export default function InvitationModal() {
   </>
 
   function header(isExpanded: boolean, measurement = false) {
-    return <div ref={measurement ? setLine : undefined} className={cx('invitation-line', { 'invitation-width-probe': measurement })}
+    return <div ref={measurement ? setLine : undefined} className={cx('invitation-line', { 'invitation-width-probe': measurement })} data-testid={measurement ? undefined : 'invitation-line'}
       aria-hidden={measurement || undefined} inert={measurement || undefined}>
       {docked ? <span className="invitation-joined-avatars">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</span>
         : <UiAvatar user={invitation.sender} size="sm" />}
@@ -297,7 +297,7 @@ export default function InvitationModal() {
           : status === 'withdrawn' ? <><b>{invitation.sender.name}</b> cancelled the invitation</>
           : <><b>{invitation.sender.name}</b> invited you to watch{!isExpanded && video && <> <b>{video.show.title}</b></>}</>}
       </p>
-      {isExpanded && queueLength + state.answered > 1 && <span className="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
+      {isExpanded && queueLength + state.answered > 1 && <span className="invitation-count" data-testid="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
       {joining && <span className="invitation-spinner" aria-label={measurement ? undefined : 'Joining room'} />}
       {!isExpanded && !busy && <UiPlainButton ref={measurement ? undefined : respondRef} className={cx('invitation-respond', { 'is-dismiss': !pending })} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
       {isExpanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
@@ -337,7 +337,7 @@ function RoomTimeline({ party, invalid, expanded }: { party: AppParty; invalid: 
       <span>{segmented ? `${season.title} · ${episodes.length} episodes` : `${durationLabel(Math.max(0, video.duration - party.current_time))} left`}</span>
     </div>
     <div className="invitation-timeline-track" role="img" aria-label={`Room snapshot: ${clockTime(party.current_time)} of ${clockTime(video.duration)}`}>
-      {segmented ? <div className="invitation-segments">{episodes.map((episode, index) => <span key={episode.id}><i style={{ width: `${index === episodeIndex ? progress * 100 : 0}%` }} /></span>)}</div>
+      {segmented ? <div className="invitation-segments" data-testid="invitation-segments">{episodes.map((episode, index) => <span key={episode.id}><i style={{ width: `${index === episodeIndex ? progress * 100 : 0}%` }} /></span>)}</div>
         : <div className="invitation-progress"><i style={{ width: `${progress * 100}%` }} /></div>}
       {members.length > 0 && <div className="invitation-playhead" style={{ left: `${position * 100}%` }}>{members.slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</div>}
     </div>

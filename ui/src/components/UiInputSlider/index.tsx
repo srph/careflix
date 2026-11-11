@@ -22,7 +22,7 @@ export default function UiInputSlider(props: Props) {
       onValueCommitted={value => { props.onChange?.(value); setIsDragging(false) }}
       onPointerCancel={() => setIsDragging(false)}>
       <Slider.Control className="ui-input-slider-control">
-        <Slider.Track className="ui-input-slider-track" style={props.styles?.track}>
+        <Slider.Track data-testid="slider-track" className="ui-input-slider-track" style={props.styles?.track}>
           <Slider.Indicator className="ui-input-slider-active" style={props.styles?.active} />
           <Slider.Thumb className="ui-input-slider-thumb" style={props.styles?.thumb} aria-label={props.ariaLabel || 'Value'} />
         </Slider.Track>

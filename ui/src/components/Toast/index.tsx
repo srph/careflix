@@ -60,7 +60,7 @@ function Toast() {
   }, [])
 
   return (
-    <div className="toast-container">
+    <div data-testid="toasts" className="toast-container">
       <div className='toast-float'>
       <AnimatePresence initial={false}>
         {state.messages.map(message =>

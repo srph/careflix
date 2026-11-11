@@ -44,7 +44,7 @@ export default function AuthHome() {
         <div className="listing-body">
           {createParty.isError && <div className="listing-status" role="alert">Unable to start the party. Please try again. <button type="button" onClick={() => createParty.reset()}>Dismiss</button></div>}
           {tab === 'all' && <AnimatePresence initial={false}>
-            {showRecentParties && <motion.div key="recent-parties" className="listing-recent-parties" initial={false}
+            {showRecentParties && <motion.div key="recent-parties" className="listing-recent-parties" data-testid="recent-parties" initial={false}
               exit={{ height: 0, opacity: 0, marginTop: 0, overflow: 'hidden' }} transition={{ duration: reduceMotion ? 0 : .45 }}>
               <div className="listing-recent-parties-content">
                 {!partiesQuery.data ? <PartiesPlaceholder recent error={partiesError} onRetry={() => { void partiesQuery.refetch() }} />
@@ -58,7 +58,7 @@ export default function AuthHome() {
               renderError={retry => <LoadMoreError parties={tab === 'parties'} onRetry={retry} />}>
               {tab === 'parties' ? <PartySection parties={parties} isLoadingMore={partiesQuery.isFetchingNextPage} />
                 : <section className="listing-section" aria-label={title}>
-                  <div className="listing-section-heading"><h2>{title}</h2>{tab !== 'all' && <span>{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
+                  <div className="listing-section-heading"><h2>{title}</h2>{tab !== 'all' && <span data-testid="section-count">{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
                   <div className="listing-show-grid">
                     {shows.map(show => <ShowCard key={show.id} show={show} onDetails={setSelectedShow} />)}
                     {showsQuery.isFetchingNextPage && <ShowSkeletonCards />}

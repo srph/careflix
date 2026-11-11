@@ -90,9 +90,9 @@ async function room(page: Page, options: { history?: ReturnType<typeof invitatio
 
 test('B5b2 replaces chat in place, supports keyboard invites, and preserves the chat draft', async ({ page }) => {
   const fixture = await room(page, { logs: true })
-  const composer = page.locator('.watch-screen-chatbar textarea')
+  const composer = page.getByPlaceholder('Message')
   await composer.fill('Keep this draft')
-  const messages = page.locator('.watch-screen-chat-messages')
+  const messages = page.getByTestId('chat-messages')
   await expect(messages.getByText('Keep our conversation 30')).toBeVisible()
   await messages.evaluate(element => { element.scrollTop = 80; element.dispatchEvent(new Event('scroll')) })
   const trigger = page.getByRole('button', { name: 'Invite people' })
@@ -107,10 +107,10 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await expect(panel.getByText('(You)', { exact: true })).toBeVisible()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   // The panel is a solid sheet over the chat, which stays put underneath but can't be reached.
-  await expect(page.locator('.watch-screen-chat-content')).toHaveAttribute('inert', '')
+  await expect(page.getByTestId('chat-content')).toHaveAttribute('inert', '')
   await expect(panel).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
   const bounds = await panel.boundingBox()
-  const chatBounds = await page.locator('.watch-screen-chat').boundingBox()
+  const chatBounds = await page.getByTestId('chat-pane').boundingBox()
   expect(bounds!.width).toBe(chatBounds!.width)
   expect(bounds!.height).toBe(chatBounds!.height)
   await expect(panel.getByRole('option').last().locator('..')).toHaveCSS('opacity', '1')
@@ -118,17 +118,17 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
 
   await input.fill('Joyce')
   // Wait for the answer itself: the groups fading out still hold a (now inert) Joyce row.
-  await expect(panel.locator('.host-invite-results').getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
+  await expect(panel.getByTestId('invite-results').getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
   await input.press('ArrowDown')
   await input.press('Enter')
   await expect(panel.getByRole('option', { name: 'Undo invite to Joyce' })).toContainText('Invited (30m)')
-  await expect(panel.locator('.host-invite-results').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
+  await expect(panel.getByTestId('invite-results').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
   expect(fixture.sent).toEqual([joyce.id])
   await expect(input).toHaveValue('Joyce')
   await input.fill('')
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
   // Back in the groups, rows stay where they were while the panel is open.
-  await expect(panel.locator('.host-invite-group').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
+  await expect(panel.getByTestId('invite-recents').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(1)
   await panel.getByRole('button', { name: 'Copy party code 048 291' }).click()
   await expect(panel.getByRole('status')).toHaveText('Party code copied')
   await expect(panel.getByRole('option').last().locator('..')).toHaveCSS('opacity', '1')
@@ -142,8 +142,8 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   }
   const closing = await page.waitForFunction(fn => {
     const read = new Function(`return (${fn})`)() as (selector: string) => number
-    return document.querySelector('.host-invite-heading') && read('.host-invite-heading') < .7
-      ? read('.host-invite-person') : null
+    return document.querySelector('[data-testid="invite-heading"]') && read('[data-testid="invite-heading"]') < .7
+      ? read('[data-testid="invite-person"]') : null
   }, opacity.toString(), { polling: 'raf' })
   expect(await closing.jsonValue()).toBeLessThan(.9)
   await expect(panel).toHaveCount(0)
@@ -153,7 +153,7 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await expect(page.getByRole('button', { name: /Waiting on Joyce/ })).toBeVisible()
   await page.getByRole('button', { name: /Waiting on Joyce/ }).click()
   // Reopened, she sits with the party.
-  await expect(panel.locator('.host-invite-group').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(0)
+  await expect(panel.getByTestId('invite-recents').getByRole('option', { name: 'Undo invite to Joyce' })).toHaveCount(0)
   await panel.getByRole('option', { name: 'Undo invite to Joyce' }).click()
   await expect(panel.getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
   await panel.getByRole('button', { name: 'Close invite' }).click()
@@ -174,20 +174,20 @@ test('live declines, expiry, acceptance, and duplicate events update the panel a
   fixture.emit('invitation.declined', { invitation: { ...leoInvite, action: 'declined' } })
   fixture.emit('invitation.sent', { invitation: leoInvite })
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toContainText('Declined')
-  await expect(page.locator('.host-invite-waiting')).toContainText('Leo declined')
+  await expect(page.getByTestId('invite-strip')).toContainText('Leo declined')
   const avaInvite = invitation(ava, 1300)
   fixture.emit('invitation.sent', { invitation: avaInvite })
   fixture.emit('invitation.accepted', { invitation: { ...avaInvite, action: 'accepted' }, member: { ...ava, pivot: { is_active: true } } })
   fixture.emit('member.joined', { member: { ...ava, pivot: { is_active: true } } })
-  const avaRow = panel.locator('.host-invite-person').filter({ hasText: 'Ava' })
+  const avaRow = panel.getByTestId('invite-person').filter({ hasText: 'Ava' })
   await expect(avaRow).toHaveCount(1)
   await expect(avaRow).toContainText('Joined')
-  await expect(avaRow.locator('.host-invite-action')).toHaveCount(0)
+  await expect(avaRow.getByTestId('invite-action')).toHaveCount(0)
   // Answers show for 4s, then the rows rest.
   await expect(avaRow).toContainText('In the room', { timeout: 6000 })
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toContainText('Offline')
   await panel.getByRole('button', { name: 'Close invite' }).click()
-  await expect(page.locator('.host-invite-waiting')).toHaveCount(0)
+  await expect(page.getByTestId('invite-strip')).toHaveCount(0)
   const again = invitation(leo, 1400)
   fixture.emit('invitation.sent', { invitation: again })
   await expect(page.getByRole('button', { name: /Waiting on Leo/ })).toBeVisible()
@@ -225,14 +225,14 @@ test('search ignores late responses and request failures have working retries', 
   await input.fill('Joy')
   // The list follows the search query, which waits out the debounce: the groups stay while you type...
   await expect(panel.getByText('Party', { exact: true })).toBeVisible()
-  await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)
+  await expect(panel.getByTestId('invite-skeletons')).toHaveCount(0)
   // ...then the search goes out and its own list (no headings) shows the skeleton until it answers.
   await searchSent
-  await expect(panel.locator('.host-invite-skeletons')).toBeVisible()
+  await expect(panel.getByTestId('invite-skeletons')).toBeVisible()
   await expect(panel.getByText('Party', { exact: true })).toHaveCount(0)
   await input.fill('Leo')
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
-  await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)
+  await expect(panel.getByTestId('invite-skeletons')).toHaveCount(0)
   release!()
   await page.waitForTimeout(300)
   await expect(panel.getByRole('option')).toHaveCount(1)
@@ -249,14 +249,14 @@ test('search ignores late responses and request failures have working retries', 
   let answer: () => void
   fixture.heldSearches.set('Ava', new Promise<void>(resolve => { answer = resolve }))
   await panel.getByRole('button', { name: 'Retry', exact: true }).click()
-  await expect(panel.locator('.host-invite-skeletons')).toBeVisible()
+  await expect(panel.getByTestId('invite-skeletons')).toBeVisible()
   answer!()
   await expect(panel.getByRole('option', { name: 'Invite Ava' })).toBeVisible()
   // A search already answered comes back at once from the cache.
   const searches = fixture.searches.length
   await input.fill('Leo')
   await expect(panel.getByRole('option', { name: 'Invite Leo' })).toBeVisible()
-  await expect(panel.locator('.host-invite-skeletons')).toHaveCount(0)
+  await expect(panel.getByTestId('invite-skeletons')).toHaveCount(0)
   expect(fixture.searches.length).toBe(searches)
   expect(fixture.errors).toEqual([])
 })
@@ -267,13 +267,13 @@ test('reduced motion keeps the inline panel usable at every viewport', async ({ 
   await page.getByRole('button', { name: 'Invite people' }).click()
   const panel = page.getByRole('region', { name: 'Invite', exact: true })
   await expect(panel.getByRole('combobox', { name: 'Search for your friends by username' })).toBeFocused()
-  await expect(panel.locator('.host-invite-note')).toHaveCount(0)
+  await expect(panel.getByTestId('invite-note')).toHaveCount(0)
   // The panel is a solid sheet over the chat, which stays put underneath but can't be reached.
-  await expect(page.locator('.watch-screen-chat-content')).toHaveAttribute('inert', '')
+  await expect(page.getByTestId('chat-content')).toHaveAttribute('inert', '')
   await expect(panel).not.toHaveCSS('background-color', 'rgba(0, 0, 0, 0)')
-  await expect(panel.locator('.host-invite-heading')).toHaveCSS('transform', 'none')
+  await expect(panel.getByTestId('invite-heading')).toHaveCSS('transform', 'none')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
-  const footer = await panel.locator('.host-invite-footer').boundingBox()
+  const footer = await panel.getByTestId('invite-footer').boundingBox()
   const viewport = page.viewportSize()!
   expect(footer!.y + footer!.height).toBeLessThanOrEqual(viewport.height + 1)
   await page.screenshot({ path: test.info().outputPath('b5b2-empty.png') })

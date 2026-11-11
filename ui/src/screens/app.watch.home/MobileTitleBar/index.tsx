@@ -36,7 +36,7 @@ function MobileTitleBar(props: Props) {
 
   return (
     <React.Fragment>
-      <div className="watch-screen-mobile-title-bar">
+      <div data-testid="mobile-title-bar" className="watch-screen-mobile-title-bar">
         <h3 className="title">
           <span className="title">{props.party.video.show.title}</span>
           <span className="info">{getVideoDetails(props.party.video)}</span>
@@ -44,12 +44,12 @@ function MobileTitleBar(props: Props) {
 
         <div className="menu">
           {props.party.video.show.title_type === 'series' && (
-            <UiPlainButton className="action" onClick={props.onOpenSeasonSelection}>
+            <UiPlainButton className="action" aria-label="Open Episode Selection" onClick={props.onOpenSeasonSelection}>
               <i className="fa fa-list-ol" />
             </UiPlainButton>
           )}
 
-          <UiPlainButton className="action" onClick={handleModalOpen}>
+          <UiPlainButton className="action" aria-label="Enter Fullscreen" onClick={handleModalOpen}>
             <i className="fa fa-expand" />
           </UiPlainButton>
         </div>

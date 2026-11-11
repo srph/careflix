@@ -58,7 +58,7 @@ async function room(page) {
 }
 
 async function openMenu(page) {
-  const video = page.locator('.watch-screen-video .container')
+  const video = page.getByTestId('video-stage')
   const box = await video.boundingBox()
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 3)
   await page.mouse.move(box.x + box.width / 2 + 10, box.y + box.height / 3)
@@ -68,12 +68,12 @@ async function openMenu(page) {
 
 test('shows the room on the picture while chat is closed, filtered by the bell', async ({ page }) => {
   const fixture = await room(page)
-  const overlay = page.locator('.activity-overlay')
+  const overlay = page.getByRole('log', { name: 'Room activity' })
 
   // With chat open, the conversation stays in the sidebar.
   fixture.emit('log', { log: message(joyce, 'ok snacks acquired') })
-  await expect(page.locator('.watch-screen-chat-messages')).toContainText('ok snacks acquired')
-  await expect(overlay.locator('.line')).toHaveCount(0)
+  await expect(page.getByTestId('chat-messages')).toContainText('ok snacks acquired')
+  await expect(overlay.getByTestId('activity-line')).toHaveCount(0)
 
   await page.keyboard.press('c')
   fixture.emit('log', { log: message(joyce, 'WHO is he') })
@@ -81,45 +81,45 @@ test('shows the room on the picture while chat is closed, filtered by the bell',
   fixture.emit('log', { log: activity(mira, 'paused', { seconds: 2472 }) })
   fixture.emit('log', { log: message(viewer, 'mine never shows') })
   fixture.emit('client-typing', { user: { id: leo.id, name: 'Leo' } })
-  await expect(overlay.locator('.line .text')).toHaveText(['Joyce WHO is he', /^Leo (just joined|is here)\.$/, 'Mira paused at 41:12', 'Leo is typing'])
+  await expect(overlay.getByTestId('activity-text')).toHaveText(['Joyce WHO is he', /^Leo (just joined|is here)\.$/, 'Mira paused at 41:12', 'Leo is typing'])
   await page.screenshot({ path: test.info().outputPath('activity-overlay-all.png') })
 
   // A friend's reaction floats at Everything.
   fixture.emit('client-reaction', { userId: joyce.id, emoji: '😂' })
-  await expect(page.locator('.reaction-float')).toHaveCount(1)
+  await expect(page.getByTestId('reaction-float')).toHaveCount(1)
 
   await openMenu(page)
   await expect(page.getByRole('menuitemradio', { name: /^Everything/ })).toHaveAttribute('aria-checked', 'true')
-  await page.locator('.activity-menu').evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)))
-  const origin = await page.locator('.activity-menu').evaluate(element => getComputedStyle(element).transformOrigin)
+  await page.getByRole('menu').evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)))
+  const origin = await page.getByRole('menu').evaluate(element => getComputedStyle(element).transformOrigin)
   const bell = await page.getByRole('button', { name: 'Activity Overlay' }).boundingBox()
-  const menu = await page.locator('.activity-menu').boundingBox()
+  const menu = await page.getByRole('menu').boundingBox()
   // The menu grows from the bell's centre.
   expect(Math.abs(menu.x + parseFloat(origin) - (bell.x + bell.width / 2))).toBeLessThan(2)
   await page.screenshot({ path: test.info().outputPath('activity-overlay-menu.png') })
 
   await page.getByRole('menuitemradio', { name: /^Just joins and pauses/ }).click()
   await expect(page.getByRole('menu')).toBeHidden()
-  await expect(page.locator('.activity-overlay-toast')).toHaveText('Showing joins and pauses only')
-  await expect(overlay.locator('.line .text')).toHaveText([/^Leo (just joined|is here)\.$/, 'Mira paused at 41:12'])
-  await expect(page.getByRole('button', { name: 'Activity Overlay' }).locator('.fa')).toHaveClass(/fa-bell-o/)
+  await expect(page.getByTestId('activity-toast')).toHaveText('Showing joins and pauses only')
+  await expect(overlay.getByTestId('activity-text')).toHaveText([/^Leo (just joined|is here)\.$/, 'Mira paused at 41:12'])
+  await expect(page.getByRole('button', { name: 'Activity Overlay' })).toHaveAttribute('data-level', 'activity')
 
   fixture.emit('log', { log: message(joyce, 'hidden at this level') })
   fixture.emit('log', { log: activity(joyce, 'played', { seconds: 2472 }) })
   fixture.emit('client-reaction', { userId: joyce.id, emoji: '🔥' })
   fixture.emit('log', { log: activity(joyce, 'paused', { seconds: 2500 }) })
-  await expect(overlay.locator('.line .text').last()).toHaveText('Joyce paused at 41:40')
+  await expect(overlay.getByTestId('activity-text').last()).toHaveText('Joyce paused at 41:40')
   await expect(overlay).not.toContainText('hidden at this level')
   await expect(overlay).not.toContainText('pressed play')
-  await expect(page.locator('.reaction-float .emoji', { hasText: '🔥' })).toHaveCount(0)
+  await expect(page.getByTestId('reaction-emoji').filter({ hasText: '🔥' })).toHaveCount(0)
 
   // Clicking a line opens chat, which takes the lines back.
-  await overlay.locator('.line').last().click()
-  await expect(page.locator('.watch-screen-chat')).toHaveClass(/is-chat-open/)
-  await expect(overlay.locator('.line')).toHaveCount(0)
+  await overlay.getByTestId('activity-line').last().click()
+  await expect(page.getByTestId('chat-pane')).toHaveAttribute('data-open', 'true')
+  await expect(overlay.getByTestId('activity-line')).toHaveCount(0)
   // With the sidebar open, reactions float whatever the level.
   fixture.emit('client-reaction', { userId: mira.id, emoji: '😭' })
-  await expect(page.locator('.reaction-float .emoji', { hasText: '😭' })).toHaveCount(1)
+  await expect(page.getByTestId('reaction-emoji').filter({ hasText: '😭' })).toHaveCount(1)
   expect(fixture.errors).toEqual([])
 })
 
@@ -127,7 +127,7 @@ test('remembers the level for the account and shows nothing when off', async ({ 
   const fixture = await room(page)
   await openMenu(page)
   await page.getByRole('menuitemradio', { name: /^Off/ }).click()
-  await expect(page.locator('.activity-overlay-toast')).toHaveText('Activity off')
+  await expect(page.getByTestId('activity-toast')).toHaveText('Activity off')
   expect(await page.evaluate(key => localStorage.getItem(key), `care.activity-overlay.${viewer.id}`)).toBe('"off"')
 
   await page.reload()
@@ -136,19 +136,19 @@ test('remembers the level for the account and shows nothing when off', async ({ 
   again.emit('log', { log: activity(leo, 'joined') })
   again.emit('client-reaction', { userId: joyce.id, emoji: '😂' })
   await page.waitForTimeout(500)
-  await expect(page.locator('.activity-overlay .line')).toHaveCount(0)
-  await expect(page.locator('.reaction-float')).toHaveCount(0)
+  await expect(page.getByTestId('activity-line')).toHaveCount(0)
+  await expect(page.getByTestId('reaction-float')).toHaveCount(0)
 
   await openMenu(page)
   await expect(page.getByRole('menuitemradio', { name: /^Off/ })).toHaveAttribute('aria-checked', 'true')
   // The seek bar and its times step aside for the menu.
-  await expect(page.locator('.watch-player-controls')).toBeHidden()
+  await expect(page.getByTestId('player-controls')).toBeHidden()
   // The menu keeps the controls up past their usual 5 seconds.
   await page.waitForTimeout(5600)
   await expect(page.getByRole('menu')).toBeVisible()
   await page.getByRole('menuitemradio', { name: /^Off/ }).click()
   await expect(page.getByRole('menu')).toBeHidden()
-  await expect(page.locator('.watch-player-controls')).toBeVisible()
+  await expect(page.getByTestId('player-controls')).toBeVisible()
   // From the keyboard, focus lands back on the bell and its tooltip takes the bar's place, like every control.
   await page.keyboard.press('Enter')
   await expect(page.getByRole('menu')).toBeVisible()
@@ -163,24 +163,24 @@ test('works on a tablet in portrait, and stops below 640px', async ({ page }) =>
   const fixture = await room(page)
   await page.keyboard.press('c')
   fixture.emit('log', { log: activity(leo, 'joined') })
-  await expect(page.locator('.activity-overlay .line .text')).toHaveText([/^Leo (just joined|is here)\.$/])
+  await expect(page.getByTestId('activity-text')).toHaveText([/^Leo (just joined|is here)\.$/])
   await openMenu(page)
   await page.getByRole('menuitemradio', { name: /^Off/ }).click()
-  await expect(page.locator('.activity-overlay-toast')).toHaveText('Activity off')
+  await expect(page.getByTestId('activity-toast')).toHaveText('Activity off')
 
   await page.setViewportSize({ width: 639, height: 900 })
-  await expect(page.locator('.activity-overlay')).toBeHidden()
+  await expect(page.getByRole('log', { name: 'Room activity' })).toBeHidden()
   await expect(page.getByRole('button', { name: 'Activity Overlay' })).toBeHidden()
   expect(fixture.errors).toEqual([])
 })
 
 test('control tooltips fade up once, swap instantly, and keep the seek bar back', async ({ page }) => {
   const fixture = await room(page)
-  const box = await page.locator('.watch-screen-video .container').boundingBox()
+  const box = await page.getByTestId('video-stage').boundingBox()
   await page.mouse.move(box.x + 300, box.y + 200)
   await page.mouse.move(box.x + 310, box.y + 200)
-  const tip = page.locator('.app-watch-player-tooltip-popover')
-  const bar = page.locator('.watch-player-controls')
+  const tip = page.getByTestId('player-tooltip')
+  const bar = page.getByTestId('player-controls')
 
   await page.getByRole('button', { name: 'Activity Overlay' }).hover()
   await expect(tip).toHaveText('Activity Overlay')
@@ -188,7 +188,7 @@ test('control tooltips fade up once, swap instantly, and keep the seek bar back'
   await expect(bar).toBeHidden()
 
   // The next control's tooltip swaps straight in, and the bar stays away while it shows.
-  await page.locator('.is-fs-icon button').hover()
+  await page.getByTestId('player-actions').getByRole('button', { name: 'Enter Fullscreen' }).hover()
   await expect(tip).toHaveText('Enter Fullscreen')
   await expect(tip).toHaveAttribute('data-instant', 'delay')
   await page.waitForTimeout(300)

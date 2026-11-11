@@ -59,7 +59,7 @@ function ShowDetails({ show, onClose, onPlay, isCreating, createError }: Props &
     <header className="show-modal-hero">
       <Artwork src={show.preview_image} eager />
       <UiPlainButton className="show-modal-close" onClick={onClose} aria-label="Close details"><i className="fa fa-close" aria-hidden="true" /></UiPlainButton>
-      <div className="show-modal-heading">
+      <div data-testid="show-heading" className="show-modal-heading">
         <h2>{show.title}</h2>
         <p className="show-modal-meta">{metadata}</p>
         <p className="show-modal-synopsis">{show.synopsis}</p>

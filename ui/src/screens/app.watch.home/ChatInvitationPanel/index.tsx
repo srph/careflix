@@ -121,7 +121,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
     })
     return <motion.div key={user.id} {...motionProps}>
       <Autocomplete.Item value={user} disabled={row.busy || !row.action} nativeButton
-        render={<button type="button" />} className="host-invite-person user-item" aria-label={row.label} aria-busy={row.busy || undefined}
+        render={<button type="button" />} className="host-invite-person user-item" data-testid="invite-person" aria-label={row.label} aria-busy={row.busy || undefined}
         onClick={() => row.action === 'undo' ? invitations.cancel(invitation) : row.action && invitations.invite(user)}>
         <UiPresenceAvatar user={invitations.withPresence(user)} />
         <span className="host-invite-details"><b>{user.name}</b><RollingText text={row.status} className="host-invite-status" lineClassName={row.tone ? `is-${row.tone}` : undefined} /></span>
@@ -138,7 +138,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
     }}>
     {/* The mirror of opening: what's on the sheet goes first, then the empty sheet fades to the chat. */}
     <motion.div className="host-invite-content" exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : CONTENT_FADE } }}>
-      <motion.div className="host-invite-heading" {...cascade(0)}>
+      <motion.div className="host-invite-heading" data-testid="invite-heading" {...cascade(0)}>
         <h3>Invite</h3>
         <UiPlainButton type="button" onClick={onClose} aria-label="Close invite"><i className="fa fa-close" aria-hidden="true" /></UiPlainButton>
       </motion.div>
@@ -157,38 +157,38 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
                 {partyRows.length > 0 && <Autocomplete.Group>
                   <motion.div {...cascade(2)}><Autocomplete.GroupLabel className="host-invite-label">Party</Autocomplete.GroupLabel></motion.div>
                   {partyRows.map(({ user, placement }, index) => placement.member
-                    ? <motion.div className="host-invite-person user-item" key={user.id} {...cascade(3 + index)}>
+                    ? <motion.div className="host-invite-person user-item" data-testid="invite-person" key={user.id} {...cascade(3 + index)}>
                       <UiPresenceAvatar user={invitations.withPresence(user)} />
                       <span className="host-invite-details"><b>{user.name}{String(user.id) === String(auth.data.id) && <em>(You)</em>}</b>
                         <small>{String(user.id) === hostId ? 'Host 👑' : 'In the room'}</small></span>
                     </motion.div>
                     : person(user, cascade(3 + index)))}
                 </Autocomplete.Group>}
-                {(recentsPending || recentRows.length > 0) && <Autocomplete.Group className="host-invite-group">
+                {(recentsPending || recentRows.length > 0) && <Autocomplete.Group className="host-invite-group" data-testid="invite-recents">
                   <motion.div {...cascade(4)}><Autocomplete.GroupLabel className="host-invite-label">Recents</Autocomplete.GroupLabel></motion.div>
                   {recentsPending && <motion.div key="skeletons" {...cascade(5)}><InviteSkeletons /></motion.div>}
                   {recentRows.map((user, index) => person(user, cascade(5 + index)))}
                 </Autocomplete.Group>}
-                {recentsFailed && <p className="host-invite-note" role="alert">Couldn’t load people. <button type="button" onClick={() => recents.refetch()}>Retry</button></p>}
+                {recentsFailed && <p className="host-invite-note" data-testid="invite-note" role="alert">Couldn’t load people. <button type="button" onClick={() => recents.refetch()}>Retry</button></p>}
               </motion.div>
-              : <motion.div key={viewKey} className="host-invite-results" {...fadeIn}>
+              : <motion.div key={viewKey} className="host-invite-results" data-testid="invite-results" {...fadeIn}>
                 {view.kind === 'skeleton' && <InviteSkeletons />}
                 {view.kind === 'results' && view.users.map(user => person(user, {}))}
                 {view.kind === 'empty' && <p className="host-invite-line">No one named “{term}”.</p>}
                 {view.kind === 'error' && <p className="host-invite-line" role="alert">Couldn’t search for “{term}”.&nbsp;<button type="button" onClick={() => search.refetch()}>Retry</button></p>}
               </motion.div>}
           </Autocomplete.List>
-          {invitations.historyError && <p className="host-invite-note" role="alert">Couldn’t load invite updates. <button type="button" onClick={invitations.refreshHistory}>Retry</button></p>}
+          {invitations.historyError && <p className="host-invite-note" data-testid="invite-note" role="alert">Couldn’t load invite updates. <button type="button" onClick={invitations.refreshHistory}>Retry</button></p>}
         </div>
       </Autocomplete.Root>
-      <motion.div className="host-invite-footer" {...cascade(7)}><PartyCode code={party.join_code} /></motion.div>
+      <motion.div className="host-invite-footer" data-testid="invite-footer" {...cascade(7)}><PartyCode code={party.join_code} /></motion.div>
     </motion.div>
   </motion.section>
 }
 
 function InviteSkeletons() {
-  return <div className="host-invite-skeletons" aria-hidden="true">
-    {[0, 1, 2, 3].map(n => <div className="host-invite-person" key={n}>
+  return <div className="host-invite-skeletons" data-testid="invite-skeletons" aria-hidden="true">
+    {[0, 1, 2, 3].map(n => <div className="host-invite-person" data-testid="invite-person" key={n}>
       <UiSkeleton width={32} height={32} radius="50%" />
       <span className="host-invite-details"><UiSkeleton width="44%" height={10} radius={5} /><UiSkeleton width="26%" height={8} radius={4} /></span>
     </div>)}
@@ -203,7 +203,7 @@ function InviteAction({ row }: { row: InviteRow }) {
   const reducedMotion = useReducedMotion()
   const blur = reducedMotion ? 'blur(0px)' : 'blur(3px)'
   return <AnimatePresence initial={false}>
-    {row.action && <motion.span key="action" className="ui-button is-s is-round host-invite-action" aria-hidden="true"
+    {row.action && <motion.span key="action" className="ui-button is-s is-round host-invite-action" data-testid="invite-action" aria-hidden="true"
       initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
       animate={{ opacity: 1, y: 0, x: row.action === 'retry' && !reducedMotion ? SHAKE : 0, transition: { x: { duration: .4, delay: .12 } } }}
       exit={{ opacity: 0, y: reducedMotion ? 0 : 10, transition: { opacity: { duration: .32, ease: 'easeIn' }, y: { duration: .38, ease: [.4, 0, .6, 1] } } }}>

@@ -12,7 +12,7 @@ function UiNavigation(props: Props) {
   return (
     <div className="ui-navigation-shape">
       <UiContainer size="xl">
-        <div className="ui-navigation">
+        <div data-testid="navigation" className="ui-navigation">
           {props.children}
         </div>
       </UiContainer>
@@ -39,7 +39,7 @@ type BackActionProps = ActionProps;
 UiNavigation.BackAction = function(props: BackActionProps) {
   return (
     <div className="action is-back">
-      <Link {...(props as LinkProps)}>
+      <Link aria-label="Go Back" {...(props as LinkProps)}>
         <i className="fa fa-angle-left" />
         <span className="action-text">
           <h5 className="ui-subheading is-compact">Go Back</h5>

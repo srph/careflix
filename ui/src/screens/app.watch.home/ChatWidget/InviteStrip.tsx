@@ -30,7 +30,7 @@ export default function InviteStrip({ invitations, onOpen }: { invitations: Host
     {strip && <motion.div key="invite-strip" className="host-invite-waiting-slot"
       initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
       transition={{ duration: reducedMotion ? 0 : .28, ease: [.2, .8, .2, 1] }}>
-      <UiPlainButton type="button" className={cx('host-invite-waiting', { 'is-muted': strip.muted })}
+      <UiPlainButton type="button" data-testid="invite-strip" className={cx('host-invite-waiting', { 'is-muted': strip.muted })}
         aria-label={strip.label} disabled={answered && invitations.busy[String(answered.recipient.id)]} onClick={strip.onClick}>
         <span className="host-invite-waiting-avatars">{strip.users.slice(0, 3).map(user => <UiAvatar key={user.id} user={user} size="sm" />)}</span>
         <RollingText text={strip.text} className="host-invite-waiting-text" />

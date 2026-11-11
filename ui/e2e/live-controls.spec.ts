@@ -28,20 +28,20 @@ test('live media controls, textarea fallback, icons and leave-party navigation',
 
   async function controls() {
     if (isMobile) {
-      if (!await page.locator('.watch-player-container').isVisible()) await page.locator('.watch-screen-video > .container').tap()
+      if (!await page.getByTestId('player-chrome').isVisible()) await page.getByTestId('video-stage').tap()
     } else {
       const box = await video.boundingBox()
       if (!box) throw new Error('Player bounds missing')
       await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
     }
-    await expect(page.locator('.watch-player-container')).toBeVisible()
+    await expect(page.getByTestId('player-chrome')).toBeVisible()
   }
-  const play = () => page.locator(isMobile ? '.watch-player-mobile-actions button.toggle' : '.watch-player-modal-actions button:has(.fa-play)')
-  const pause = () => page.locator(isMobile ? '.watch-player-mobile-actions button.toggle' : '.watch-player-modal-actions button:has(.fa-pause)')
+  const play = () => page.getByTestId(isMobile ? 'player-mobile-actions' : 'player-actions').getByRole('button', { name: 'Play', exact: true })
+  const pause = () => page.getByTestId(isMobile ? 'player-mobile-actions' : 'player-actions').getByRole('button', { name: 'Pause', exact: true })
   await controls()
   if (!isMobile) {
     await play().hover()
-    await expect(page.locator('.app-watch-player-tooltip-popover')).toHaveText('Play')
+    await expect(page.getByTestId('player-tooltip')).toHaveText('Play')
   }
   await play().click()
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(false)
@@ -56,7 +56,7 @@ test('live media controls, textarea fallback, icons and leave-party navigation',
   })
   await controls()
   if (isMobile) {
-    const track = page.locator('.app-watch-player-seeker .ui-input-slider-track')
+    const track = page.getByTestId('player-seeker').getByTestId('slider-track')
     const box = await track.boundingBox()
     if (!box) throw new Error('Touch seek track missing')
     await page.touchscreen.tap(box.x + box.width * 0.25, box.y + box.height / 2)
@@ -70,32 +70,32 @@ test('live media controls, textarea fallback, icons and leave-party navigation',
 
   if (!isMobile) {
     await controls()
-    await page.locator('.app-watch-volume-control-action').hover()
+    await page.getByTestId('volume-control').hover()
     const volume = page.getByRole('slider', { name: 'Volume' })
     await volume.focus()
     await volume.press('Home')
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.volume)).toBe(0)
     await volume.press('ArrowRight')
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.volume)).toBeCloseTo(0.1, 2)
-    await page.locator('.app-watch-volume-control-action button').click()
+    await page.getByTestId('volume-control').getByRole('button', { name: /^(Mute|Unmute)$/ }).click()
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.muted)).toBe(true)
-    await page.locator('.app-watch-volume-control-action button').click()
+    await page.getByTestId('volume-control').getByRole('button', { name: /^(Mute|Unmute)$/ }).click()
     await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.muted)).toBe(false)
   }
 
-  const input = page.locator('textarea')
+  const input = page.getByPlaceholder('Message')
   await input.fill(Array.from({ length: 30 }, (_, i) => `Line ${i}`).join('\n'))
   const enhanced = await input.evaluate(element => ({ height: element.getBoundingClientRect().height, scroll: element.scrollHeight, supported: CSS.supports('field-sizing', 'content') }))
   expect(enhanced.height).toBeGreaterThanOrEqual(50)
   expect(enhanced.height).toBeLessThanOrEqual(200)
   expect(enhanced.scroll).toBeGreaterThan(enhanced.height)
-  const fallback = await page.addStyleTag({ content: '.watch-screen-chatbar-input textarea { field-sizing: fixed !important; height: 50px !important; }' })
+  const fallback = await page.addStyleTag({ content: '[data-testid="chat-composer"] textarea { field-sizing: fixed !important; height: 50px !important; }' })
   expect(await input.evaluate(element => element.getBoundingClientRect().height)).toBe(50)
   await fallback.evaluate(element => element.remove())
   await input.fill('')
 
   await page.evaluate(() => document.fonts.ready)
-  expect(await page.locator('.fa').first().evaluate(element => ({ font: getComputedStyle(element).fontFamily, glyph: getComputedStyle(element, '::before').content }))).toMatchObject({ font: 'FontAwesome' })
+  expect(await page.getByTestId('chat-canopy').locator('i').first().evaluate(element => ({ font: getComputedStyle(element).fontFamily, glyph: getComputedStyle(element, '::before').content }))).toMatchObject({ font: 'FontAwesome' })
   expect(await page.evaluate(() => Array.from(document.fonts).some(font => font.family === 'FontAwesome' && font.status === 'loaded'))).toBe(true)
 
   await controls()
@@ -104,12 +104,12 @@ test('live media controls, textarea fallback, icons and leave-party navigation',
   if (isMobile) {
     // Existing mobile UI opens installation/orientation guidance rather than
     // requesting the desktop Fullscreen API, even when the engine exposes it.
-    await page.locator('.watch-screen-mobile-title-bar button:has(.fa-expand)').tap()
+    await page.getByTestId('mobile-title-bar').getByRole('button', { name: 'Enter Fullscreen' }).tap()
     await expect(page.getByRole('dialog').getByText('How to fullscreen on mobile')).toBeVisible()
-    await page.locator('.ui-modal-overlay').tap({ position: { x: 5, y: 5 } })
+    await page.getByTestId('modal-overlay').tap({ position: { x: 5, y: 5 } })
     await expect(page.getByRole('dialog')).not.toBeVisible()
   } else if (fullscreenEnabled) {
-    const fullscreenButton = () => page.locator('.watch-player-modal-actions button:has(.fa-expand), .watch-player-modal-actions button:has(.fa-compress)')
+    const fullscreenButton = () => page.getByTestId('player-actions').getByRole('button', { name: /Fullscreen$/ })
     await fullscreenButton().click()
     await expect.poll(() => page.evaluate(() => Boolean(document.fullscreenElement || (document as Document & { webkitFullscreenElement?: Element }).webkitFullscreenElement))).toBe(true)
     await controls()

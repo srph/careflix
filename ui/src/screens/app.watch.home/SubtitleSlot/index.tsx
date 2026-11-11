@@ -87,7 +87,7 @@ function SubtitleSlot(props: Props) {
           <div key={placement.className} className={className}>
             {placementSubtitles.map(subtitle => (
               <p
-                className="subtitle"
+                className="subtitle" data-testid="subtitle"
                 key={subtitle.index}
                 dangerouslySetInnerHTML={{
                   __html: subtitle.text.replace('\n', '<br />').replace(placement.indicator, '')

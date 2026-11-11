@@ -6,6 +6,8 @@
   "singleQuote": true,
   "trailingComma": "none",
   "bracketSpacing": true,
-  "jsxBracketSameLine": true,
-  "fluid": false
+  "bracketSameLine": true,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/tailwind.css",
+  "tailwindFunctions": ["cn", "cx"]
 }

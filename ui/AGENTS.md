@@ -47,6 +47,22 @@ src/
 └── utils/        pure helper functions, grouped by domain (api, date, dom, shows)
 ```
 
+## Styling
+
+Styling is moving from one global `style.css` per component to Tailwind `4.3.5`. Both exist until the migration ends.
+
+- **Migrate a stylesheet whole, then delete it.** The old CSS is unlayered and always beats Tailwind's layered utilities, so a component can't be half and half.
+- **Tokens** live in `src/tailwind.css` (`@theme`). A value used in several places becomes a token; a true one-off is an arbitrary value (`bg-[#5865f2]`).
+- **Colours** come straight from Tailwind's palette: primary `pink-500`, focus `pink-700`, soft pink text `pink-300`, error `rose-400`, live `rose-500`, green `emerald-300`, blue `sky-500`, yellow `amber-300`. `neutral-*` holds Tailwind's taupe values.
+- **Snap to the default scale** for spacing, radius and font size instead of registering near-misses. `text-10`, `text-11` and `text-13` are the only extra sizes.
+- **Mobile-first only.** Base classes are the phone layout; `sm:`, `md:`, `lg:` and `xl:` add to it. No `max-*` variants.
+- **1rem is 16px.** The app's 14px text comes from `text-sm/[1.15]` on `body`.
+- **Easings** are `ease-*` tokens (`ease-out-soft` is the house curve). Motion can't read them, so `utils/motion.ts` mirrors the ones it needs.
+- **`cn()`** from `~/utils/cn` joins classes and lets a later Tailwind class win. Primitives that accept `className` use it.
+- **Preflight is not loaded yet;** `sanitize.css` still does the reset. Borders need an explicit style and colour until that changes.
+- **Tests never select by class name.** Use roles, text, labels or `data-testid`, and expose state as `data-*` attributes.
+- `prettier-plugin-tailwindcss` sorts classes; run Prettier on files you migrate.
+
 ## Video player
 
 There's no video library (no video.js/hls.js) — it's a plain HTML5 `<video>` element (`screens/app.watch.home/index.tsx`) with fully custom React-built chrome:

@@ -9,6 +9,7 @@ import usePusher from '~/hooks/usePusher'
 import usePropRef from '~/hooks/usePropRef'
 import useTransientState from '~/hooks/useTransientState'
 import useUpdateEffect from '~/hooks/useUpdateEffect'
+import { easeOutSoft } from '~/utils/motion'
 import useTypingStatus from '../ChatWidget/useTypingStatus'
 import { hypeFor, isJoinActivity, typingLabel } from '../ChatStatus/status'
 import { ActivitySaid, activityIcon } from '../ChatStatus/ActivitySaid'
@@ -35,8 +36,6 @@ export const LINE_MS = 8000
 // Older lines make way once a burst fills the corner.
 export const MAX_LINES = 4
 const TOAST_MS = 2200
-
-const EASE = [0.2, 0.8, 0.2, 1] as const
 
 /**
  * The room over the bottom-left of the picture while chat is closed: new messages, joins and
@@ -90,7 +89,7 @@ function ActivityOverlay(props: Props) {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -24, transition: { duration: 0.26, ease: [0.4, 0, 1, 1] } }}
-              transition={{ duration: 0.32, ease: EASE }}>
+              transition={{ duration: 0.32, ease: easeOutSoft }}>
               <button type="button" className="line" data-testid="activity-line" data-age={count - 1 - i} onClick={props.onOpenChat}>
                 <LineContent log={line.log} />
               </button>
@@ -105,7 +104,7 @@ function ActivityOverlay(props: Props) {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.32, ease: EASE }}>
+              transition={{ duration: 0.32, ease: easeOutSoft }}>
               <button type="button" className="line is-typing" data-testid="activity-line" data-age={0} onClick={props.onOpenChat}>
                 <span className="dots" aria-hidden="true"><i /><i /><i /></span>
                 <span className="text" data-testid="activity-text"><b>{typer.subject}</b> {typer.verb}</span>
@@ -124,7 +123,7 @@ function ActivityOverlay(props: Props) {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: EASE }}>
+            transition={{ duration: 0.2, ease: easeOutSoft }}>
             <i className={cx('fa', ACTIVITY_COPY[toast].icon)} aria-hidden="true" />
             {ACTIVITY_COPY[toast].toast}
           </motion.div>

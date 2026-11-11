@@ -1,0 +1,49 @@
+/**
+ * Tailwind v4: theme tokens and utilities.
+ * Preflight is left out until the old stylesheets are gone; sanitize.css still does the reset.
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* `static` keeps every token in the output: the old stylesheets read them through var(). */
+@theme static {
+  /* Neutrals are Tailwind's taupe, under the name the app already uses. */
+  --color-neutral-50: oklch(98.6% 0.002 67.8);
+  --color-neutral-100: oklch(96% 0.002 17.2);
+  --color-neutral-200: oklch(92.2% 0.005 34.3);
+  --color-neutral-300: oklch(86.8% 0.007 39.5);
+  --color-neutral-400: oklch(71.4% 0.014 41.2);
+  --color-neutral-500: oklch(54.7% 0.021 43.1);
+  --color-neutral-600: oklch(43.8% 0.017 39.3);
+  --color-neutral-700: oklch(36.7% 0.016 35.7);
+  --color-neutral-800: oklch(26.8% 0.011 36.5);
+  --color-neutral-900: oklch(21.4% 0.009 43.1);
+  --color-neutral-950: oklch(14.7% 0.004 49.3);
+
+  --font-sans: 'halyard-display', sans-serif;
+  --font-label: 'Work Sans', sans-serif;
+
+  /* Sizes between Tailwind's steps, named by their pixel size. They leave line height alone. */
+  --text-10: 0.625rem;
+  --text-11: 0.6875rem;
+  --text-13: 0.8125rem;
+
+  --tracking-label: 0.08em;
+
+  --shadow-pop: 0 8px 20px -8px #000;
+  --shadow-menu: 0 25px 60px -15px #000;
+  --shadow-modal: 0 60px 120px -30px rgb(0 0 0 / 0.95);
+  /* The primary button's glow: pink-500 at 55%. */
+  --shadow-glow: 0 10px 30px -8px oklch(65.6% 0.241 354.308 / 0.55);
+
+  --text-shadow-default: 0 1px 1px var(--color-neutral-950);
+
+  /* Easings. Motion can't read these, so utils/motion.ts mirrors the ones it needs. */
+  --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-emphasized: cubic-bezier(0.3, 0, 0, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-circ: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-out-circ: cubic-bezier(0, 0.55, 0.45, 1);
+  --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+}

@@ -12,6 +12,7 @@ import { useAuth } from '~/contexts/Auth'
 import { useNow } from '~/hooks/useNow'
 import { usePusher } from '~/hooks/usePusher'
 import axios from '~/lib/axios'
+import { easeOutSoft } from '~/utils/motion'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 import { clockTime, showMeta } from '~/screens/app.home/Listing/format'
 import { useShowGroupsQuery } from '~/screens/app.home/queries'
@@ -241,8 +242,8 @@ export default function InvitationModal() {
             width: Math.min(expanded ? 400 : pillWidth, viewportWidth - 24),
             borderRadius: expanded ? 16 : 20,
           }} transition={{
-            height: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
-            width: { duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] },
+            height: { duration: reducedMotion ? 0 : 0.5, ease: easeOutSoft },
+            width: { duration: reducedMotion ? 0 : 0.5, ease: easeOutSoft },
             borderRadius: { duration: reducedMotion ? 0 : 0.45 },
           }} data-testid="invitation-card" data-expanded={Boolean(expanded)} data-docked={Boolean(docked)} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
             <BorderBeam data-testid="invitation-beam" className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"
@@ -256,7 +257,7 @@ export default function InvitationModal() {
               <div ref={setBody} className="invitation-body" data-testid="invitation-body" inert={!expanded} aria-hidden={!expanded}>
                 <motion.div key={invitation.id} className="invitation-content" data-testid="invitation-content"
                   initial={expanded && !reducedMotion ? { opacity: 0, x: 32 } : false} animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: reducedMotion ? 0 : 0.5, ease: [0.2, 0.8, 0.2, 1] }}>
+                  transition={{ duration: reducedMotion ? 0 : 0.5, ease: easeOutSoft }}>
                   {video && <>
                     <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
                     <div className="invitation-info">

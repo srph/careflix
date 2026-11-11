@@ -44,7 +44,7 @@
   }
 }
 
-.watch-screen-video > .container {
+.watch-screen-video > .stage {
   position: relative;
   padding-bottom: 56.25%;
   width: 100%;
@@ -54,7 +54,7 @@
   cursor: pointer;
 }
 
-.watch-screen-video > .container > video {
+.watch-screen-video > .stage > video {
   position: absolute;
   top: 0;
   left: 0;
@@ -66,7 +66,7 @@
 }
 
 @media (min-width: 640px) {
-  .watch-screen-video > .container > video {
+  .watch-screen-video > .stage > video {
     position: static;
   }
 }

@@ -12,7 +12,8 @@ export default defineConfig({
   use: {
     baseURL: externalServer || 'http://localhost:8486',
     trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
+    // E2E_SCREENSHOTS=1 keeps a full-page screenshot of where every test ends, for before/after comparisons.
+    screenshot: process.env.E2E_SCREENSHOTS ? { mode: 'on', fullPage: true } : 'only-on-failure',
     actionTimeout: 15_000,
   },
   projects: [

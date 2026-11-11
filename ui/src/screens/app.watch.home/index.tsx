@@ -509,7 +509,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             'is-chat-open': state.isChatOpen
           })}>
           <div
-            data-testid="video-stage" className="container"
+            data-testid="video-stage" className="stage"
             style={
               state.isInitialized
                 ? {}

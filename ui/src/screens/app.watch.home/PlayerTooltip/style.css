@@ -8,8 +8,25 @@
   font-size: 16px;
   background: var(--color-neutral-900);
   border-radius: var(--border-radius);
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
 }
 
+/* Fades up on the way in; leaves at once. */
+.app-watch-player-tooltip-popover[data-starting-style] {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+/* Moving to the next control while one shows swaps it straight in. */
+.app-watch-player-tooltip-popover[data-instant] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-watch-player-tooltip-popover[data-starting-style] {
+    transform: none;
+  }
+}
 
 @media (min-width: 992px) {
   .app-watch-player-tooltip-popover {

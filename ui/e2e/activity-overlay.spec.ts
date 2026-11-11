@@ -173,3 +173,29 @@ test('works on a tablet in portrait, and stops below 640px', async ({ page }) =>
   await expect(page.getByRole('button', { name: 'Activity Overlay' })).toBeHidden()
   expect(fixture.errors).toEqual([])
 })
+
+test('control tooltips fade up once, swap instantly, and keep the seek bar back', async ({ page }) => {
+  const fixture = await room(page)
+  const box = await page.locator('.watch-screen-video .container').boundingBox()
+  await page.mouse.move(box.x + 300, box.y + 200)
+  await page.mouse.move(box.x + 310, box.y + 200)
+  const tip = page.locator('.app-watch-player-tooltip-popover')
+  const bar = page.locator('.watch-player-controls')
+
+  await page.getByRole('button', { name: 'Activity Overlay' }).hover()
+  await expect(tip).toHaveText('Activity Overlay')
+  await expect(tip).not.toHaveAttribute('data-instant')
+  await expect(bar).toBeHidden()
+
+  // The next control's tooltip swaps straight in, and the bar stays away while it shows.
+  await page.locator('.is-fs-icon button').hover()
+  await expect(tip).toHaveText('Enter Fullscreen')
+  await expect(tip).toHaveAttribute('data-instant', 'delay')
+  await page.waitForTimeout(300)
+  await expect(bar).toBeHidden()
+
+  await page.mouse.move(box.x + 300, box.y + 200)
+  await expect(tip).toHaveCount(0)
+  await expect(bar).toBeVisible()
+  expect(fixture.errors).toEqual([])
+})

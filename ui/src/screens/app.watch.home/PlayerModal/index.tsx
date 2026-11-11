@@ -13,6 +13,7 @@ import { useFullscreen } from '~/hooks/useFullscreen'
 import { usePlayerHotkeys } from '../usePlayerHotkeys'
 import PlayerSeeker from '../PlayerSeeker'
 import VolumeControl from '../VolumeControl'
+import { Tooltip } from '@base-ui/react/tooltip'
 import PlayerTooltip from '../PlayerTooltip'
 import ActivityMenu from '../ActivityMenu'
 import type { ActivityLevel } from '../activityLevel'
@@ -55,7 +56,9 @@ function PlayerModal({ party, ...props }: Props) {
   const media = useMediaMode()
   const [isFullscreen, toggleIsFullsceen] = useFullscreen()
   const [isVolumeControlOpen, setIsVolumeControlOpen] = useState(false)
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false)
+  // Counted, not a flag: moving across the controls opens the next tooltip before the last one closes.
+  const [openTooltips, setOpenTooltips] = useState(0)
+  const isTooltipOpen = openTooltips > 0
   const [isRemainingTimeToggled, setIsRemainingTimeToggled] = useState(false)
   const [isRemainingTimeTooltipOpen, setIsRemainingTimeTooltipOpen] = useState(false)
   const [isActivityMenuOpen, setIsActivityMenuOpen] = useState(false)
@@ -137,15 +140,15 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   function handleOpenTooltip() {
-    setIsTooltipOpen(true)
+    setOpenTooltips(count => count + 1)
   }
 
   function handleCloseTooltip() {
-    setIsTooltipOpen(false)
+    setOpenTooltips(count => Math.max(0, count - 1))
   }
 
   function handleOpenRemainingTimeTooltip() {
-    setIsTooltipOpen(true)
+    handleOpenTooltip()
     setIsRemainingTimeTooltipOpen(true)
   }
 
@@ -155,11 +158,14 @@ function PlayerModal({ party, ...props }: Props) {
   }
 
   function handleCloseRemainingTimeTooltip() {
-    setIsTooltipOpen(false)
+    handleCloseTooltip()
     setIsRemainingTimeTooltipOpen(false)
   }
 
   return (
+    // One provider for every control's tooltip: once one shows, moving to the next swaps it in
+    // instantly (data-instant) instead of fading up again.
+    <Tooltip.Provider>
     <div>
       <AnimatePresence initial={false}>
       {props.isOpen && (
@@ -382,6 +388,7 @@ function PlayerModal({ party, ...props }: Props) {
       )}
       </AnimatePresence>
     </div>
+    </Tooltip.Provider>
   )
 }
 

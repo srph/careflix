@@ -8,13 +8,15 @@ interface Props {
   text: string
   align: 'left' | 'right'
   padding?: number
+  // While something else is open from this control, e.g. a menu.
+  disabled?: boolean
   children: React.ReactNode
 }
 
 export default function PlayerTooltip({ padding = 32, ...props }: Props) {
   return (
     <Tooltip.Provider>
-      <Tooltip.Root onOpenChange={open => { if (open) props.onOpen(); else props.onClose() }}>
+      <Tooltip.Root disabled={props.disabled} onOpenChange={open => { if (open) props.onOpen(); else props.onClose() }}>
         <Tooltip.Trigger delay={0} closeOnClick={false} render={<div />}>
           {props.children}
         </Tooltip.Trigger>

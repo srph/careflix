@@ -13,6 +13,8 @@ import PlayerStateBufferedIndicator from './PlayerStateBufferedIndicator'
 import KeyboardInfoModal from './KeyboardInfoModal'
 import ReactionLayer from './ReactionLayer'
 import useReactions from './useReactions'
+import ActivityOverlay from './ActivityOverlay'
+import { showsReactions, useActivityLevel } from './activityLevel'
 
 import useUpdateEffect from '~/hooks/useUpdateEffect'
 import { useReducer, useEffect, useRef } from 'react'
@@ -195,7 +197,7 @@ const reducer = (state: State, action: Action): State => {
 function AppWatchHome(props: ReactComponentWrapper) {
   const context = usePartyContext()
   const auth = useAuth()
-  const reactions = useReactions(context.party, auth.data)
+  const [activityLevel, setActivityLevel] = useActivityLevel(auth.data.id)
   const { registerPlayer } = useInvitationOverlay()
 
   useEffect(() => {
@@ -218,6 +220,9 @@ function AppWatchHome(props: ReactComponentWrapper) {
     isMuted: false,
     isSubtitleEnabled: Boolean(context.party.video.subtitle_url)
   })
+
+  // Other people's floats follow the Activity Overlay level while chat is closed.
+  const reactions = useReactions(context.party, auth.data, showsReactions(activityLevel, state.isChatOpen))
 
   const $video = useRef<HTMLVideoElement>(null)
 
@@ -305,13 +310,27 @@ function AppWatchHome(props: ReactComponentWrapper) {
       type: 'controls:open'
     })
 
+    armControlsTimeout()
+  }
+
+  // The controls hide a while after the pointer last moved over the picture,
+  // except while the Activity Overlay menu is open from them.
+  const isActivityMenuOpenRef = useRef(false)
+
+  function armControlsTimeout() {
     window.clearTimeout(timeoutRef.current)
+    if (isActivityMenuOpenRef.current) return
 
     timeoutRef.current = window.setTimeout(() => {
       dispatch({
         type: 'controls:close'
       })
     }, 5000)
+  }
+
+  function handleActivityMenuOpenChange(open: boolean) {
+    isActivityMenuOpenRef.current = open
+    armControlsTimeout()
   }
 
   function handleOverlayClose() {
@@ -539,6 +558,15 @@ function AppWatchHome(props: ReactComponentWrapper) {
 
           <ReactionLayer floats={reactions.floats} isLifted={state.isOpen} onDone={reactions.remove} />
 
+          <ActivityOverlay
+            party={context.party}
+            me={auth.data}
+            level={activityLevel}
+            isChatOpen={state.isChatOpen}
+            isLifted={state.isOpen}
+            onOpenChat={handleToggleChat}
+          />
+
           <PlayerModal
             party={context.party}
             time={state.time}
@@ -552,6 +580,9 @@ function AppWatchHome(props: ReactComponentWrapper) {
             isInvitationOpen={state.isInvitationOpen}
             isKeyboardInfoOpen={state.isKeyboardInfoOpen}
             isSubtitleEnabled={state.isSubtitleEnabled}
+            activityLevel={activityLevel}
+            onChangeActivityLevel={setActivityLevel}
+            onActivityMenuOpenChange={handleActivityMenuOpenChange}
             onClose={handleOverlayClose}
             onPlay={handlePlay}
             onSeek={handleSeek}

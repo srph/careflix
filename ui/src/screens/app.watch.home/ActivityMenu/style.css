@@ -1,0 +1,198 @@
+/**
+ * .activity-menu: the Activity Overlay menu above the bell.
+ * Opens with a fade while it grows from 60% out of the bell (200ms); shuts with a fade only (150ms).
+ * Both use in-out expo. Base UI sets --transform-origin from the hidden arrow under the bell.
+ */
+.activity-menu-positioner {
+  z-index: var(--zindex-player-tooltip);
+  outline: 0;
+}
+
+.activity-menu {
+  --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+  width: 372px;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--color-neutral-900);
+  box-shadow: 0 16px 36px -12px #000, 0 0 0 1px rgb(255 255 255 / .07);
+  color: var(--color-white);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  transform-origin: var(--transform-origin);
+  transition: opacity 200ms var(--ease-in-out-expo), transform 200ms var(--ease-in-out-expo);
+  outline: 0;
+}
+
+.activity-menu[data-starting-style] {
+  opacity: 0;
+  transform: scale(.6);
+}
+
+.activity-menu[data-ending-style] {
+  opacity: 0;
+  transition: opacity 150ms var(--ease-in-out-expo);
+}
+
+.activity-menu-anchor {
+  width: 0;
+  height: 0;
+}
+
+.activity-menu .heading {
+  padding: 6px 10px;
+  color: var(--color-neutral-400);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.activity-menu .option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: 0;
+}
+
+.activity-menu .option + .option {
+  margin-top: 2px;
+}
+
+.activity-menu .option[data-highlighted] {
+  background: rgb(255 255 255 / .06);
+}
+
+.activity-menu .option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+}
+
+.activity-menu .words {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.activity-menu .label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.activity-menu .check {
+  color: var(--color-primary);
+  font-size: 11px;
+}
+
+.activity-menu .description {
+  color: var(--color-neutral-400);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+/* The close-up: the corner of the picture at real size. */
+.activity-menu-preview {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 152px;
+  height: 86px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: linear-gradient(180deg, var(--color-neutral-800) 0%, var(--color-neutral-900) 55%, var(--color-neutral-950) 100%);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .08);
+}
+
+.activity-menu .option[data-checked] .activity-menu-preview {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.activity-menu-preview .lines {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.activity-menu-preview .line {
+  display: flex;
+  align-items: center;
+  padding: 2px 7px 2px 2px;
+  border-radius: 10px;
+  background: rgb(0 0 0 / .42);
+  color: var(--color-neutral-200);
+  font-size: 9.5px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.activity-menu-preview .line b {
+  color: var(--color-white);
+}
+
+.activity-menu-preview .face {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / .14);
+  color: var(--color-white);
+  font-size: 7.5px;
+  font-weight: 700;
+}
+
+.activity-menu-preview .face.is-leo { background: var(--color-green); color: var(--color-neutral-950); }
+.activity-menu-preview .face.is-pause { font-size: 6px; }
+
+.activity-menu-preview .reaction {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activity-menu-preview .reaction .emoji {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.activity-menu-preview .reaction .name {
+  margin-top: 2px;
+  padding: 1px 6px;
+  border-radius: 7px;
+  background: var(--color-white);
+  color: var(--color-neutral-950);
+  font-size: 7.5px;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-menu,
+  .activity-menu[data-starting-style] {
+    transform: none;
+  }
+}
+
+/* The bell lives with the desktop controls only. */
+.watch-player-modal-action-item.is-activity-icon {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .watch-player-modal-action-item.is-activity-icon {
+    display: block;
+  }
+}

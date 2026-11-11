@@ -54,18 +54,22 @@ export function makePath(random: () => number = Math.random): FloatPath {
   }
 }
 
-export default function useReactions(party: Pick<AppParty, 'id' | 'members'>, me: Pick<AppUser, 'id'>) {
+// `showOthers` is false while chat is closed and the Activity Overlay is below "Everything";
+// their reactions are dropped then, not saved for later. Your own always float.
+export default function useReactions(party: Pick<AppParty, 'id' | 'members'>, me: Pick<AppUser, 'id'>, showOthers = true) {
   const channelName = `private-party.${party.id}`
   const [floats, setFloats] = useState<ReactionFloat[]>([])
   const members = useRef(party.members)
   members.current = party.members
+  const isShowingOthers = useRef(showOthers)
+  isShowingOthers.current = showOthers
 
   const add = useCallback((emoji: Reaction, name: string) => {
     setFloats(current => [...current, { id: uuid(), emoji, name, path: makePath() }].slice(-MAX_FLOATS))
   }, [])
 
   usePusher(channelName, REACTION_EVENT, (data: { userId?: AppId, emoji?: unknown }) => {
-    if (!data || !isReaction(data.emoji) || String(data.userId) === String(me.id)) return
+    if (!data || !isReaction(data.emoji) || String(data.userId) === String(me.id) || !isShowingOthers.current) return
     // The name comes from the party, not the payload.
     const member = members.current.find(member => String(member.id) === String(data.userId))
     if (member) add(data.emoji, member.name)

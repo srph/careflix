@@ -51,6 +51,16 @@ describe('reactions', () => {
     expect(result.current.floats).toHaveLength(MAX_FLOATS - 1)
   })
 
+  it('drops friends’ reactions while hidden, keeps your own, and picks up again after', () => {
+    const { result, rerender } = renderHook(({ show }) => useReactions(party, me, show), { initialProps: { show: false } })
+    receive({ userId: 2, emoji: '🔥' })
+    act(() => result.current.send('😂'))
+    expect(result.current.floats).toMatchObject([{ emoji: '😂', name: 'You' }])
+    rerender({ show: true })
+    receive({ userId: 3, emoji: '😭' })
+    expect(result.current.floats.map(float => float.name)).toEqual(['You', 'Mira'])
+  })
+
   it('still floats locally before the room channel is subscribed', () => {
     channel.subscribed = false
     const { result } = renderHook(() => useReactions(party, me))

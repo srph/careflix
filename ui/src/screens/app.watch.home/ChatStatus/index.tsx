@@ -2,7 +2,8 @@ import './style.css'
 import * as React from 'react'
 import cx from 'classnames'
 import UiAvatar from '~/components/UiAvatar'
-import { hypeFor, latestStatusActivity, movieTime, seekDirection, typingLabel } from './status'
+import { hypeFor, latestStatusActivity, typingLabel } from './status'
+import { ActivitySaid, activityIcon } from './ActivitySaid'
 
 interface Props {
   logs: AppPartyLog[]
@@ -11,13 +12,6 @@ interface Props {
   // A friend who just arrived; shown briefly with their hype line.
   joined: AppUser | null
   meId: AppId
-}
-
-const ICONS: Partial<Record<AppPartyActivityKind, string>> = {
-  played: 'fa-play',
-  paused: 'fa-pause',
-  created: 'fa-star',
-  switched: 'fa-film'
 }
 
 /**
@@ -46,21 +40,10 @@ function ChatStatus({ logs, typing, joined, meId }: Props) {
       <span className="text"><b>{typer.subject}</b> {typer.verb}</span>
     </>
   } else if (activity) {
-    const seconds = activity.meta?.seconds
-    const at = seconds == null ? null : <span className="time">{movieTime(seconds)}</span>
-    const direction = activity.kind === 'seeked' ? seekDirection(activity) : null
-    const icon = activity.kind === 'seeked' ? (direction === 'back' ? 'fa-backward' : 'fa-forward') : ICONS[activity.kind]
-    const said = {
-      played: <>pressed play</>,
-      paused: at ? <>paused at {at}</> : <>paused</>,
-      seeked: at ? <>{direction === 'back' ? 'jumped back' : direction === 'ahead' ? 'skipped ahead' : 'skipped'} to {at}</> : <>skipped</>,
-      created: <>started the room</>,
-      switched: <>{activity.text}</>
-    }[activity.kind]
     key = `activity:${activity.id}`
     line = <>
-      <i className={cx('fa', icon, 'icon', { 'is-playing': activity.kind === 'played' })} aria-hidden="true" />
-      <span className="text"><b>{who(activity.user)}</b> {said}</span>
+      <i className={cx('fa', activityIcon(activity), 'icon', { 'is-playing': activity.kind === 'played' })} aria-hidden="true" />
+      <span className="text"><b>{who(activity.user)}</b> <ActivitySaid activity={activity} /></span>
     </>
   }
 

@@ -14,6 +14,8 @@ import { usePlayerHotkeys } from '../usePlayerHotkeys'
 import PlayerSeeker from '../PlayerSeeker'
 import VolumeControl from '../VolumeControl'
 import PlayerTooltip from '../PlayerTooltip'
+import ActivityMenu from '../ActivityMenu'
+import type { ActivityLevel } from '../activityLevel'
 
 interface Props {
   party: AppParty
@@ -28,6 +30,10 @@ interface Props {
   isInvitationOpen: boolean
   isKeyboardInfoOpen: boolean
   isSubtitleEnabled: boolean
+  activityLevel: ActivityLevel
+  onChangeActivityLevel: (level: ActivityLevel) => void
+  // The Activity Overlay menu opened or shut; the controls stay up while it's open.
+  onActivityMenuOpenChange: (open: boolean) => void
   onClose: () => void
   onPlay: () => void
   onSeek: (time: number) => void
@@ -52,6 +58,7 @@ function PlayerModal({ party, ...props }: Props) {
   const [isTooltipOpen, setIsTooltipOpen] = useState(false)
   const [isRemainingTimeToggled, setIsRemainingTimeToggled] = useState(false)
   const [isRemainingTimeTooltipOpen, setIsRemainingTimeTooltipOpen] = useState(false)
+  const [isActivityMenuOpen, setIsActivityMenuOpen] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -70,7 +77,7 @@ function PlayerModal({ party, ...props }: Props) {
 
   usePlayerHotkeys({
     isDisabled() {
-      return isIncomingInvitationOpen || props.isSeasonSelectionOpen || props.isInvitationOpen || props.isKeyboardInfoOpen
+      return isIncomingInvitationOpen || isActivityMenuOpen || props.isSeasonSelectionOpen || props.isInvitationOpen || props.isKeyboardInfoOpen
     },
     onFullscreen() {
       toggleIsFullsceen()
@@ -140,6 +147,11 @@ function PlayerModal({ party, ...props }: Props) {
   function handleOpenRemainingTimeTooltip() {
     setIsTooltipOpen(true)
     setIsRemainingTimeTooltipOpen(true)
+  }
+
+  function handleActivityMenuOpenChange(open: boolean) {
+    setIsActivityMenuOpen(open)
+    props.onActivityMenuOpenChange(open)
   }
 
   function handleCloseRemainingTimeTooltip() {
@@ -333,6 +345,21 @@ function PlayerModal({ party, ...props }: Props) {
                     <UiPlainButton className="icon">
                       {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
                     </UiPlainButton>
+                  </div>
+                </PlayerTooltip>
+
+                <PlayerTooltip
+                  text="Activity Overlay"
+                  align="right"
+                  disabled={isActivityMenuOpen}
+                  onOpen={handleOpenTooltip}
+                  onClose={handleCloseTooltip}>
+                  <div className="watch-player-modal-action-item is-activity-icon">
+                    <ActivityMenu
+                      level={props.activityLevel}
+                      onChange={props.onChangeActivityLevel}
+                      onOpenChange={handleActivityMenuOpenChange}
+                    />
                   </div>
                 </PlayerTooltip>
 

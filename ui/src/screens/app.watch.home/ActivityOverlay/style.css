@@ -1,5 +1,5 @@
 /**
- * .activity-overlay: the room over the bottom-left of the picture while chat is closed. Desktop only.
+ * .activity-overlay: the room over the bottom-left of the picture while chat is closed. 640px and up (tablets too).
  * Sits above the player overlay so its lines stay clickable while the controls are up.
  */
 .activity-overlay {
@@ -10,7 +10,7 @@
   display: none;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 640px) {
   .activity-overlay {
     position: absolute;
     left: 32px;

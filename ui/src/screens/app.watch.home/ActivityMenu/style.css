@@ -186,12 +186,12 @@
   }
 }
 
-/* The bell lives with the desktop controls only. */
+/* The bell shows from 640px up, tablets included; phones go without for now. */
 .watch-player-modal-action-item.is-activity-icon {
   display: none;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 640px) {
   .watch-player-modal-action-item.is-activity-icon {
     display: block;
   }

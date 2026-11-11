@@ -21,7 +21,7 @@ const message = (user, text: string) => {
   return { id: key, party_id: party.id, type: 'message', created_at: at, message: { id: key, text, user, created_at: at, updated_at: at } }
 }
 
-test.skip(({ isMobile }) => isMobile, 'The Activity Overlay is desktop only for now.')
+test.skip(({ isMobile }) => isMobile, 'The Activity Overlay starts at 640px; phones go without it for now.')
 
 async function room(page) {
   let connection: WebSocketRoute
@@ -147,4 +147,20 @@ test('remembers the level for the account and shows nothing when off', async ({ 
   await page.keyboard.press('Escape')
   await expect(page.getByRole('menu')).toBeHidden()
   expect([...fixture.errors, ...again.errors]).toEqual([])
+})
+
+test('works on a tablet in portrait, and stops below 640px', async ({ page }) => {
+  await page.setViewportSize({ width: 820, height: 1180 })
+  const fixture = await room(page)
+  await page.keyboard.press('c')
+  fixture.emit('log', { log: activity(leo, 'joined') })
+  await expect(page.locator('.activity-overlay .line .text')).toHaveText([/^Leo (just joined|is here)\.$/])
+  await openMenu(page)
+  await page.getByRole('menuitemradio', { name: /^Off/ }).click()
+  await expect(page.locator('.activity-overlay-toast')).toHaveText('Activity off')
+
+  await page.setViewportSize({ width: 639, height: 900 })
+  await expect(page.locator('.activity-overlay')).toBeHidden()
+  await expect(page.getByRole('button', { name: 'Activity Overlay' })).toBeHidden()
+  expect(fixture.errors).toEqual([])
 })

@@ -81,19 +81,26 @@
  */
 .watch-screen-chat-messages-container {
   position: relative;
+  flex: 1;
   min-height: 0;
-  height: 100%;
 }
 
+/* A short chat sits on the composer; the auto margin (not justify-content: flex-end) keeps the top reachable once it scrolls. */
 .watch-screen-chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   height: 100%;
   overflow-y: auto;
-  padding: 2px 12px 8px;
+  padding: 16px 12px;
   background: var(--color-neutral-900);
 }
 
+.watch-screen-chat-messages > :first-child { margin-top: auto; }
+
+/* Flex items don't collapse margins: 8px gap + 6px = 14px above a time, 8px below it. */
 .watch-screen-chat-time {
-  margin: 14px 0 6px;
+  margin: 6px 0 0;
   font-size: 11.5px;
   color: var(--color-neutral-400);
   text-align: center;
@@ -102,7 +109,6 @@
 .watch-screen-chat-group {
   display: flex;
   gap: 8px;
-  margin: 8px 0;
 }
 
 .watch-screen-chat-group > .avatar { flex: none; margin-top: 19px; }

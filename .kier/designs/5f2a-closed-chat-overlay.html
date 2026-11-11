@@ -91,7 +91,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .mk .subt{position:absolute;left:0;right:0;bottom:9%;z-index:1;text-align:center;font:600 21px/1.3 'Outfit',sans-serif;text-shadow:0 1px 3px #000,0 0 12px #000a;transition:transform .25s var(--ez)}
 .mk .fx{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;container-type:size}
 .mk .lift{transition:transform .25s var(--ez)}
-.mk .vid:hover .lift,.mk.pin .lift,.mk .vid:hover .subt,.mk.pin .subt{transform:translateY(calc(-1 * var(--lift)))}
+.mk .vid:hover .lift,.mk.pin .lift,.mk.menu .lift,.mk .vid:hover .subt,.mk.pin .subt,.mk.menu .subt{transform:translateY(calc(-1 * var(--lift)))}
 
 /* player state flash (PlayerStateBufferedIndicator) */
 .mk .pind{position:absolute;left:50%;top:50%;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;transform:translate(-50%,-50%);pointer-events:none;opacity:0}
@@ -103,9 +103,9 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 
 /* player controls (PlayerModal) */
 .mk .ctl{position:absolute;left:0;right:0;bottom:0;z-index:4;padding-top:56px;background:linear-gradient(0deg,rgba(0,0,0,.78),transparent);opacity:0;transition:opacity .2s;pointer-events:none}
-.mk .vid:hover .ctl,.mk.pin .ctl{opacity:1;pointer-events:auto}
+.mk .vid:hover .ctl,.mk.pin .ctl,.mk.menu .ctl{opacity:1;pointer-events:auto}
 .mk .back{position:absolute;left:24px;top:18px;z-index:4;font-size:13px;font-weight:600;opacity:0;transition:opacity .2s}
-.mk .vid:hover .back,.mk.pin .back{opacity:1}
+.mk .vid:hover .back,.mk.pin .back,.mk.menu .back{opacity:1}
 .mk .back i{margin-right:8px}
 .mk .seek{display:flex;align-items:center;gap:16px;padding:0 32px;font-size:12px;font-variant-numeric:tabular-nums}
 .mk .trk{position:relative;flex:1;height:4px;border-radius:2px;background:#ffffff33}
@@ -203,6 +203,117 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
 .mk .pchip{padding-left:14px;color:#ffffffe0}
 .mk .pchip i{font-size:10px}
 
+/* A2–A6 · putting the comments away */
+.mk .hx{display:inline-flex;align-items:center;gap:6px;height:26px;margin-bottom:8px;padding:0 11px 0 9px;border-radius:13px;background:rgba(10,15,20,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px #ffffff1f;font-size:12px;font-weight:600;color:#ffffffd0;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .18s,transform .2s var(--ez)}
+.mk .hx i{font-size:11px}
+.mk .hx:hover{background:rgba(10,15,20,.82);color:#fff}
+.mk .vid:hover .hx.on,.mk.pin .hx.on{opacity:1;transform:none;pointer-events:auto}
+.mk .ln .lx{display:grid;place-items:center;flex:none;width:0;height:22px;margin-right:-8px;overflow:hidden;opacity:0;border-radius:50%;font-size:10px;color:#ffffffb0;transition:width .18s var(--ez),opacity .15s,margin .18s}
+.mk .ln:hover .lx{width:22px;opacity:1;margin:0 -8px 0 2px}
+.mk .ln .lx:hover{background:#ffffff24;color:#fff}
+.mk .ov .bl.swipe .ln{cursor:grab;touch-action:pan-y;user-select:none}
+.mk .ov .bl.swipe .ln.drag{cursor:grabbing;transition:none}
+.mk .fd{display:none;align-items:center;gap:8px;height:34px;padding:0 12px 0 6px;border-radius:17px;background:rgba(10,15,20,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px #ffffff14;font-size:13px;white-space:nowrap;color:#ffffffe0;pointer-events:auto;transition:opacity .2s}
+.mk .fd.on{display:inline-flex}
+.mk .fd.idle{opacity:.6}
+.mk .fd:hover{opacity:1;background:rgba(10,15,20,.78)}
+.mk .fd>.fa-comment-o{margin-left:6px;font-size:13px}
+.mk .fd>.fa-angle-up{font-size:15px;color:#ffffff90}
+.mk .fd .dots{color:#ffffffc0}
+.mk .cmt.off::after{content:"";position:absolute;left:50%;top:50%;width:21px;height:2px;border-radius:1px;background:#fff;box-shadow:0 0 0 1.5px #000c;transform:translate(-50%,-50%) rotate(-45deg)}
+.mk .ic .tip{position:absolute;bottom:calc(100% + 14px);left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:6px 7px 6px 11px;border-radius:8px;background:var(--n3);box-shadow:0 8px 20px -8px #000;font-size:12px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.mk .ic .tip:empty{display:none}
+.mk .ic:hover .tip{opacity:1}
+.mk.menu .ic .tip{opacity:0}
+.mk kbd{padding:1px 6px;border-radius:4px;background:#ffffff1f;font:600 11px/1.4 inherit;font-family:inherit;color:#ffffffd0}
+.mk .cto{position:absolute;top:18px;left:50%;transform:translateX(-50%);display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:17px;background:rgba(10,15,20,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 0 0 1px #ffffff14;font-size:13px;white-space:nowrap}
+.mk .cto i{font-size:11px}
+.mk .cmenu{position:absolute;right:20px;bottom:58px;width:248px;padding:6px;border-radius:12px;background:var(--n3);box-shadow:0 16px 36px -12px #000,0 0 0 1px #ffffff12}
+.mk .cmenu[hidden]{display:none}
+.mk .cmenu .mh{padding:6px 10px 6px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--n5)}
+.mk .cmenu button{display:flex;align-items:center;gap:10px;width:100%;height:36px;padding:0 10px;border-radius:8px;font-size:13.5px}
+.mk .cmenu button:hover{background:#ffffff10}
+.mk .cmenu .ck{width:12px;flex:none;font-size:11px;color:var(--pk);visibility:hidden}
+.mk .cmenu button[aria-checked="true"] .ck{visibility:visible}
+.mk .cmenu button>small{margin-left:auto;font-size:12px;color:var(--n5)}
+.mk .cmenu .mhr{display:flex;align-items:center;justify-content:space-between;padding-right:2px}
+.mk .cmenu .mhr .inf{display:grid;place-items:center;width:28px;height:28px;padding:0;border-radius:50%;font-size:14px;color:var(--n5)}
+.mk .cmenu .mhr .inf:hover,.mk .cmenu .mhr .inf:focus-visible{background:#ffffff12;color:#fff;outline:none}
+.mk .cmenu .lb{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.mk .cmenu .lb small{font-size:12px;line-height:1.35;color:var(--n5)}
+.mk .cmenu.tall{width:272px}
+.mk .cmenu.tall button{height:auto;padding:8px 10px;align-items:flex-start}
+.mk .cmenu.tall .ck{margin-top:4px}
+/* A5b · cards */
+.mk .cmenu.cm-cards{width:auto}
+.mk .cmenu .lc{display:flex;gap:4px}
+.mk .cmenu .lc button{flex-direction:column;align-items:flex-start;gap:5px;width:136px;height:auto;padding:6px 6px 9px}
+.mk .cmenu .lc .pvw{--s:.443}
+.mk .cmenu .lc button[aria-checked="true"] .pvw{box-shadow:0 0 0 2px var(--pk)}
+.mk .cmenu .lc .lt{display:flex;align-items:center;gap:6px;margin-top:3px;padding:0 2px;font-size:13px}
+.mk .cmenu .lc small{padding:0 2px;font-size:11.5px;line-height:1.3;color:var(--n5)}
+/* a real-size picture of an option, scaled by --s */
+.mk .pvw{--s:.5;position:relative;display:block;flex:none;width:calc(280px * var(--s));height:calc(158px * var(--s));overflow:hidden;border-radius:7px;background:#000;box-shadow:0 0 0 1px #ffffff14}
+.mk .pvw .pin{position:absolute;left:0;top:0;width:280px;height:158px;transform:scale(var(--s));transform-origin:0 0}
+.mk .pvw .pst{position:absolute;inset:0;background:radial-gradient(14% 24% at 74% 30%,#ffd9a0 0%,#f2a65a66 35%,transparent 72%),linear-gradient(180deg,#24344b 0%,#172536 52%,#0c141d 100%)}
+.mk .pvw .pls{position:absolute;left:10px;bottom:12px;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.mk .pvw .pl{display:inline-flex;align-items:center;gap:6px;padding:3px 10px 3px 3px;border-radius:12px;background:rgba(10,15,20,.6);font-size:11px;line-height:1.25;white-space:nowrap;color:#ffffffe6}
+.mk .pvw .pl .av{width:17px;height:17px;font-size:8px}
+.mk .pvw .pl.act{background:none;text-shadow:0 1px 2px #000c}
+.mk .pvw .pi{display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#ffffff24;font-size:7.5px}
+.mk .pvw .pi .emo{font-size:10px}
+.mk .pvw .pud{position:absolute;right:14px;bottom:12px;font-size:15px}
+.mk .pvw .pud b{position:absolute;top:-6px;right:-9px;min-width:14px;height:14px;padding:0 4px;border-radius:7px;background:var(--pk);font-size:9px;line-height:14px;text-align:center}
+/* A5c · help modal */
+.mk .hm{position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(5,8,12,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.mk .hm[hidden]{display:none}
+.mk.modal .ctl,.mk.modal .back{opacity:0!important}
+.mk .hd{width:min(830px,calc(100% - 48px));padding:20px 22px 22px;border-radius:16px;background:var(--n2);box-shadow:0 30px 60px -20px #000,0 0 0 1px #ffffff12}
+.mk .hh{display:flex;align-items:flex-start;gap:16px;margin-bottom:18px}
+.mk .hh h3{margin:0;font-size:18px;font-weight:700}
+.mk .hh p{margin-top:2px;font-size:13.5px;color:var(--n5)}
+.mk .hc{display:grid!important;place-items:center;flex:none;width:32px;height:32px;margin-left:auto;border-radius:50%;background:#ffffff10!important;font-size:13px!important}
+.mk .hc:hover{background:#ffffff1f!important}
+.mk .hg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.mk .hcard{display:flex;flex-direction:column;gap:4px}
+.mk .hcard .pvw{--s:.886;margin-bottom:8px}
+.mk .hcard.cur .pvw{box-shadow:0 0 0 2px var(--pk)}
+.mk .hcard b{font-size:14.5px}
+.mk .hcard p{min-height:38px;font-size:13px;line-height:1.4;color:var(--n5)}
+.mk .ub{align-self:flex-start;display:inline-flex!important;align-items:center;gap:7px;height:32px;margin-top:6px;padding:0 14px!important;border-radius:4px;background:#ffffff14!important;font-size:13px!important;font-weight:700!important}
+.mk .ub:hover{background:#ffffff24!important}
+.mk .hcard.cur .ub{padding-left:0!important;background:none!important;color:var(--n5);cursor:default}
+.mk .hcard.cur .ub i{font-size:11px;color:var(--pk)}
+/* A5b2 · a list of close-up previews */
+.mk .cmenu.cm-rows{width:372px}
+.mk .cmenu .lr{display:flex;flex-direction:column;gap:2px}
+.mk .cmenu .lr button{height:auto;gap:14px;padding:6px 10px 6px 6px}
+.mk .cmenu .lr .lb{gap:3px}
+.mk .cmenu .lr .lt{display:flex;align-items:center;gap:6px;font-size:13.5px}
+.mk .cmenu .lr small{font-size:12px;line-height:1.35;color:var(--n5)}
+.mk .cmenu .lr button[aria-checked="true"] .pvz{box-shadow:0 0 0 2px var(--pk)}
+.mk .pvz{position:relative;display:block;flex:none;width:152px;height:86px;overflow:hidden;border-radius:7px;background:linear-gradient(180deg,#24344b 0%,#172536 55%,#0c141d 100%);box-shadow:0 0 0 1px #ffffff14}
+.mk .pvz .pls{position:absolute;left:7px;bottom:8px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.mk .pvz .pl{display:inline-flex;align-items:center;gap:5px;padding:2px 8px 2px 2px;border-radius:10px;background:rgba(10,15,20,.6);font-size:9.5px;line-height:1.25;white-space:nowrap;color:#ffffffe6}
+.mk .pvz .pl .av{width:15px;height:15px;font-size:7.5px}
+.mk .pvz .pl.act{background:none;text-shadow:0 1px 2px #000c}
+.mk .pvz .pi{display:grid;place-items:center;width:15px;height:15px;border-radius:50%;background:#ffffff24;font-size:6.5px}
+.mk .pvz .pi .emo{font-size:9px}
+.mk .pvz .zrx{position:absolute;right:10px;top:5px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.mk .pvz .zrx span{font-size:16px;line-height:1;filter:drop-shadow(0 2px 4px #0008)}
+.mk .pvz .zrx b{padding:1px 6px;border-radius:7px;background:#fff;color:#10171E;font-size:8px;font-weight:700;line-height:1.3}
+.mk .pvz .pud{position:absolute;right:12px;bottom:10px;font-size:14px}
+.mk .pvz .pud b{position:absolute;top:-6px;right:-9px;min-width:14px;height:14px;padding:0 4px;border-radius:7px;background:var(--pk);font-size:9px;line-height:14px;text-align:center}
+.mk .pvz .znone{position:absolute;left:8px;bottom:9px;font-size:9.5px;color:#ffffff70}
+
+/* A5d · preview on the picture */
+.mk .ov .bl.pving>.stk,.mk .ov .bl.pving>.typ{opacity:0!important;transition:opacity .15s}
+.mk .pvst{position:absolute;left:0;bottom:0;display:flex;flex-direction:column;align-items:flex-start;gap:6px;animation:pvIn .22s var(--ez)}
+.mk .pvtag{display:inline-flex;align-items:center;gap:6px;height:22px;margin-bottom:2px;padding:0 10px 0 8px;border-radius:11px;background:var(--pk);font-size:11.5px;font-weight:700}
+.mk .pvtag i{font-size:11px}
+.mk .pvnone{padding:6px 13px;border-radius:16px;border:1px dashed #ffffff50;font-size:13px;color:#ffffffb0}
+@keyframes pvIn{from{opacity:0;transform:translateY(6px)}}
+
 /* reaction floats (ReactionLayer) */
 .mk .fl{position:absolute;bottom:18px;right:calc(24px + var(--x) * min(260px, 35cqw));animation:rRise var(--d) var(--ease) forwards,rFade var(--d) linear forwards}
 .mk .fl>.drift{display:flex;flex-direction:column;align-items:center;animation:rDrift var(--d) ease-in-out forwards}
@@ -261,15 +372,16 @@ body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,
     <div>Subtitles own the bottom centre; reaction floats the bottom right.</div>
     <div>Controls rise on hover; anything at the bottom lifts with them.</div>
     <div>Clicking the overlay opens chat.</div>
+    <div>A2–A6 try ways to put A’s comments away; A5b–A5d explain A5’s options.</div>
   </div>
 </header>
 <div id="vars"></div>
 <section class="further">
   <h2>Further Actions</h2>
   <div class="cards">
-    <div><b>Explore</b>Explore from A: tune how long lines live and how a burst folds.</div>
-    <div><b>Remix</b>Remix A: add G’s named pause and F’s quick reply.</div>
-    <div><b>Settle</b>Settle on A for the lightest live-stream feel.</div>
+    <div><b>Explore</b>Explore from A5d: how the preview works with the keyboard and on touch.</div>
+    <div><b>Remix</b>Remix A5b2b: let each close-up play a few seconds of the party.</div>
+    <div><b>Settle</b>Settle on A5d for help that never leaves the picture.</div>
   </div>
 </section>
 </main>
@@ -319,13 +431,280 @@ const Stack = {
   tone(c){ [...c.st.children].reverse().forEach((l, i) => l.style.opacity = [1, 1, .8, .55, .3][i] ?? 0); },
   add(c, ev){
     const ln = el('div', 'ln' + (ev.kind === 'act' ? ' act' : ''), lineHTML(ev));
-    ln.dataset.act = 'chat';
+    ln.dataset.act = 'chat'; ln.dataset.kind = ev.kind;
+    c.deco?.(c, ln);
     flip(c.st, () => { c.st.append(ln); while(c.st.children.length > 5) c.st.firstElementChild.remove(); });
     ln.animate([{opacity:0, transform:'translateY(10px) scale(.96)'}, {opacity:1, transform:'none'}], {duration:320, easing:EZ});
     Stack.tone(c);
     later(c, 8000, () => fadeOut(ln, () => Stack.tone(c)));
   },
   typing(c, who, on){ c.ty.querySelector('.tx').innerHTML = `<b>${nm(who)}</b> is typing`; c.ty.classList.toggle('on', on); }
+};
+
+/* ───── A2–A6: putting the comments away ───── */
+/* Slide lines out to the left; keep() spares some (A5's activity-only). */
+function hideLines(c, keep = () => false){
+  const out = [...c.st.children].filter(l => !keep(l));
+  out.forEach((l, i) => {
+    l.style.pointerEvents = 'none';
+    l.animate([{opacity:getComputedStyle(l).opacity, transform:'none'}, {opacity:0, transform:'translateX(-28px)'}],
+      {duration:240, delay:(out.length - 1 - i) * 40, easing:EZ, fill:'forwards'}).onfinish = () => { flip(c.st, () => l.remove()); Stack.tone(c); };
+  });
+  c.ty.classList.remove('on');
+}
+
+/* A2 / A6 · a Hide chip above the lines; A6 folds into a pill that keeps counting */
+const Put = {
+  mount(c, fold){
+    Stack.mount(c); c.hid = false; c.fold = fold; c.miss = []; c.typer = null;
+    c.hx = el('button', 'hx'); c.hx.type = 'button';
+    c.hx.addEventListener('click', e => { e.stopPropagation(); Put.set(c, !c.hid); });
+    c.bl.prepend(c.hx);
+    if(fold){
+      c.fd = el('button', 'fd'); c.fd.type = 'button'; c.fd.setAttribute('aria-label', 'Show comments');
+      c.fd.addEventListener('click', e => { e.stopPropagation(); Put.set(c, false); });
+      c.bl.append(c.fd);
+    }
+    new MutationObserver(() => Put.paint(c)).observe(c.st, {childList:true});
+    Put.paint(c);
+  },
+  set(c, hid){
+    c.hid = hid;
+    if(hid) hideLines(c);
+    else if(c.fold){ const back = c.miss.slice(-3); c.miss = []; back.forEach((ev, i) => later(c, i * 110, () => Stack.add(c, ev))); if(c.typer) Stack.typing(c, c.typer, true); }
+    Put.paint(c);
+  },
+  push(c, ev){
+    if(!c.hid) return Stack.add(c, ev);
+    if(!c.fold) return;
+    c.miss.push(ev); Put.paint(c);
+    c.fd.animate([{transform:'scale(1)'}, {transform:'scale(1.07)'}, {transform:'scale(1)'}], {duration:320, easing:EZ});
+  },
+  typing(c, who, on){ c.typer = on ? who : null; if(!c.hid) Stack.typing(c, who, on); else if(c.fold) Put.paint(c); },
+  clear(c){ c.miss = []; if(c.fold) Put.paint(c); },
+  paint(c){
+    const folded = c.fold && c.hid;
+    c.hx.innerHTML = c.hid ? '<i class="fa fa-comment"></i>Show comments' : '<i class="fa fa-times"></i>Hide';
+    c.hx.classList.toggle('on', !folded && (c.hid || c.st.children.length > 0));
+    if(!c.fold) return;
+    const names = [...new Set(c.miss.map(e => e.who).reverse())].slice(0, 3);
+    c.fd.classList.toggle('on', folded);
+    c.fd.classList.toggle('idle', !c.miss.length && !c.typer);
+    c.fd.innerHTML = (c.miss.length ? `<span class="fs">${names.map(n => av(n)).join('')}</span><b>${c.miss.length} new</b>` : '<i class="fa fa-comment-o"></i><span>Comments hidden</span>')
+      + (c.typer ? '<span class="dots"><i></i><i></i><i></i></span>' : '') + '<i class="fa fa-angle-up"></i>';
+  }
+};
+
+/* A3 · each line gets an ×, and can be dragged off to the left */
+function swipeable(c, ln){
+  const x = el('button', 'lx', '<i class="fa fa-times"></i>'); x.type = 'button'; x.setAttribute('aria-label', 'Dismiss');
+  ln.append(x);
+  x.addEventListener('click', e => { e.stopPropagation(); throwLine(c, ln); });
+  let sx = null, dx = 0, base = 1;
+  ln.addEventListener('pointerdown', e => {
+    if(e.button !== 0 || e.target.closest('.lx')) return;
+    sx = e.clientX; dx = 0; base = +ln.style.opacity || 1; ln.setPointerCapture(e.pointerId);
+  });
+  ln.addEventListener('pointermove', e => {
+    if(sx === null) return;
+    dx = e.clientX - sx; if(dx > 0) dx *= .25;
+    if(Math.abs(dx) > 4) ln.classList.add('drag');
+    ln.style.transform = `translateX(${dx}px)`;
+    ln.style.opacity = base * Math.max(0, 1 - Math.max(0, -dx) / 220);
+  });
+  const up = () => {
+    if(sx === null) return; sx = null;
+    if(Math.abs(dx) > 4) ln._dragged = true;
+    ln.classList.remove('drag');
+    if(dx < -70) return throwLine(c, ln);
+    ln.animate([{transform:`translateX(${dx}px)`}, {transform:'none'}], {duration:220, easing:EZ});
+    ln.style.transform = ''; Stack.tone(c);
+  };
+  ln.addEventListener('pointerup', up); ln.addEventListener('pointercancel', up);
+  ln.addEventListener('click', e => { if(ln._dragged){ ln._dragged = false; e.stopPropagation(); } });
+}
+function throwLine(c, ln){
+  ln.style.pointerEvents = 'none';
+  const cs = getComputedStyle(ln);
+  ln.animate([{transform:cs.transform === 'none' ? 'none' : cs.transform, opacity:cs.opacity}, {transform:'translateX(-380px)', opacity:0}],
+    {duration:260, easing:'cubic-bezier(.4,0,1,1)', fill:'forwards'}).onfinish = () => { flip(c.st, () => ln.remove()); Stack.tone(c); };
+}
+
+/* A4 / A5 · a comments button in the player controls, next to chat */
+function ctlBtn(c, onClick){
+  let b = c.room.querySelector('.cmt');
+  if(!b){
+    b = el('button', 'ic cmt', '<i class="fa fa-commenting"></i><span class="tip"></span>'); b.type = 'button';
+    c.room.querySelector('.ctl [data-act="chat"]').before(b);
+    b.addEventListener('click', e => { e.stopPropagation(); onClick(); });
+  }
+  return b;
+}
+function toast(c, html){
+  c.ov.querySelector('.cto')?.remove();
+  const t = el('div', 'cto', html); c.ov.append(t);
+  t.animate([{opacity:0, transform:'translate(-50%,-8px)'}, {opacity:1, transform:'translate(-50%,0)', offset:.12}, {opacity:1, transform:'translate(-50%,0)', offset:.82}, {opacity:0, transform:'translate(-50%,0)'}],
+    {duration:2200, easing:'ease', fill:'forwards'}).onfinish = () => t.remove();
+}
+function setA4(c, off){
+  c.off = off;
+  if(off) hideLines(c);
+  paintA4(c);
+  toast(c, off ? '<i class="fa fa-commenting"></i>Comments off · <kbd>C</kbd> to show' : '<i class="fa fa-commenting"></i>Comments on');
+}
+function paintA4(c){
+  c.cb.classList.toggle('off', c.off);
+  c.cb.setAttribute('aria-label', c.off ? 'Show comments' : 'Hide comments');
+  c.cb.querySelector('.tip').innerHTML = `${c.off ? 'Show' : 'Hide'} comments <kbd>C</kbd>`;
+}
+/* A5 family · a level menu in the controls. A5 = plain list; A5b cards; A5c ⓘ + modal; A5d previews on the picture. */
+const LV = ['all', 'act', 'off'];
+const LVL = {head:'Comments on the video', tip:'Comments',
+  all:{label:'Everything', toast:'Showing everything'},
+  act:{label:'Just joins and pauses', small:'no messages', toast:'Showing joins and pauses only'},
+  off:{label:'Off', toast:'Comments off'}};
+const LVL_RX = {head:'Activity on the video', tip:'Activity',
+  all:{label:'Everything', desc:'Messages, reactions, joins and pauses.', toast:'Showing everything'},
+  act:{label:'Just joins and pauses', desc:'Who came in and who paused. No messages or reactions.', toast:'Showing joins and pauses only'},
+  off:{label:'Off', desc:'Nothing on the picture. The chat icon still counts.', toast:'Activity off'}};
+/* A5b2b · same words, new heading, a bell for the button, and a menu that grows out of it */
+const LVL_POP = {...LVL_RX, head:'Activity Overlay', tip:'Activity Overlay', pop:true,
+  ic:{all:'fa-bell', act:'fa-bell-o', off:'fa-bell-slash'}};
+const LVL_ACT = {head:'Activity on the video', tip:'Activity',
+  all:{label:'Everything', desc:'Messages, joins and pauses.', toast:'Showing everything'},
+  act:{label:'Just joins and pauses', desc:'Who came in and who paused. No messages.', toast:'Showing joins and pauses only'},
+  off:{label:'Off', desc:'Nothing on the picture. The chat icon still counts.', toast:'Activity off'}};
+
+/* A small, real-size picture of an option, scaled down with --s */
+const PVL = {
+  all:[['msg', 'Leo', 'ok who picked this'], ['act', 'Joyce', 'joined'], ['msg', 'Mira', 'SHH it’s starting']],
+  act:[['act', 'Joyce', 'joined'], ['act', 'Mira', 'paused']],
+  off:[]};
+/* A5b2 · a close-up of the bottom-left corner, drawn at thumbnail size */
+const ZL = {all:[['msg', 'Leo', 'ok who picked this'], ['act', 'Joyce', 'is here.', 'joined']],
+  act:[['act', 'Joyce', 'is here.', 'joined'], ['act', 'Mira', 'paused at 41:12', 'paused']], off:[]};
+const zoomPV = k => `<span class="pvz"><span class="pls">${ZL[k].map(([kind, who, x, ic]) => kind === 'msg'
+    ? `<span class="pl">${av(who)}<span><b>${who}</b> ${esc(x)}</span></span>`
+    : `<span class="pl act"><span class="pi">${ICON[ic]}</span><span><b>${who}</b> ${x}</span></span>`).join('')}</span>${
+    k === 'all' ? '<span class="zrx"><span>😂</span><b>Joyce</b></span>' : ''}${
+    k === 'off' ? '<span class="pud"><i class="fa fa-comment"></i><b>3</b></span>' : ''}</span>`;
+const miniPV = k => `<span class="pvw"><span class="pin"><span class="pst"></span><span class="pls">${PVL[k].map(([kind, who, x]) => kind === 'msg'
+    ? `<span class="pl">${av(who)}<span><b>${who}</b> ${esc(x)}</span></span>`
+    : `<span class="pl act"><span class="pi">${ICON[x]}</span><span>${ACT({who, act:x})}</span></span>`).join('')}</span>${k === 'off'
+    ? '<span class="pud"><i class="fa fa-comment"></i><b>3</b></span>' : ''}</span></span>`;
+
+function lvlMenu(c){
+  const L = c.L, k5 = c.k5;
+  const head = `<div class="mhr"><p class="mh">${L.head}</p>${k5 === 'info' ? '<button type="button" class="inf" aria-label="What each option shows"><i class="fa fa-info-circle"></i></button>' : ''}</div>`;
+  if(k5 === 'rows') return head + `<div class="lr">${LV.map(k => `<button type="button" role="menuitemradio" data-lvl="${k}">${zoomPV(k)}<span class="lb"><span class="lt"><b>${L[k].label}</b><i class="ck fa fa-check"></i></span><small>${L[k].desc}</small></span></button>`).join('')}</div>`;
+  if(k5 === 'cards') return head + `<div class="lc">${LV.map(k => `<button type="button" role="menuitemradio" data-lvl="${k}">${miniPV(k)}<span class="lt"><b>${L[k].label}</b><i class="ck fa fa-check"></i></span><small>${L[k].desc}</small></button>`).join('')}</div>`;
+  return head + LV.map(k => `<button type="button" role="menuitemradio" data-lvl="${k}"><i class="ck fa fa-check"></i><span class="lb"><span>${L[k].label}</span>${k5 === 'hover' ? `<small>${L[k].desc}</small>` : ''}</span>${L[k].small ? `<small>${L[k].small}</small>` : ''}</button>`).join('');
+}
+function mountLvl(c, k5, L){
+  Stack.mount(c); c.lvl = 'all'; c.k5 = k5; c.L = L;
+  c.cb = ctlBtn(c, () => menuA5(c, !c.open5));
+  c.cb.setAttribute('aria-haspopup', 'true');
+  if(!c.menu5){
+    c.menu5 = el('div', 'cmenu' + (k5 === 'cards' ? ' cm-cards' : '') + (k5 === 'rows' ? ' cm-rows' : '') + (k5 === 'hover' ? ' tall' : ''), lvlMenu(c));
+    c.menu5.setAttribute('role', 'menu'); c.menu5.hidden = true;
+    c.room.querySelector('.ctl').append(c.menu5);
+    c.menu5.addEventListener('click', e => {
+      e.stopPropagation();
+      if(e.target.closest('.inf')) return openHelp(c);
+      const b = e.target.closest('[data-lvl]'); if(b) setA5(c, b.dataset.lvl);
+    });
+    if(k5 === 'hover'){
+      c.menu5.querySelectorAll('[data-lvl]').forEach(b => {
+        b.addEventListener('mouseenter', () => previewLvl(c, b.dataset.lvl));
+        b.addEventListener('focus', () => { if(b.matches(':focus-visible')) previewLvl(c, b.dataset.lvl); });
+      });
+      c.menu5.addEventListener('mouseleave', () => previewLvl(c, null));
+    }
+    if(k5 === 'info'){
+      c.help = el('div', 'hm', `<div class="hd" role="dialog" aria-modal="true" aria-label="${L.head}">
+        <div class="hh"><div><h3>${L.head}</h3><p>What shows over the picture while chat is closed.</p></div><button type="button" class="hc" aria-label="Close"><i class="fa fa-times"></i></button></div>
+        <div class="hg">${LV.map(k => `<div class="hcard" data-k="${k}">${miniPV(k)}<b>${L[k].label}</b><p>${L[k].desc}</p><button type="button" class="ub" data-lvl="${k}"></button></div>`).join('')}</div></div>`);
+      c.help.hidden = true; c.vid.append(c.help);
+      c.help.addEventListener('click', e => {
+        e.stopPropagation();
+        if(e.target === c.help || e.target.closest('.hc')) return closeHelp(c);
+        const b = e.target.closest('[data-lvl]'); if(b && b.dataset.lvl !== c.lvl){ setA5(c, b.dataset.lvl); closeHelp(c); }
+      });
+    }
+  }
+  if(c.help) closeHelp(c, true);
+  menuA5(c, false); paintA5(c);
+}
+function menuA5(c, open){
+  const m = c.menu5;
+  c.open5 = open;
+  c.cb.setAttribute('aria-expanded', String(open));
+  if(!open && c.k5 === 'hover') previewLvl(c, null);
+  if(!c.L.pop){
+    m.hidden = !open; c.room.classList.toggle('menu', open);
+  } else {
+    /* origin-aware: scale from the button's centre, wherever it sits relative to the menu */
+    c.pop5?.cancel(); c.pop5 = null;
+    if(open){
+      m.hidden = false; c.room.classList.add('menu');
+      const b = c.cb.getBoundingClientRect(), r = m.getBoundingClientRect();
+      m.style.transformOrigin = `${(b.left + b.width / 2 - r.left) / r.width * 100}% ${(b.top + b.height / 2 - r.top) / r.height * 100}%`;
+      c.pop5 = m.animate([{opacity:0, transform:'scale(.4)'}, {opacity:1, offset:.45}, {opacity:1, transform:'none'}],
+        {duration:260, easing:'cubic-bezier(.2,.9,.25,1)'});
+    } else if(!m.hidden){
+      c.pop5 = m.animate([{opacity:1, transform:'none'}, {opacity:0, transform:'scale(.55)'}],
+        {duration:160, easing:'cubic-bezier(.4,0,.9,.6)', fill:'forwards'});
+      c.pop5.onfinish = () => { m.hidden = true; c.room.classList.remove('menu'); c.pop5.cancel(); c.pop5 = null; };
+    }
+  }
+  if(open) m.querySelector('[aria-checked="true"]').focus();
+}
+function setA5(c, lvl){
+  c.lvl = lvl; menuA5(c, false);
+  if(lvl === 'off') hideLines(c);
+  if(lvl === 'act') hideLines(c, l => l.dataset.kind === 'act');
+  paintA5(c);
+  toast(c, `<i class="fa ${lvlIc(c, lvl)}"></i>${c.L[lvl].toast}`);
+}
+function lvlIc(c, lvl){ return c.L.ic ? c.L.ic[lvl] : 'fa-commenting' + (lvl === 'act' ? '-o' : ''); }
+function paintA5(c){
+  c.cb.classList.toggle('off', c.lvl === 'off' && !c.L.ic);
+  c.cb.querySelector('.fa').className = 'fa ' + lvlIc(c, c.lvl);
+  c.cb.querySelector('.tip').textContent = c.L.tip;
+  c.cb.setAttribute('aria-label', c.L.head);
+  c.menu5.querySelectorAll('[data-lvl]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.lvl === c.lvl)));
+  c.help?.querySelectorAll('.hcard').forEach(h => {
+    const cur = h.dataset.k === c.lvl;
+    h.classList.toggle('cur', cur);
+    h.querySelector('.ub').innerHTML = cur ? '<i class="fa fa-check"></i>Current' : 'Use this';
+  });
+}
+/* A5c · the help modal */
+function openHelp(c){
+  menuA5(c, false); paintA5(c);
+  c.help.hidden = false; c.room.classList.add('modal');
+  c.help.querySelector('.hd').animate([{opacity:0, transform:'translateY(8px) scale(.97)'}, {opacity:1, transform:'none'}], {duration:240, easing:EZ});
+  c.help.animate([{opacity:0}, {opacity:1}], {duration:180});
+  c.help.querySelector('.hc').focus();
+}
+function closeHelp(c, quiet){
+  if(c.help.hidden) return;
+  c.help.hidden = true; c.room.classList.remove('modal');
+  if(!quiet) c.cb.focus();
+}
+/* A5d · show the option on the real picture while you hover it */
+function previewLvl(c, k){
+  c.bl.querySelector('.pvst')?.remove();
+  c.bl.classList.toggle('pving', !!k);
+  if(!k) return;
+  const evs = c.log.filter(e => e.kind === 'act' ? k !== 'off' : k === 'all').slice(-4);
+  c.bl.append(el('div', 'pvst', `<span class="pvtag"><i class="fa fa-eye"></i>Preview · ${c.L[k].label}</span>`
+    + (evs.length ? evs.map(e => `<div class="ln${e.kind === 'act' ? ' act' : ''}">${lineHTML(e)}</div>`).join('') : '<div class="pvnone">Nothing shows here</div>')));
+}
+
+const LvlH = {
+  push(c, ev){ if(c.lvl === 'all' || (c.lvl === 'act' && ev.kind === 'act')) Stack.add(c, ev); },
+  typing(c, w, on){ if(c.lvl === 'all') Stack.typing(c, w, on); }
 };
 
 /* ───── variations ───── */
@@ -337,6 +716,55 @@ const VARS = [
   {id:'A', name:'Live comments, bottom left', from:'TikTok LIVE', dot:true, hint:'Hover to lift with the controls; click a line',
    notes:[['good', 'Fresh lines bright, older ones fade out.'], ['good', 'Left side is clear of subtitles and floats.'], ['bad', 'A long subtitle line can graze it.']],
    H:{mount:Stack.mount, push:Stack.add, typing:Stack.typing}},
+
+  {id:'A2', name:'Hide button above the lines', from:'A + YouTube Live “Hide chat”', dot:true, hint:'Hover the picture: Hide sits on top of the stack',
+   notes:[['good', 'One click clears the corner; the chat icon keeps counting.'], ['good', 'Show comments comes back in the same spot.'], ['bad', 'Off is invisible until you hover; easy to forget.']],
+   H:{mount:c => Put.mount(c, false), push:Put.push, typing:Put.typing, clear:Put.clear}},
+
+  {id:'A3', name:'Swipe a line away', from:'A + phone notifications', dot:true, hint:'Drag a line to the left, or hover it for ×',
+   notes:[['good', 'Clear just the line that’s in the way.'], ['good', 'Feels like flicking away a notification.'], ['bad', 'A burst means a lot of swiping.'], ['bad', 'New lines keep coming; nothing turns it off.']],
+   H:{mount(c){ Stack.mount(c); c.bl.classList.add('swipe'); c.deco = swipeable; }, push:Stack.add, typing:Stack.typing}},
+
+  {id:'A4', name:'Comments toggle in the controls, C key', from:'A + how subtitles toggle', dot:true, hint:'Hover the picture and press C, or use the new icon left of chat',
+   notes:[['good', 'Sits with the other player toggles.'], ['good', 'C turns it off and on without the mouse.'], ['bad', 'Two chat-looking icons side by side.']],
+   H:{
+     mount(c){ Stack.mount(c); c.off = false; c.cb = ctlBtn(c, () => setA4(c, !c.off)); c.vid.tabIndex = 0; paintA4(c); },
+     push(c, ev){ if(!c.off) Stack.add(c, ev); },
+     typing(c, w, on){ if(!c.off) Stack.typing(c, w, on); },
+     key(c){ setA4(c, !c.off); }
+   }},
+
+  {id:'A5', name:'Comments menu: everything, activity, off', from:'A + Twitch / Kick chat settings', dot:true, hint:'Open the new icon left of chat in the controls',
+   notes:[['good', 'Keep joins and pauses, drop the chatter.'], ['good', 'Every level lives in one menu.'], ['bad', 'Three choices for a small setting.']],
+   H:{
+     mount(c){ mountLvl(c, 'list', LVL); },
+     push(c, ev){ if(c.lvl === 'all' || (c.lvl === 'act' && ev.kind === 'act')) Stack.add(c, ev); },
+     typing(c, w, on){ if(c.lvl === 'all') Stack.typing(c, w, on); }
+   }},
+
+  {id:'A5b', name:'Activity menu with a picture on each option', from:'A5, renamed Activity', dot:true, hint:'Open the icon left of chat; each option shows what it puts on the picture',
+   notes:[['good', 'See the difference before you pick.'], ['good', 'Still one click to choose.'], ['bad', 'Thumbnails are small; the words do most of the work.']],
+   H:{mount(c){ mountLvl(c, 'cards', LVL_ACT); }, push:LvlH.push, typing:LvlH.typing}},
+
+  {id:'A5b2', name:'Activity menu as a list of close-ups', from:'A5b', dot:true, hint:'Open the icon left of chat; each row shows the corner up close',
+   notes:[['good', 'Close-ups are big enough to read.'], ['good', 'Reactions are part of the choice.'], ['bad', '“Just joins and pauses” also drops reactions; the name doesn’t say so.'], ['bad', 'A taller menu over the picture.']],
+   H:{mount(c){ mountLvl(c, 'rows', LVL_RX); }, push:LvlH.push, typing:LvlH.typing, rxOff:c => c.lvl !== 'all'}},
+
+  {id:'A5b2b', name:'Activity Overlay: bell button, menu grows from it', from:'A5b2', dot:true, hint:'Open the bell left of chat, then pick or press Escape to watch it shrink back',
+   notes:[['good', 'The menu grows out of the bell and shrinks back into it.'], ['good', 'Bell, outline bell, crossed bell: the button shows the level.'], ['bad', 'A bell can read as notifications, not the picture.']],
+   H:{mount(c){ mountLvl(c, 'rows', LVL_POP); }, push:LvlH.push, typing:LvlH.typing, rxOff:c => c.lvl !== 'all'}},
+
+  {id:'A5c', name:'Activity menu with ⓘ for a preview modal', from:'A5, renamed Activity', dot:true, hint:'Open the menu, then the ⓘ beside the heading',
+   notes:[['good', 'Big, readable previews with a line each.'], ['good', 'The menu stays short once you know it.'], ['bad', 'A modal is heavy for a three-way setting.'], ['bad', 'The ⓘ is easy to miss.']],
+   H:{mount(c){ mountLvl(c, 'info', LVL_ACT); }, push:LvlH.push, typing:LvlH.typing}},
+
+  {id:'A5d', name:'Activity menu that previews on the picture', from:'A5, renamed Activity', dot:true, hint:'Let the scene run, open the menu and hover an option',
+   notes:[['good', 'Previews your own party on your own picture.'], ['good', 'Nothing to learn: hover and see.'], ['bad', 'Hover only; on touch you just pick.']],
+   H:{mount(c){ mountLvl(c, 'hover', LVL_ACT); }, push:LvlH.push, typing:LvlH.typing}},
+
+  {id:'A6', name:'Fold into a pill that keeps counting', from:'A + C’s fold', dot:true, hint:'Hide, let the scene run, then click the pill',
+   notes:[['good', 'Nothing lost: the pill counts what you missed.'], ['good', 'Click it and the last three lines come back.'], ['bad', 'The pill never fully leaves the picture.']],
+   H:{mount:c => Put.mount(c, true), push:Put.push, typing:Put.typing, clear:Put.clear}},
 
   {id:'B', name:'See-through chat where the sidebar was', from:'Kick / Twitch overlay chat', dot:true, hint:'Fades after 10s quiet; hover brings it back',
    notes:[['good', 'Most context; reads as the chat itself.'], ['bad', 'Fights reaction floats for the right side.'], ['bad', 'Bright scenes wash out the text.']],
@@ -600,7 +1028,7 @@ document.querySelectorAll('section.var').forEach((sec, k) => {
   };
   c.push = ev => {
     if(ev.kind === 'type'){ c.typingWho = ev.on ? ev.who : null; if(c.open) c.renderChat(); else H.typing?.(c, ev.who, ev.on); return; }
-    if(ev.kind === 'rx') return spawn(c, ev.emoji, ev.who);
+    if(ev.kind === 'rx') return H.rxOff?.(c) ? null : spawn(c, ev.emoji, ev.who);
     if(ev.kind === 'msg' && ev.who === c.typingWho){ c.typingWho = null; H.typing?.(c, ev.who, false); }
     if(ev.kind === 'act' && ev.act === 'paused') c.paused = true;
     if(ev.kind === 'act' && ev.act === 'played') c.paused = false;
@@ -700,7 +1128,22 @@ document.querySelectorAll('section.var').forEach(sec => {
   });
   menu.addEventListener('click', ev => ev.stopPropagation());
 });
-document.addEventListener('click', () => closeAll());
+document.addEventListener('click', ev => {
+  closeAll();
+  rooms.forEach(c => { if(c.menu5 && c.open5 && !ev.target.closest('.cmt')) menuA5(c, false); });
+});
+/* A4 · C toggles comments on the room under the pointer or in focus */
+document.addEventListener('keydown', ev => {
+  if(ev.key.toLowerCase() !== 'c' || ev.metaKey || ev.ctrlKey || ev.altKey || ev.target.closest?.('input,textarea')) return;
+  rooms.forEach(c => { if(c.H.key && (c.vid.matches(':hover') || c.vid.contains(document.activeElement))) c.H.key(c); });
+});
+document.addEventListener('keydown', ev => {
+  if(ev.key !== 'Escape') return;
+  rooms.forEach(c => {
+    if(c.help && !c.help.hidden) return closeHelp(c);
+    if(c.menu5 && c.open5){ menuA5(c, false); c.cb.focus(); }
+  });
+});
 document.addEventListener('keydown', ev => {
   if(ev.key !== 'Escape') return;
   const open = pickers.find(p => !p.menu.hidden);

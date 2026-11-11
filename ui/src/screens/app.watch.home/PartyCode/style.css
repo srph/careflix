@@ -1,9 +1,9 @@
-.watch-party-code { position: relative; display: flex; flex: none; align-items: center; gap: 10px; min-height: 40px; margin: 0 16px 14px; padding: 0 6px 0 14px; border-radius: 12px; background: #ffffff0d; }
-.watch-party-code > span:first-child { color: var(--color-black-5); font: 600 10px var(--font-family-subheading); letter-spacing: .08em; text-transform: uppercase; }
+.watch-party-code { position: relative; display: flex; flex: none; align-items: center; gap: 10px; min-height: 40px; margin: 0 16px 14px; padding: 0 6px 0 14px; border-radius: 12px; background: var(--color-neutral-800); }
+.watch-party-code > span:first-child { color: var(--color-neutral-400); font: 600 10px var(--font-family-subheading); letter-spacing: .08em; text-transform: uppercase; }
 .watch-party-code button { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; margin-left: auto; padding: 0 8px 0 10px; border-radius: 16px; color: var(--color-white); transition: background .2s; }
-.watch-party-code button:hover { background: #ffffff14; }
+.watch-party-code button:hover { background: var(--color-neutral-700); }
 .watch-party-code b { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.watch-party-code i { color: var(--color-black-5); font-size: 14px; }
+.watch-party-code i { color: var(--color-neutral-400); font-size: 14px; }
 .watch-party-code .is-copied { color: #65d6ad; }
 .watch-party-code-icon { display: inline-grid; place-items: center; width: 16px; height: 16px; }
 /* Keep each icon on its own layer: centred in the cell it sits on a half pixel, and without this it snaps a pixel over the moment the spring ends. */
@@ -12,8 +12,8 @@
 
 /* Chip: the code and a copy icon in the chat header. */
 .watch-party-code.is-chip { display: block; min-height: 0; margin: 0; padding: 0; background: none; }
-.watch-party-code.is-chip button { gap: 7px; min-height: 0; height: 30px; margin: 0; padding: 0 10px 0 12px; border-radius: 15px; background: #ffffff0d; }
-.watch-party-code.is-chip button:hover { background: #ffffff1a; }
+.watch-party-code.is-chip button { gap: 7px; min-height: 0; height: 30px; margin: 0; padding: 0 10px 0 12px; border-radius: 15px; background: var(--color-neutral-800); }
+.watch-party-code.is-chip button:hover { background: var(--color-neutral-700); }
 .watch-party-code.is-chip b { font-size: 13px; }
 .watch-party-code.is-chip i { font-size: 13px; }
 

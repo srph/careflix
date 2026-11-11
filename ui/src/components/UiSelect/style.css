@@ -9,7 +9,7 @@
   height: var(--form-size);
   color: var(--color-white);
   background: transparent;
-  border: 1px solid var(--color-black-5);
+  border: 1px solid var(--color-neutral-400);
   border-radius: var(--border-radius);
   cursor: pointer;
   -webkit-appearance: none;
@@ -29,10 +29,10 @@
 }
 
 .ui-select.is-light > select {
-  color: var(--color-black-4);
-  border-color: var(--color-silver-3);
+  color: var(--color-neutral-700);
+  border-color: var(--color-neutral-300);
 }
 
 .ui-select.is-light > .caret {
-  color: var(--color-silver-5);
+  color: var(--color-neutral-500);
 }

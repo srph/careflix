@@ -82,7 +82,7 @@
   height: 32px;
   width: 32px;
   color: var(--color-white);
-  background: var(--color-black-5);
+  background: var(--color-neutral-400);
   border-radius: 50%;
 }
 

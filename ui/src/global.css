@@ -14,16 +14,18 @@ html, body {
   --font-family: 'halyard-display', sans-serif;
   --font-family-subheading: 'Work Sans', sans-serif;
   --color-black: #000;
-  --color-black-1: #10171E;
-  --color-black-2: #15202B;
-  --color-black-3: #1C2938;
-  --color-black-4: #38444D;
-  --color-black-5: #8899A6;
-  --color-silver-1: #F0F4F8;
-  --color-silver-2: #D9E2EC;
-  --color-silver-3: #BCCCDC;
-  --color-silver-4: #9FB3C8;
-  --color-silver-5: #829AB1;
+  /* Neutrals: Tailwind v4 taupe. */
+  --color-neutral-50: oklch(98.6% 0.002 67.8);
+  --color-neutral-100: oklch(96% 0.002 17.2);
+  --color-neutral-200: oklch(92.2% 0.005 34.3);
+  --color-neutral-300: oklch(86.8% 0.007 39.5);
+  --color-neutral-400: oklch(71.4% 0.014 41.2);
+  --color-neutral-500: oklch(54.7% 0.021 43.1);
+  --color-neutral-600: oklch(43.8% 0.017 39.3);
+  --color-neutral-700: oklch(36.7% 0.016 35.7);
+  --color-neutral-800: oklch(26.8% 0.011 36.5);
+  --color-neutral-900: oklch(21.4% 0.009 43.1);
+  --color-neutral-950: oklch(14.7% 0.004 49.3);
   --color-primary: #E8368F;
   --color-secondary: #F7C948;
   --color-blue: #1da1f2;
@@ -36,8 +38,8 @@ html, body {
   --border-radius: 4px;
   --letter-spacing-subheading: 1px;
   --overlay-fade: linear-gradient(transparent, rgba(0,0,0,0.9));
-  --overlay-fade-2: linear-gradient(180deg, transparent 70%, var(--color-black-1) 100%);
-  --text-shadow-default: 0 1px 1px var(--color-black-1);
+  --overlay-fade-2: linear-gradient(180deg, transparent 70%, var(--color-neutral-950) 100%);
+  --text-shadow-default: 0 1px 1px var(--color-neutral-950);
   --form-size: 40px;
   --screen-tablet: 720px;
 
@@ -65,7 +67,7 @@ html, body {
   color: var(--color-white);
   font-size: var(--font-size);
   font-family: var(--font-family);
-  background: var(--color-black-1);
+  background: var(--color-neutral-950);
 }
 
 h1 {

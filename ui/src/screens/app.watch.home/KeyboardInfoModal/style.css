@@ -1,5 +1,5 @@
 .app-watch-keyboard-info-overlay {
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
 }
 
 @media (min-width: 992px) {
@@ -16,7 +16,7 @@
   .app-watch-keyboard-info-modal {
     margin: 80px auto;
     width: 480px;
-    background: var(--color-black-2);
+    background: var(--color-neutral-900);
     border-radius: var(--border-radius);
   }
 }
@@ -35,7 +35,7 @@
   height: 32px;
   width: 32px;
   color: var(--color-white);
-  background: var(--color-black-5);
+  background: var(--color-neutral-400);
   border-radius: 50%;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .app-watch-keyboard-info-item:not(:last-child) {
-  border-bottom: 1px solid var(--color-black-3);
+  border-bottom: 1px solid var(--color-neutral-800);
 }
 
 .app-watch-keyboard-info-item > .combo {
@@ -60,7 +60,7 @@
   display: inline-block;
   padding: 4px 8px;
   text-transform: uppercase;
-  background: var(--color-black-4);
-  border: 1px solid var(--color-black-5);
+  background: var(--color-neutral-700);
+  border: 1px solid var(--color-neutral-400);
   border-radius: 2px;
 }

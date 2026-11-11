@@ -70,7 +70,7 @@ function PlayerSeeker(props: Props) {
           track: {
             width: '100%',
             height: 8,
-            background: 'var(--color-black-4)',
+            background: 'var(--color-neutral-700)',
             cursor: 'pointer'
           }
         }}

@@ -4,8 +4,8 @@
   justify-content: space-between;
   padding: 16px;
   padding-right: 8px;
-  background: var(--color-black-2);
-  border-bottom: 1px solid var(--color-black-1);
+  background: var(--color-neutral-900);
+  border-bottom: 1px solid var(--color-neutral-950);
 }
 
 @media (min-width: 640px) {
@@ -61,7 +61,7 @@
   margin-top: 40px;
   padding: 16px;
   text-align: center;
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
   border-radius: var(--border-radius);
 }
 
@@ -73,7 +73,7 @@
 
 .watch-screen-mobile-fs-note-modal > .heading {
   margin-bottom: 8px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }
 
 .watch-screen-mobile-fs-note-modal > .text {

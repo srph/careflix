@@ -23,7 +23,7 @@ function UiAvatar(props: Props) {
   // A missing user (signed out mid-render, deleted account) gets a blank circle instead of crashing the route.
   const initials = props.user?.name ? getInitials(props.user.name) : ''
   return (
-    <div className={className} style={{ backgroundColor: initials ? getBgFromInitials(initials) : 'var(--color-black-4)' }}>
+    <div className={className} style={{ backgroundColor: initials ? getBgFromInitials(initials) : 'var(--color-neutral-700)' }}>
       {initials}
     </div>
   )

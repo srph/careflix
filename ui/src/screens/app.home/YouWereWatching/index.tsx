@@ -62,7 +62,7 @@ function YouWereWatching() {
         <UiContainer size="xl">
           <div className="you-were-watching-dismiss">
             <div className="desktop">
-              <UiButton onClick={handleDismiss}>
+              <UiButton onArt onClick={handleDismiss}>
                 Dismiss
               </UiButton>
             </div>

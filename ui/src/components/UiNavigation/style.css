@@ -1,5 +1,5 @@
 .ui-navigation-shape {
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
 }
 
 .ui-navigation {
@@ -11,12 +11,12 @@
 
 .ui-navigation > .action {
   width: 25%;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }
 
 .ui-navigation > .action > a {
   display: inline-block;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   text-decoration: none;
 }
 

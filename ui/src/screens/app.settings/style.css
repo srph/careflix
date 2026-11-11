@@ -29,7 +29,7 @@
 }
 
 .settings-user-info > .info > .description {
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   flex-shrink: 0;
 }
 
@@ -44,16 +44,16 @@
   text-decoration: none;
   padding: 16px;
   color: var(--color-white);
-  border-bottom: 1px solid var(--color-black-2);
+  border-bottom: 1px solid var(--color-neutral-900);
 }
 
 .settings-menu-list > .item:first-child {
-  border-top: 1px solid var(--color-black-2);
+  border-top: 1px solid var(--color-neutral-900);
 }
 
 .settings-menu-list > .item > .icon {
   width: 24px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }
 
 .settings-menu-list > .item > .caret {
@@ -73,5 +73,5 @@
 }
 
 .settings-credits > .ui-subheading {
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }

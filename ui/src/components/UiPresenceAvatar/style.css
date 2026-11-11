@@ -9,8 +9,8 @@
   right: -4px;
   height: 16px;
   width: 16px;
-  background: var(--color-black-5);
-  border: 2px solid var(--color-black-2);
+  background: var(--color-neutral-400);
+  border: 2px solid var(--color-neutral-900);
   border-radius: 50%;
 }
 

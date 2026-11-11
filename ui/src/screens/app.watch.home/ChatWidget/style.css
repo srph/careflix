@@ -7,12 +7,12 @@
   align-items: center;
   gap: 8px;
   padding: 12px 12px 8px 14px;
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
 }
 
 .watch-screen-canopy > .ui-avatar-group { margin-right: auto; }
 .watch-screen-canopy .ui-avatar-group > .avatar:not(:last-child) { margin-right: -8px; }
-.watch-screen-canopy .ui-avatar { width: 24px; height: 24px; font-size: 10px; box-shadow: 0 0 0 2px var(--color-black-2); }
+.watch-screen-canopy .ui-avatar { width: 24px; height: 24px; font-size: 10px; box-shadow: 0 0 0 2px var(--color-neutral-900); }
 /* Presence dots sized for the smaller header faces. */
 .watch-screen-canopy .ui-presence-avatar > .status { right: -2px; bottom: -2px; width: 10px; height: 10px; }
 
@@ -25,12 +25,12 @@
   width: 30px;
   font-size: 13px;
   color: var(--color-white);
-  background: #ffffff14;
+  background: var(--color-neutral-800);
   border-radius: 50%;
   transition: background .2s;
 }
 
-.watch-screen-canopy > .invite:hover { background: #ffffff26; }
+.watch-screen-canopy > .invite:hover { background: var(--color-neutral-700); }
 
 /**
  * .watch-screen-chat
@@ -40,7 +40,7 @@
   position: relative;
   min-height: 0;
   overflow: hidden;
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
   flex-shrink: 1;
   display: flex;
   flex-direction: column;
@@ -51,11 +51,11 @@
 .host-invite-waiting-slot { flex: none; overflow: hidden; }
 .host-invite-waiting { display: flex; width: calc(100% - 24px); align-items: center; gap: 10px; margin: 0 12px 10px; padding: 7px 12px 7px 8px; border: 1px solid #e8368f33; border-radius: 12px; background: #e8368f14; color: #ffd1e6; font-size: 13px; text-align: left; transition: background-color .35s, border-color .35s, color .35s; }
 .host-invite-waiting-avatars { display: flex; flex: none; }
-.host-invite-waiting-avatars .ui-avatar + .ui-avatar { margin-left: -8px; box-shadow: 0 0 0 2px var(--color-black-2); }
-.host-invite-waiting.is-muted { border-color: #ffffff14; background: #ffffff08; color: #d5dde4; }
+.host-invite-waiting-avatars .ui-avatar + .ui-avatar { margin-left: -8px; box-shadow: 0 0 0 2px var(--color-neutral-900); }
+.host-invite-waiting.is-muted { border-color: var(--color-neutral-700); background: var(--color-neutral-800); color: var(--color-neutral-200); }
 .host-invite-waiting-text, .host-invite-waiting-right { position: relative; height: 18px; line-height: 18px; }
 .host-invite-waiting-text { flex: 1; min-width: 0; }
-.host-invite-waiting-right { flex: none; min-width: 40px; color: var(--color-black-5); font-size: 12px; font-variant-numeric: tabular-nums; }
+.host-invite-waiting-right { flex: none; min-width: 40px; color: var(--color-neutral-400); font-size: 12px; font-variant-numeric: tabular-nums; }
 .host-invite-waiting-text > span, .host-invite-waiting-right > span { position: absolute; inset: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .host-invite-waiting-right > span { text-align: right; }
 .host-invite-waiting-right .is-action { color: #ff9fcb; text-decoration: underline; }
@@ -89,13 +89,13 @@
   height: 100%;
   overflow-y: auto;
   padding: 2px 12px 8px;
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
 }
 
 .watch-screen-chat-time {
   margin: 14px 0 6px;
   font-size: 11.5px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   text-align: center;
 }
 
@@ -112,7 +112,7 @@
 .watch-screen-chat-group > .messages > .name {
   margin: 0 0 2px 4px;
   font-size: 12px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }
 
 .watch-screen-chat-group > .messages > .list {
@@ -129,7 +129,7 @@
   line-height: 1.4;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  background: var(--color-black-3);
+  background: var(--color-neutral-800);
   border-radius: 18px;
 }
 
@@ -150,9 +150,8 @@
 .watch-screen-chatbar {
   flex-shrink: 0;
   margin: 4px 10px 10px;
-  background: var(--color-black-3);
+  background: var(--color-neutral-800);
   border-radius: 14px;
-  box-shadow: 0 0 0 1px #ffffff0d;
 }
 
 .watch-screen-chatbar-input {
@@ -164,13 +163,13 @@
   /* sanitize.css puts a margin to forms */
   margin: 0;
   padding: 0 6px 0 15px;
-  background: var(--color-black-2);
+  background: var(--color-neutral-900);
   border-radius: 14px;
-  box-shadow: 0 0 0 1px #ffffff14;
+  box-shadow: 0 0 0 1px var(--color-neutral-700);
   transition: background .15s;
 }
 
-.watch-screen-chatbar-input:focus-within { background: #111820; }
+.watch-screen-chatbar-input:focus-within { background: var(--color-neutral-950); }
 
 /* The focus ring belongs to the field (text and send), drawn inside because the field is flush with the tray. */
 .watch-screen-chatbar-input:has(> .textarea:focus-visible) {
@@ -197,7 +196,7 @@
 }
 
 .watch-screen-chatbar-input > .textarea:focus-visible { outline: none; }
-.watch-screen-chatbar-input > .textarea::placeholder { color: var(--color-black-5); }
+.watch-screen-chatbar-input > .textarea::placeholder { color: var(--color-neutral-400); }
 
 /* Grow with the message where supported; elsewhere stay one line tall and scroll. */
 @supports (field-sizing: content) {
@@ -241,7 +240,7 @@
   font-size: 12.5px;
   font-weight: 600;
   white-space: nowrap;
-  color: var(--color-black-1);
+  color: var(--color-neutral-950);
   background: var(--color-white);
   border-radius: 16px;
   box-shadow: 0 8px 20px -8px #000;

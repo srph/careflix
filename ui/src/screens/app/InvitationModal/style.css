@@ -20,9 +20,9 @@
   /* Focused controls must not scroll the shrinking card and hide its header. */
   overflow: clip;
   color: var(--color-white);
-  background: rgba(21,32,43,.97);
+  background: color-mix(in srgb, var(--color-neutral-900) 97%, transparent);
   backdrop-filter: blur(14px);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 26px 54px -16px rgba(0,0,0,.85);
+  box-shadow: inset 0 0 0 1px var(--color-neutral-800), 0 26px 54px -16px rgba(0,0,0,.85);
   transition: filter .4s;
 }
 
@@ -58,7 +58,7 @@
   min-width: 0;
   margin: 0;
   font-size: 13px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -82,7 +82,7 @@
 
 .invitation-count {
   flex: none;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
@@ -91,7 +91,7 @@
   flex: none;
   width: 28px;
   height: 32px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   font-size: 19px;
 }
 
@@ -146,7 +146,7 @@
 
 .invitation-info .ui-subheading {
   margin: 5px 0 0;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   font-size: 10px;
   letter-spacing: 1px;
 }
@@ -160,7 +160,7 @@
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 9px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
   font-size: 12px;
 }
 
@@ -195,7 +195,7 @@
 .invitation-progress, .invitation-segments > span {
   overflow: hidden;
   border-radius: 2px;
-  background: rgba(255,255,255,.12);
+  background: var(--color-neutral-700);
 }
 
 .invitation-progress > i, .invitation-segments i {
@@ -225,7 +225,7 @@
   width: 20px;
   height: 20px;
   font-size: 9px;
-  box-shadow: 0 0 0 2px #17222e;
+  box-shadow: 0 0 0 2px var(--color-neutral-900);
 }
 
 .incoming-invitation .invitation-playhead .ui-avatar + .ui-avatar {
@@ -235,7 +235,7 @@
 .invitation-snapshot {
   margin: 6px 0 0;
   font-size: 10px;
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }
 
 .invitation-actions {
@@ -249,7 +249,7 @@
   min-height: 34px;
   padding: 7px 15px;
   border-radius: 8px;
-  background: rgba(255,255,255,.08);
+  background: var(--color-neutral-800);
   color: #fff;
   font-size: 13px;
   font-weight: 600;
@@ -261,7 +261,7 @@
 }
 
 .invitation-actions > button:not(:disabled):is(:hover, :focus-visible) {
-  background: rgba(255,255,255,.16);
+  background: var(--color-neutral-700);
 }
 
 .invitation-actions > .is-primary:not(:disabled):is(:hover, :focus-visible) {
@@ -282,7 +282,7 @@
 }
 
 .incoming-invitation.is-expired .invitation-info h3 {
-  color: #aab6c1;
+  color: var(--color-neutral-300);
 }
 
 .incoming-invitation.is-expired .invitation-info .ui-subheading {
@@ -351,7 +351,7 @@
   width: 24px;
   height: 24px;
   font-size: 10.5px;
-  box-shadow: 0 0 0 2px #15202b;
+  box-shadow: 0 0 0 2px var(--color-neutral-900);
 }
 
 .incoming-invitation-position .invitation-joined-avatars .ui-avatar + .ui-avatar {
@@ -396,5 +396,5 @@
 }
 
 .invitation-line > .invitation-respond.is-dismiss {
-  background: rgba(255,255,255,.08);
+  background: var(--color-neutral-800);
 }

@@ -3,7 +3,7 @@
   flex-shrink: 0;
   height: 1em;
   border-radius: 4px;
-  background: rgb(255 255 255 / 8%);
+  background: var(--color-neutral-800);
   animation: ui-skeleton-pulse 1.6s ease-in-out infinite alternate;
 }
 

@@ -48,16 +48,16 @@
 }
 
 .watch-player-modal-card > .meta {
-  color: var(--color-black-5);
+  color: var(--color-neutral-400);
 }
 
 .watch-player-modal-card > .title {
-  color: var(--color-black-2);
+  color: var(--color-neutral-900);
   margin-bottom: 8px;
 }
 
 .watch-player-modal-card > .summary {
-  color: var(--color-black-1);
+  color: var(--color-neutral-950);
   font-size: var(--font-size-h4);
   line-height: 1.25;
 }

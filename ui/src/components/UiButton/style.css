@@ -10,7 +10,7 @@
   letter-spacing: .08em;
   white-space: nowrap;
   color: var(--color-white);
-  background: rgba(255, 255, 255, .1);
+  background: var(--color-neutral-800);
   border-radius: var(--border-radius);
   border: 0;
   outline: 2px solid transparent;
@@ -51,6 +51,15 @@ a.ui-button {
 }
 
 .ui-button:not(.is-primary):not(:disabled):hover {
+  background: var(--color-neutral-700);
+}
+
+/* Over artwork a solid step reads as a hole in the picture, so stay see-through. */
+.ui-button.is-on-art:not(.is-primary) {
+  background: rgba(255, 255, 255, .1);
+}
+
+.ui-button.is-on-art:not(.is-primary):not(:disabled):hover {
   background: rgba(255, 255, 255, .18);
 }
 

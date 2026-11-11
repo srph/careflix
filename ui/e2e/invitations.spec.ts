@@ -109,7 +109,7 @@ test('expiration stays visible, Dismiss skips stale invites, and cancellation up
   await open(page)
   await page.clock.fastForward(6000)
   await expect(dialog(page)).toContainText('Kier’s invitation expired')
-  await expect(dialog(page).getByRole('heading', { name: 'Velvet Static' })).toHaveCSS('color', 'rgb(170, 182, 193)')
+  await expect(dialog(page).getByRole('heading', { name: 'Velvet Static' })).toHaveCSS('color', 'oklch(0.868 0.007 39.5)')
   await expect(dialog(page).locator('.ui-subheading')).toHaveText('Kier’s invitation expired')
   await expect(dialog(page).locator('.ui-subheading')).toHaveCSS('color', 'rgb(247, 201, 72)')
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0)

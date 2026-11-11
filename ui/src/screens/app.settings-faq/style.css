@@ -24,7 +24,7 @@
 .app-settings-faq-text a {
   text-decoration: none;
   color: inherit;
-  border-bottom: 1px dashed var(--color-black-5);
+  border-bottom: 1px dashed var(--color-neutral-400);
 }
 
 .app-settings-faq-text:not(:last-child) {

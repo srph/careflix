@@ -3,14 +3,14 @@
   padding: 0 16px;
   height: 50px;
   width: 100%;
-  color: var(--color-black-5);
-  background: var(--color-black-2);
+  color: var(--color-neutral-400);
+  background: var(--color-neutral-900);
   border: 1px solid transparent;
   border-radius: var(--border-radius);
 }
 
 .ui-input:focus {
-  background: var(--color-black-1);
+  background: var(--color-neutral-950);
 }
 
 .ui-input,
@@ -20,7 +20,7 @@
 }
 
 .ui-input.is-dark {
-  background: var(--color-black-1);
+  background: var(--color-neutral-950);
 }
 
 .ui-input.is-round {

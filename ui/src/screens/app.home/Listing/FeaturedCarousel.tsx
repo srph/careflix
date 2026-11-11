@@ -44,7 +44,7 @@ export default function FeaturedCarousel({ items, onDetails, onStart, isCreating
           <div className="listing-featured-actions">
             {party ? <UiButton link to={`/watch/${party.id}`} variant="primary" size="l"><i className="fa fa-play" aria-hidden="true" /> Rejoin party</UiButton>
               : <><UiButton variant="primary" size="l" disabled={isCreating} onClick={() => onStart(show)}><i className="fa fa-play" aria-hidden="true" /> {isCreating ? 'Starting…' : 'Start a party'}</UiButton>
-                <UiButton size="l" onClick={() => onDetails(show)}>Details</UiButton></>}
+                <UiButton size="l" onArt onClick={() => onDetails(show)}>Details</UiButton></>}
             {party && <UiAvatarGroup users={party.members ?? []} size="sm" />}
           </div>
         </div>

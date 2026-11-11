@@ -9,7 +9,7 @@
   overflow: hidden;
   isolation: isolate;
   color: #fff;
-  background: #0e1318;
+  background: var(--color-neutral-950);
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
 }
@@ -17,7 +17,7 @@
 .login-message { z-index: 2; grid-row: 2; width: 100%; padding: 0 24px; text-align: center; }
 .login-message h1 { font-size: clamp(64px, 8.6vw, 110px); line-height: 1.02; letter-spacing: -.045em; font-weight: 700; }
 .login-message h1 span { overflow-wrap: anywhere; }
-.login-subtitle { max-width: 520px; margin: 24px auto 0; color: #b9c3cd; font-size: 19px; line-height: 1.5; text-wrap: balance; }
+.login-subtitle { max-width: 520px; margin: 24px auto 0; color: var(--color-neutral-300); font-size: 19px; line-height: 1.5; text-wrap: balance; }
 .login-friends { white-space: nowrap; }
 .login-friend-avatars {
   --login-friend-overlap: .42em;
@@ -41,7 +41,7 @@
   transition: margin .28s cubic-bezier(.2, .8, .2, 1);
 }
 .login-friend-avatar + .login-friend-avatar { margin-left: calc(-1 * var(--login-friend-overlap)); }
-.login-friend-avatar-circle { position: absolute; inset: 0; border-radius: 50%; background: #cfe4ff; box-shadow: 0 0 0 2px #0e1318; }
+.login-friend-avatar-circle { position: absolute; inset: 0; border-radius: 50%; background: #cfe4ff; box-shadow: 0 0 0 2px var(--color-neutral-950); }
 .login-friend-avatar:nth-child(2) { animation-delay: .72s; }
 .login-friend-avatar:nth-child(2) .login-friend-avatar-circle { background: #ffedb0; }
 .login-friend-avatar:nth-child(3) { animation-delay: .98s; }

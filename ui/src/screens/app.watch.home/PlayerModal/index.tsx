@@ -194,7 +194,8 @@ function PlayerModal({ party, ...props }: Props) {
           </div>
 
           <div className="watch-player-contents">
-            {!isVolumeControlOpen && (isRemainingTimeTooltipOpen || !isTooltipOpen) && (
+            {/* The Activity Overlay menu sits over the seek bar, so the bar and its times step aside, like for the volume. */}
+            {!isVolumeControlOpen && !isActivityMenuOpen && (isRemainingTimeTooltipOpen || !isTooltipOpen) && (
               <div className="watch-player-controls">
                 <div className="time">
                   {toReadableTime(props.time, {

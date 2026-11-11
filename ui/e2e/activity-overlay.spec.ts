@@ -141,11 +141,20 @@ test('remembers the level for the account and shows nothing when off', async ({ 
 
   await openMenu(page)
   await expect(page.getByRole('menuitemradio', { name: /^Off/ })).toHaveAttribute('aria-checked', 'true')
+  // The seek bar and its times step aside for the menu.
+  await expect(page.locator('.watch-player-controls')).toBeHidden()
   // The menu keeps the controls up past their usual 5 seconds.
   await page.waitForTimeout(5600)
   await expect(page.getByRole('menu')).toBeVisible()
+  await page.getByRole('menuitemradio', { name: /^Off/ }).click()
+  await expect(page.getByRole('menu')).toBeHidden()
+  await expect(page.locator('.watch-player-controls')).toBeVisible()
+  // From the keyboard, focus lands back on the bell and its tooltip takes the bar's place, like every control.
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('menu')).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('menu')).toBeHidden()
+  await expect(page.getByRole('button', { name: 'Activity Overlay' })).toBeFocused()
   expect([...fixture.errors, ...again.errors]).toEqual([])
 })
 

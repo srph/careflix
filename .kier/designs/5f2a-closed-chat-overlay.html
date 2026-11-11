@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Closed Chat Overlay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/wta3dot.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+/* ───────────── Page chrome (neutral) ───────────── */
+:root{--ink:#18181b;--mut:#6b6b72;--line:#e2e1dc;--bg:#f5f4f0;--card:#fff;--good:#16794c;--goodbg:#e6f4ec;--bad:#a8331f;--badbg:#fbeae6;--code:#f0efea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}}
+:root[data-theme="dark"]{--ink:#ececee;--mut:#9a9aa2;--line:#2c2c31;--bg:#141416;--card:#1c1c20;--good:#6fd3a0;--goodbg:#16291f;--bad:#f19a85;--badbg:#2e1a16;--code:#232328}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.doc{width:min(1180px,calc(100vw - 280px));margin-left:max(240px,calc((100vw - 1180px)/2));padding:56px 0 120px}
+@media (max-width:1000px){.doc{width:auto;margin:0 16px 0 56px}}
+@media (max-width:600px){.doc{margin:0 16px}.mm{display:none}}
+.eyebrow{font:600 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.brief h1{font-size:44px;line-height:1.08;letter-spacing:-.025em;margin:14px 0 22px;font-weight:650;max-width:900px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.cards>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.cards code{font:12.5px ui-monospace,Menlo,monospace;background:var(--code);padding:1px 5px;border-radius:5px}
+.var{margin-top:72px;scroll-margin-top:24px}
+.var-h{display:flex;align-items:center;gap:12px}
+.var-h .id{display:inline-grid;place-items:center;min-width:36px;height:30px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--card);font:700 13px/1 ui-monospace,Menlo,monospace}
+.var-h h2{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:0}
+.var-h .from{font-size:13px;color:var(--mut)}
+.pick-btn{margin-left:auto;font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+.pick-btn:hover,.pick-btn[aria-expanded="true"]{border-color:var(--mut)}
+.pick-menu{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pick-menu[hidden]{display:none}
+.pick-menu button{display:flex;flex-direction:column;gap:2px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-family:inherit;width:220px}
+.pick-menu button:hover,.pick-menu button:focus-visible{border-color:var(--ink);outline:none}
+.pick-menu b{font-size:13px;font-weight:600}.pick-menu span{font-size:12px;color:var(--mut)}
+.pick-out{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:10px;font-size:13px}
+.pick-out[hidden]{display:none}
+.pick-out code,.pick-out input{font:12.5px/1.4 ui-monospace,Menlo,monospace;background:var(--code);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 10px}
+.pick-out input{width:min(560px,100%)}
+.pick-out .copied{color:var(--good);font-weight:600}
+
+.rail{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.rail .lbl{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-left:6px}
+.rail .lbl:first-child{margin-left:0}
+.rail .grp{display:flex;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:3px}
+.rail .grp button{font:500 13px/1 inherit;font-family:inherit;color:var(--ink);background:none;border:0;border-radius:7px;padding:6px 10px;cursor:pointer;white-space:nowrap}
+.rail .grp button:hover{background:var(--code)}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:12px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:14px;display:flex;gap:10px;align-items:baseline}
+.note::before{flex:none;font:700 10.5px/1 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:5px}
+.note.good::before{content:"Good";color:var(--good);background:var(--goodbg)}
+.note.bad::before{content:"Bad";color:var(--bad);background:var(--badbg)}
+.further{margin-top:96px}
+.further h2{font-size:24px;letter-spacing:-.015em;margin:0 0 14px;font-weight:650}
+.further .cards>div b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.mm{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;padding:10px 8px;border-radius:12px}
+.mm a{display:flex;align-items:center;gap:10px;height:16px;text-decoration:none;color:var(--mut)}
+.mm i{display:block;width:16px;height:2px;border-radius:2px;background:var(--line);transition:width .25s,background .25s;flex:none}
+.mm a.on i{width:30px;background:var(--ink)}
+.mm span{font-size:12.5px;white-space:nowrap;opacity:0;max-width:0;overflow:hidden;transition:opacity .2s,max-width .25s}
+.mm span b{font-family:ui-monospace,Menlo,monospace;margin-right:4px;color:var(--ink)}
+.mm:hover{background:var(--card);box-shadow:0 0 0 1px var(--line)}
+.mm:hover span{opacity:1;max-width:300px}
+.mm a.on span{color:var(--ink)}
+.frame{position:relative;aspect-ratio:16/9;margin-top:14px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;box-shadow:0 30px 60px -40px rgba(0,0,0,.45)}
+.rail .hint{font-size:13px;color:var(--mut)}
+.rail .grp button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+/* ───────────── Mockup: the Care.tv watch room, chat closed ───────────── */
+.mk{--pk:#E8368F;--g:#65D6AD;--n1:#10171E;--n2:#15202B;--n3:#1C2938;--n4:#38444D;--n5:#8899A6;--ez:cubic-bezier(.2,.8,.2,1);--lift:78px;
+  position:relative;color:#fff;font-family:'halyard-display','Outfit',sans-serif;font-size:14px;line-height:1.4;-webkit-font-smoothing:antialiased}
+.mk *{box-sizing:border-box}
+.mk button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+.mk p{margin:0}
+.mk b{font-weight:700}
+.mk .av{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--c);color:#10171E;font-weight:800;font-size:10px;font-style:normal;flex:none}
+.mk .av.lg{width:30px;height:30px;font-size:12px}
+.mk.room{display:grid;grid-template-columns:minmax(0,1fr) 0px;height:100%;overflow:hidden;background:var(--n1);transition:grid-template-columns .28s var(--ez)}
+.mk.room.open{grid-template-columns:minmax(0,1fr) 320px}
+
+.mk .vid{position:relative;min-width:0;background:#000;overflow:hidden;outline:none}
+.mk .still{position:absolute;inset:0;background:
+  radial-gradient(14% 24% at 74% 30%,#ffd9a0 0%,#f2a65a66 35%,transparent 72%),
+  radial-gradient(50% 70% at 72% 38%,#c9874a2e,transparent 70%),
+  linear-gradient(180deg,#24344b 0%,#172536 52%,#0c141d 100%)}
+.mk .still::after{content:"";position:absolute;inset:0;background:radial-gradient(80% 90% at 50% 45%,transparent 55%,#000b)}
+.mk .subt{position:absolute;left:0;right:0;bottom:9%;z-index:1;text-align:center;font:600 21px/1.3 'Outfit',sans-serif;text-shadow:0 1px 3px #000,0 0 12px #000a;transition:transform .25s var(--ez)}
+.mk .fx{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;container-type:size}
+.mk .lift{transition:transform .25s var(--ez)}
+.mk .vid:hover .lift,.mk.pin .lift,.mk .vid:hover .subt,.mk.pin .subt{transform:translateY(calc(-1 * var(--lift)))}
+
+/* player state flash (PlayerStateBufferedIndicator) */
+.mk .pind{position:absolute;left:50%;top:50%;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;transform:translate(-50%,-50%);pointer-events:none;opacity:0}
+.mk .pind.show{animation:pind 1.5s ease forwards}
+.mk .pind.long{animation-duration:2.4s}
+.mk .pind .ring{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:#000a;font-size:26px}
+.mk .pind .who{padding:4px 11px;border-radius:12px;background:#fff;color:#10171E;font-size:12.5px;font-weight:700;box-shadow:0 4px 12px -4px #000a}
+@keyframes pind{0%{opacity:0;transform:translate(-50%,-50%) scale(.85)}12%{opacity:1;transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0}}
+
+/* player controls (PlayerModal) */
+.mk .ctl{position:absolute;left:0;right:0;bottom:0;z-index:4;padding-top:56px;background:linear-gradient(0deg,rgba(0,0,0,.78),transparent);opacity:0;transition:opacity .2s;pointer-events:none}
+.mk .vid:hover .ctl,.mk.pin .ctl{opacity:1;pointer-events:auto}
+.mk .back{position:absolute;left:24px;top:18px;z-index:4;font-size:13px;font-weight:600;opacity:0;transition:opacity .2s}
+.mk .vid:hover .back,.mk.pin .back{opacity:1}
+.mk .back i{margin-right:8px}
+.mk .seek{display:flex;align-items:center;gap:16px;padding:0 32px;font-size:12px;font-variant-numeric:tabular-nums}
+.mk .trk{position:relative;flex:1;height:4px;border-radius:2px;background:#ffffff33}
+.mk .fill{position:absolute;left:0;top:0;bottom:0;width:38%;border-radius:2px;background:var(--pk)}
+.mk .fill::after{content:"";position:absolute;right:-6px;top:-4px;width:12px;height:12px;border-radius:50%;background:#fff}
+.mk .pa{display:flex;align-items:center;gap:20px;padding:14px 32px 16px}
+.mk .pa .sec{display:flex;align-items:center;gap:18px;min-width:0}
+.mk .pa .sec.r{margin-left:auto;flex:none}
+.mk .ic{position:relative;display:grid;place-items:center;width:22px;height:22px;font-size:15px;color:#fff}
+.mk .ttl{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px;font-weight:600}
+.mk .ttl span{margin-left:8px;color:var(--n5);font-size:13px;font-weight:400}
+.mk .ud{position:absolute;top:-7px;right:-10px;min-width:17px;height:17px;padding:0 5px;border-radius:9px;background:var(--pk);font-size:10.5px;font-weight:800;line-height:17px;text-align:center;display:none}
+.mk .ud.on{display:block}
+
+/* overlay layer */
+.mk .ov{position:absolute;inset:0;z-index:5;pointer-events:none;transition:opacity .2s}
+.mk.room.open .ov{opacity:0;visibility:hidden}
+.mk .ov [data-act="chat"]{pointer-events:auto;cursor:pointer}
+.mk .bl{position:absolute;left:24px;bottom:22px;width:360px;display:flex;flex-direction:column;align-items:flex-start}
+.mk .dots{display:inline-flex;gap:3px;align-items:center}
+.mk .dots i{width:4px;height:4px;border-radius:50%;background:currentColor;animation:dt 1.1s infinite ease-in-out}
+.mk .dots i:nth-child(2){animation-delay:.15s}.mk .dots i:nth-child(3){animation-delay:.3s}
+@keyframes dt{0%,60%,100%{opacity:.35;transform:none}30%{opacity:1;transform:translateY(-2px)}}
+.mk .ico{display:grid;place-items:center;width:22px;height:22px;flex:none;font-size:10px;color:#fff}
+.mk .ico .emo{font-size:14px}
+
+/* A, F, G · live comment stack (TikTok LIVE) */
+.mk .stk{display:flex;flex-direction:column;align-items:flex-start;gap:6px;width:100%}
+.mk .ln{display:inline-flex;align-items:flex-start;gap:8px;max-width:100%;padding:5px 13px 5px 5px;border-radius:16px;background:rgba(10,15,20,.52);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:13.5px;line-height:1.35;transition:opacity .3s}
+.mk .ln .tx{padding-top:2px;color:#ffffffe6}
+.mk .ln .tx b{color:#fff;margin-right:2px}
+.mk .ln.act{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:#ffffffd0;text-shadow:0 1px 3px #000c;font-size:13px}
+.mk .ln.act .ico{background:#ffffff1f;border-radius:50%}
+.mk .ln:hover{background:rgba(10,15,20,.72)}
+.mk .ln.act:hover{background:none;text-decoration:underline;text-underline-offset:3px}
+.mk .typ{max-height:0;opacity:0;overflow:hidden;margin-top:0;transition:max-height .25s var(--ez),opacity .2s,margin .25s}
+.mk .typ.on{max-height:30px;opacity:1;margin-top:6px}
+.mk .typ .ico{background:none}
+.mk .qr{position:relative;display:flex;align-items:center;width:100%;max-height:0;margin-top:0;opacity:0;overflow:hidden;pointer-events:auto;transition:max-height .25s var(--ez),opacity .2s,margin .25s}
+.mk .vid:hover .qr,.mk .qr:focus-within,.mk.pin .qr{max-height:44px;margin-top:10px;opacity:1}
+.mk .qr input{flex:1;min-width:0;height:40px;padding:0 64px 0 16px;border:0;border-radius:20px;background:rgba(10,15,20,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px #ffffff24;color:#fff;font:inherit;font-size:13.5px;outline:none}
+.mk .qr input::placeholder{color:#ffffffa0}
+.mk .qr input:focus{box-shadow:inset 0 0 0 1.5px #fff}
+.mk .qr kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%);padding:3px 7px;border-radius:6px;background:#ffffff1f;font:600 11px/1.2 inherit;font-family:inherit;color:#ffffffc0}
+.mk .qr:focus-within kbd{background:var(--pk);color:#fff}
+
+/* B · see-through chat column (Kick / Twitch overlay chat) */
+.mk .gcol{position:absolute;top:56px;right:24px;bottom:22px;width:300px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;overflow:hidden;-webkit-mask:linear-gradient(to bottom,transparent,#000 30%);mask:linear-gradient(to bottom,transparent,#000 30%);transition:transform .25s var(--ez),opacity .6s}
+.mk .gcol.idle{opacity:0}
+.mk .vid:hover .gcol{opacity:1}
+.mk .gl{flex:none;font-size:14px;line-height:1.35;font-weight:500;text-shadow:0 1px 2px #000,0 0 10px #000d}
+.mk .gl b{color:var(--c)}
+.mk .gl.act{color:#ffffffc0;font-size:12.5px}
+.mk .gl.act i{font-size:9.5px;margin-right:4px}
+.mk .gl.typ2{color:#ffffffa8;font-size:12.5px;display:none}
+.mk .gl.typ2.on{display:block}
+
+/* C · one rolling line (Twitch event ticker) */
+.mk .slot{position:relative;width:460px;height:34px;overflow:hidden;border-radius:17px}
+.mk .rl{position:absolute;left:0;bottom:0;display:inline-flex;align-items:center;gap:8px;height:34px;max-width:100%;padding:0 14px 0 6px;border-radius:17px;background:rgba(10,15,20,.55);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);white-space:nowrap;font-size:13.5px}
+.mk .rl .tx{overflow:hidden;text-overflow:ellipsis;color:#ffffffe6}
+.mk .rl .tx b{color:#fff}
+.mk .rl.act .ico{background:#ffffff1f;border-radius:50%}
+.mk .fs{display:flex}.mk .fs .av{box-shadow:0 0 0 2px #15202B}.mk .fs .av+.av{margin-left:-7px}
+
+/* D · stacked toasts, top right (Discord / Meet) */
+.mk .tsx{position:absolute;top:18px;right:18px;width:300px}
+.mk .ts{position:absolute;top:0;right:0;width:300px;display:flex;align-items:flex-start;gap:10px;padding:10px 14px 11px 10px;border-radius:14px;background:rgba(28,41,56,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 14px 30px -14px #000e,0 0 0 1px #ffffff12;transform-origin:50% 100%;transition:transform .38s var(--ez),opacity .3s}
+.mk .ts .tb{min-width:0}
+.mk .ts .th{display:flex;align-items:baseline;gap:6px;font-size:13px}
+.mk .ts .th span{font-size:11.5px;color:var(--n5)}
+.mk .ts .tt{font-size:13.5px;color:#ffffffe0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mk .ts.act{align-items:center;padding:8px 14px 8px 10px}
+.mk .ts.act .ico{width:30px;height:30px;border-radius:50%;background:#ffffff14;font-size:11px}
+.mk .ts.act .tt{font-size:13px}
+
+/* E · chat tab on the edge (Twitch collapsed chat) */
+.mk .tab{position:absolute;right:0;top:34%;display:flex;align-items:center;gap:8px;height:40px;padding:0 12px 0 14px;border-radius:20px 0 0 20px;background:rgba(21,32,43,.86);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 0 0 1px #ffffff14,0 10px 24px -10px #000;opacity:.55;transition:opacity .2s;pointer-events:auto}
+.mk .tab.has,.mk .tab.typing,.mk .tab:hover,.mk .tab.say{opacity:1}
+.mk .tab>.fa{font-size:14px}
+.mk .tab .tf{display:flex}.mk .tab .tf:empty{display:none}
+.mk .tab .tf .av{box-shadow:0 0 0 2px #15202B}.mk .tab .tf .av+.av{margin-left:-7px}
+.mk .tab .tn{display:none;min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:var(--pk);font-size:11.5px;font-weight:800;line-height:20px;text-align:center}
+.mk .tab.has .tn{display:block}
+.mk .tab .dots{display:none;color:#ffffffc0}
+.mk .tab.typing .dots{display:inline-flex}
+.mk .pv{position:absolute;right:calc(100% + 10px);top:50%;width:max-content;max-width:280px;padding:8px 13px;border-radius:16px 16px 4px 16px;background:#fff;color:#10171E;font-size:13.5px;line-height:1.35;box-shadow:0 10px 24px -8px #000a;transform-origin:100% 50%;transform:translateY(-50%) scale(.85);opacity:0;transition:transform .3s var(--ez),opacity .22s;pointer-events:none}
+.mk .pv.on{opacity:1;transform:translateY(-50%) scale(1)}
+.mk .pv b{font-weight:800;margin-right:3px}
+.mk .pv i.fa{font-size:10px;margin-right:5px}.mk .pv .emo{margin-right:5px}
+
+/* G · activity where it happens */
+.mk .gtop{position:absolute;top:16px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+.mk .jb,.mk .pchip{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 15px 0 6px;border-radius:17px;background:rgba(10,15,20,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:13.5px;white-space:nowrap;box-shadow:0 0 0 1px #ffffff14}
+.mk .pchip{padding-left:14px;color:#ffffffe0}
+.mk .pchip i{font-size:10px}
+
+/* reaction floats (ReactionLayer) */
+.mk .fl{position:absolute;bottom:18px;right:calc(24px + var(--x) * min(260px, 35cqw));animation:rRise var(--d) var(--ease) forwards,rFade var(--d) linear forwards}
+.mk .fl>.drift{display:flex;flex-direction:column;align-items:center;animation:rDrift var(--d) ease-in-out forwards}
+.mk .fl .emoji{display:block;font-size:var(--size);line-height:1;filter:drop-shadow(0 3px 8px #0008);animation:rPop .6s cubic-bezier(.34,1.56,.64,1) backwards}
+.mk .fl .name{max-width:120px;margin-top:5px;padding:3px 9px;overflow:hidden;border-radius:11px;background:#fff;color:#10171E;font-size:11.5px;font-weight:700;line-height:1.2;white-space:nowrap;animation:rName .4s cubic-bezier(.34,1.4,.64,1) .18s backwards}
+@keyframes rRise{from{transform:translateY(0)}to{transform:translateY(calc(-1 * min(var(--rise) * 1cqh, 300px)))}}
+@keyframes rFade{0%{opacity:0}5%{opacity:1}60%{opacity:1}100%{opacity:0}}
+@keyframes rDrift{0%{transform:none}50%{transform:translateX(var(--drift))}100%{transform:translateX(var(--drift-end))}}
+@keyframes rPop{from{transform:scale(0)}}
+@keyframes rName{from{opacity:0;transform:translateY(-8px) scale(.6)}}
+
+/* chat column (ChatWidget), opens on click */
+.mk .chat{position:relative;min-width:0;overflow:hidden;background:var(--n2)}
+.mk .chat>.in{display:flex;flex-direction:column;width:320px;height:100%}
+.mk .cano{display:flex;align-items:center;gap:8px;padding:12px 12px 8px 14px}
+.mk .faces{display:flex;margin-right:auto}
+.mk .cf{position:relative;display:inline-flex}
+.mk .cf+.cf{margin-left:-8px}
+.mk .cf .av{width:24px;height:24px;box-shadow:0 0 0 2px var(--n2)}
+.mk .cf .dot{position:absolute;right:-2px;bottom:-2px;width:10px;height:10px;border-radius:50%;background:var(--g);box-shadow:0 0 0 2px var(--n2)}
+.mk .code{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 10px 0 12px;border-radius:15px;background:#ffffff0d;font-size:13px;font-weight:700;white-space:nowrap}
+.mk .code i{color:var(--n5)}
+.mk .cbtn{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#ffffff14;font-size:13px;flex:none}
+.mk .msgs{flex:1;min-height:0;overflow:hidden;padding:2px 12px 8px;display:flex;flex-direction:column;justify-content:flex-end}
+.mk .mg{display:flex;gap:8px;margin:6px 0}
+.mk .mg>.av{margin-top:19px;width:24px;height:24px}
+.mk .mg .nm{margin:0 0 2px 4px;font-size:12px;color:var(--n5)}
+.mk .msg{display:inline-block;padding:7px 12px;font-size:13.5px;background:var(--n3);border-radius:18px}
+.mk .mg.me{justify-content:flex-end}
+.mk .mg.me .msg{background:var(--pk)}
+.mk .al{margin:8px 0;text-align:center;font-size:12px;color:var(--n5)}
+.mk .al i.fa{font-size:9.5px;margin-right:4px}
+.mk .al b{color:#fff;font-weight:600}
+.mk .cbar{flex:none;margin:4px 10px 10px;background:var(--n3);border-radius:14px;box-shadow:0 0 0 1px #ffffff0d}
+.mk .st{display:flex;align-items:center;gap:7px;height:32px;padding:0 6px 0 15px;font-size:12px;color:var(--n5);white-space:nowrap;overflow:hidden}
+.mk .st b{color:#fff;font-weight:600}
+.mk .st>.fa{flex:none;font-size:10px;color:var(--pk)}
+.mk .inp{display:flex;align-items:center;gap:4px;height:44px;padding:0 6px 0 15px;background:var(--n2);border-radius:14px;box-shadow:0 0 0 1px #ffffff14;color:var(--n5);font-size:13.5px}
+.mk .inp span{flex:1}
+.mk .send{display:grid;place-items:center;flex:none!important;width:32px;height:32px;border-radius:10px;background:var(--pk);color:#fff;font-size:13px}
+
+@media (prefers-reduced-motion:reduce){
+  .mk .fl{animation:rFade var(--d) linear forwards}
+  .mk .fl>.drift,.mk .fl .emoji,.mk .fl .name,.mk .dots i{animation:none}
+}
+</style>
+</head>
+<body>
+<nav class="mm" aria-label="Variations"></nav>
+<main class="doc">
+<header class="brief">
+  <div class="eyebrow">Care.tv · watch room · chat closed</div>
+  <h1>Keep the party on screen when chat is closed.</h1>
+  <div class="cards">
+    <div>Today a closed chat hides every message, join and pause.</div>
+    <div>Subtitles own the bottom centre; reaction floats the bottom right.</div>
+    <div>Controls rise on hover; anything at the bottom lifts with them.</div>
+    <div>Clicking the overlay opens chat.</div>
+  </div>
+</header>
+<div id="vars"></div>
+<section class="further">
+  <h2>Further Actions</h2>
+  <div class="cards">
+    <div><b>Explore</b>Explore from A: tune how long lines live and how a burst folds.</div>
+    <div><b>Remix</b>Remix A: add G’s named pause and F’s quick reply.</div>
+    <div><b>Settle</b>Settle on A for the lightest live-stream feel.</div>
+  </div>
+</section>
+</main>
+<script>
+const FILE = '.kier/designs/5f2a-closed-chat-overlay.html';
+const FR = {Kier:'#E8368F', Leo:'#65D6AD', Mira:'#C084FC', Joyce:'#FB923C'};
+const FRIENDS = ['Leo', 'Mira', 'Joyce'];
+const POOL = ['no way', 'WHAT', 'called it', 'rewind that', 'i’m screaming', 'this soundtrack tho', 'he’s so done', 'ok that was good', 'who is she??', 'brb snacks'];
+const EZ = 'cubic-bezier(.2,.8,.2,1)';
+const EASES = ['cubic-bezier(.22,.61,.36,1)', 'cubic-bezier(.33,.7,.4,1)', 'cubic-bezier(.17,.5,.3,1)'];
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const now = () => performance.now();
+const nm = n => n === 'Kier' ? 'You' : n;
+const av = (n, cls = '') => `<i class="av ${cls}" style="--c:${FR[n]}">${n[0]}</i>`;
+const el = (tag, cls, html = '') => { const e = document.createElement(tag); if(cls) e.className = cls; e.innerHTML = html; return e; };
+const later = (c, ms, fn) => c.timers.push(setTimeout(fn, ms));
+
+const ICON = {joined:'<span class="emo">👋</span>', paused:'<i class="fa fa-pause"></i>', played:'<i class="fa fa-play"></i>', seeked:'<i class="fa fa-undo"></i>'};
+const ACT = ev => {
+  const n = `<b>${nm(ev.who)}</b>`;
+  return {joined:`${n} is here. We are so back.`, paused:`${n} paused at 41:12`, played:`${n} played at 41:12`, seeked:`${n} skipped back to 39:50`}[ev.act];
+};
+const msgHTML = ev => `${av(ev.who)}<span class="tx"><b>${nm(ev.who)}</b> ${esc(ev.text)}</span>`;
+const actHTML = ev => `<span class="ico">${ICON[ev.act]}</span><span class="tx">${ACT(ev)}</span>`;
+const lineHTML = ev => ev.kind === 'msg' ? msgHTML(ev) : actHTML(ev);
+
+/* Smoothly move siblings when a line arrives or leaves. */
+function flip(box, mutate){
+  const before = new Map([...box.children].map(k => [k, k.getBoundingClientRect().top]));
+  mutate();
+  [...box.children].forEach(k => {
+    if(!before.has(k)) return;
+    const dy = before.get(k) - k.getBoundingClientRect().top;
+    if(Math.abs(dy) > .5) k.animate([{transform:`translateY(${dy}px)`}, {transform:'none'}], {duration:300, easing:EZ});
+  });
+}
+const fadeOut = (node, done, ms = 380) => { if(!node.isConnected) return; const a = node.animate([{opacity:getComputedStyle(node).opacity}, {opacity:0}], {duration:ms, fill:'forwards'}); a.onfinish = () => { node.remove(); done?.(); }; };
+
+/* ───── shared: the live comment stack (A, F, G) ───── */
+const Stack = {
+  mount(c){
+    c.st = el('div', 'stk');
+    c.ty = el('div', 'ln act typ', '<span class="ico"><span class="dots"><i></i><i></i><i></i></span></span><span class="tx"></span>');
+    c.bl.append(c.st, c.ty);
+  },
+  tone(c){ [...c.st.children].reverse().forEach((l, i) => l.style.opacity = [1, 1, .8, .55, .3][i] ?? 0); },
+  add(c, ev){
+    const ln = el('div', 'ln' + (ev.kind === 'act' ? ' act' : ''), lineHTML(ev));
+    ln.dataset.act = 'chat';
+    flip(c.st, () => { c.st.append(ln); while(c.st.children.length > 5) c.st.firstElementChild.remove(); });
+    ln.animate([{opacity:0, transform:'translateY(10px) scale(.96)'}, {opacity:1, transform:'none'}], {duration:320, easing:EZ});
+    Stack.tone(c);
+    later(c, 8000, () => fadeOut(ln, () => Stack.tone(c)));
+  },
+  typing(c, who, on){ c.ty.querySelector('.tx').innerHTML = `<b>${nm(who)}</b> is typing`; c.ty.classList.toggle('on', on); }
+};
+
+/* ───── variations ───── */
+const VARS = [
+  {id:'Now', name:'Closed chat shows nothing', from:'Built today', hint:'Play the scene and watch the picture',
+   notes:[['bad', 'Messages and joins land unseen.'], ['bad', 'The video pauses; nobody says who.']],
+   H:{}},
+
+  {id:'A', name:'Live comments, bottom left', from:'TikTok LIVE', dot:true, hint:'Hover to lift with the controls; click a line',
+   notes:[['good', 'Fresh lines bright, older ones fade out.'], ['good', 'Left side is clear of subtitles and floats.'], ['bad', 'A long subtitle line can graze it.']],
+   H:{mount:Stack.mount, push:Stack.add, typing:Stack.typing}},
+
+  {id:'B', name:'See-through chat where the sidebar was', from:'Kick / Twitch overlay chat', dot:true, hint:'Fades after 10s quiet; hover brings it back',
+   notes:[['good', 'Most context; reads as the chat itself.'], ['bad', 'Fights reaction floats for the right side.'], ['bad', 'Bright scenes wash out the text.']],
+   H:{
+     mount(c){
+       c.gc = el('div', 'gcol lift idle');
+       c.gt2 = el('div', 'gl typ2');
+       c.ov.append(c.gc);
+       c.gc.append(c.gt2);
+     },
+     push(c, ev){
+       const l = el('div', 'gl' + (ev.kind === 'act' ? ' act' : ''),
+         ev.kind === 'msg' ? `<b style="--c:${FR[ev.who]}">${nm(ev.who)}</b> ${esc(ev.text)}` : `${ICON[ev.act]}${ACT(ev)}`);
+       l.dataset.act = 'chat';
+       flip(c.gc, () => { c.gc.insertBefore(l, c.gt2); while(c.gc.children.length > 13) c.gc.firstElementChild.remove(); });
+       l.animate([{opacity:0, transform:'translateY(6px)'}, {opacity:1, transform:'none'}], {duration:240, easing:EZ});
+       c.gc.classList.remove('idle');
+       clearTimeout(c.idleT); c.idleT = setTimeout(() => c.gc.classList.add('idle'), 10000);
+     },
+     typing(c, who, on){ c.gt2.innerHTML = `<span class="dots"><i></i><i></i><i></i></span> ${nm(who)} is typing`; c.gt2.classList.toggle('on', on); }
+   }},
+
+  {id:'C', name:'One rolling line', from:'Twitch event ticker, our chat status strip', dot:true, hint:'Try Burst: five messages fold into one line',
+   notes:[['good', 'Smallest footprint; bursts fold into one line.'], ['bad', 'You read the room one line at a time.']],
+   H:{
+     mount(c){ c.slot = el('div', 'slot'); c.bl.append(c.slot); c.q = []; c.cur = null; c.lastShow = -1e9; c.pumpT = null; },
+     push(c, ev){ c.q.push(ev); pumpC(c); }
+   }},
+
+  {id:'D', name:'Stacked toasts, top right', from:'Discord / Google Meet', dot:true, hint:'Hover the stack to fan it out',
+   notes:[['good', 'Clear of subtitles, floats and controls.'], ['good', 'Hover fans the stack out and holds it.'], ['bad', 'Reads as notifications, not a party.']],
+   H:{
+     mount(c){
+       c.tsx = el('div', 'tsx'); c.ov.append(c.tsx); c.tl = []; c.dHover = false;
+       c.tsx.addEventListener('mouseenter', () => { c.dHover = true; layoutD(c); });
+       c.tsx.addEventListener('mouseleave', () => { c.dHover = false; layoutD(c); });
+     },
+     push(c, ev){
+       const t = el('div', 'ts' + (ev.kind === 'act' ? ' act' : ''), ev.kind === 'msg'
+         ? `${av(ev.who, 'lg')}<div class="tb"><p class="th"><b>${nm(ev.who)}</b><span>now</span></p><p class="tt">${esc(ev.text)}</p></div>`
+         : `<span class="ico">${ICON[ev.act]}</span><p class="tt">${ACT(ev)}</p>`);
+       t.dataset.act = 'chat';
+       t.style.opacity = 0; t.style.transform = 'translateY(-14px) scale(.97)';
+       c.tsx.append(t); c.tl.unshift(t);
+       if(c.tl.length > 4) c.tl.pop().remove();
+       requestAnimationFrame(() => requestAnimationFrame(() => layoutD(c)));
+       const expire = () => { if(!t.isConnected) return; if(c.dHover) return later(c, 1500, expire);
+         t.style.opacity = 0; t.style.transform += ' translateX(24px)';
+         later(c, 320, () => { t.remove(); c.tl = c.tl.filter(x => x !== t); layoutD(c); }); };
+       later(c, 5000, expire);
+     }
+   }},
+
+  {id:'E', name:'Chat tab on the edge', from:'Twitch collapsed chat', hint:'The tab counts what you missed; click it',
+   notes:[['good', 'Always a way back to chat, with a count.'], ['good', 'Typing dots ride on the tab.'], ['bad', 'A burst becomes just a number.']],
+   H:{
+     mount(c){
+       c.tab = el('button', 'tab', '<i class="fa fa-comment"></i><span class="tf"></span><span class="dots"><i></i><i></i><i></i></span><b class="tn"></b><span class="pv"></span>');
+       c.tab.type = 'button'; c.tab.dataset.act = 'chat'; c.tab.setAttribute('aria-label', 'Open chat');
+       c.ov.append(c.tab);
+       c.ex = {who:[], n:0, q:[], last:-1e9, t:null};
+       paintTab(c);
+     },
+     push(c, ev){
+       if(ev.kind === 'msg'){ c.ex.n++; c.ex.who = [ev.who, ...c.ex.who.filter(x => x !== ev.who)].slice(0, 3); }
+       paintTab(c); c.ex.q.push(ev); pumpE(c);
+     },
+     typing(c, who, on){ c.tab.classList.toggle('typing', on); },
+     clear(c){ c.ex.n = 0; c.ex.who = []; paintTab(c); }
+   }},
+
+  {id:'F', name:'Live comments with a quick reply', from:'TikTok LIVE comment bar', dot:true, hint:'Hover, or focus the picture and press Enter, then type',
+   notes:[['good', 'Reply without opening chat.'], ['good', 'Enter starts typing; Escape lets go.'], ['bad', 'A text field sits on the picture.']],
+   H:{
+     mount(c){
+       Stack.mount(c);
+       c.qr = el('label', 'qr', '<input type="text" placeholder="Say something to the room" aria-label="Quick reply"><kbd>Enter</kbd>');
+       c.bl.append(c.qr);
+       const inp = c.qr.querySelector('input');
+       inp.addEventListener('keydown', e => {
+         e.stopPropagation();
+         if(e.key === 'Enter' && inp.value.trim()){ c.push({kind:'msg', who:'Kier', text:inp.value.trim()}); inp.value = ''; }
+         if(e.key === 'Escape'){ inp.blur(); c.vid.focus(); }
+       });
+       c.vid.tabIndex = 0;
+       if(!c.vid.dataset.qr){ c.vid.dataset.qr = 1; c.vid.addEventListener('keydown', e => { if(e.key === 'Enter' && e.target === c.vid){ e.preventDefault(); c.qr.querySelector('input').focus(); } }); }
+     },
+     push:Stack.add, typing:Stack.typing
+   }},
+
+  {id:'G', name:'Activity shows where it happens', from:'TikTok LIVE entrance banner', dot:true, hint:'Try Pause, then Play; and Someone joins',
+   notes:[['good', 'A pause names who did it, on the pause icon.'], ['good', '“Paused by Mira” stays until someone plays.'], ['bad', 'Three places to look.']],
+   H:{
+     mount(c){ Stack.mount(c); c.gt = el('div', 'gtop'); c.ov.append(c.gt); c.pc = null; },
+     push(c, ev){
+       if(ev.kind === 'msg') return Stack.add(c, ev);
+       if(ev.act === 'joined'){
+         const b = el('div', 'jb', `${av(ev.who)}<span><b>${nm(ev.who)}</b> is here. We are so back.</span>`);
+         b.dataset.act = 'chat';
+         flip(c.gt, () => c.gt.prepend(b));
+         b.animate([{opacity:0, transform:'translateY(-14px) scale(.95)'}, {opacity:1, transform:'none'}], {duration:360, easing:EZ});
+         later(c, 3400, () => fadeOut(b));
+         return;
+       }
+       if(c.pc){ fadeOut(c.pc); c.pc = null; }
+       if(ev.act === 'paused'){
+         const p = el('div', 'pchip', `<i class="fa fa-pause"></i><span>Paused by <b>${nm(ev.who)}</b></span>`);
+         p.dataset.act = 'chat';
+         c.gt.append(p); c.pc = p;
+         p.animate([{opacity:0}, {opacity:1}], {duration:300, delay:1800, fill:'backwards'});
+       }
+     },
+     typing:Stack.typing
+   }},
+];
+
+/* C · roll a line in from below; three or more queued fold into one */
+function pumpC(c){
+  if(c.pumpT) return;
+  const wait = Math.max(0, c.lastShow + 1800 - now());
+  c.pumpT = setTimeout(() => {
+    c.pumpT = null;
+    if(!c.q.length || !c.slot.isConnected) return;
+    let html, act = false;
+    if(c.q.length >= 3){
+      const batch = c.q.splice(0), msgs = batch.filter(e => e.kind === 'msg');
+      const names = [...new Set(msgs.map(e => e.who))];
+      html = `<span class="fs">${names.slice(0, 3).map(n => av(n)).join('')}</span><span class="tx"><b>${names.map(nm).join(', ')}</b> · ${msgs.length} new messages</span>`;
+    } else { const ev = c.q.shift(); html = lineHTML(ev); act = ev.kind === 'act'; }
+    const r = el('div', 'rl' + (act ? ' act' : ''), html); r.dataset.act = 'chat';
+    c.slot.append(r);
+    r.animate([{transform:'translateY(100%)', opacity:0}, {transform:'none', opacity:1}], {duration:360, easing:EZ});
+    if(c.cur){ const old = c.cur; old.animate([{transform:'none', opacity:1}, {transform:'translateY(-100%)', opacity:0}], {duration:320, easing:EZ, fill:'forwards'}).onfinish = () => old.remove(); }
+    c.cur = r; c.lastShow = now();
+    clearTimeout(c.hideT);
+    c.hideT = setTimeout(() => { if(c.cur !== r) return; r.animate([{transform:'none', opacity:1}, {transform:'translateY(100%)', opacity:0}], {duration:320, easing:EZ, fill:'forwards'}).onfinish = () => r.remove(); c.cur = null; }, 6000);
+    if(c.q.length) pumpC(c);
+  }, wait);
+  c.timers.push(c.pumpT);
+}
+
+/* D · newest in front; older ones peek out underneath, or fan out on hover */
+function layoutD(c){
+  const front = c.tl[0]; if(!front) return;
+  const fh = front.offsetHeight; let y = 0;
+  c.tl.forEach((t, k) => {
+    t.style.zIndex = 10 - k;
+    if(c.dHover){ t.style.transform = `translateY(${y}px)`; t.style.opacity = 1; y += t.offsetHeight + 8; }
+    else { t.style.transform = `translateY(${fh - t.offsetHeight + k * 9}px) scale(${1 - k * .05})`; t.style.opacity = k > 2 ? 0 : 1 - k * .12; }
+    t.style.pointerEvents = k > 2 && !c.dHover ? "none" : "";
+  });
+}
+
+/* E · the tab and its preview bubble */
+function paintTab(c){
+  c.tab.querySelector('.tf').innerHTML = c.ex.who.map(n => av(n)).join('');
+  c.tab.querySelector('.tn').textContent = c.ex.n;
+  c.tab.classList.toggle('has', c.ex.n > 0);
+}
+function pumpE(c){
+  if(c.ex.t) return;
+  const wait = Math.max(0, c.ex.last + 1700 - now());
+  c.ex.t = setTimeout(() => {
+    c.ex.t = null;
+    if(!c.ex.q.length || !c.tab.isConnected) return;
+    if(c.ex.q.length > 2) c.ex.q = c.ex.q.slice(-1);
+    const ev = c.ex.q.shift(), pv = c.tab.querySelector('.pv');
+    pv.innerHTML = ev.kind === 'msg' ? `<b>${nm(ev.who)}</b>${esc(ev.text)}` : `${ICON[ev.act]}${ACT(ev)}`;
+    pv.classList.remove('on'); void pv.offsetWidth; pv.classList.add('on'); c.tab.classList.add('say');
+    c.ex.last = now();
+    clearTimeout(c.ex.hide); c.ex.hide = setTimeout(() => { pv.classList.remove('on'); c.tab.classList.remove('say'); }, 3200);
+    if(c.ex.q.length) pumpE(c);
+  }, wait);
+  c.timers.push(c.ex.t);
+}
+
+/* ───── the scene: about 14s of a party ───── */
+const SCENE = [
+  [0, 'msg', 'Leo', 'ok who picked this'],
+  [1300, 'msg', 'Mira', 'SHH it’s starting'],
+  [2700, 'act', 'Joyce', 'joined'],
+  [3900, 'msg', 'Joyce', 'wait is that the brother??'],
+  [4500, 'rx', 'Leo', '😱'],
+  [5200, 'type', 'Leo', true],
+  [7000, 'msg', 'Leo', 'it’s ALWAYS the brother'],
+  [8400, 'act', 'Mira', 'paused'],
+  [9400, 'msg', 'Mira', 'bathroom brb, nobody touch it'],
+  [12000, 'act', 'Mira', 'played'],
+  [12900, 'msg', 'Leo', 'lmao'],
+  [13150, 'msg', 'Joyce', '😭😭'],
+  [13300, 'rx', 'Joyce', '😂'],
+  [13450, 'msg', 'Leo', 'ok shh'],
+  [13750, 'msg', 'Joyce', 'GO'],
+];
+const mkEv = (kind, who, x) => kind === 'msg' ? {kind, who, text:x} : kind === 'act' ? {kind, who, act:x} : kind === 'rx' ? {kind, who, emoji:x} : {kind, who, on:x};
+
+/* ───── markup ───── */
+const chatMsg = ev => ev.who === 'Kier'
+  ? `<div class="mg me"><div><span class="msg">${esc(ev.text)}</span></div></div>`
+  : `<div class="mg">${av(ev.who)}<div><p class="nm">${ev.who}</p><span class="msg">${esc(ev.text)}</span></div></div>`;
+const roomHTML = () => `<div class="mk room">
+  <div class="vid">
+    <div class="still"></div><div class="subt">We are not doing this again.</div>
+    <div class="fx lift"></div>
+    <div class="pind"></div>
+    <span class="back"><i class="fa fa-long-arrow-left"></i>Back to Browse</span>
+    <div class="ctl">
+      <div class="seek"><span>41:12</span><div class="trk"><div class="fill"></div></div><span>1:48:30</span></div>
+      <div class="pa">
+        <div class="sec"><span class="ic"><i class="fa fa-pause"></i></span><span class="ic"><i class="fa fa-backward"></i></span><span class="ic"><i class="fa fa-forward"></i></span><span class="ic"><i class="fa fa-volume-up"></i></span><p class="ttl">The Long Weekend<span>S1 · E3</span></p></div>
+        <div class="sec r"><span class="ic"><i class="fa fa-keyboard-o"></i></span><span class="ic"><i class="fa fa-align-center"></i></span><span class="ic"><i class="fa fa-list-ol"></i></span><span class="ic"><i class="fa fa-expand"></i></span><button type="button" class="ic" data-act="chat" aria-label="Open chat"><i class="fa fa-comment"></i><b class="ud"></b></button></div>
+      </div>
+    </div>
+    <div class="ov"><div class="bl lift"></div></div>
+  </div>
+  <aside class="chat"><div class="in">
+    <div class="cano"><div class="faces">${['Leo', 'Mira', 'Joyce', 'Kier'].map(n => `<span class="cf">${av(n)}<i class="dot"></i></span>`).join('')}</div>
+      <span class="code"><b>482 913</b><i class="fa fa-clone"></i></span><span class="cbtn"><i class="fa fa-user-plus"></i></span></div>
+    <div class="msgs"></div>
+    <div class="cbar"><div class="st"></div><div class="inp"><span>Message</span><span class="send"><i class="fa fa-arrow-up"></i></span></div></div>
+  </div></aside>
+</div>`;
+
+document.getElementById('vars').innerHTML = VARS.map(v => `<section class="var" id="v-${v.id}" data-id="${v.id}" data-name="${esc(v.name)}">
+  <div class="var-h"><span class="id">${v.id}</span><h2>${esc(v.name)}</h2><span class="from">${esc(v.from)}</span></div>
+  <div class="frame">${roomHTML()}</div>
+  <div class="rail"><span class="lbl">Simulate</span><div class="grp">
+      <button type="button" data-sim="scene">Play scene</button><button type="button" data-sim="msg">Message</button><button type="button" data-sim="burst">Burst</button><button type="button" data-sim="join">Someone joins</button><button type="button" data-sim="pause">Pause / Play</button><button type="button" data-sim="seek">Skip back</button><button type="button" data-sim="typing">Typing</button></div>
+    <div class="grp"><button type="button" data-sim="pin" aria-pressed="false">Show controls</button><button type="button" data-sim="reset">Reset</button></div>
+    <span class="hint">${esc(v.hint)}</span></div>
+  <div class="notes">${v.notes.map(([t, x]) => `<div class="note ${t}">${x}</div>`).join('')}</div>
+</section>`).join('');
+
+/* ───── wire each room ───── */
+const rooms = [];
+document.querySelectorAll('section.var').forEach((sec, k) => {
+  const v = VARS[k], H = v.H, room = sec.querySelector('.room');
+  const c = {id:v.id, v, H, room, vid:room.querySelector('.vid'), ov:room.querySelector('.ov'), fx:room.querySelector('.fx'), pind:room.querySelector('.pind'),
+    cm:room.querySelector('.msgs'), cst:room.querySelector('.st'), ud:room.querySelector('.ud'), chatIc:room.querySelector('.ctl [data-act="chat"] .fa'),
+    timers:[], log:[], unread:0, open:false, typingWho:null, paused:false, played:false};
+
+  c.mount = () => { c.ov.innerHTML = '<div class="bl lift"></div>'; c.bl = c.ov.querySelector('.bl'); H.mount?.(c); };
+  c.paintUnread = () => { c.ud.textContent = c.unread; c.ud.classList.toggle('on', !!v.dot && c.unread > 0 && !c.open); };
+  c.renderChat = () => {
+    c.cm.innerHTML = c.log.slice(-10).map(ev => ev.kind === 'msg' ? chatMsg(ev) : `<p class="al">${ICON[ev.act]}${ACT(ev)}</p>`).join('');
+    const lastPlay = [...c.log].reverse().find(e => e.kind === 'act' && e.act !== 'joined');
+    c.cst.innerHTML = c.typingWho ? `<span class="dots"><i></i><i></i><i></i></span><span><b>${c.typingWho}</b> is typing</span>`
+      : `<i class="fa fa-${lastPlay?.act === 'paused' ? 'pause' : 'play'}"></i><span><b>${lastPlay ? nm(lastPlay.who) : 'Leo'}</b> ${lastPlay ? lastPlay.act : 'played'} at 41:12</span>`;
+  };
+  c.toggleChat = () => {
+    c.open = !c.open;
+    room.classList.toggle('open', c.open);
+    c.chatIc.className = 'fa ' + (c.open ? 'fa-comment-o' : 'fa-comment');
+    if(c.open){ c.unread = 0; H.clear?.(c); c.renderChat(); }
+    c.paintUnread();
+  };
+  c.flashInd = ev => {
+    const icon = {paused:'pause', played:'play', seeked:'undo'}[ev.act];
+    c.pind.innerHTML = `<span class="ring"><i class="fa fa-${icon}"></i></span>${v.id === 'G' ? `<span class="who">${nm(ev.who)} ${ev.act === 'seeked' ? 'skipped back' : ev.act}</span>` : ''}`;
+    c.pind.className = 'pind'; void c.pind.offsetWidth; c.pind.className = 'pind show' + (v.id === 'G' ? ' long' : '');
+  };
+  c.push = ev => {
+    if(ev.kind === 'type'){ c.typingWho = ev.on ? ev.who : null; if(c.open) c.renderChat(); else H.typing?.(c, ev.who, ev.on); return; }
+    if(ev.kind === 'rx') return spawn(c, ev.emoji, ev.who);
+    if(ev.kind === 'msg' && ev.who === c.typingWho){ c.typingWho = null; H.typing?.(c, ev.who, false); }
+    if(ev.kind === 'act' && ev.act === 'paused') c.paused = true;
+    if(ev.kind === 'act' && ev.act === 'played') c.paused = false;
+    c.log.push(ev);
+    if(ev.kind === 'act' && ev.act !== 'joined') c.flashInd(ev);
+    if(c.open) return c.renderChat();
+    if(ev.kind === 'msg' && ev.who !== 'Kier'){ c.unread++; c.paintUnread(); }
+    H.push?.(c, ev);
+  };
+  c.reset = () => {
+    c.timers.forEach(clearTimeout); c.timers = []; clearTimeout(c.idleT); clearTimeout(c.hideT);
+    c.fx.innerHTML = ''; c.log = [{kind:'msg', who:'Kier', text:'popcorn secured 🍿'}]; c.unread = 0; c.typingWho = null; c.paused = false;
+    if(c.open) c.toggleChat();
+    c.mount(); c.paintUnread(); c.renderChat();
+  };
+  c.reset();
+
+  room.addEventListener('click', ev => { if(ev.target.closest('[data-act="chat"]')) c.toggleChat(); });
+  sec.querySelectorAll('[data-sim]').forEach(b => b.addEventListener('click', () => sim(c, b.dataset.sim, b)));
+  rooms.push(c);
+});
+
+function playScene(c){ c.played = true; SCENE.forEach(([t, kind, who, x]) => later(c, t, () => c.push(mkEv(kind, who, x)))); }
+
+function sim(c, k, b){
+  const who = pick(FRIENDS);
+  if(k === 'scene'){ c.reset(); playScene(c); }
+  if(k === 'msg') c.push({kind:'msg', who, text:pick(POOL)});
+  if(k === 'burst') for(let j = 0; j < 5; j++) later(c, j * 260, () => c.push({kind:'msg', who:pick(FRIENDS), text:pick(POOL)}));
+  if(k === 'join') c.push({kind:'act', who, act:'joined'});
+  if(k === 'pause') c.push({kind:'act', who, act:c.paused ? 'played' : 'paused'});
+  if(k === 'seek') c.push({kind:'act', who, act:'seeked'});
+  if(k === 'typing'){ c.push({kind:'type', who:'Mira', on:true}); later(c, 2600, () => c.push({kind:'msg', who:'Mira', text:'okay WAIT'})); }
+  if(k === 'pin'){ const on = c.room.classList.toggle('pin'); b.setAttribute('aria-pressed', String(on)); }
+  if(k === 'reset') c.reset();
+}
+
+function spawn(c, emoji, name){
+  const r = Math.random, bt = (a, b) => a + r() * (b - a), side = r() < .5 ? -1 : 1;
+  const f = document.createElement('div');
+  f.className = 'fl';
+  f.style.cssText = `--x:${r()};--d:${bt(2.6, 3.6)}s;--rise:${bt(50, 75)};--size:${bt(26, 34)}px;--drift:${side * bt(8, 22)}px;--drift-end:${-side * bt(0, 16)}px;--ease:${pick(EASES)}`;
+  f.innerHTML = `<span class="drift"><span class="emoji">${emoji}</span><span class="name">${esc(nm(name))}</span></span>`;
+  f.addEventListener('animationend', ev => { if(ev.target === f) f.remove(); });
+  c.fx.appendChild(f);
+}
+
+/* Each room plays its scene once, the first time it's mostly on screen. */
+const io = new IntersectionObserver(es => es.forEach(en => {
+  if(!en.isIntersecting) return;
+  const c = rooms.find(x => x.room.closest('.frame') === en.target);
+  if(c && !c.played) playScene(c);
+}), {threshold:.6});
+document.querySelectorAll('.frame').forEach(f => io.observe(f));
+
+/* ───── Pick menus ───── */
+const ACTIONS = [
+  ['Explore from this', 'Add variations in this direction', id => `Explore from ${id} in ${FILE}`],
+  ['Remix this', 'Fork it and apply your changes', id => `Remix ${id} in ${FILE}:`],
+  ['Settle on this', 'Make this the direction', id => `Settle on ${id} in ${FILE}`]
+];
+const pickers = [];
+function closeAll(except){ pickers.forEach(p => { if(p !== except){ p.menu.hidden = true; p.btn.setAttribute('aria-expanded', 'false'); } }); }
+function legacyCopy(text){
+  const t = document.createElement('textarea'); t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select(); let ok = false; try { ok = document.execCommand('copy'); } catch(e){} t.remove(); return ok;
+}
+async function copyText(text){
+  try { if(navigator.clipboard && window.isSecureContext){ await navigator.clipboard.writeText(text); return true; } } catch(e){}
+  return legacyCopy(text);
+}
+document.querySelectorAll('section.var').forEach(sec => {
+  const id = sec.dataset.id, head = sec.querySelector('.var-h');
+  const btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'pick-btn'; btn.textContent = 'Pick'; btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+  head.appendChild(btn);
+  const menu = document.createElement('div'); menu.className = 'pick-menu'; menu.hidden = true; menu.setAttribute('role', 'menu');
+  const out = document.createElement('div'); out.className = 'pick-out'; out.hidden = true;
+  ACTIONS.forEach(([label, hint, make]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem');
+    b.innerHTML = `<b>${label}</b><span>${hint}</span>`;
+    b.addEventListener('click', async () => {
+      const text = make(id); closeAll(); btn.focus();
+      const ok = await copyText(text);
+      out.hidden = false;
+      out.innerHTML = ok ? '<code></code><span class="copied">Copied</span>' : '<input readonly aria-label="Prompt">';
+      if(ok) out.querySelector('code').textContent = text; else { const inp = out.querySelector('input'); inp.value = text; inp.focus(); inp.select(); }
+    });
+    menu.appendChild(b);
+  });
+  head.after(menu); menu.after(out);
+  const p = {btn, menu}; pickers.push(p);
+  btn.addEventListener('click', ev => {
+    ev.stopPropagation();
+    const open = menu.hidden; closeAll(p); menu.hidden = !open; btn.setAttribute('aria-expanded', String(open));
+    if(open) menu.querySelector('button').focus();
+  });
+  menu.addEventListener('click', ev => ev.stopPropagation());
+});
+document.addEventListener('click', () => closeAll());
+document.addEventListener('keydown', ev => {
+  if(ev.key !== 'Escape') return;
+  const open = pickers.find(p => !p.menu.hidden);
+  if(open){ closeAll(); open.btn.focus(); }
+});
+
+/* ───── minimap ───── */
+const mm = document.querySelector('.mm');
+const secs = [...document.querySelectorAll('section.var')];
+secs.forEach(sec => {
+  const a = document.createElement('a'); a.href = '#' + sec.id;
+  a.innerHTML = `<i></i><span><b>${sec.dataset.id}</b>${esc(sec.dataset.name)}</span>`;
+  a.addEventListener('click', ev => { ev.preventDefault(); sec.scrollIntoView({behavior:'smooth', block:'start'}); });
+  mm.appendChild(a);
+});
+function syncMM(){
+  let best = 0, bestD = Infinity;
+  secs.forEach((s, k) => { const d = Math.abs(s.getBoundingClientRect().top - 24); if(d < bestD){ bestD = d; best = k; } });
+  [...mm.children].forEach((a, k) => a.classList.toggle('on', k === best));
+}
+addEventListener('scroll', syncMM, {passive:true}); syncMM();
+</script>
+</body>
+</html>

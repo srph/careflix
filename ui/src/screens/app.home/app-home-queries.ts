@@ -49,7 +49,7 @@ export function useShowGroupsQuery(show: AppShow | null, enabled = true) {
   const { data: user, isAuthenticated } = useAuth()
   return useQuery({
     queryKey: ['listing', user?.id, 'groups', show?.id],
-    queryFn: ({ signal }) => get<AppShowGroup[]>(`/api/shows/${show.id}/groups`, undefined, signal),
+    queryFn: ({ signal }) => get<AppShowGroup[]>(`/api/shows/${show!.id}/groups`, undefined, signal),
     enabled: isAuthenticated && enabled && show?.title_type === 'series',
   })
 }
@@ -98,8 +98,8 @@ export function useJoinPartyMutation() {
     },
     onSuccess: party => {
       for (const id of [...party.accepted_invitation_ids, ...party.declined_invitation_ids]) auth.removeInvitation(id)
-      void client.invalidateQueries({ queryKey: ['listing', auth.data.id, 'parties'] })
-      void client.invalidateQueries({ queryKey: ['listing', auth.data.id, 'search'] })
+      void client.invalidateQueries({ queryKey: ['listing', auth.data?.id, 'parties'] })
+      void client.invalidateQueries({ queryKey: ['listing', auth.data?.id, 'search'] })
       navigate(`/watch/${party.id}`)
     },
   })

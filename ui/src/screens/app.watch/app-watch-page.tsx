@@ -46,44 +46,49 @@ const reducer = (state: State, action: Action): State => {
     }
 
     case 'data:sync-state': {
-      return immer(state, draft => {
-        draft.playbackRevision += 1
-        draft.party.current_time = action.payload.state.current_time
-        draft.party.is_playing = action.payload.state.is_playing
-      })
+      if (!state.party) return state
+      return {
+        ...state,
+        playbackRevision: state.playbackRevision + 1,
+        party: { ...state.party, current_time: action.payload.state.current_time, is_playing: action.payload.state.is_playing }
+      }
     }
 
     case 'invitation.send': {
+      if (!state.party) return state
       if (state.party.members.some(member => String(member.id) === String(action.payload.invitation.recipient.id)) ||
-        state.party.invitations.some(invitation => invitation.id === action.payload.invitation.id)) return state
+        state.party.invitations?.some(invitation => invitation.id === action.payload.invitation.id)) return state
       return {
         ...state,
         party: immer(state.party, draft => {
-          draft.invitations.push(action.payload.invitation)
+          (draft.invitations ??= []).push(action.payload.invitation)
         })
       }
     }
 
     case 'invitation.cancel': {
+      if (!state.party) return state
       return {
         ...state,
         party: immer(state.party, draft => {
-          draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+          draft.invitations = (draft.invitations ?? []).filter(invitation => invitation.id !== action.payload.invitation.id)
         })
       }
     }
 
     case 'invitation.accept': {
+      if (!state.party) return state
       return {
         ...state,
         party: immer(state.party, draft => {
           if (!draft.members.some(member => String(member.id) === String(action.payload.member.id))) draft.members.push(action.payload.member)
-          draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+          draft.invitations = (draft.invitations ?? []).filter(invitation => invitation.id !== action.payload.invitation.id)
         })
       }
     }
 
     case 'member.join': {
+      if (!state.party) return state
       return {
         ...state,
         party: immer(state.party, draft => {
@@ -93,10 +98,11 @@ const reducer = (state: State, action: Action): State => {
     }
 
     case 'invitation.decline': {
+      if (!state.party) return state
       return {
         ...state,
         party: immer(state.party, draft => {
-          draft.invitations = draft.invitations.filter(invitation => invitation.id !== action.payload.invitation.id)
+          draft.invitations = (draft.invitations ?? []).filter(invitation => invitation.id !== action.payload.invitation.id)
         })
       }
     }
@@ -111,7 +117,7 @@ const reducer = (state: State, action: Action): State => {
 export function AppWatchPage(props: ReactComponentWrapper) {
   const params = useParams<'partyId'>()
   // Switching rooms must reset the player, chat, and all room subscriptions together.
-  return <WatchRoom key={params.partyId} partyId={params.partyId}>{props.children}</WatchRoom>
+  return <WatchRoom key={params.partyId} partyId={params.partyId!}>{props.children}</WatchRoom>
 }
 
 function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
@@ -208,7 +214,7 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
       payload: {
         party: {
           ...party,
-          invitations: state.party.invitations
+          invitations: state.party?.invitations
         }
       }
     })

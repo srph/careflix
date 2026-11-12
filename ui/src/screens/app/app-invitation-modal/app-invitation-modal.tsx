@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth, useAuthUser } from '~/contexts/auth/auth'
 import { useNow } from '~/hooks/use-now'
 import { usePusher } from '~/hooks/use-pusher'
 import { axios } from '~/lib/axios/axios'
@@ -43,12 +43,13 @@ const FILL = 'block h-full rounded-xs bg-pink-500'
 
 export function AppInvitationModal() {
   const auth = useAuth()
+  const user = useAuthUser()
   const navigate = useNavigate()
   const location = useLocation()
   const overlay = useInvitationOverlay()
   const reducedMotion = useReducedMotion()
   const now = useNow({ interval: 1000 })
-  const invitations = auth.data.invitations ?? []
+  const invitations = user.invitations ?? []
   const latestInvitations = useRef(invitations)
   latestInvitations.current = invitations
   const [activeId, setActiveId] = useState<AppId | null>(invitations[0]?.id ?? null)
@@ -108,13 +109,13 @@ export function AppInvitationModal() {
     return () => observer.disconnect()
   }, [body, expanded])
 
-  usePusher(`private-user.${auth.data.id}`, 'invitation.received', (event: { invitation: AppPartyInvitation }) => {
+  usePusher(`private-user.${user.id}`, 'invitation.received', (event: { invitation: AppPartyInvitation }) => {
     auth.receiveInvitation(event.invitation)
   })
-  usePusher(`private-user.${auth.data.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
+  usePusher(`private-user.${user.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
     auth.cancelInvitation(event.invitation)
   })
-  usePusher(`private-user.${auth.data.id}`, 'invitations.resolved', (event: { invitation_ids: AppId[] }) => {
+  usePusher(`private-user.${user.id}`, 'invitations.resolved', (event: { invitation_ids: AppId[] }) => {
     for (const id of event.invitation_ids) auth.removeInvitation(id)
   })
 
@@ -130,6 +131,7 @@ export function AppInvitationModal() {
     if (!current || state.phase !== 'respond' || lastNotification.current === current.id) return
     lastNotification.current = current.id
     const audio = notificationRef.current
+    if (!audio) return
     audio.volume = 0.1
     // Browsers can refuse autoplay until the user has interacted with the page.
     audio.play()?.catch(() => {})
@@ -308,10 +310,11 @@ export function AppInvitationModal() {
   </>
 
   function header(isExpanded: boolean, measurement = false) {
+    if (!invitation) return null
     // The hidden copy measures the collapsed line on its own, apart from the card's animated width.
     return <div ref={measurement ? setLine : undefined} className={cn(LINE, measurement && 'pointer-events-none invisible absolute w-max')} data-testid={measurement ? undefined : 'invitation-line'}
       aria-hidden={measurement || undefined} inert={measurement || undefined}>
-      {docked ? <span className="flex flex-none">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" className={`${FACE} ring-2 ring-neutral-900 not-first:-ml-2`} />)}</span>
+      {docked ? <span className="flex flex-none">{[...roomMembers(party).filter(member => member.id !== user.id), user].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" className={`${FACE} ring-2 ring-neutral-900 not-first:-ml-2`} />)}</span>
         : <UiAvatar user={invitation.sender} size="sm" className={`${FACE} flex-none`} />}
       <p className="min-w-0 flex-1 truncate text-xs text-neutral-400 sm:text-13" aria-live={measurement ? undefined : 'polite'} aria-atomic="true">
         {docked ? roomMembers(party).length ? <>You’re in with <b>{roomNames(party)}</b></> : <>You’re in the room</>
@@ -329,11 +332,11 @@ export function AppInvitationModal() {
   }
 }
 
-function roomMembers(party: AppParty) {
+function roomMembers(party: AppParty | undefined) {
   return party?.members?.filter(member => Number(member.pivot?.is_active) === 1) ?? []
 }
 
-function roomNames(party: AppParty) {
+function roomNames(party: AppParty | undefined) {
   const names = roomMembers(party).map(member => member.name)
   if (!names.length) return 'the room'
   if (names.length > 2) return `${names[0]} and ${names.length - 1} others`
@@ -352,7 +355,7 @@ function RoomTimeline({ party, invalid, expanded }: { party: AppParty; invalid: 
   const episodes = season?.videos ?? []
   const episodeIndex = episodes.findIndex(episode => String(episode.id) === String(video.id))
   const progress = Math.min(1, Math.max(0, Number(party.current_time) / Number(video.duration || 1)))
-  const segmented = episodeIndex >= 0 && episodes.length > 0
+  const segmented = season !== undefined && episodeIndex >= 0 && episodes.length > 0
   const position = segmented ? (episodeIndex + progress) / episodes.length : progress
   const members = roomMembers(party)
   return <div className={cn('px-3.25 pt-4.5', invalid && DIMMED)}>

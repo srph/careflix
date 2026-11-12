@@ -15,12 +15,13 @@ export function AppHomeListingPartySection({ parties, recent = false, onSeeAll, 
   const reduceMotion = useReducedMotion()
   function shift(event: PointerEvent) {
     if (event.pointerType !== 'mouse' || reduceMotion || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    const list = grid.current
     const card = (event.target as HTMLElement).closest<HTMLElement>(CARD)
-    if (!card || card === hovered.current) return
+    if (!list || !card || card === hovered.current) return
     hovered.current = card
-    const cards = Array.from(grid.current.querySelectorAll<HTMLElement>(CARD))
+    const cards = Array.from(list.querySelectorAll<HTMLElement>(CARD))
     const row = cards.filter(other => other.offsetTop === card.offsetTop)
-    const columns = getComputedStyle(grid.current).gridTemplateColumns.split(' ').length
+    const columns = getComputedStyle(list).gridTemplateColumns.split(' ').length
     if (columns < 2) return
     const column = row.indexOf(card)
     const growth = card.offsetWidth * .1

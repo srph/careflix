@@ -50,7 +50,7 @@ export function AppHomeAuth() {
               {/* The gap under the section is padding, so it closes along with the section when the last party goes. */}
               <div className="pb-8 sm:pb-11">
                 {!partiesQuery.data ? <PartiesPlaceholder recent error={partiesError} onRetry={() => { void partiesQuery.refetch() }} />
-                  : <AppHomeListingPartySection parties={parties} recent onSeeAll={partiesQuery.data.pages[0].total >= 5 ? () => { setTab('parties'); window.scrollTo({ top: 0 }) } : undefined} />}
+                  : <AppHomeListingPartySection parties={parties} recent onSeeAll={(partiesQuery.data.pages[0].total ?? 0) >= 5 ? () => { setTab('parties'); window.scrollTo({ top: 0 }) } : undefined} />}
               </div>
             </motion.div>}
           </AnimatePresence>}

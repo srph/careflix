@@ -21,9 +21,11 @@ vi.mock('~/contexts/auth/auth', async () => {
     return () => { auth.listeners.delete(listener) }
   }
   const removeInvitation = (id: AppId) => auth.set(auth.invitations.filter(invitation => invitation.id !== id))
+  const useUser = () => ({ id: 1, invitations: useSyncExternalStore(subscribe, () => auth.invitations) })
   return {
+    useAuthUser: useUser,
     useAuth: () => ({
-      data: { id: 1, invitations: useSyncExternalStore(subscribe, () => auth.invitations) },
+      data: useUser(),
       removeInvitation,
       declineInvitation: (invitation: AppPartyInvitation) => { auth.declined.push(invitation.id); removeInvitation(invitation.id) },
       receiveInvitation: () => {},

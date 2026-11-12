@@ -34,7 +34,7 @@ export function AppHomeShowModal(props: Props) {
   return <UiModal isOpen={Boolean(props.show)} onClose={props.onClose}
     shouldCloseOnOverlayClick={media === 'desktop'} ariaLabel={props.show?.title}
     overlayClassName={SCRIM} modalClassName={SHEET}>
-    {() => <ShowDetails key={props.show.id} {...props} show={props.show} />}
+    {() => props.show && <ShowDetails key={props.show.id} {...props} show={props.show} />}
   </UiModal>
 }
 

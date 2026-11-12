@@ -21,7 +21,7 @@ export function AppPage(props: ReactComponentWrapper) {
       {auth.isAuthenticated && (
         <React.Fragment>
           <AppHeading />
-          <AppInvitationModal key={auth.data.id} />
+          <AppInvitationModal key={auth.data?.id} />
         </React.Fragment>
       )}
       

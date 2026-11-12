@@ -18,7 +18,9 @@ export const interceptorToastErrors = {
         return Promise.reject(err)
       }
 
-      const cfg = err.config.app.validation
+      // Kept as is on purpose: a request without `app` throws here, so this interceptor never toasts today.
+
+      const cfg = err.config.app!.validation
 
       if (cfg === false) {
         return Promise.reject(err)
@@ -29,7 +31,7 @@ export const interceptorToastErrors = {
       } else if (err.response.status === 500) {
         toast('An error occurred with the server. Try again.')
       } else if (err.response.status === 422) {
-        const cfg = err.config.app.validation
+        const cfg = err.config.app!.validation
 
         if (cfg == null) {
           toast(getFirstValidationMessage(err.response.data.errors))

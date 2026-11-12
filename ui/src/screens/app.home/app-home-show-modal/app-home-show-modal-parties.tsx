@@ -2,8 +2,8 @@ import { Link } from 'react-router'
 import { UiAvatarGroup } from '~/components/ui-avatar-group/ui-avatar-group'
 import { useAuth } from '~/contexts/auth/auth'
 import { cn } from '~/utils/cn'
-import { partyStatus } from '../Listing/format'
-import { PARTY_ROW_LINE } from './classes'
+import { partyStatus } from '../app-home-listing/app-home-listing-format'
+import { PARTY_ROW_LINE } from './app-home-show-modal-classes'
 
 function partyPosition(party: AppParty) {
   return party.video?.show?.title_type === 'series'

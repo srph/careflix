@@ -25,7 +25,7 @@ No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.
 Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers.
 
 The authenticated home listing uses `@tanstack/react-query` through the wrapper hooks in
-`screens/app.home/queries.ts`. The shared provider in `lib/query` sets a 60-second
+`screens/app.home/app-home-queries.ts`. The shared provider in `lib/query` sets a 60-second
 stale time and replaces the cache when the authenticated account changes. Other
 screens retain their existing fetching patterns. `SeasonSelection` accepts optional
 externally fetched groups so the listing's details modal can use Query without

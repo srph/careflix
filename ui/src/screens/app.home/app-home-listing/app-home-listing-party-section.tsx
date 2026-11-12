@@ -1,12 +1,12 @@
-import PartyCard from './PartyCard'
+import { AppHomeListingPartyCard } from './app-home-listing-party-card'
 import { useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { useReducedMotion } from 'motion/react'
-import { PartySkeletonCards } from './ListingStates'
-import { PARTY_GRID, SECTION_HEADING, SECTION_TITLE } from './classes'
+import { PartySkeletonCards } from './app-home-listing-states'
+import { PARTY_GRID, SECTION_HEADING, SECTION_TITLE } from './app-home-listing-classes'
 
 const CARD = '[data-testid="party-card"]'
 
-export default function PartySection({ parties, recent = false, onSeeAll, isLoadingMore = false }: {
+export function AppHomeListingPartySection({ parties, recent = false, onSeeAll, isLoadingMore = false }: {
   parties: AppParty[]; recent?: boolean; onSeeAll?: () => void; isLoadingMore?: boolean
 }) {
   const grid = useRef<HTMLDivElement>(null)
@@ -36,7 +36,7 @@ export default function PartySection({ parties, recent = false, onSeeAll, isLoad
       {recent && onSeeAll && <button type="button" onClick={onSeeAll} className="ml-auto cursor-pointer py-1.25 text-xs text-neutral-300 hover:text-pink-500 sm:text-13">See all parties <span aria-hidden="true" className="ml-1.25">→</span></button>}
     </div>
     {parties.length ? <div className={PARTY_GRID} ref={grid} onPointerOver={shift} onPointerLeave={() => { hovered.current = null; setStyles([]) }}>
-      {(recent ? parties.slice(0, 3) : parties).map((party, index) => <PartyCard party={party} key={party.id} style={styles[index]} />)}
+      {(recent ? parties.slice(0, 3) : parties).map((party, index) => <AppHomeListingPartyCard party={party} key={party.id} style={styles[index]} />)}
       {isLoadingMore && <PartySkeletonCards />}</div>
       : <p className="py-9 text-base text-neutral-400">Your parties will appear here. Pick a title to start watching together.</p>}
     {isLoadingMore && <span className="sr-only" role="status">Loading more parties…</span>}

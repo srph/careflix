@@ -3,7 +3,7 @@ import { QueryClientProvider, useQueryClient } from '@tanstack/react-query'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createQueryClient } from '~/lib/query/client'
 import { QueryProvider } from '~/lib/query/query-provider'
-import { useCreatePartyMutation, useListingSearchQuery, useShowsQuery } from './queries'
+import { useCreatePartyMutation, useListingSearchQuery, useShowsQuery } from './app-home-queries'
 import { axios } from '~/lib/axios/axios'
 
 const session = vi.hoisted(() => ({ user: { id: 1 }, navigate: vi.fn() }))

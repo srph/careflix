@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest'
-import { partyStatus } from './format'
+import { partyStatus } from './app-home-listing-format'
 
 it('shows the same elapsed time for equivalent timestamps across time zones', () => {
   vi.useFakeTimers({ toFake: ['Date'] })

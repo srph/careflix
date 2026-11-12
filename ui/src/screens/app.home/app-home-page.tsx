@@ -1,11 +1,9 @@
 import * as React from 'react'
 import Login from '~/screens/login'
-import AuthHome from './AuthHome'
+import { AppHomeAuth } from './app-home-auth'
 import { useAuth } from '~/contexts/auth/auth'
 
-function AppHome() {
+export function AppHomePage() {
   const auth = useAuth()
-  return auth.isGuest ? <Login /> : <AuthHome />
+  return auth.isGuest ? <Login /> : <AppHomeAuth />
 }
-
-export default AppHome

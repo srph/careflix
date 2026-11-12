@@ -1,4 +1,4 @@
-import { clockTime } from '../Listing/format'
+import { clockTime } from './app-home-listing/app-home-listing-format'
 
 export function previewStatus(party: AppPartyPreview) {
   if (party.is_member) return 'You’re already in this party'

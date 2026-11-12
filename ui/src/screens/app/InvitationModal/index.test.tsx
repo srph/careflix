@@ -34,7 +34,7 @@ vi.mock('~/contexts/auth/auth', async () => {
 vi.mock('./sendDecline', () => ({ sendDecline: vi.fn(() => new Promise(() => {})) }))
 vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
 vi.mock('~/hooks/use-pusher', () => ({ usePusher: () => {} }))
-vi.mock('~/screens/app.home/queries', () => ({ useShowGroupsQuery: () => ({ data: undefined }) }))
+vi.mock('~/screens/app.home/app-home-queries', () => ({ useShowGroupsQuery: () => ({ data: undefined }) }))
 vi.mock('react-router', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/' }) }))
 vi.mock('border-beam', () => ({ BorderBeam: () => null }))
 

@@ -1,7 +1,7 @@
 import { UiSelect } from '~/components/ui-select/ui-select'
-import Artwork from '../Listing/Artwork'
-import { EPISODE_ART, EPISODE_GRID, EPISODE_HEADING, STATUS } from './classes'
-import { duration, totalDuration } from './format'
+import { AppHomeListingArtwork } from '../app-home-listing/app-home-listing-artwork'
+import { EPISODE_ART, EPISODE_GRID, EPISODE_HEADING, STATUS } from './app-home-show-modal-classes'
+import { duration, totalDuration } from './app-home-show-modal-format'
 
 interface Props {
   show: AppShow
@@ -12,7 +12,7 @@ interface Props {
   isCreating?: boolean
 }
 
-export default function Episodes({ show, groups, group, onGroupChange, onPlay, isCreating }: Props) {
+export function AppHomeShowModalEpisodes({ show, groups, group, onGroupChange, onPlay, isCreating }: Props) {
   return <>
     <div className={EPISODE_HEADING}>
       <UiSelect aria-label="Season" value={group.id} onChange={event => onGroupChange(Number(event.currentTarget.value))} className="max-w-[65%] min-w-31"
@@ -26,7 +26,7 @@ export default function Episodes({ show, groups, group, onGroupChange, onPlay, i
       {group.videos.map((video, index) => <button type="button" data-testid="episode" key={video.id} disabled={isCreating} onClick={() => onPlay(video)}
         className="group block w-full min-w-0 cursor-pointer text-left text-white disabled:cursor-default disabled:opacity-60">
         <span className={`${EPISODE_ART} transition-shadow duration-200 group-hover:ring-neutral-500 group-focus-visible:ring-neutral-500`}>
-          <Artwork src={video.preview_image || show.preview_image} />
+          <AppHomeListingArtwork src={video.preview_image || show.preview_image} />
           <span className="absolute inset-0 grid place-items-center bg-neutral-950/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"><i className="fa fa-play" aria-hidden="true" /></span>
         </span>
         <b className="mt-2.25 block text-sm font-semibold wrap-anywhere"><span aria-hidden="true">{index + 1}. </span><span>{video.title}</span></b>

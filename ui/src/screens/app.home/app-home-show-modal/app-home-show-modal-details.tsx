@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { airYears, duration, totalDuration } from './format'
+import { airYears, duration, totalDuration } from './app-home-show-modal-format'
 import { UiSkeleton } from '~/components/ui-skeleton/ui-skeleton'
 
 const SEASONS = 'grid gap-1.5'
@@ -11,7 +11,7 @@ function Fact({ label, children }: { label: string; children: ReactNode }) {
   </div>
 }
 
-export default function Details({ show, groups, groupsStatus, groupsLoading }: { show: AppShow; groups: AppShowGroup[]; groupsStatus: ReactNode; groupsLoading?: boolean }) {
+export function AppHomeShowModalDetails({ show, groups, groupsStatus, groupsLoading }: { show: AppShow; groups: AppShowGroup[]; groupsStatus: ReactNode; groupsLoading?: boolean }) {
   const isSeries = show.title_type === 'series'
   return <>
     <dl data-testid="show-facts">

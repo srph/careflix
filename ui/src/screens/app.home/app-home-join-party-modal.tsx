@@ -7,12 +7,12 @@ import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { useAuth } from '~/contexts/auth/auth'
 import { cn } from '~/utils/cn'
 import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
-import { useJoinPartyMutation, usePartyCodeQuery } from '../queries'
-import Artwork from '../Listing/Artwork'
-import { clockTime } from '../Listing/format'
-import { previewStatus, presentMembers } from './format'
+import { useJoinPartyMutation, usePartyCodeQuery } from './app-home-queries'
+import { AppHomeListingArtwork } from './app-home-listing/app-home-listing-artwork'
+import { clockTime } from './app-home-listing/app-home-listing-format'
+import { previewStatus, presentMembers } from './app-home-join-party-modal-format'
 
-export default function JoinPartyModal() {
+export function AppHomeJoinPartyModal() {
   const [open, setOpen] = useState(false)
   const joining = useRef(false)
   const trigger = useRef<HTMLButtonElement>(null)
@@ -152,7 +152,7 @@ function PartyPreview({ party, shown }: { party: AppPartyPreview; shown: boolean
     'mt-4 flex origin-top flex-col items-stretch gap-3.5 rounded-xl border border-neutral-800 bg-neutral-800 p-3 transition-[opacity,scale] duration-[.28s,.4s] ease-out-soft min-[361px]:flex-row min-[361px]:items-center',
     shown ? 'scale-100 opacity-100 delay-340' : 'scale-97 opacity-0'
   )}>
-    <div className="relative aspect-video w-full flex-none overflow-hidden rounded-lg min-[361px]:w-25 sm:w-33"><Artwork src={party.video.preview_image} eager />
+    <div className="relative aspect-video w-full flex-none overflow-hidden rounded-lg min-[361px]:w-25 sm:w-33"><AppHomeListingArtwork src={party.video.preview_image} eager />
       {progress > 0 && <div className="absolute inset-x-0 bottom-0 h-0.75 bg-neutral-700" role="progressbar" aria-label="Playback progress" aria-valuenow={Math.round(progress)}><i className="block h-full bg-pink-500" style={{ width: `${progress}%` }} /></div>}
     </div>
     <div className="min-w-0 wrap-anywhere"><b className="block text-base">{party.video.show.title}</b>

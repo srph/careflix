@@ -12,7 +12,7 @@ import { AxiosManager } from '~/lib/axios/axios-manager'
 import { PusherManager } from '~/lib/pusher/pusher-manager'
 import { WindowVhSetter } from '~/components/window-vh-setter/window-vh-setter'
 import App from '~/screens/app'
-import AppHome from '~/screens/app.home'
+import { AppHomePage } from '~/screens/app.home/app-home-page'
 import AppWatch from '~/screens/app.watch'
 import AppWatchHome from '~/screens/app.watch.home'
 import AppSettings from '~/screens/app.settings'
@@ -52,7 +52,7 @@ const router = createBrowserRouter([{
     { path: '/request-access', element: <Navigate to="/onboarding" replace /> },
     { path: '/logout', element: <Logout /> },
     { element: <ApplicationLayout />, children: [
-      { path: '/', element: <AppHome /> },
+      { path: '/', element: <AppHomePage /> },
       { path: '/download', element: <AppDownload /> },
       { element: <PrivateRoute />, children: [
         { path: '/settings', element: <AppSettings /> },

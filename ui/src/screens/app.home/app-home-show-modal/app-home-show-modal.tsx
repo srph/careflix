@@ -4,14 +4,14 @@ import { UiModal } from '~/components/ui-modal/ui-modal'
 import { UiButton } from '~/components/ui-button/ui-button'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { useMediaMode } from '~/hooks/use-media-mode'
-import { useMyPartiesQuery, useShowGroupsQuery } from '../queries'
-import Artwork from '../Listing/Artwork'
-import { PANE, STATUS, STATUS_BAND, TAB_BAR, TAB_COLUMN, TEXT_BUTTON } from './classes'
-import Details from './Details'
-import Episodes from './Episodes'
-import { LiveRoom, PartyHistory } from './Parties'
-import { airYears, duration } from './format'
-import { DetailsLoading, EpisodesLoading } from './Loading'
+import { useMyPartiesQuery, useShowGroupsQuery } from '../app-home-queries'
+import { AppHomeListingArtwork } from '../app-home-listing/app-home-listing-artwork'
+import { PANE, STATUS, STATUS_BAND, TAB_BAR, TAB_COLUMN, TEXT_BUTTON } from './app-home-show-modal-classes'
+import { AppHomeShowModalDetails } from './app-home-show-modal-details'
+import { AppHomeShowModalEpisodes } from './app-home-show-modal-episodes'
+import { LiveRoom, PartyHistory } from './app-home-show-modal-parties'
+import { airYears, duration } from './app-home-show-modal-format'
+import { DetailsLoading, EpisodesLoading } from './app-home-show-modal-loading'
 
 interface Props {
   show: AppShow | null
@@ -29,7 +29,7 @@ const SCRIM = 'bg-neutral-950/80 [scrollbar-color:var(--color-neutral-700)_trans
 const SHADE = 'pointer-events-none absolute inset-0'
 const TAB = 'relative cursor-pointer py-4.25 text-sm font-medium text-neutral-400 hover:text-white aria-selected:text-white aria-selected:after:absolute aria-selected:after:inset-x-0 aria-selected:after:bottom-0 aria-selected:after:h-0.5 aria-selected:after:rounded-full aria-selected:after:bg-pink-500'
 
-export default function ShowModal(props: Props) {
+export function AppHomeShowModal(props: Props) {
   const media = useMediaMode()
   return <UiModal isOpen={Boolean(props.show)} onClose={props.onClose}
     shouldCloseOnOverlayClick={media === 'desktop'} ariaLabel={props.show?.title}
@@ -63,7 +63,7 @@ function ShowDetails({ show, onClose, onPlay, isCreating, createError }: Props &
 
   return <>
     <header className="relative flex min-h-95 items-end sm:min-h-100">
-      <Artwork src={show.preview_image} eager />
+      <AppHomeListingArtwork src={show.preview_image} eager />
       {/* The artwork fades into the sheet: upwards on phones, and from the left as well from `sm`. */}
       <div className={`${SHADE} hidden bg-linear-to-t from-neutral-900/90 to-transparent to-40% sm:block`} />
       <div className={`${SHADE} bg-linear-to-t from-neutral-900 from-2% via-neutral-900/70 via-62% to-neutral-900/20 sm:bg-linear-to-r sm:from-8% sm:via-neutral-900/55 sm:via-46% sm:to-transparent sm:to-75%`} />
@@ -85,12 +85,12 @@ function ShowDetails({ show, onClose, onPlay, isCreating, createError }: Props &
       {partiesQuery.isPending ? <DetailsLoading isSeries={isSeries} /> : <>
         {liveRoom && <LiveRoom party={liveRoom} />}
         {partiesQuery.isError && !parties.length && <div className={STATUS_BAND} role="alert">Unable to load your parties. <button type="button" className={TEXT_BUTTON} onClick={() => { void partiesQuery.refetch() }}>Retry</button></div>}
-        {tabs.length === 1 ? <div className={PANE}><Details show={show} groups={groups} groupsStatus={null} /></div>
+        {tabs.length === 1 ? <div className={PANE}><AppHomeShowModalDetails show={show} groups={groups} groupsStatus={null} /></div>
           : <DetailTabs tabs={tabs}>
             {isSeries && <Tabs.Panel className={PANE} value="episodes">
               {groupsQuery.isPending ? <EpisodesLoading /> : <>
                 {groupsStatus && <div className={STATUS}>{groupsStatus}</div>}
-                {groups.length > 0 && !groupsQuery.isError && <Episodes show={show} groups={groups} group={group} onGroupChange={setGroupId} onPlay={onPlay} isCreating={isCreating} />}
+                {groups.length > 0 && !groupsQuery.isError && <AppHomeShowModalEpisodes show={show} groups={groups} group={group} onGroupChange={setGroupId} onPlay={onPlay} isCreating={isCreating} />}
               </>}
             </Tabs.Panel>}
             {parties.length > 0 && <Tabs.Panel className={PANE} value="parties">
@@ -99,7 +99,7 @@ function ShowDetails({ show, onClose, onPlay, isCreating, createError }: Props &
               {partiesQuery.hasNextPage && !partiesQuery.isFetchNextPageError && <div className="mt-5"><UiButton size="l" disabled={partiesQuery.isFetchingNextPage} onClick={() => { void partiesQuery.fetchNextPage() }}>{partiesQuery.isFetchingNextPage ? 'Loading…' : 'Load more parties'}</UiButton></div>}
             </Tabs.Panel>}
             <Tabs.Panel className={PANE} value="details">
-              <Details show={show} groups={groups} groupsLoading={isSeries && groupsQuery.isPending} groupsStatus={isSeries ? groupsStatus : null} />
+              <AppHomeShowModalDetails show={show} groups={groups} groupsLoading={isSeries && groupsQuery.isPending} groupsStatus={isSeries ? groupsStatus : null} />
             </Tabs.Panel>
           </DetailTabs>}
       </>}

@@ -2,16 +2,16 @@ import { useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { InfiniteScroll } from '~/components/infinite-scroll/infinite-scroll'
 import { PageTitle } from '~/components/page-title/page-title'
-import ShowModal from '../ShowModal'
-import { useCreatePartyMutation, useMyPartiesQuery, useShowsQuery, type ListingTab } from '../queries'
-import FeaturedCarousel from '../Listing/FeaturedCarousel'
-import ListingNavigation from '../Listing/ListingNavigation'
-import PartySection from '../Listing/PartySection'
-import ShowCard from '../Listing/ShowCard'
-import { FeaturedPlaceholder, LoadMoreError, PartiesPlaceholder, ShowSkeletonCards, TitlesPlaceholder } from '../Listing/ListingStates'
-import { SECTION_HEADING, SECTION_TITLE, SHOW_GRID } from '../Listing/classes'
+import { AppHomeShowModal } from './app-home-show-modal/app-home-show-modal'
+import { useCreatePartyMutation, useMyPartiesQuery, useShowsQuery, type ListingTab } from './app-home-queries'
+import { AppHomeListingFeaturedCarousel } from './app-home-listing/app-home-listing-featured-carousel'
+import { AppHomeListingNav } from './app-home-listing/app-home-listing-nav'
+import { AppHomeListingPartySection } from './app-home-listing/app-home-listing-party-section'
+import { AppHomeListingShowCard } from './app-home-listing/app-home-listing-show-card'
+import { FeaturedPlaceholder, LoadMoreError, PartiesPlaceholder, ShowSkeletonCards, TitlesPlaceholder } from './app-home-listing/app-home-listing-states'
+import { SECTION_HEADING, SECTION_TITLE, SHOW_GRID } from './app-home-listing/app-home-listing-classes'
 
-export default function AuthHome() {
+export function AppHomeAuth() {
   const [tab, setTab] = useState<ListingTab>('all')
   const [selectedShow, setSelectedShow] = useState<AppShow | null>(null)
   const showsQuery = useShowsQuery(tab === 'movie' || tab === 'series' ? tab : undefined, tab !== 'parties')
@@ -38,10 +38,10 @@ export default function AuthHome() {
   return <div className="min-h-screen overflow-x-clip bg-neutral-950 text-sm text-white antialiased motion-reduce:**:animate-none! motion-reduce:**:[transition:none]!">
     <PageTitle title="Watch together" />
     <div className="mx-auto max-w-400">
-      <ListingNavigation tab={tab} onTabChange={setTab} onShowSelect={setSelectedShow} />
+      <AppHomeListingNav tab={tab} onTabChange={setTab} onShowSelect={setSelectedShow} />
       <main id="listing-panel" role="tabpanel" aria-labelledby={`listing-tab-${tab}`} tabIndex={0} className="focus:outline-none">
         {tab !== 'parties' && (!query.data ? <FeaturedPlaceholder error={initialError} onRetry={() => { void query.refetch() }} />
-          : <FeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />)}
+          : <AppHomeListingFeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />)}
         <div className="px-5 pt-7 pb-15 sm:px-6 sm:pt-7.5 lg:px-10 lg:pt-9 lg:pb-20">
           {createParty.isError && <div role="alert" className="mb-8 rounded-xl border border-neutral-800 bg-neutral-900 p-6 text-neutral-300 sm:mb-11">Unable to start the party. Please try again. <button type="button" className="cursor-pointer rounded-md border border-neutral-600 px-3 py-1.5 leading-[inherit] text-white" onClick={() => createParty.reset()}>Dismiss</button></div>}
           {tab === 'all' && <AnimatePresence initial={false}>
@@ -50,7 +50,7 @@ export default function AuthHome() {
               {/* The gap under the section is padding, so it closes along with the section when the last party goes. */}
               <div className="pb-8 sm:pb-11">
                 {!partiesQuery.data ? <PartiesPlaceholder recent error={partiesError} onRetry={() => { void partiesQuery.refetch() }} />
-                  : <PartySection parties={parties} recent onSeeAll={partiesQuery.data.pages[0].total >= 5 ? () => { setTab('parties'); window.scrollTo({ top: 0 }) } : undefined} />}
+                  : <AppHomeListingPartySection parties={parties} recent onSeeAll={partiesQuery.data.pages[0].total >= 5 ? () => { setTab('parties'); window.scrollTo({ top: 0 }) } : undefined} />}
               </div>
             </motion.div>}
           </AnimatePresence>}
@@ -58,11 +58,11 @@ export default function AuthHome() {
             : <InfiniteScroll key={tab} itemCount={items.length} hasMore={Boolean(query.hasNextPage)} isLoading={query.isFetching}
               onLoadMore={async () => { const result = await query.fetchNextPage(); if (result.isError) throw result.error }}
               renderError={retry => <LoadMoreError parties={tab === 'parties'} onRetry={retry} />}>
-              {tab === 'parties' ? <PartySection parties={parties} isLoadingMore={partiesQuery.isFetchingNextPage} />
+              {tab === 'parties' ? <AppHomeListingPartySection parties={parties} isLoadingMore={partiesQuery.isFetchingNextPage} />
                 : <section aria-label={title}>
                   <div className={SECTION_HEADING}><h2 className={SECTION_TITLE}>{title}</h2>{tab !== 'all' && <span data-testid="section-count" className="font-label text-xs font-semibold text-neutral-400">{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
                   <div className={SHOW_GRID}>
-                    {shows.map(show => <ShowCard key={show.id} show={show} onDetails={setSelectedShow} />)}
+                    {shows.map(show => <AppHomeListingShowCard key={show.id} show={show} onDetails={setSelectedShow} />)}
                     {showsQuery.isFetchingNextPage && <ShowSkeletonCards />}
                   </div>
                   {showsQuery.isFetchingNextPage && <span className="sr-only" role="status">Loading more titles…</span>}
@@ -72,6 +72,6 @@ export default function AuthHome() {
         </div>
       </main>
     </div>
-    <ShowModal show={selectedShow} onClose={() => setSelectedShow(null)} onPlay={video => { if (!createParty.isPending) createParty.mutate(video) }} isCreating={createParty.isPending} createError={createParty.isError} />
+    <AppHomeShowModal show={selectedShow} onClose={() => setSelectedShow(null)} onPlay={video => { if (!createParty.isPending) createParty.mutate(video) }} isCreating={createParty.isPending} createError={createParty.isError} />
   </div>
 }

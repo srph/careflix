@@ -3,13 +3,13 @@ import { UiLogo } from '~/components/ui-logo/ui-logo'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { useAuth } from '~/contexts/auth/auth'
-import { type ListingTab } from '../queries'
-import ListingSearch from './ListingSearch'
-import JoinPartyModal from '../JoinPartyModal'
+import { type ListingTab } from '../app-home-queries'
+import { AppHomeListingSearch } from './app-home-listing-search'
+import { AppHomeJoinPartyModal } from '../app-home-join-party-modal'
 
 const tabs: Array<[ListingTab, string]> = [['all', 'All'], ['movie', 'Movies'], ['series', 'Series'], ['parties', 'Parties']]
 
-export default function ListingNavigation({ tab, onTabChange, onShowSelect }: {
+export function AppHomeListingNav({ tab, onTabChange, onShowSelect }: {
   tab: ListingTab; onTabChange: (tab: ListingTab) => void; onShowSelect: (show: AppShow) => void
 }) {
   const auth = useAuth()
@@ -31,8 +31,8 @@ export default function ListingNavigation({ tab, onTabChange, onShowSelect }: {
           document.getElementById(`listing-tab-${tabs[next][0]}`)?.focus()
         }}>{label}</UiPlainButton>)}
     </div>
-    <JoinPartyModal />
-    <ListingSearch onShowSelect={onShowSelect} />
+    <AppHomeJoinPartyModal />
+    <AppHomeListingSearch onShowSelect={onShowSelect} />
     <Link to="/settings" className="flex flex-none items-center sm:-ml-2 xl:-ml-5" aria-label="Account settings"><UiAvatar user={auth.data} className="size-7.5 sm:size-8.5" /></Link>
   </nav>
 }

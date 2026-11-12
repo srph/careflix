@@ -2,9 +2,9 @@ import { Autocomplete } from '@base-ui/react/autocomplete'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { UiSkeleton } from '~/components/ui-skeleton/ui-skeleton'
-import { useListingSearchQuery } from '../queries'
-import Artwork from './Artwork'
-import { partyDetails, partyStatus, showMeta } from './format'
+import { useListingSearchQuery } from '../app-home-queries'
+import { AppHomeListingArtwork } from './app-home-listing-artwork'
+import { partyDetails, partyStatus, showMeta } from './app-home-listing-format'
 
 type SearchOption = { key: string; show: AppShow; party: AppParty | null }
 type SearchGroup = { value: 'Titles' | 'Parties'; items: SearchOption[] }
@@ -29,7 +29,7 @@ function SearchSkeleton() {
   </div>
 }
 
-export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: AppShow) => void }) {
+export function AppHomeListingSearch({ onShowSelect }: { onShowSelect: (show: AppShow) => void }) {
   const [text, setText] = useState('')
   const [term, setTerm] = useState('')
   const [open, setOpen] = useState(false)
@@ -106,7 +106,7 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
               <Autocomplete.Collection>
                 {(option: SearchOption) => <Autocomplete.Item key={option.key} value={option} className={`group ${ROW} cursor-pointer rounded-lg text-white outline-none data-highlighted:bg-neutral-800`}
                   onClick={() => select(option)}>
-                  <Artwork src={option.party?.video.preview_image || option.show.preview_image} className={THUMBNAIL} />
+                  <AppHomeListingArtwork src={option.party?.video.preview_image || option.show.preview_image} className={THUMBNAIL} />
                   <span className="min-w-0"><b className="block text-sm">{highlight(option.show.title)}</b><small className="block truncate text-xs text-neutral-400">{option.party ? `${partyDetails(option.party)} · ${partyStatus(option.party)}` : showMeta(option.show, true)}</small></span>
                   <span className="ml-auto opacity-0 group-data-highlighted:opacity-100" aria-hidden="true">↵</span>
                 </Autocomplete.Item>}

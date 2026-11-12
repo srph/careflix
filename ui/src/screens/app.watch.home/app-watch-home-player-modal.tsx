@@ -1,4 +1,4 @@
-import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
+import { useInvitationOverlay } from '~/screens/app/app-invitation-modal/app-invitation-modal-context'
 import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { useState, useRef, useEffect } from 'react'

@@ -3,7 +3,7 @@ import { axios } from '~/lib/axios/axios'
 import { usePusher } from '~/hooks/use-pusher'
 import { usePresence } from '~/hooks/use-presence'
 import { useNow } from '~/hooks/use-now'
-import { usePartyContext } from '~/screens/app.watch/Context'
+import { usePartyContext } from '~/screens/app.watch/use-party-context'
 
 /** How long Joined, Declined or Expired shows before the row goes back to rest. */
 export const ANSWER_MS = 4000

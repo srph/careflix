@@ -11,18 +11,18 @@ import { QueryProvider } from '~/lib/query/query-provider'
 import { AxiosManager } from '~/lib/axios/axios-manager'
 import { PusherManager } from '~/lib/pusher/pusher-manager'
 import { WindowVhSetter } from '~/components/window-vh-setter/window-vh-setter'
-import App from '~/screens/app'
+import { AppPage } from '~/screens/app/app-page'
 import { AppHomePage } from '~/screens/app.home/app-home-page'
-import AppWatch from '~/screens/app.watch'
+import { AppWatchPage } from '~/screens/app.watch/app-watch-page'
 import { AppWatchHomePage } from '~/screens/app.watch.home/app-watch-home-page'
-import AppSettings from '~/screens/app.settings'
-import AppSettingsProfile from '~/screens/app.settings-profile'
-import AppSettingsFaq from '~/screens/app.settings-faq'
-import AppDownload from '~/screens/app.download'
-import Login from '~/screens/login'
-import Logout from '~/screens/logout'
-import AuthCallback from '~/screens/auth.callback'
-import Onboarding from '~/screens/onboarding'
+import { AppSettingsPage } from '~/screens/app.settings/app-settings-page'
+import { AppSettingsProfilePage } from '~/screens/app.settings-profile/app-settings-profile-page'
+import { AppSettingsFaqPage } from '~/screens/app.settings-faq/app-settings-faq-page'
+import { AppDownloadPage } from '~/screens/app.download/app-download-page'
+import { LoginPage } from '~/screens/login/login-page'
+import { LogoutPage } from '~/screens/logout/logout-page'
+import { AuthCallbackPage } from '~/screens/auth.callback/auth-callback-page'
+import { OnboardingPage } from '~/screens/onboarding/onboarding-page'
 
 function RootLayout() {
   return (
@@ -37,29 +37,29 @@ function RootLayout() {
 }
 
 function ApplicationLayout() {
-  return <QueryProvider><PusherManager><App><Outlet /></App></PusherManager></QueryProvider>
+  return <QueryProvider><PusherManager><AppPage><Outlet /></AppPage></PusherManager></QueryProvider>
 }
 
 const router = createBrowserRouter([{
   element: <RootLayout />,
   children: [
     { element: <GuestRoute />, children: [
-      { path: '/login', element: <Login /> },
+      { path: '/login', element: <LoginPage /> },
       { path: '/register', element: <Navigate to="/login" replace /> },
     ] },
-    { path: '/auth/callback', element: <AuthCallback /> },
-    { path: '/onboarding', element: <Onboarding /> },
+    { path: '/auth/callback', element: <AuthCallbackPage /> },
+    { path: '/onboarding', element: <OnboardingPage /> },
     { path: '/request-access', element: <Navigate to="/onboarding" replace /> },
-    { path: '/logout', element: <Logout /> },
+    { path: '/logout', element: <LogoutPage /> },
     { element: <ApplicationLayout />, children: [
       { path: '/', element: <AppHomePage /> },
-      { path: '/download', element: <AppDownload /> },
+      { path: '/download', element: <AppDownloadPage /> },
       { element: <PrivateRoute />, children: [
-        { path: '/settings', element: <AppSettings /> },
-        { path: '/settings/profile', element: <AppSettingsProfile /> },
+        { path: '/settings', element: <AppSettingsPage /> },
+        { path: '/settings/profile', element: <AppSettingsProfilePage /> },
         { path: '/settings/password', element: <Navigate to="/settings" replace /> },
-        { path: '/settings/faq', element: <AppSettingsFaq /> },
-        { path: '/watch/:partyId', element: <AppWatch><AppWatchHomePage /></AppWatch> },
+        { path: '/settings/faq', element: <AppSettingsFaqPage /> },
+        { path: '/watch/:partyId', element: <AppWatchPage><AppWatchHomePage /></AppWatchPage> },
       ] },
       // The previous router kept the app shell for unmatched URLs.
       { path: '*', element: null },

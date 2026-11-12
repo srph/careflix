@@ -11,7 +11,7 @@ const headings: Record<string, { title: string; backUrl: string }> = {
   '/settings/faq': { title: 'FAQ', backUrl: '/settings' },
 }
 
-function AppHeading() {
+export function AppHeading() {
   const auth = useAuth()
   const location = useLocation()
   if (location.pathname === '/' || location.pathname.includes('watch')) return null
@@ -24,5 +24,3 @@ function AppHeading() {
     </UiNavigation>
   )
 }
-
-export default AppHeading

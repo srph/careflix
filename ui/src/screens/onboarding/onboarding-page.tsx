@@ -4,9 +4,9 @@ import { useAuth } from '~/contexts/auth/auth'
 import { authError, returnToApp } from '~/lib/auth/discord'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { cn } from '~/utils/cn'
-import Splash, { DISCORD_BUTTON, Spinner } from '~/screens/login/Splash'
+import { LoginSplash, DISCORD_BUTTON, Spinner } from '~/screens/login/login-splash'
 
-export default function Onboarding() {
+export function OnboardingPage() {
   const auth = useAuth()
   const navigate = useNavigate()
   const [code, setCode] = useState('')
@@ -34,7 +34,7 @@ export default function Onboarding() {
     try { await auth.startDiscord() } catch { setError('Discord couldn’t open. Please try again.'); setBusy(false) }
   }
   const message = expired ? 'Your sign-in expired. Please continue with Discord again.' : error
-  return <Splash access state={busy ? 'checking' : error ? 'wrong' : 'idle'} identity={
+  return <LoginSplash access state={busy ? 'checking' : error ? 'wrong' : 'idle'} identity={
     <div className="mb-6.5 inline-flex min-h-8.5 max-w-full items-center gap-2 rounded-full bg-neutral-800 py-1 pr-3 pl-1 text-13 text-neutral-300 inset-ring inset-ring-neutral-700" data-reaction-shelf data-reaction-solid>
       <span aria-hidden="true" className="flex flex-none"><UiAvatar user={{ name: auth.onboarding.name, avatar: '' }} className="size-6.5 text-11" /></span>
       <span className="flex min-w-0 items-baseline gap-0.75 whitespace-nowrap">Signed in as <b title={auth.onboarding.name} className="truncate font-semibold text-white">{auth.onboarding.name}</b></span>
@@ -56,5 +56,5 @@ export default function Onboarding() {
           busy ? 'cursor-wait bg-pink-500 text-white' : 'cursor-pointer bg-pink-500 text-white not-disabled:hover:bg-pink-600 disabled:cursor-default disabled:bg-neutral-800 disabled:text-neutral-500'
         )}>{busy && <Spinner />}{busy ? 'Checking…' : 'Continue'}</button>}
     </form>
-  </Splash>
+  </LoginSplash>
 }

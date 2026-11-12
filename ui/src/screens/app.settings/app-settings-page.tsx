@@ -3,7 +3,7 @@ import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiContainer } from '~/components/ui-container/ui-container'
 import { Link } from 'react-router'
 
-import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
+import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 
 import { useAuth } from '~/contexts/auth/auth'
 import { useIsPWA } from '~/hooks/use-is-pwa'
@@ -32,7 +32,7 @@ function MenuItem({ icon, children }: { icon: string; children: React.ReactNode 
 /**
  * Use this to create a route instead of typing everything down
  */
-function AppSettings() {
+export function AppSettingsPage() {
   const auth = useAuth()
   const isPWA = useIsPWA()
 
@@ -96,5 +96,3 @@ function AppSettings() {
     </React.Fragment>
   )
 }
-
-export default AppSettings

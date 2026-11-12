@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useIsPWA } from '~/hooks/use-is-pwa'
 import { useNavigate } from 'react-router'
 
-import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
+import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 import { UiContainer } from '~/components/ui-container/ui-container'
 import { UiAccordion } from '~/components/ui-accordion/ui-accordion'
 
@@ -29,7 +29,7 @@ function Highlight({ children }: { children: React.ReactNode }) {
   return <span className="border-b border-dashed border-neutral-400">{children}</span>
 }
 
-function AppDownload() {
+export function AppDownloadPage() {
   const navigate = useNavigate()
   const isPWA = useIsPWA()
 
@@ -85,5 +85,3 @@ function AppDownload() {
     </React.Fragment>
   )
 }
-
-export default AppDownload

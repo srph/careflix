@@ -1,4 +1,4 @@
-import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
+import { useInvitationOverlay } from '~/screens/app/app-invitation-modal/app-invitation-modal-context'
 
 import * as React from 'react'
 import { cn } from '~/utils/cn'
@@ -17,7 +17,7 @@ import { showsReactions, useActivityLevel } from './app-watch-home-activity-leve
 
 import { useUpdateEffect } from '~/hooks/use-update-effect'
 import { useReducer, useEffect, useRef } from 'react'
-import { usePartyContext } from '~/screens/app.watch/Context'
+import { usePartyContext } from '~/screens/app.watch/use-party-context'
 import { useAuth } from '~/contexts/auth/auth'
 import { useBufferState } from '~/hooks/use-buffer-state'
 import { useMediaMode } from '~/hooks/use-media-mode'

@@ -1,4 +1,4 @@
-export default [
+export const appSettingsFaqQuestions = [
   {
     title: 'What is Care.tv?',
     content: [

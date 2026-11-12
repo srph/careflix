@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuth } from '~/contexts/auth/auth'
 import { authError, returnToApp } from '~/lib/auth/discord'
-import Splash from '~/screens/login/Splash'
+import { LoginSplash } from '~/screens/login/login-splash'
 
 const ERRORS: Record<string, string> = {
   cancelled: 'Discord didn’t connect. No harm done.',
@@ -12,7 +12,7 @@ const ERRORS: Record<string, string> = {
   connection_failed: 'Discord couldn’t connect. Please try again.',
 }
 
-export default function AuthCallback() {
+export function AuthCallbackPage() {
   const auth = useAuth()
   const navigate = useNavigate()
   const [parameters] = useState(() => new URLSearchParams(window.location.search))
@@ -46,5 +46,5 @@ export default function AuthCallback() {
     setError(''); setState('connecting')
     try { await auth.startDiscord() } catch { setState('cancelled'); setError(ERRORS.connection_failed) }
   }
-  return <Splash state={state} error={error} name={name} onDiscord={retry} />
+  return <LoginSplash state={state} error={error} name={name} onDiscord={retry} />
 }

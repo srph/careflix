@@ -1,10 +1,10 @@
 import * as React from 'react'
-import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
+import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 import { UiContainer } from '~/components/ui-container/ui-container'
 import { UiAccordion } from '~/components/ui-accordion/ui-accordion'
 
 import asset_faqImage from '~/assets/faq-img.svg'
-import faqs from './faq'
+import { appSettingsFaqQuestions as faqs } from './app-settings-faq-questions'
 
 // What is this?
 // For whom is this?
@@ -14,7 +14,7 @@ import faqs from './faq'
 // Can you see our messages?
 // How do I request movies?
 // How do I report bugs?
-function AppSettingsFaq() {
+export function AppSettingsFaqPage() {
   return (
     <React.Fragment>
       <AppHeadingSettings title="FAQ" backUrl="/settings" />
@@ -50,5 +50,3 @@ function AppSettingsFaq() {
     </React.Fragment>
   )
 }
-
-export default AppSettingsFaq

@@ -19,7 +19,7 @@ Legacy date-fns `1.30.1` is retained under the `date-fns-v1` npm alias to preser
 No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.g.:
 
 - `contexts/auth/auth.tsx` — auth/session state
-- `screens/app.watch/Context` — the active watch party (see `usePartyContext`)
+- `screens/app.watch/app-watch-context.ts` — the active watch party (see `usePartyContext`)
 - `screens/app.watch.home/app-watch-home-page.tsx` — local player state (time, playing, volume, subtitles) via a single `useReducer`
 
 Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers.

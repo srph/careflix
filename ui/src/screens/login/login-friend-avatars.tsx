@@ -14,7 +14,7 @@ const faces = [
  * Three overlapping faces set inline in the login subtitle, sized in em so they follow its text.
  * Hovering spreads them apart: the overlap is one variable that the row's width and each face's margin read.
  */
-export default function FriendAvatars() {
+export function LoginFriendAvatars() {
   return <span aria-hidden="true" className="relative -mt-[.2em] mr-[.32em] ml-[.12em] inline-flex w-[calc(4.65em-2*var(--overlap))] animate-friends-open align-middle transition-[width] duration-280 ease-out-soft [--overlap:.42em] hover:[--overlap:.16em] motion-reduce:animate-none motion-reduce:transition-none">
     {faces.map(face => <span key={face.src} style={{ animationDelay: face.delay }} 
       className="relative block size-[1.55em] flex-none origin-bottom animate-friend-drop transition-[margin] duration-280 ease-out-soft not-first:ml-[calc(-1*var(--overlap))] motion-reduce:animate-none motion-reduce:transition-none">

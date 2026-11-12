@@ -13,7 +13,7 @@ const RAIN_DELAY_SECONDS = 2.2
 // Tailwind's md breakpoint, where the splash switches from its phone layout.
 const DESKTOP = 768
 
-export default function ReactionCanvas({ stage, state, resting = false }: { stage: RefObject<HTMLElement | null>; state: string; resting?: boolean }) {
+export function LoginReactionCanvas({ stage, state, resting = false }: { stage: RefObject<HTMLElement | null>; state: string; resting?: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null)
   const currentState = useRef(state)
   const kick = useRef<() => void>(() => {})

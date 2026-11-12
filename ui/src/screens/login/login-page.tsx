@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router'
 import { useAuth } from '~/contexts/auth/auth'
-import Splash from './Splash'
+import { LoginSplash } from './login-splash'
 
-export default function Login() {
+export function LoginPage() {
   const auth = useAuth()
   const location = useLocation()
   const [state, setState] = useState('idle')
@@ -18,5 +18,5 @@ export default function Login() {
       setState('cancelled')
     }
   }
-  return <Splash state={state} error={error} onDiscord={connect} />
+  return <LoginSplash state={state} error={error} onDiscord={connect} />
 }

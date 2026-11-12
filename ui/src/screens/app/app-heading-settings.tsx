@@ -5,6 +5,6 @@ interface Props {
   backUrl: string
 }
 
-export default function AppHeadingSettings({ title }: Props) {
+export function AppHeadingSettings({ title }: Props) {
   return <PageTitle title={title} />
 }

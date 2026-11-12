@@ -1,9 +1,18 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["unicorn", "typescript", "oxc", "import"],
+  "rules": {
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    "import/no-default-export": "error"
+  },
   "overrides": [
     {
       "files": ["src/types.ts"],
       "rules": { "no-unused-vars": "off" }
+    },
+    {
+      "files": ["*.config.ts", "*.d.ts"],
+      "rules": { "import/no-default-export": "off" }
     }
   ]
 }

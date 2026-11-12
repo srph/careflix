@@ -1,8 +1,8 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import InvitationModal from './index'
-import { InvitationOverlayProvider } from './Context'
-import { sendDecline } from './sendDecline'
+import { AppInvitationModal } from './app-invitation-modal'
+import { InvitationOverlayProvider } from './app-invitation-modal-context'
+import { sendDecline } from './app-invitation-modal-send-decline'
 
 const auth = vi.hoisted(() => ({
   invitations: [] as AppPartyInvitation[],
@@ -31,7 +31,7 @@ vi.mock('~/contexts/auth/auth', async () => {
     }),
   }
 })
-vi.mock('./sendDecline', () => ({ sendDecline: vi.fn(() => new Promise(() => {})) }))
+vi.mock('./app-invitation-modal-send-decline', () => ({ sendDecline: vi.fn(() => new Promise(() => {})) }))
 vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
 vi.mock('~/hooks/use-pusher', () => ({ usePusher: () => {} }))
 vi.mock('~/screens/app.home/app-home-queries', () => ({ useShowGroupsQuery: () => ({ data: undefined }) }))
@@ -44,7 +44,7 @@ const invite = (id: number, name: string) => ({
 }) as unknown as AppPartyInvitation
 
 function open() {
-  render(<InvitationOverlayProvider><InvitationModal /></InvitationOverlayProvider>)
+  render(<InvitationOverlayProvider><AppInvitationModal /></InvitationOverlayProvider>)
   fireEvent.click(screen.getByRole('button', { name: 'Respond' }))
 }
 

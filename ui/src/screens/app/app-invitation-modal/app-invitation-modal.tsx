@@ -1,6 +1,6 @@
 import { Dialog } from '@base-ui/react/dialog'
 import { BorderBeam } from 'border-beam'
-import { CANDY_LINE_STROKE_ONLY } from './beamFix'
+import { CANDY_LINE_STROKE_ONLY } from './app-invitation-modal-beam-fix'
 import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
@@ -16,9 +16,9 @@ import { getVideoDetails } from '~/utils/shows/get-video-details'
 import { clockTime, showMeta } from '~/screens/app.home/app-home-listing/app-home-listing-format'
 import { useShowGroupsQuery } from '~/screens/app.home/app-home-queries'
 import assetInvitation from '~/assets/audio/invitation.ogg'
-import { useInvitationOverlay } from './Context'
-import { initialState, invitationStatus, reducer } from './state'
-import { sendDecline } from './sendDecline'
+import { useInvitationOverlay } from './app-invitation-modal-context'
+import { initialState, invitationStatus, reducer } from './app-invitation-modal-state'
+import { sendDecline } from './app-invitation-modal-send-decline'
 
 const COLLAPSED_HEIGHT = 40
 const DECLINE_COOLDOWN = 500
@@ -41,7 +41,7 @@ const BAR = 'absolute inset-x-0 top-2 h-1'
 const TROUGH = 'overflow-hidden rounded-xs bg-neutral-700'
 const FILL = 'block h-full rounded-xs bg-pink-500'
 
-export default function InvitationModal() {
+export function AppInvitationModal() {
   const auth = useAuth()
   const navigate = useNavigate()
   const location = useLocation()

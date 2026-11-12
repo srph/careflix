@@ -1,5 +1,5 @@
 import * as React from 'react'
-import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
+import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 import { UiButton } from '~/components/ui-button/ui-button'
 
 import { useReducer, useMemo } from 'react'
@@ -10,8 +10,8 @@ import { useParams } from 'react-router'
 import { axios } from '~/lib/axios/axios'
 import immer from 'immer'
 
-import { Context } from './Context'
-import { State, ContextType, Action } from './types'
+import { AppWatchContext } from './app-watch-context'
+import { State, ContextType, Action } from './app-watch-types'
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -108,7 +108,7 @@ const reducer = (state: State, action: Action): State => {
 /**
  * Use this to create a route instead of typing everything down
  */
-function AppWatch(props: ReactComponentWrapper) {
+export function AppWatchPage(props: ReactComponentWrapper) {
   const params = useParams<'partyId'>()
   // Switching rooms must reset the player, chat, and all room subscriptions together.
   return <WatchRoom key={params.partyId} partyId={params.partyId}>{props.children}</WatchRoom>
@@ -241,9 +241,7 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
     <React.Fragment>
       <AppHeadingSettings title="Watch" backUrl="/" />
 
-      <Context.Provider value={context}>{props.children}</Context.Provider>
+      <AppWatchContext.Provider value={context}>{props.children}</AppWatchContext.Provider>
     </React.Fragment>
   )
 }
-
-export default AppWatch

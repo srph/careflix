@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { axios } from '~/lib/axios/axios'
-import { sendDecline } from './sendDecline'
+import { sendDecline } from './app-invitation-modal-send-decline'
 
 vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
 

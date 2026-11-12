@@ -1,14 +1,14 @@
 
 import * as React from 'react'
-import InvitationModal from './InvitationModal'
-import { InvitationOverlayProvider } from './InvitationModal/Context'
-import AppHeading from './AppHeading'
+import { AppInvitationModal } from './app-invitation-modal/app-invitation-modal'
+import { InvitationOverlayProvider } from './app-invitation-modal/app-invitation-modal-context'
+import { AppHeading } from './app-heading'
 
 import { useCallback } from 'react'
 import { usePusher } from '~/hooks/use-pusher'
 import { useAuth } from '~/contexts/auth/auth'
 
-function App(props: ReactComponentWrapper) {
+export function AppPage(props: ReactComponentWrapper) {
   const auth = useAuth()
 
   const noop = useCallback(() => {}, [])
@@ -21,7 +21,7 @@ function App(props: ReactComponentWrapper) {
       {auth.isAuthenticated && (
         <React.Fragment>
           <AppHeading />
-          <InvitationModal key={auth.data.id} />
+          <AppInvitationModal key={auth.data.id} />
         </React.Fragment>
       )}
       
@@ -29,5 +29,3 @@ function App(props: ReactComponentWrapper) {
     </InvitationOverlayProvider>
   )
 }
-
-export default App

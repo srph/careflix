@@ -48,6 +48,8 @@ async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolea
       { id: 2, title: 'Season 2', videos: [{ id: 801, title: 'A new beginning', duration: 2700 }] },
     ]
     if (/\/api\/parties\/\d+$/.test(path)) body = parties[0]
+    // Entering a room loads its chat history and pending invites.
+    if (/\/api\/parties\/\d+\/(logs|invitations)$/.test(path)) body = []
     await route.fulfill({ json: body })
   })
 }

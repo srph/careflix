@@ -13,10 +13,11 @@ export default function ListingNavigation({ tab, onTabChange, onShowSelect }: {
   tab: ListingTab; onTabChange: (tab: ListingTab) => void; onShowSelect: (show: AppShow) => void
 }) {
   const auth = useAuth()
-  return <nav className="listing-navigation" aria-label="Catalog">
-    <Link to="/" className="listing-logo" aria-label="Care.tv" onClick={() => onTabChange('all')}><UiLogo /></Link>
-    <div className="listing-tabs" role="tablist" aria-label="Browse">
+  return <nav aria-label="Catalog" className="sticky top-0 z-30 flex min-h-19 flex-wrap items-center gap-2.5 bg-neutral-950/95 px-3 pt-3.5 pb-2.5 min-[361px]:gap-3.5 min-[361px]:px-5 sm:gap-x-6 sm:gap-y-3 sm:px-6 sm:pt-4 lg:flex-nowrap lg:gap-6 lg:px-10 lg:py-3 xl:gap-9">
+    <Link to="/" className="flex-none text-inherit no-underline" aria-label="Care.tv" onClick={() => onTabChange('all')}><UiLogo className="font-bold text-white first-letter:text-pink-500 min-[361px]:text-lg sm:text-xl" /></Link>
+    <div role="tablist" aria-label="Browse" className="sliding-tabs order-4 flex w-full items-center justify-between gap-3 sm:justify-start sm:gap-7 lg:order-none lg:w-auto lg:gap-5 xl:gap-6.5">
       {tabs.map(([value, label], index) => <UiPlainButton key={value} id={`listing-tab-${value}`} role="tab"
+        className="relative rounded-sm py-2.5 text-sm font-bold text-neutral-400 aria-selected:text-white sm:text-base"
         aria-controls="listing-panel" aria-selected={tab === value} tabIndex={tab === value ? 0 : -1}
         onClick={() => onTabChange(value)} onKeyDown={event => {
           let next = index
@@ -32,6 +33,6 @@ export default function ListingNavigation({ tab, onTabChange, onShowSelect }: {
     </div>
     <JoinPartyModal />
     <ListingSearch onShowSelect={onShowSelect} />
-    <Link to="/settings" className="listing-account" aria-label="Account settings"><UiAvatar user={auth.data} /></Link>
+    <Link to="/settings" className="flex flex-none items-center text-inherit no-underline sm:-ml-2 xl:-ml-5" aria-label="Account settings"><UiAvatar user={auth.data} className="size-7.5 sm:size-8.5" /></Link>
   </nav>
 }

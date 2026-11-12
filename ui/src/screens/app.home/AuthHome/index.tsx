@@ -1,4 +1,3 @@
-import './style.css'
 import { useMemo, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import InfiniteScroll from '~/components/InfiniteScroll'
@@ -10,6 +9,7 @@ import ListingNavigation from '../Listing/ListingNavigation'
 import PartySection from '../Listing/PartySection'
 import ShowCard from '../Listing/ShowCard'
 import { FeaturedPlaceholder, LoadMoreError, PartiesPlaceholder, ShowSkeletonCards, TitlesPlaceholder } from '../Listing/ListingStates'
+import { SECTION_HEADING, SECTION_TITLE, SHOW_GRID } from '../Listing/classes'
 
 export default function AuthHome() {
   const [tab, setTab] = useState<ListingTab>('all')
@@ -34,19 +34,21 @@ export default function AuthHome() {
     else setSelectedShow(show)
   }
 
-  return <div className="listing-home">
+  // Reduced motion stops everything on this screen, whatever the component.
+  return <div className="min-h-screen overflow-x-clip bg-neutral-950 text-sm text-white antialiased motion-reduce:**:animate-none! motion-reduce:**:[transition:none]!">
     <PageTitle title="Watch together" />
-    <div className="listing-shell">
+    <div className="mx-auto max-w-400">
       <ListingNavigation tab={tab} onTabChange={setTab} onShowSelect={setSelectedShow} />
-      <main id="listing-panel" role="tabpanel" aria-labelledby={`listing-tab-${tab}`} tabIndex={0}>
+      <main id="listing-panel" role="tabpanel" aria-labelledby={`listing-tab-${tab}`} tabIndex={0} className="focus:outline-none">
         {tab !== 'parties' && (!query.data ? <FeaturedPlaceholder error={initialError} onRetry={() => { void query.refetch() }} />
           : <FeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />)}
-        <div className="listing-body">
-          {createParty.isError && <div className="listing-status" role="alert">Unable to start the party. Please try again. <button type="button" onClick={() => createParty.reset()}>Dismiss</button></div>}
+        <div className="px-5 pt-7 pb-15 sm:px-6 sm:pt-7.5 lg:px-10 lg:pt-9 lg:pb-20">
+          {createParty.isError && <div role="alert" className="mb-8 rounded-xl border border-neutral-800 bg-neutral-900 p-6 text-neutral-300 sm:mb-11">Unable to start the party. Please try again. <button type="button" className="cursor-pointer rounded-md border border-neutral-600 bg-transparent px-3 py-1.5 leading-[inherit] text-white" onClick={() => createParty.reset()}>Dismiss</button></div>}
           {tab === 'all' && <AnimatePresence initial={false}>
-            {showRecentParties && <motion.div key="recent-parties" className="listing-recent-parties" data-testid="recent-parties" initial={false}
-              exit={{ height: 0, opacity: 0, marginTop: 0, overflow: 'hidden' }} transition={{ duration: reduceMotion ? 0 : .45 }}>
-              <div className="listing-recent-parties-content">
+            {showRecentParties && <motion.div key="recent-parties" data-testid="recent-parties" initial={false}
+              exit={{ height: 0, opacity: 0, overflow: 'hidden' }} transition={{ duration: reduceMotion ? 0 : .45 }}>
+              {/* The gap under the section is padding, so it closes along with the section when the last party goes. */}
+              <div className="pb-8 sm:pb-11">
                 {!partiesQuery.data ? <PartiesPlaceholder recent error={partiesError} onRetry={() => { void partiesQuery.refetch() }} />
                   : <PartySection parties={parties} recent total={partiesQuery.data.pages[0].total} onSeeAll={partiesQuery.data.pages[0].total >= 5 ? () => { setTab('parties'); window.scrollTo({ top: 0 }) } : undefined} />}
               </div>
@@ -57,14 +59,14 @@ export default function AuthHome() {
               onLoadMore={async () => { const result = await query.fetchNextPage(); if (result.isError) throw result.error }}
               renderError={retry => <LoadMoreError parties={tab === 'parties'} onRetry={retry} />}>
               {tab === 'parties' ? <PartySection parties={parties} isLoadingMore={partiesQuery.isFetchingNextPage} />
-                : <section className="listing-section" aria-label={title}>
-                  <div className="listing-section-heading"><h2>{title}</h2>{tab !== 'all' && <span data-testid="section-count">{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
-                  <div className="listing-show-grid">
+                : <section aria-label={title}>
+                  <div className={SECTION_HEADING}><h2 className={SECTION_TITLE}>{title}</h2>{tab !== 'all' && <span data-testid="section-count" className="font-label text-xs font-semibold text-neutral-400">{showsQuery.data?.pages[0].total ?? shows.length}</span>}</div>
+                  <div className={SHOW_GRID}>
                     {shows.map(show => <ShowCard key={show.id} show={show} onDetails={setSelectedShow} />)}
                     {showsQuery.isFetchingNextPage && <ShowSkeletonCards />}
                   </div>
-                  {showsQuery.isFetchingNextPage && <span className="listing-loading-label" role="status">Loading more titles…</span>}
-                  {!showsQuery.isPending && !shows.length && <p className="listing-empty">No {tab === 'all' ? 'titles' : tab === 'movie' ? 'movies' : 'series'} available yet.</p>}
+                  {showsQuery.isFetchingNextPage && <span className="sr-only" role="status">Loading more titles…</span>}
+                  {!showsQuery.isPending && !shows.length && <p className="py-9 text-base text-neutral-400">No {tab === 'all' ? 'titles' : tab === 'movie' ? 'movies' : 'series'} available yet.</p>}
                 </section>}
             </InfiniteScroll>}
         </div>

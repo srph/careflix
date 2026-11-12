@@ -1,8 +1,6 @@
-import './style.css'
 import * as React from 'react'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import UiContainer from '~/components/UiContainer'
-import UiSpacer from '~/components/UiSpacer'
 import UiAccordion from '~/components/UiAccordion'
 
 import asset_faqImage from '~/assets/faq-img.svg'
@@ -22,9 +20,9 @@ function AppSettingsFaq(props: ReactComponentWrapper) {
       <AppHeadingSettings title="FAQ" backUrl="/settings" />
 
       <UiContainer size="sm">
-        <div className="app-settings-faq-heading">
-          <img src={asset_faqImage} />
-          <p className="text">Frequently Asked Questions.</p>
+        <div className="mb-6 pt-6 text-center">
+          <img src={asset_faqImage} className="mb-6 inline max-w-40" />
+          <p className="text-2xl">Frequently Asked Questions.</p>
         </div>
 
         <UiAccordion>
@@ -32,7 +30,7 @@ function AppSettingsFaq(props: ReactComponentWrapper) {
             <UiAccordion.Section icon={<i className="fa fa-android" />} title={faq.title} key={i}>
               {faq.content.map((p, j) => (
                 <p
-                  className="app-settings-faq-text"
+                  className="text-sm not-last:mb-4 [&_a]:border-b [&_a]:border-dashed [&_a]:border-neutral-400 [&_a]:text-inherit [&_a]:no-underline"
                   key={j}
                   dangerouslySetInnerHTML={{
                     __html: p
@@ -48,7 +46,7 @@ function AppSettingsFaq(props: ReactComponentWrapper) {
         </UiAccordion>
       </UiContainer>
 
-      <UiSpacer size={10} />
+      <div className="h-20" />
     </React.Fragment>
   )
 }

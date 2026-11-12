@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
 import UiNavigation from '~/components/UiNavigation'

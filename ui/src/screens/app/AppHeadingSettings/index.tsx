@@ -1,4 +1,3 @@
-import './style.css'
 import PageTitle from '~/components/PageTitle'
 
 interface Props {

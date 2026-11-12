@@ -1,4 +1,3 @@
-import './style.css'
 
 import * as React from 'react'
 import InvitationModal from './InvitationModal'

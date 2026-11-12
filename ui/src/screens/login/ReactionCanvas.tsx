@@ -1,5 +1,6 @@
 import { useEffect, useRef, type RefObject } from 'react'
 import { useReducedMotion } from 'motion/react'
+import { cn } from '~/utils/cn'
 
 interface Reaction {
   x: number; y: number; vx: number; vy: number; radius: number
@@ -9,6 +10,8 @@ interface Collider { x: number; y: number; width: number; height: number; radius
 const EMOJI = ['🍿', '😂', '😭', '❤️', '😱', '🔥', '👀', '🥹', '💀', '✨']
 // The final friend avatar settles at 1.88s; leave a short pause before the rain.
 const RAIN_DELAY_SECONDS = 2.2
+// Tailwind's md breakpoint, where the splash switches from its phone layout.
+const DESKTOP = 768
 
 export default function ReactionCanvas({ stage, state, resting = false }: { stage: RefObject<HTMLElement | null>; state: string; resting?: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null)
@@ -43,7 +46,7 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
       const bounds = root.getBoundingClientRect()
       const resized = width !== bounds.width || height !== bounds.height
       width = bounds.width; height = bounds.height; ratio = Math.min(window.devicePixelRatio || 1, 2)
-      const form = resting && width < 720 ? root.querySelector('form')?.getBoundingClientRect() : null
+      const form = resting && width < DESKTOP ? root.querySelector('form')?.getBoundingClientRect() : null
       // On mobile the pile rests above the form, leaving the controls clear.
       floor = form ? form.top - bounds.top : height
       const pixelWidth = Math.round(width * ratio), pixelHeight = Math.round(height * ratio)
@@ -79,7 +82,7 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
     const step = () => {
       tick++
       if (!resting && tick >= rainStartTick && (tick - rainStartTick) % 18 === 0 && reactions.length < 30 && currentState.current !== 'welcome') {
-        const radius = width >= 720 ? 20 + Math.random() * 8 : 15 + Math.random() * 6
+        const radius = width >= DESKTOP ? 20 + Math.random() * 8 : 15 + Math.random() * 6
         // Send 40% to each outer quarter and 20% to the middle half.
         const lane = Math.random(), laneStart = lane < .4 ? 0 : lane < .8 ? .75 : .25
         const laneWidth = lane < .8 ? .25 : .5
@@ -138,9 +141,9 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
     }
     const seed = () => {
       reactions.length = 0
-      const desktop = width >= 720, spacing = desktop ? 50 : 36
+      const desktop = width >= DESKTOP, spacing = desktop ? 50 : 36
       const columns = Math.max(1, Math.floor((width - 20) / spacing))
-      const subtitle = root.querySelector('.login-subtitle')?.getBoundingClientRect()
+      const subtitle = root.querySelector('[data-reaction-layout]')?.getBoundingClientRect()
       const top = subtitle ? subtitle.bottom - root.getBoundingClientRect().top + 24 : 0
       for (let i = 0; i < (desktop ? 64 : 34); i++) {
         const radius = (desktop ? 20 : 15) + Math.random() * (desktop ? 8 : 6)
@@ -206,5 +209,6 @@ export default function ReactionCanvas({ stage, state, resting = false }: { stag
       refresh.current = () => {}
     }
   }, [stage, reducedMotion, resting])
-  return <canvas ref={canvas} className="login-reactions" data-testid="login-reactions" aria-hidden="true" />
+  return <canvas ref={canvas} data-testid="login-reactions" aria-hidden="true"
+    className={cn('pointer-events-none absolute inset-0 size-full motion-reduce:hidden', resting ? 'z-1' : 'z-3')} />
 }

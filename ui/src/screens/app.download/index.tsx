@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import { useEffect } from 'react'
 import { useIsPWA } from '~/hooks/useIsPWA'
@@ -7,7 +6,6 @@ import { useNavigate } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import UiContainer from '~/components/UiContainer'
-import UiSpacer from '~/components/UiSpacer'
 import UiAccordion from '~/components/UiAccordion'
 
 import asset_downloadImage from '~/assets/download-img.svg'
@@ -15,6 +13,22 @@ import asset_downloadStep1 from '~/assets/download-step-1.png'
 import asset_downloadStep2 from '~/assets/download-step-2.png'
 import asset_downloadStep3 from '~/assets/download-step-3.png'
 import asset_downloadStep4 from '~/assets/download-step-4.png'
+
+function Step({ label, image, children }: { label: string; image: string; children: React.ReactNode }) {
+  return (
+    <div className="not-last:mb-6">
+      <div className="mb-2">
+        <h5 className="font-label text-xs font-bold tracking-label uppercase">{label}</h5>
+      </div>
+      <img src={image} className="mb-2 block w-full rounded-sm border border-neutral-400" />
+      <p className="text-sm">{children}</p>
+    </div>
+  )
+}
+
+function Highlight({ children }: { children: React.ReactNode }) {
+  return <span className="border-b border-dashed border-neutral-400">{children}</span>
+}
 
 function AppDownload(props: ReactComponentWrapper) {
   const navigate = useNavigate()
@@ -31,52 +45,36 @@ function AppDownload(props: ReactComponentWrapper) {
       <AppHeadingSettings title="Download The App" backUrl="/" />
 
       <UiContainer size="sm">
-        <div className="app-download-heading">
-          <img src={asset_downloadImage} />
-          <p className="text">Enjoy a more immersive experience. Now on Android.</p>
+        <div className="mb-6 pt-6 text-center">
+          <img src={asset_downloadImage} className="mb-6 inline max-w-40" />
+          <p className="text-2xl">Enjoy a more immersive experience. Now on Android.</p>
         </div>
 
         <UiAccordion>
           <UiAccordion.Section icon={<i className="fa fa-android" />} title="Download on Android">
-            <div className="app-download-step">
-              <div className="count">
-                <h5 className="ui-subheading">Step 1</h5>
-              </div>
-              <img src={asset_downloadStep1} className="thumb" />
-              <p className="text">On the right portion of the url bar, press the triple dots icon.</p>
-            </div>
+            <Step label="Step 1" image={asset_downloadStep1}>
+              On the right portion of the url bar, press the triple dots icon.
+            </Step>
 
-            <div className="app-download-step">
-              <div className="count">
-                <h5 className="ui-subheading">Step 2</h5>
-              </div>
-              <img src={asset_downloadStep2} className="thumb" />
-              <p className="text">Scroll down until you find the <span className="highlight">Add To Home Screen</span> menu.</p>
-            </div>
+            <Step label="Step 2" image={asset_downloadStep2}>
+              Scroll down until you find the <Highlight>Add To Home Screen</Highlight> menu.
+            </Step>
 
-            <div className="app-download-step">
-              <div className="count">
-                <h5 className="ui-subheading">Step 3</h5>
-              </div>
-              <img src={asset_downloadStep3} className="thumb" />
-              <p className="text">A popup will appear to download the app. Simply press <span className="highlight">OK</span>.</p>
-            </div>
+            <Step label="Step 3" image={asset_downloadStep3}>
+              A popup will appear to download the app. Simply press <Highlight>OK</Highlight>.
+            </Step>
 
-            <div className="app-download-step">
-              <div className="count">
-                <h5 className="ui-subheading">Step 3</h5>
-              </div>
-              <img src={asset_downloadStep4} className="thumb" />
-              <p className="text">On your home screen, you should find <span className="highlight">Care.tv</span>.</p>
-            </div>
+            <Step label="Step 3" image={asset_downloadStep4}>
+              On your home screen, you should find <Highlight>Care.tv</Highlight>.
+            </Step>
           </UiAccordion.Section>
 
           <UiAccordion.Section icon={<i className="fa fa-apple" />} title="Download on Apple">
-            <div className="app-download-apple-note">
-              <div className="soon">
-                <h5 className="ui-subheading">Coming soon!</h5>
+            <div>
+              <div className="mb-1 text-neutral-400">
+                <h5 className="font-label text-xs font-bold tracking-label uppercase">Coming soon!</h5>
               </div>
-              <div className="text">
+              <div className="text-sm">
                 Ironically, I use an Apple device, but I haven't made it work yet. Coming really, really soon.
               </div>
             </div>
@@ -84,7 +82,7 @@ function AppDownload(props: ReactComponentWrapper) {
         </UiAccordion>
       </UiContainer>
 
-      <UiSpacer size={5} />
+      <div className="h-10" />
     </React.Fragment>
   )
 }

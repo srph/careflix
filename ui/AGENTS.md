@@ -31,6 +31,13 @@ screens retain their existing fetching patterns. `SeasonSelection` accepts optio
 externally fetched groups so the listing's details modal can use Query without
 changing the watch room's data flow.
 
+Query conventions:
+
+- **Wrap every query and mutation in a hook** (`usePartyCodeQuery`) that just returns `useQuery`/`useMutation`.
+- **Keys live in `src/query-keys.ts`.** Keys shared across pages start with `global-`; a page's own start with the page's name (`home-`, `watch-party-`). Keys leave out the account, since the provider swaps the cache per account.
+- **Hooks sit with their screen** (in a `queries/` folder once the screen has several), and move to `src/queries/<domain>-queries.ts` once a second page uses them.
+- **Read `status` and `data` together**, and use `fetchStatus` when a background fetch matters.
+
 ## File structure
 
 ```

@@ -1,8 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { get } from '~/lib/query/get'
-
-export const inviteRecentsKey = (partyId: AppId) => ['invite', String(partyId), 'recents'] as const
-export const inviteSearchKey = (partyId: AppId, term: string) => ['invite', String(partyId), 'search', term] as const
+import { queryKeys } from '~/query-keys'
 
 async function people(partyId: AppId, term: string, signal?: AbortSignal) {
   const users = await get<AppUser[]>(
@@ -17,7 +15,7 @@ async function people(partyId: AppId, term: string, signal?: AbortSignal) {
 /** People the viewer has watched with before, most recent first; the room's members are left out. */
 export function useInviteRecentsQuery(partyId: AppId) {
   return useQuery({
-    queryKey: inviteRecentsKey(partyId),
+    queryKey: queryKeys.watchParty.inviteRecents(partyId),
     queryFn: ({ signal }) => people(partyId, '', signal)
   })
 }
@@ -25,7 +23,7 @@ export function useInviteRecentsQuery(partyId: AppId) {
 /** Everyone but the viewer whose name or email matches, room members included. Off without a term. */
 export function useInviteSearchQuery(partyId: AppId, term: string) {
   return useQuery({
-    queryKey: inviteSearchKey(partyId, term),
+    queryKey: queryKeys.watchParty.inviteSearch(partyId, term),
     queryFn: ({ signal }) => people(partyId, term, signal),
     enabled: Boolean(term)
   })

@@ -12,11 +12,8 @@ import { cn } from '~/utils/cn'
 import { AppWatchHomePartyCode } from '../app-watch-home-party-code'
 import { HostInvitations, minutesLeft } from './use-host-invitations'
 import { InviteRow, inviteRow } from './app-watch-home-chat-invitation-panel-invite-row'
-import {
-  inviteSearchKey,
-  useInviteRecentsQuery,
-  useInviteSearchQuery
-} from './app-watch-home-chat-invitation-panel-queries'
+import { useInviteRecentsQuery, useInviteSearchQuery } from './app-watch-home-chat-invitation-panel-queries'
+import { queryKeys } from '~/query-keys'
 import { searchView } from './app-watch-home-chat-invitation-panel-search-view'
 import { AppWatchHomeChatInvitationPanelRollingText } from './app-watch-home-chat-invitation-panel-rolling-text'
 import { CONTENT_FADE, PANEL_FADE } from './app-watch-home-chat-invitation-panel-motion'
@@ -83,7 +80,11 @@ export function AppWatchHomeChatInvitationPanel({
   }, [trimmed])
   // An emptied field goes back to the groups at once, and a term that's already cached answers at once,
   // instead of waiting out the debounce.
-  const term = !trimmed ? '' : client.getQueryData(inviteSearchKey(party.id, trimmed)) ? trimmed : debounced
+  const term = !trimmed
+    ? ''
+    : client.getQueryData(queryKeys.watchParty.inviteSearch(party.id, trimmed))
+      ? trimmed
+      : debounced
   const recents = useInviteRecentsQuery(party.id)
   const search = useInviteSearchQuery(party.id, term)
   const view = term ? searchView(search) : null

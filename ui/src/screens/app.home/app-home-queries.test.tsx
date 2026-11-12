@@ -5,6 +5,7 @@ import { createQueryClient } from '~/lib/query/client'
 import { QueryProvider } from '~/lib/query/query-provider'
 import { useCreatePartyMutation, useListingSearchQuery, useShowsQuery } from './app-home-queries'
 import { axios } from '~/lib/axios/axios'
+import { queryKeys } from '~/query-keys'
 
 const session = vi.hoisted(() => ({ user: { id: 1 }, navigate: vi.fn() }))
 vi.mock('~/contexts/auth/auth', () => ({ useAuth: () => ({ data: session.user, isAuthenticated: true }) }))
@@ -97,15 +98,15 @@ describe('listing queries', () => {
   it('invalidates history and search after creating a party, then enters its room', async () => {
     vi.mocked(axios.post).mockResolvedValue([null, { data: { id: 42 } }] as any)
     const { client, wrapper } = setup()
-    client.setQueryData(['listing', 1, 'parties'], page)
-    client.setQueryData(['listing', 1, 'search', 'moon'], {})
+    client.setQueryData(queryKeys.home.parties(), page)
+    client.setQueryData(queryKeys.home.search('moon'), {})
     const hook = renderHook(() => useCreatePartyMutation(), { wrapper })
     await act(async () => {
       await hook.result.current.mutateAsync({ id: 10 } as AppShowVideo)
     })
     expect(axios.post).toHaveBeenCalledWith('/api/parties', { show_video_id: 10 })
-    expect(client.getQueryState(['listing', 1, 'parties'])!.isInvalidated).toBe(true)
-    expect(client.getQueryState(['listing', 1, 'search', 'moon'])!.isInvalidated).toBe(true)
+    expect(client.getQueryState(queryKeys.home.parties())!.isInvalidated).toBe(true)
+    expect(client.getQueryState(queryKeys.home.search('moon'))!.isInvalidated).toBe(true)
     expect(session.navigate).toHaveBeenCalledWith('/watch/42')
   })
 

@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router'
 import { axios } from '~/lib/axios/axios'
 import { get } from '~/lib/query/get'
 import { useAuth } from '~/contexts/auth/auth'
+import { queryKeys } from '~/query-keys'
 
 export type ListingTab = 'all' | 'movie' | 'series' | 'parties'
 
 const nextPage = (page: AppCollection) => (page.current_page < page.last_page ? page.current_page + 1 : undefined)
 
 export function useShowsQuery(titleType?: 'movie' | 'series', enabled = true) {
-  const { data: user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
   return useInfiniteQuery({
-    queryKey: ['listing', user?.id, 'shows', titleType ?? 'all'],
+    queryKey: queryKeys.home.shows(titleType ?? 'all'),
     queryFn: ({ pageParam, signal }) =>
       get<AppCollection<AppShow>>('/api/shows', { page: pageParam, title_type: titleType }, signal),
     initialPageParam: 1,
@@ -21,9 +22,9 @@ export function useShowsQuery(titleType?: 'movie' | 'series', enabled = true) {
 }
 
 export function useMyPartiesQuery(show?: AppShow) {
-  const { data: user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
   return useInfiniteQuery({
-    queryKey: show ? ['listing', user?.id, 'parties', show.id] : ['listing', user?.id, 'parties'],
+    queryKey: queryKeys.home.parties(show?.id),
     queryFn: ({ pageParam, signal }) =>
       get<AppCollection<AppParty>>('/api/me/parties', { page: pageParam, ...(show && { show_id: show.id }) }, signal),
     initialPageParam: 1,
@@ -33,9 +34,9 @@ export function useMyPartiesQuery(show?: AppShow) {
 }
 
 export function useListingSearchQuery(term: string) {
-  const { data: user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
   return useQuery({
-    queryKey: ['listing', user?.id, 'search', term],
+    queryKey: queryKeys.home.search(term),
     queryFn: async ({ signal }) => {
       const [titles, parties] = await Promise.all([
         get<AppCollection<AppShow>>('/api/shows', { q: term, per_page: 5 }, signal),
@@ -47,38 +48,28 @@ export function useListingSearchQuery(term: string) {
   })
 }
 
-export function useShowGroupsQuery(show: AppShow | null, enabled = true) {
-  const { data: user, isAuthenticated } = useAuth()
-  return useQuery({
-    queryKey: ['listing', user?.id, 'groups', show?.id],
-    queryFn: ({ signal }) => get<AppShowGroup[]>(`/api/shows/${show!.id}/groups`, undefined, signal),
-    enabled: isAuthenticated && enabled && show?.title_type === 'series'
-  })
-}
-
 export function useCreatePartyMutation() {
-  const { data: user } = useAuth()
   const client = useQueryClient()
   const navigate = useNavigate()
   return useMutation({
-    mutationKey: ['listing', user?.id, 'create-party'],
+    mutationKey: queryKeys.home.createParty(),
     mutationFn: async (video: AppShowVideo): Promise<AppParty> => {
       const [error, response] = await axios.post('/api/parties', { show_video_id: video.id })
       if (error) throw error
       return response.data
     },
     onSuccess: (party) => {
-      void client.invalidateQueries({ queryKey: ['listing', user?.id, 'parties'] })
-      void client.invalidateQueries({ queryKey: ['listing', user?.id, 'search'] })
+      void client.invalidateQueries({ queryKey: queryKeys.home.parties() })
+      void client.invalidateQueries({ queryKey: queryKeys.home.search() })
       navigate(`/watch/${party.id}`)
     }
   })
 }
 
 export function usePartyCodeQuery(code: string) {
-  const { data: user, isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth()
   return useQuery({
-    queryKey: ['party-code', user?.id, code],
+    queryKey: queryKeys.home.partyCode(code),
     queryFn: ({ signal }) => get<AppPartyPreview>(`/api/party-codes/${code}`, undefined, signal),
     enabled: isAuthenticated && code.length === 6,
     staleTime: 0,
@@ -102,8 +93,8 @@ export function useJoinPartyMutation() {
     },
     onSuccess: (party) => {
       for (const id of [...party.accepted_invitation_ids, ...party.declined_invitation_ids]) auth.removeInvitation(id)
-      void client.invalidateQueries({ queryKey: ['listing', auth.data?.id, 'parties'] })
-      void client.invalidateQueries({ queryKey: ['listing', auth.data?.id, 'search'] })
+      void client.invalidateQueries({ queryKey: queryKeys.home.parties() })
+      void client.invalidateQueries({ queryKey: queryKeys.home.search() })
       navigate(`/watch/${party.id}`)
     }
   })

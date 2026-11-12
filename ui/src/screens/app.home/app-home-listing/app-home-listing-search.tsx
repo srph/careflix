@@ -42,7 +42,7 @@ export function AppHomeListingSearch({ onShowSelect }: { onShowSelect: (show: Ap
   const failed = Boolean(trimmed) && !results && query.isError
   const loading = Boolean(trimmed) && !results && !failed
   const groups: SearchGroup[] = results ? [
-    { value: 'Titles' as const, items: results.titles.map(show => ({ key: `title-${show.id}`, show, party: null })) },
+    { value: 'Titles' as const, items: results.titles.map((show): SearchOption => ({ key: `title-${show.id}`, show, party: null })) },
     { value: 'Parties' as const, items: results.parties.map(party => ({ key: `party-${party.id}`, show: party.video.show, party })) },
   ].filter(group => group.items.length) : []
 

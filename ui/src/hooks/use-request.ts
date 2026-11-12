@@ -7,7 +7,9 @@ interface State<T> {
   isLoading: boolean
 }
 
-const reducer = (state: State<any>, action) => {
+type Action = { type: 'data:init' | 'data:success' | 'data:error'; payload?: any }
+
+const reducer = (state: State<any>, action: Action) => {
   switch (action.type) {
     case 'data:init': {
       return {

@@ -1,3 +1,4 @@
+import type { AxiosRequestConfig } from './types'
 import { instance } from './instance'
 import { goify } from '~/utils/goify'
 import './interceptor-app-init'
@@ -8,16 +9,16 @@ import './interceptor-toast-errors'
 import './interceptor-pusher'
 
 export const axios = {
-  get(url: string, config?) {
+  get(url: string, config?: AxiosRequestConfig) {
     return goify(instance.get(url, config))
   },
-  post(url: string, payload?, config?) {
+  post(url: string, payload?: unknown, config?: AxiosRequestConfig) {
     return goify(instance.post(url, payload, config))
   },
-  put(url: string, payload?, config?) {
+  put(url: string, payload?: unknown, config?: AxiosRequestConfig) {
     return goify(instance.put(url, payload, config))
   },
-  delete(url: string, config?) {
+  delete(url: string, config?: AxiosRequestConfig) {
     return goify(instance.delete(url, config))
   }
 }

@@ -9,7 +9,7 @@ const { client, channel } = vi.hoisted(() => {
 })
 vi.mock('~/lib/pusher/pusher', () => ({ pusher: () => client }))
 
-function Listener({ name = 'private-party.1', event = 'state', callback = () => {} }) {
+function Listener({ name = 'private-party.1', event = 'state', callback = () => {} }): null {
   usePusher(name, event, callback)
   return null
 }

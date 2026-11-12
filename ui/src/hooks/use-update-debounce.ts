@@ -12,7 +12,7 @@ function useUpdateDebounce (fn: () => void, ms: number, args: any[]) {
       return
     }
     
-    var handle = setTimeout(fn.bind(null, args), ms);
+    var handle = setTimeout(fn, ms);
     return function () {
       // if args change then clear timeout
       clearTimeout(handle);

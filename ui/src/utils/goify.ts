@@ -10,7 +10,7 @@ export async function goify(promise: Promise<any>): Promise<AsyncGoReturn> {
     if (import.meta.env.DEV) {
       console.error(e)
     }
-    return [e]
+    return [e as Error]
   }
   return data instanceof Error ? [data] : [null, data]
 }

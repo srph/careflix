@@ -9,7 +9,7 @@ interface Props {
   className?: string
 }
 
-const SIZES = { sm: 'size-4 text-[8px] font-normal', m: 'size-12', l: 'size-20' }
+const SIZES: Partial<Record<NonNullable<Props['size']>, string>> = { sm: 'size-4 text-[8px] font-normal', m: 'size-12', l: 'size-20' }
 
 export function UiAvatar(props: Props) {
   const className = cn(

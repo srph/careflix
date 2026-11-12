@@ -34,9 +34,9 @@ vi.mock('~/contexts/auth/auth', async () => {
 vi.mock('./app-invitation-modal-send-decline', () => ({ sendDecline: vi.fn(() => new Promise(() => {})) }))
 vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
 vi.mock('~/hooks/use-pusher', () => ({ usePusher: () => {} }))
-vi.mock('~/screens/app.home/app-home-queries', () => ({ useShowGroupsQuery: () => ({ data: undefined }) }))
+vi.mock('~/screens/app.home/app-home-queries', () => ({ useShowGroupsQuery: () => ({ data: undefined as unknown }) }))
 vi.mock('react-router', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/' }) }))
-vi.mock('border-beam', () => ({ BorderBeam: () => null }))
+vi.mock('border-beam', () => ({ BorderBeam: (): null => null }))
 
 const invite = (id: number, name: string) => ({
   id, action: 'pending', party: null, sender: { id: id + 100, name },

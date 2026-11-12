@@ -11,7 +11,7 @@ function setup({ retry = true } = {}) {
   const client = createQueryClient()
   if (!retry) client.setDefaultOptions({ queries: { ...client.getDefaultOptions().queries, retry: false } })
   clients.push(client)
-  return ({ children }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  return ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>
 }
 afterEach(() => { clients.forEach(client => client.clear()); clients.length = 0; vi.clearAllMocks() })
 const theo = { id: 2, name: 'Theo' }

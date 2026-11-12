@@ -78,7 +78,7 @@ function Toast() {
   )
 }
 
-function toast(message) {
+function toast(message: string) {
   instance.toast(message)
 }
 

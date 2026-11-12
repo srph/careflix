@@ -16,7 +16,7 @@ describe('subtitle loading', () => {
     window.history.replaceState({}, '', '/watch/77')
     vi.mocked(axios.get).mockResolvedValue([null, { data: { subtitle: cue('Hello together') } }] as any)
     render(<AppWatchHomeSubtitleSlot {...props} />)
-    expect(axios.get).toHaveBeenCalledWith('/api/videos/1/subtitle', { validation: false })
+    expect(axios.get).toHaveBeenCalledWith('/api/videos/1/subtitle', { app: { validation: false } })
     await screen.findByText('Hello together')
     window.history.replaceState({}, '', '/')
   })

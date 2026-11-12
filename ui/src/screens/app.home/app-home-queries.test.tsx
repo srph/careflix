@@ -14,7 +14,7 @@ const clients: ReturnType<typeof createQueryClient>[] = []
 function setup() {
   const client = createQueryClient()
   clients.push(client)
-  return { client, wrapper: ({ children }) => <QueryClientProvider client={client}>{children}</QueryClientProvider> }
+  return { client, wrapper: ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider> }
 }
 afterEach(() => { clients.forEach(client => client.clear()); clients.length = 0; vi.clearAllMocks(); session.user = { id: 1 } })
 const page = { data: [{ id: 1 }], current_page: 1, last_page: 1 }

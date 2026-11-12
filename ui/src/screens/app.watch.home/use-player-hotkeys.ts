@@ -27,7 +27,7 @@ const keys = {
   SLASH: 191
 }
 
-function usePlayerHotkeys(hookProps: Props) {
+function usePlayerHotkeys(hookProps: Props): null {
   const props = usePropRef(hookProps)
 
   useEffect(() => {

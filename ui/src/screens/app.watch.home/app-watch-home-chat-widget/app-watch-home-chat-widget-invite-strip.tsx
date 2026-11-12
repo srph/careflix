@@ -21,9 +21,9 @@ export function AppWatchHomeChatWidgetInviteStrip({ invitations, onOpen }: { inv
     text: invitations.answer(String(answered.recipient.id)) === 'declined' ? `${answered.recipient.name} declined` : `${answered.recipient.name}’s invite expired`,
     right: 'Invite', label: `Invite ${answered.recipient.name} again`, onClick: () => invitations.invite(answered.recipient)
   } : invitations.sending.length ? {
-    users: invitations.sending, muted: false, text: `Inviting ${names(invitations.sending)}…`, right: '', label: undefined, onClick: onOpen
+    users: invitations.sending, muted: false, text: `Inviting ${names(invitations.sending)}…`, right: '', label: undefined as string | undefined, onClick: onOpen
   } : waiting.length ? {
-    users: waiting, muted: false, text: `Waiting on ${names(waiting)}`, label: undefined, onClick: onOpen,
+    users: waiting, muted: false, text: `Waiting on ${names(waiting)}`, label: undefined as string | undefined, onClick: onOpen,
     right: minutesLeft(invitations.pending.reduce((soonest, invitation) => Date.parse(invitation.expires_at) < Date.parse(soonest.expires_at) ? invitation : soonest), invitations.now)
   } : null
 

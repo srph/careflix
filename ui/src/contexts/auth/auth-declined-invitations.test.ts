@@ -18,7 +18,7 @@ describe('declined invitations', () => {
     rememberDeclinedInvitation(1, invitation(7, 1))
     rememberDeclinedInvitation(1, invitation(8, 30))
     expect(readDeclinedInvitations(1, Date.now() + 2 * 60_000).map(entry => entry.id)).toEqual(['8'])
-    expect(JSON.parse(localStorage.getItem('care.declined-invitations.1')).map(entry => entry.id)).toEqual(['8'])
+    expect(JSON.parse(localStorage.getItem('care.declined-invitations.1')).map((entry: { id: string }) => entry.id)).toEqual(['8'])
   })
 
   it('ignores unreadable storage', () => {

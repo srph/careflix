@@ -4,7 +4,7 @@ import { useWindowSize } from '~/hooks/use-window-size'
 /**
  * @NOTE Don't mount this twice; only on the root node.
  */
-export function WindowVhSetter() {
+export function WindowVhSetter(): null {
   const { height } = useWindowSize()
 
   useEffect(() => {

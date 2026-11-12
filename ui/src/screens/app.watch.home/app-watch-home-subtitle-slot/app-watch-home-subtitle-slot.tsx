@@ -32,7 +32,7 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
 
       try {
         const [err, res] = await axios.get(`/api/videos/${props.video.id}/subtitle`, {
-          validation: false
+          app: { validation: false }
         })
 
         if (cancelled || err || typeof res?.data?.subtitle !== 'string') return

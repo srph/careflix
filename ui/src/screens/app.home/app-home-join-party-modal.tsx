@@ -21,7 +21,7 @@ export function AppHomeJoinPartyModal() {
   return <>
     <span className="ml-auto flex flex-none">
       <UiButton ref={trigger} variant="primary" round aria-haspopup="dialog" aria-expanded={open}
-        className="h-9 px-3 text-10 leading-none transition-[background-color,filter,box-shadow,outline-color,opacity,scale] active:scale-96 aria-expanded:ring-4 aria-expanded:ring-pink-500/25 motion-reduce:[transition:none] sm:h-10.5 sm:px-4.75 sm:text-11" onClick={event => {
+        className="h-9 px-3 text-10 leading-none transition-[background-color,filter,box-shadow,outline-color,opacity,scale] active:scale-96 aria-expanded:ring-4 aria-expanded:ring-pink-500/25 motion-reduce:[transition:none] sm:h-10.5 sm:px-4.75 sm:text-11" onClick={(event: React.MouseEvent<HTMLElement>) => {
         event.currentTarget.focus()
         overlay.setExpanded(false)
         setOpen(true)

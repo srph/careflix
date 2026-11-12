@@ -8,7 +8,7 @@ function UiPlainButton({ className, ...props }: Props, ref: React.MutableRefObje
     <button
       {...props}
       ref={ref}
-      className={cn('inline-block cursor-pointer border-0 bg-transparent p-0 text-inherit', className)}>
+      className={cn('inline-block cursor-pointer', className)}>
       {props.children}
     </button>
   )

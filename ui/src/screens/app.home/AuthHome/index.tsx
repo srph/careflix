@@ -43,7 +43,7 @@ export default function AuthHome() {
         {tab !== 'parties' && (!query.data ? <FeaturedPlaceholder error={initialError} onRetry={() => { void query.refetch() }} />
           : <FeaturedCarousel key={tab} items={featured} onDetails={setSelectedShow} onStart={start} isCreating={createParty.isPending} />)}
         <div className="px-5 pt-7 pb-15 sm:px-6 sm:pt-7.5 lg:px-10 lg:pt-9 lg:pb-20">
-          {createParty.isError && <div role="alert" className="mb-8 rounded-xl border border-neutral-800 bg-neutral-900 p-6 text-neutral-300 sm:mb-11">Unable to start the party. Please try again. <button type="button" className="cursor-pointer rounded-md border border-neutral-600 bg-transparent px-3 py-1.5 leading-[inherit] text-white" onClick={() => createParty.reset()}>Dismiss</button></div>}
+          {createParty.isError && <div role="alert" className="mb-8 rounded-xl border border-neutral-800 bg-neutral-900 p-6 text-neutral-300 sm:mb-11">Unable to start the party. Please try again. <button type="button" className="cursor-pointer rounded-md border border-neutral-600 px-3 py-1.5 leading-[inherit] text-white" onClick={() => createParty.reset()}>Dismiss</button></div>}
           {tab === 'all' && <AnimatePresence initial={false}>
             {showRecentParties && <motion.div key="recent-parties" data-testid="recent-parties" initial={false}
               exit={{ height: 0, opacity: 0, overflow: 'hidden' }} transition={{ duration: reduceMotion ? 0 : .45 }}>

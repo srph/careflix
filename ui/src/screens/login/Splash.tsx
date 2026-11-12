@@ -14,7 +14,7 @@ export function Spinner() {
 }
 
 /** The Discord button's look, shared with the onboarding screen's "start over" button. */
-export const DISCORD_BUTTON = 'flex min-h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full border-0 bg-[#5865f2] px-5.5 py-3 text-lg leading-snug font-semibold tracking-[-.01em] text-white transition-colors duration-150 hover:bg-[#4752c4] disabled:cursor-wait motion-reduce:transition-none'
+export const DISCORD_BUTTON = 'flex min-h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#5865f2] px-5.5 py-3 text-lg leading-snug font-semibold tracking-[-.01em] text-white transition-colors duration-150 hover:bg-[#4752c4] disabled:cursor-wait motion-reduce:transition-none'
 
 function DiscordButton({ state, onClick, name }: { state: string; onClick?: () => void; name?: string }) {
   return <button type="button" className={DISCORD_BUTTON} data-reaction-shelf disabled={state === 'connecting' || state === 'welcome'} onClick={onClick}>
@@ -40,7 +40,7 @@ export default function Splash({ state = 'idle', name, error, children, identity
   )}>
     <PageTitle title={access ? 'Request access' : 'Watch together'} />
     <Link to="/" aria-label="Care.tv home" className={cn(
-      'absolute inset-x-0 z-2 text-center text-pink-500 no-underline md:top-9 md:right-auto md:left-11 md:text-left',
+      'absolute inset-x-0 z-2 text-center text-pink-500 md:top-9 md:right-auto md:left-11 md:text-left',
       access ? 'top-16.5 font-label text-lg leading-none font-semibold tracking-[-.01em]' : 'top-5.5 text-[25px] leading-none font-bold tracking-[-.04em] md:text-[27px]'
     )}>Care.tv</Link>
     <div className={cn('z-2 text-center', access ? 'w-[min(100%,1000px)]' : 'row-start-2 w-full px-5 md:px-6')}>

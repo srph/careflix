@@ -18,7 +18,7 @@ interface Props {
 
 // White text with a black edge. <font> tags in a subtitle file keep their colour but not their own size or face.
 // The md step is the only place 768px is used: a hotfix for a split-screen setup on a small laptop.
-const SLOT = 'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) m-0 p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
+const SLOT = 'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
 
 function SubtitleSlot(props: Props) {
   const [state, setState] = useState<State>(() => ({ tracks: [] }))

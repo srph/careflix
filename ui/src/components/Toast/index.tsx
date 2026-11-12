@@ -67,7 +67,7 @@ function Toast() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
             {message.text}
-            <button className="absolute top-3 right-3 cursor-pointer border-0 bg-transparent p-0 text-white opacity-40" onClick={() => close(message.id)}>
+            <button className="absolute top-3 right-3 cursor-pointer text-white opacity-40" onClick={() => close(message.id)}>
               ×
             </button>
           </motion.div>

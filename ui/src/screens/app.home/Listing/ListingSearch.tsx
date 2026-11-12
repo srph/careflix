@@ -84,8 +84,8 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
     <Autocomplete.InputGroup data-testid="search" className="group relative flex h-9 min-w-0 flex-1 items-center gap-1.75 rounded-xl border border-neutral-800 bg-neutral-900 px-2.5 text-neutral-400 transition-colors duration-200 focus-within:border-neutral-500 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-3 has-[input:focus-visible]:outline-pink-700 sm:-ml-2.5 sm:h-10.5 sm:w-[min(240px,35%)] sm:flex-initial sm:gap-2.5 sm:pr-3 sm:pl-3.5 lg:w-62.5 xl:-ml-5">
       <i className="fa fa-search" aria-hidden="true" />
       <Autocomplete.Input ref={input} aria-label="Search titles and parties" placeholder="Search titles & parties"
-        autoComplete="off" maxLength={200} className="w-full min-w-0 flex-1 border-0 bg-transparent text-sm text-white outline-none! placeholder:text-xs placeholder:text-neutral-500 sm:placeholder:text-13" />
-      <Autocomplete.Clear className="-mr-1 grid size-5 flex-none cursor-pointer place-items-center rounded-full border-0 bg-neutral-800 p-0 text-sm leading-none text-neutral-300 transition-colors duration-200 hover:bg-neutral-700 hover:text-white" aria-label="Clear search"><i className="fa fa-close" aria-hidden="true" /></Autocomplete.Clear>
+        autoComplete="off" maxLength={200} className="w-full min-w-0 flex-1 text-sm text-white outline-none! placeholder:text-xs placeholder:text-neutral-500 sm:placeholder:text-13" />
+      <Autocomplete.Clear className="-mr-1 grid size-5 flex-none cursor-pointer place-items-center rounded-full bg-neutral-800 text-sm leading-none text-neutral-300 transition-colors duration-200 hover:bg-neutral-700 hover:text-white" aria-label="Clear search"><i className="fa fa-close" aria-hidden="true" /></Autocomplete.Clear>
       {!text && <kbd aria-hidden="true" className="hidden rounded-sm border border-neutral-700 px-1.25 py-0.5 text-11 sm:inline sm:group-focus-within:hidden">/</kbd>}
     </Autocomplete.InputGroup>
     <Autocomplete.Portal>
@@ -94,7 +94,7 @@ export default function ListingSearch({ onShowSelect }: { onShowSelect: (show: A
         <Autocomplete.Popup data-testid="search-dropdown" className="max-h-[min(70vh,var(--available-height))] w-[min(420px,var(--available-width))] overflow-y-auto rounded-2xl border border-neutral-700 bg-neutral-900/96 p-2 text-sm text-white antialiased shadow-menu outline-none sm:max-h-[min(650px,75vh,var(--available-height))]">
           <Autocomplete.Status data-testid="search-status">
             {loading && <span className="sr-only">Searching titles and parties…</span>}
-            {failed && <div role="alert" className="px-2.5 py-4.5 text-neutral-300">Unable to search. <button type="button" className="cursor-pointer border-0 bg-transparent p-0 leading-[inherit] text-white underline" onClick={() => { void query.refetch() }}>Retry</button></div>}
+            {failed && <div role="alert" className="px-2.5 py-4.5 text-neutral-300">Unable to search. <button type="button" className="cursor-pointer leading-[inherit] text-white underline" onClick={() => { void query.refetch() }}>Retry</button></div>}
           </Autocomplete.Status>
           {loading && <SearchSkeleton />}
           <Autocomplete.Empty data-testid="search-empty">

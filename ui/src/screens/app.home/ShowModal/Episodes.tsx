@@ -24,7 +24,7 @@ export default function Episodes({ show, groups, group, onGroupChange, onPlay, i
     {!group.videos.length && <p className={STATUS}>No episodes available in this season yet.</p>}
     <div className={EPISODE_GRID}>
       {group.videos.map((video, index) => <button type="button" data-testid="episode" key={video.id} disabled={isCreating} onClick={() => onPlay(video)}
-        className="group block w-full min-w-0 cursor-pointer border-0 bg-transparent p-0 text-left text-white disabled:cursor-default disabled:opacity-60">
+        className="group block w-full min-w-0 cursor-pointer text-left text-white disabled:cursor-default disabled:opacity-60">
         <span className={`${EPISODE_ART} transition-shadow duration-200 group-hover:ring-neutral-500 group-focus-visible:ring-neutral-500`}>
           <Artwork src={video.preview_image || show.preview_image} />
           <span className="absolute inset-0 grid place-items-center bg-neutral-950/40 opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"><i className="fa fa-play" aria-hidden="true" /></span>

@@ -31,7 +31,7 @@ export function LiveRoom({ party }: { party: AppParty }) {
     {/* On phones the sentence drops to its own line under the faces and the button. */}
     <p className="order-1 min-w-0 grow basis-full wrap-anywhere sm:order-none sm:basis-0">Your room{names && <> with <b className="font-semibold text-white">{names}</b></>} <span className="text-xs text-neutral-400">· {partyPosition(party)}</span></p>
     <Link to={`/watch/${party.id}`} aria-label={`Join your room for ${party.video?.show?.title}`}
-      className="ml-auto inline-flex h-8.5 flex-none items-center justify-center rounded-full bg-white px-4 font-label text-11 leading-none font-bold tracking-label text-neutral-950 uppercase no-underline hover:bg-neutral-200">Join</Link>
+      className="ml-auto inline-flex h-8.5 flex-none items-center justify-center rounded-full bg-white px-4 font-label text-11 leading-none font-bold tracking-label text-neutral-950 uppercase hover:bg-neutral-200">Join</Link>
   </div>
 }
 
@@ -39,7 +39,7 @@ function PartyRow({ party }: { party: AppParty }) {
   const { members, names } = usePartyMembers(party)
   // Phones stack the three lines of text between the faces and the arrow; from `sm` everything sits on one line.
   return <Link data-testid="party-row" to={`/watch/${party.id}`} aria-label={`Rejoin ${party.video?.show?.title}${names ? ` with ${names}` : ''}`}
-    className={`grid grid-cols-[64px_minmax(0,1fr)_12px] items-center gap-x-3 gap-y-1 rounded-lg py-3.5 text-inherit no-underline hover:bg-neutral-800 hover:shadow-none! sm:grid-cols-[88px_minmax(0,1fr)_minmax(0,auto)_110px_16px] sm:gap-4 sm:px-2.5 [:hover+&]:shadow-none! ${PARTY_ROW_LINE}`}>
+    className={`grid grid-cols-[64px_minmax(0,1fr)_12px] items-center gap-x-3 gap-y-1 rounded-lg py-3.5 hover:bg-neutral-800 hover:shadow-none! sm:grid-cols-[88px_minmax(0,1fr)_minmax(0,auto)_110px_16px] sm:gap-4 sm:px-2.5 [:hover+&]:shadow-none! ${PARTY_ROW_LINE}`}>
     <Faces members={members} className="row-span-3 sm:row-span-1" />
     <b className="col-start-2 truncate text-sm font-semibold sm:col-start-auto">You{names && `, ${names}`}</b>
     <span className="col-start-2 text-xs text-neutral-400 sm:col-start-auto">{partyPosition(party)}</span>

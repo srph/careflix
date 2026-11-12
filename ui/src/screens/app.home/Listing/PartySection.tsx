@@ -33,7 +33,7 @@ export default function PartySection({ parties, recent = false, total, onSeeAll,
   }
   return <section aria-label={recent ? 'Recent parties' : 'All parties'} aria-busy={isLoadingMore}>
     <div className={SECTION_HEADING}><h2 className={SECTION_TITLE}>{recent ? 'Recent parties' : 'All parties'}</h2>
-      {recent && onSeeAll && <button type="button" onClick={onSeeAll} className="ml-auto cursor-pointer border-0 bg-transparent px-0 py-1.25 text-xs text-neutral-300 hover:text-pink-500 sm:text-13">See all parties <span aria-hidden="true" className="ml-1.25">→</span></button>}
+      {recent && onSeeAll && <button type="button" onClick={onSeeAll} className="ml-auto cursor-pointer py-1.25 text-xs text-neutral-300 hover:text-pink-500 sm:text-13">See all parties <span aria-hidden="true" className="ml-1.25">→</span></button>}
     </div>
     {parties.length ? <div className={PARTY_GRID} ref={grid} onPointerOver={shift} onPointerLeave={() => { hovered.current = null; setStyles([]) }}>
       {(recent ? parties.slice(0, 3) : parties).map((party, index) => <PartyCard party={party} key={party.id} style={styles[index]} />)}

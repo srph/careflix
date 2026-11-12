@@ -39,7 +39,7 @@ export default function Onboarding() {
       <span aria-hidden="true" className="flex flex-none"><UiAvatar user={{ name: auth.onboarding.name, avatar: '' }} className="size-6.5 text-11" /></span>
       <span className="flex min-w-0 items-baseline gap-0.75 whitespace-nowrap">Signed in as <b title={auth.onboarding.name} className="truncate font-semibold text-white">{auth.onboarding.name}</b></span>
       <span className="flex-none whitespace-nowrap text-neutral-400">(<button type="button" onClick={reconnect} disabled={busy} aria-label="Use a different Discord account"
-        className="cursor-pointer border-0 bg-transparent p-0 leading-[inherit] text-inherit underline decoration-neutral-600 underline-offset-2 disabled:cursor-wait">Not you?</button>)</span>
+        className="cursor-pointer leading-[inherit] underline decoration-neutral-600 underline-offset-2 disabled:cursor-wait">Not you?</button>)</span>
     </div>
   }>
     <form className="grid gap-3" onSubmit={submit} aria-busy={busy}>
@@ -51,7 +51,7 @@ export default function Onboarding() {
       {message && <p id="request-access-error" className="-mt-1 ml-0.5 text-sm wrap-anywhere text-rose-300" role="alert">{message}</p>}
       {expired ? <button type="button" className={DISCORD_BUTTON} onClick={reconnect} disabled={busy}>Continue with Discord</button> :
         <button type="submit" disabled={busy || !code.trim()} data-reaction-shelf className={cn(
-          'flex min-h-13 w-full items-center justify-center gap-2 rounded-xl border-0 px-4 py-3 font-sans text-base leading-none font-semibold transition-colors duration-150 motion-reduce:transition-none',
+          'flex min-h-13 w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-sans text-base leading-none font-semibold transition-colors duration-150 motion-reduce:transition-none',
           // While the code is being checked the button is disabled but keeps its colour.
           busy ? 'cursor-wait bg-pink-500 text-white' : 'cursor-pointer bg-pink-500 text-white not-disabled:hover:bg-pink-600 disabled:cursor-default disabled:bg-neutral-800 disabled:text-neutral-500'
         )}>{busy && <Spinner />}{busy ? 'Checking…' : 'Continue'}</button>}

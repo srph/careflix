@@ -12,7 +12,7 @@ import useWindowSize from '~/hooks/useWindowSize'
 import config from '~/config'
 import asset_author from '~/assets/author.jpg'
 
-const ITEM = 'flex items-center border-b border-neutral-900 p-4 text-white no-underline first:border-t'
+const ITEM = 'flex items-center border-b border-neutral-900 p-4 text-white first:border-t'
 
 function MenuItem({ icon, children }: { icon: string; children: React.ReactNode }) {
   return (

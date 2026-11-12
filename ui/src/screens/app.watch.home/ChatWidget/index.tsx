@@ -475,7 +475,7 @@ function ChatWidget(props: Props) {
 
           {/* The focus ring belongs to the field (text and send), drawn inside because the field is flush with the tray. */}
           <form onSubmit={handleMessage} data-testid="chat-composer"
-            className="relative m-0 flex min-h-11 items-end gap-1 rounded-xl bg-neutral-900 pr-1.5 pl-3.75 ring-1 ring-neutral-700 transition-colors duration-150 focus-within:bg-neutral-950 has-[textarea:focus-visible]:outline-2 has-[textarea:focus-visible]:-outline-offset-2 has-[textarea:focus-visible]:outline-pink-700 motion-reduce:[transition:none]">
+            className="relative flex min-h-11 items-end gap-1 rounded-xl bg-neutral-900 pr-1.5 pl-3.75 ring-1 ring-neutral-700 transition-colors duration-150 focus-within:bg-neutral-950 has-[textarea:focus-visible]:outline-2 has-[textarea:focus-visible]:-outline-offset-2 has-[textarea:focus-visible]:outline-pink-700 motion-reduce:[transition:none]">
             <textarea
               rows={1}
               placeholder="Message"
@@ -485,7 +485,7 @@ function ChatWidget(props: Props) {
               onChange={handleInput}
               onKeyDown={handleInputKeyDown}
               // Grows with the message where the browser can; elsewhere it stays one line tall and scrolls.
-              className="block field-sizing-content max-h-33 min-h-11 min-w-0 flex-1 resize-none overflow-y-auto border-0 bg-transparent px-0 py-3 text-sm/5 text-white outline-none not-supports-[field-sizing:content]:h-11 placeholder:text-neutral-500"
+              className="block field-sizing-content max-h-33 min-h-11 min-w-0 flex-1 resize-none overflow-y-auto py-3 text-sm/5 text-white outline-none not-supports-[field-sizing:content]:h-11 placeholder:text-neutral-500"
             />
 
             <UiPlainButton disabled={!isSubmittable} ref={buttonRef} aria-label="Send message"

@@ -27,7 +27,7 @@ type DetailTab = 'episodes' | 'parties' | 'details'
 const SHEET = 'min-h-dvh w-full overflow-hidden bg-neutral-900 p-0 text-sm text-white antialiased shadow-modal transition-[translate,scale,opacity] duration-[.3s,.3s,.2s] data-ending-style:translate-y-5.5 data-ending-style:scale-97 data-starting-style:translate-y-5.5 data-starting-style:scale-97 sm:mx-auto sm:my-11 sm:min-h-0 sm:w-[calc(100%-48px)] sm:max-w-220 sm:rounded-2xl lg:w-1/2 motion-reduce:translate-none! motion-reduce:scale-none! motion-reduce:[transition:none] motion-reduce:**:animate-none! motion-reduce:**:[transition:none]!'
 const SCRIM = 'bg-neutral-950/80 [scrollbar-color:var(--color-neutral-700)_transparent] [scrollbar-width:thin]'
 const SHADE = 'pointer-events-none absolute inset-0'
-const TAB = 'relative cursor-pointer border-0 bg-transparent px-0 py-4.25 text-sm font-medium text-neutral-400 hover:text-white aria-selected:text-white aria-selected:after:absolute aria-selected:after:inset-x-0 aria-selected:after:bottom-0 aria-selected:after:h-0.5 aria-selected:after:rounded-full aria-selected:after:bg-pink-500'
+const TAB = 'relative cursor-pointer py-4.25 text-sm font-medium text-neutral-400 hover:text-white aria-selected:text-white aria-selected:after:absolute aria-selected:after:inset-x-0 aria-selected:after:bottom-0 aria-selected:after:h-0.5 aria-selected:after:rounded-full aria-selected:after:bg-pink-500'
 
 export default function ShowModal(props: Props) {
   const media = useMediaMode()

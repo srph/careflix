@@ -30,7 +30,7 @@ function AppSettingsFaq(props: ReactComponentWrapper) {
             <UiAccordion.Section icon={<i className="fa fa-android" />} title={faq.title} key={i}>
               {faq.content.map((p, j) => (
                 <p
-                  className="text-sm not-last:mb-4 [&_a]:border-b [&_a]:border-dashed [&_a]:border-neutral-400 [&_a]:text-inherit [&_a]:no-underline"
+                  className="text-sm not-last:mb-4 [&_a]:border-b [&_a]:border-dashed [&_a]:border-neutral-400"
                   key={j}
                   dangerouslySetInnerHTML={{
                     __html: p

@@ -171,7 +171,7 @@ function ShowModal(props: Props) {
               type="button"
               disabled={props.isDisabled}
               className={cn(
-                'flex w-full cursor-pointer items-center border-0 bg-transparent py-4 text-left not-last:border-b first:border-t',
+                'flex w-full cursor-pointer items-center py-4 text-left not-last:border-b first:border-t',
                 light ? 'border-neutral-200 text-neutral-700' : 'border-neutral-800 text-white'
               )}
               key={video.id}

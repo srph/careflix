@@ -33,7 +33,7 @@ const SIZES = { s: 'h-6.5 px-3', m: 'h-8 px-4', l: 'h-10 px-5' }
 export function buttonClass({ variant, size = 'm', block, round, glow, onArt }: StyleProps = {}, className?: string) {
   const primary = variant === 'primary'
   return cn(
-    'inline-flex cursor-pointer items-center justify-center gap-2 border-0 py-0 text-center font-label text-11 leading-none font-bold tracking-label whitespace-nowrap text-white uppercase no-underline',
+    'inline-flex cursor-pointer items-center justify-center gap-2 text-center font-label text-11 leading-none font-bold tracking-label whitespace-nowrap text-white uppercase',
     'outline-2 outline-offset-3 outline-transparent transition-[background-color,filter,box-shadow,outline-color,opacity] duration-200 focus-visible:outline-pink-700 disabled:cursor-default disabled:opacity-50',
     SIZES[size],
     round ? 'rounded-full' : 'rounded-sm',

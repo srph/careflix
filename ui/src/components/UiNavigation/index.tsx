@@ -28,7 +28,7 @@ type ActionProps =
 UiNavigation.Action = function (props: ActionProps) {
   return (
     <div className="w-1/4 text-neutral-400 last:text-right">
-      {props.children && <Link {...(props as LinkProps)} className="inline-block text-neutral-400 no-underline" />}
+      {props.children && <Link {...(props as LinkProps)} className="inline-block text-neutral-400" />}
     </div>
   )
 }
@@ -38,7 +38,7 @@ type BackActionProps = ActionProps
 UiNavigation.BackAction = function (props: BackActionProps) {
   return (
     <div className="-ml-2 w-1/4 text-neutral-400 last:text-right">
-      <Link aria-label="Go Back" {...(props as LinkProps)} className="inline-block p-2 text-neutral-400 no-underline">
+      <Link aria-label="Go Back" {...(props as LinkProps)} className="inline-block p-2 text-neutral-400">
         <i className="fa fa-angle-left" />
         <span className="ml-2 hidden uppercase sm:inline-block">
           <h5 className="inline-block font-label text-xs font-bold uppercase">Go Back</h5>
@@ -55,7 +55,7 @@ UiNavigation.Title = function (props: Props) {
 UiNavigation.Logo = function () {
   return (
     <div className="w-1/2 text-center">
-      <Link to="/" className="no-underline">
+      <Link to="/">
         <UiLogo />
       </Link>
     </div>

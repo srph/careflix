@@ -20,7 +20,7 @@ function UiInput({ mode, className, selectClassName, caretClassName, ...props }:
       <select
         {...props}
         className={cn(
-          'block h-10 w-full cursor-pointer appearance-none rounded-sm border bg-transparent px-3 py-0',
+          'block h-10 w-full cursor-pointer appearance-none rounded-sm border px-3',
           light ? 'border-neutral-300 text-neutral-700' : 'border-neutral-400 text-white',
           selectClassName
         )}

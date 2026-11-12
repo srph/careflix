@@ -36,7 +36,7 @@ export const MAX_LINES = 4
 const TOAST_MS = 2200
 
 // A line is a pill over the picture. Newest is brightest; older lines step back.
-const LINE = 'pointer-events-auto flex max-w-full cursor-pointer items-center gap-2 rounded-2xl border-0 bg-black/42 py-1.25 pr-3.5 pl-1.25 text-left text-base/snug text-neutral-200 transition-[opacity,background-color] duration-[.3s,.15s] text-shadow-default hover:bg-black/62 data-[age="1"]:opacity-88 data-[age="2"]:opacity-74 data-[age="3"]:opacity-60 data-[age="4"]:opacity-50'
+const LINE = 'pointer-events-auto flex max-w-full cursor-pointer items-center gap-2 rounded-2xl bg-black/42 py-1.25 pr-3.5 pl-1.25 text-left text-base/snug text-neutral-200 transition-[opacity,background-color] duration-[.3s,.15s] text-shadow-default hover:bg-black/62 data-[age="1"]:opacity-88 data-[age="2"]:opacity-74 data-[age="3"]:opacity-60 data-[age="4"]:opacity-50'
 const TEXT = 'line-clamp-2 min-w-0 wrap-anywhere'
 const NAME = 'font-bold text-white'
 // The avatar, the icon disc and the typing dots all fill the same 24px slot, so names line up.

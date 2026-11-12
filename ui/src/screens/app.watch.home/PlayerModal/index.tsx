@@ -178,7 +178,7 @@ function PlayerModal({ party, ...props }: Props) {
         <motion.div data-testid="player-chrome" className="pointer-events-auto absolute inset-0 z-(--zindex-player-overlay)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
           <div className="absolute inset-0 bg-black/70 sm:bg-transparent sm:bg-linear-to-t sm:from-black/75 sm:to-transparent" ref={overlayRef} onClick={handleClickOverlay} />
 
-          <Link to="/" className="absolute top-4 left-4 text-base leading-none text-white no-underline text-shadow-[0_1px_2px_rgb(0_0_0/0.5)] lg:text-xl">
+          <Link to="/" className="absolute top-4 left-4 text-base leading-none text-white text-shadow-[0_1px_2px_rgb(0_0_0/0.5)] lg:text-xl">
             <span className="mr-4">
               <i className="fa fa-long-arrow-left" />
             </span>

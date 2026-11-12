@@ -24,16 +24,16 @@ const SHAKE = [0, -4, 4, -2, 0]
 const TONES = { pink: 'text-pink-300', error: 'text-rose-300', success: 'text-emerald-300' }
 
 // A person in the list. As a button it highlights on hover and while the keyboard is on it.
-const PERSON = 'flex min-h-15 w-full items-center gap-3 rounded-xl border-0 bg-transparent px-3.5 py-2.5 text-left text-inherit'
+const PERSON = 'flex min-h-15 w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-left'
 const PERSON_BUTTON = `group cursor-pointer not-disabled:hover:bg-neutral-800 disabled:cursor-default aria-busy:cursor-wait! data-highlighted:bg-neutral-800 ${PERSON}`
 const DETAILS = 'flex min-w-0 flex-1 flex-col'
 const NAME = 'truncate text-sm/4 font-semibold'
 const SUBTEXT = 'text-xs text-neutral-400 tabular-nums'
 const LABEL = 'block px-3.5 pt-4 pb-2 font-label text-11 leading-none font-semibold tracking-label text-neutral-400 uppercase'
 // No one, or a failed search: one line in a row's slot, where the skeleton was.
-const LINE = 'm-0 flex min-h-15 items-center px-3.5 py-2.5 text-13 text-neutral-400'
+const LINE = 'flex min-h-15 items-center px-3.5 py-2.5 text-13 text-neutral-400'
 const NOTE = 'px-3.5 py-3 text-13 text-neutral-400'
-const TEXT_BUTTON = 'cursor-pointer border-0 bg-transparent text-white underline'
+const TEXT_BUTTON = 'cursor-pointer text-white underline'
 
 /** A face with a small green dot while they're online, and no dot when they're not. */
 function Face({ user }: { user: AppUser }) {
@@ -161,7 +161,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
     {/* The mirror of opening: what's on the sheet goes first, then the empty sheet fades to the chat. */}
     <motion.div className="flex min-h-0 flex-1 flex-col" exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : CONTENT_FADE } }}>
       <motion.div className="flex flex-none items-center gap-2 pt-4 pr-4 pb-1.5 pl-5" data-testid="invite-heading" {...cascade(0)}>
-        <h3 className="m-0 text-lg font-bold">Invite</h3>
+        <h3 className="text-lg font-bold">Invite</h3>
         <UiPlainButton type="button" onClick={onClose} aria-label="Close invite" className="ml-auto grid size-8 place-items-center rounded-full text-neutral-400 hover:bg-neutral-800 hover:text-white"><i className="fa fa-close" aria-hidden="true" /></UiPlainButton>
       </motion.div>
       <Autocomplete.Root inline open items={items} filter={null} value={text}
@@ -170,7 +170,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
         <motion.label {...cascade(1)}
           className="mx-4 mt-2.5 mb-1 flex h-10.5 flex-none items-center gap-2.5 rounded-xl border border-neutral-800 bg-neutral-950 px-3.5 text-neutral-400 has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-3 has-[input:focus-visible]:outline-pink-700">
           <i className="fa fa-search" aria-hidden="true" />
-          <Autocomplete.Input ref={input} className="w-full min-w-0 border-0 bg-transparent p-0 text-sm text-white outline-none placeholder:text-neutral-500" placeholder="Search for your friends by username" aria-label="Search for your friends by username" maxLength={100} autoComplete="off" spellCheck={false} />
+          <Autocomplete.Input ref={input} className="w-full min-w-0 text-sm text-white outline-none placeholder:text-neutral-500" placeholder="Search for your friends by username" aria-label="Search for your friends by username" maxLength={100} autoComplete="off" spellCheck={false} />
         </motion.label>
         <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain px-1.5 pb-2" ref={list} aria-busy={view?.kind === 'skeleton' || (!view && recentsPending)}>
           <Autocomplete.List>
@@ -199,7 +199,7 @@ export default function ChatInvitationPanel({ invitations, onClose }: {
                 {view.kind === 'skeleton' && <InviteSkeletons />}
                 {view.kind === 'results' && view.users.map(user => person(user, {}))}
                 {view.kind === 'empty' && <p className={LINE}>No one named “{term}”.</p>}
-                {view.kind === 'error' && <p className={LINE} role="alert">Couldn’t search for “{term}”.&nbsp;<button type="button" className={`${TEXT_BUTTON} p-0`} onClick={() => search.refetch()}>Retry</button></p>}
+                {view.kind === 'error' && <p className={LINE} role="alert">Couldn’t search for “{term}”.&nbsp;<button type="button" className={TEXT_BUTTON} onClick={() => search.refetch()}>Retry</button></p>}
               </motion.div>}
           </Autocomplete.List>
           {invitations.historyError && <p className={NOTE} data-testid="invite-note" role="alert">Couldn’t load invite updates. <button type="button" className={TEXT_BUTTON} onClick={invitations.refreshHistory}>Retry</button></p>}

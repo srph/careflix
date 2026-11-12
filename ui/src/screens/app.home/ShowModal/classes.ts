@@ -14,7 +14,7 @@ export const PANE = 'min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pt-5
 export const STATUS = 'leading-relaxed text-neutral-300'
 export const STATUS_BAND = `shrink-0 px-6 py-3.5 sm:px-9 ${STATUS}`
 /** A button that reads as a link inside a sentence, such as Retry. */
-export const TEXT_BUTTON = 'cursor-pointer border-0 bg-transparent px-1 py-0.5 leading-[inherit] text-white underline'
+export const TEXT_BUTTON = 'cursor-pointer px-1 py-0.5 leading-[inherit] text-white underline'
 
 export const EPISODE_HEADING = 'flex items-center gap-3.5'
 export const EPISODE_GRID = 'mt-4.5 grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(min(196px,100%),1fr))] sm:gap-x-3.5'

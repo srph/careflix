@@ -101,14 +101,14 @@ function JoinPartyForm({ onClose, joining }: { onClose: () => void; joining: Rea
     : isFound ? 'group-focus-within/code:border-emerald-300 group-focus-within/code:ring-emerald-300/12'
       : 'group-focus-within/code:border-neutral-500 group-focus-within/code:ring-transparent'
 
-  return <form className="m-0" onSubmit={submit}>
-    <div className="flex items-center gap-2.5"><h2 className="m-0 flex-1 text-xl font-bold tracking-[-.01em]">Join a watch party</h2>
+  return <form onSubmit={submit}>
+    <div className="flex items-center gap-2.5"><h2 className="flex-1 text-xl font-bold tracking-[-.01em]">Join a watch party</h2>
       <UiPlainButton type="button" aria-label="Close" className="grid size-7 place-items-center text-neutral-300 hover:text-white" disabled={join.isPending} onClick={onClose}><i className="fa fa-times" aria-hidden="true" /></UiPlainButton>
     </div>
     <p className="mt-1.5 text-neutral-300" id={`${id}-hint`}>Enter the 6-digit code someone shared with you.</p>
     {/* One real input lies invisibly over six drawn cells. */}
     <div className="group/code relative mt-5.5">
-      <input ref={input} className="absolute inset-0 z-1 size-full cursor-text border-0 text-base opacity-0 outline-none" aria-label="Party code" aria-describedby={`${id}-hint ${id}-status`} aria-invalid={wrong || undefined}
+      <input ref={input} className="absolute inset-0 z-1 size-full cursor-text text-base opacity-0 outline-none" aria-label="Party code" aria-describedby={`${id}-hint ${id}-status`} aria-invalid={wrong || undefined}
         inputMode="numeric" autoComplete="off" type="text" maxLength={32} value={code} disabled={join.isPending}
         onChange={event => change(event.target.value)} onPaste={event => { event.preventDefault(); change(event.clipboardData.getData('text/plain')) }} />
       <div className="flex items-center gap-1.5 sm:gap-2" aria-hidden="true">
@@ -131,7 +131,7 @@ function JoinPartyForm({ onClose, joining }: { onClose: () => void; joining: Rea
     )} id={`${id}-status`} role={error ? 'alert' : 'status'}>
       {looking && <i className="fa fa-circle-o-notch fa-spin mt-0.75 flex-none" aria-hidden="true" />}
       {preview && !error && !looking && <i className="fa fa-check mt-0.75 flex-none" aria-hidden="true" />}
-      <span>{message} {lookupError && !wrong && <button type="button" className="cursor-pointer border-0 bg-transparent p-0 leading-[inherit] text-white underline" onClick={() => { void query.refetch() }}>Retry</button>}</span>
+      <span>{message} {lookupError && !wrong && <button type="button" className="cursor-pointer leading-[inherit] text-white underline" onClick={() => { void query.refetch() }}>Retry</button>}</span>
     </div>
     <div className={cn('grid transition-[grid-template-rows] duration-420 ease-out-soft', isShown ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]')} inert={!shown || !preview || Boolean(error)}><div className="min-h-0 overflow-hidden">
       {preview && <PartyPreview party={preview} shown={isShown} />}

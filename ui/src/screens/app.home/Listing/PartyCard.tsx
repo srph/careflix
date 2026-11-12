@@ -17,7 +17,7 @@ export default function PartyCard({ party, style }: { party: AppParty; style?: C
   const active = party.members?.some(member => Number(member.pivot?.is_active) === 1)
   // White on hover is intentional; keyboard focus uses the pink ring, and wins when both apply.
   return <Link data-testid="party-card" style={style} to={`/watch/${party.id}`} aria-label={`Rejoin ${show.title}`}
-    className="group relative block aspect-video min-w-0 overflow-hidden rounded-xl text-inherit no-underline ring-1 ring-neutral-800 outline-2 outline-offset-4 outline-transparent transition-[outline-color,transform] duration-[.25s,.3s] hover:z-4 hover:shadow-[0_20px_40px_-24px_#000] hover:ring-0 hover:outline-white focus-visible:shadow-[0_20px_40px_-24px_#000] focus-visible:ring-0 focus-visible:outline-pink-700">
+    className="group relative block aspect-video min-w-0 overflow-hidden rounded-xl ring-1 ring-neutral-800 outline-2 outline-offset-4 outline-transparent transition-[outline-color,transform] duration-[.25s,.3s] hover:z-4 hover:shadow-[0_20px_40px_-24px_#000] hover:ring-0 hover:outline-white focus-visible:shadow-[0_20px_40px_-24px_#000] focus-visible:ring-0 focus-visible:outline-pink-700">
     <Artwork src={party.video.preview_image || show.preview_image} />
     <div className="absolute inset-0 bg-linear-to-t from-neutral-950/96 from-18% to-neutral-950/8 to-95%" />
     <div className={PARTY_BADGES}><span className={BADGE}>{active && <i className="mr-1.25 inline-block size-1.5 rounded-full bg-pink-500" />} {partyStatus(party)}</span><span className={BADGE}>{show.title_type === 'movie' ? 'Movie' : 'Series'}</span></div>

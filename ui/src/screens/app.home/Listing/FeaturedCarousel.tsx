@@ -53,13 +53,13 @@ export default function FeaturedCarousel({ items, onDetails, onStart, isCreating
           </div>
         </div>
       </article>)}
-      {items.length > 1 && <button type="button" className="absolute top-3.5 right-3.5 z-2 grid size-8 cursor-pointer place-items-center rounded-full border border-white/25 bg-neutral-950/47 p-0 text-white" aria-label={stopped ? 'Play slideshow' : 'Pause slideshow'} onClick={() => setStopped(!stopped)}>
+      {items.length > 1 && <button type="button" className="absolute top-3.5 right-3.5 z-2 grid size-8 cursor-pointer place-items-center rounded-full border border-white/25 bg-neutral-950/47 text-white" aria-label={stopped ? 'Play slideshow' : 'Pause slideshow'} onClick={() => setStopped(!stopped)}>
         <i className={`fa fa-${stopped ? 'play' : 'pause'}`} aria-hidden="true" />
       </button>}
     </div>
     <ol className={FEATURED_LIST} aria-label="Choose a featured title">
       {items.map(({ show, party }, position) => <li key={party?.id ?? show.id} className={FEATURED_LIST_ITEM}>
-        <button type="button" className="group relative flex flex-1 cursor-pointer items-center overflow-hidden rounded-xl border-0 bg-neutral-900 p-3 text-left text-white hover:bg-neutral-800 aria-[current=true]:bg-neutral-800 sm:px-4.5 sm:py-0" aria-current={index === position ? 'true' : undefined} onClick={() => setActive(position)}>
+        <button type="button" className="group relative flex flex-1 cursor-pointer items-center overflow-hidden rounded-xl bg-neutral-900 p-3 text-left text-white hover:bg-neutral-800 aria-[current=true]:bg-neutral-800 sm:px-4.5 sm:py-0" aria-current={index === position ? 'true' : undefined} onClick={() => setActive(position)}>
           {/* A faded slice of the picture on the right of each row. */}
           <Artwork src={party?.video.preview_image || show.preview_image} eager
             className="top-1/2 right-0 left-auto aspect-video h-auto w-[64%] -translate-y-1/2 scale-106 [mask-image:linear-gradient(90deg,transparent,#0007_42%,#000)] opacity-26 transition-[opacity,scale] duration-[.5s,1s] group-hover:opacity-38 group-aria-[current=true]:scale-100 group-aria-[current=true]:opacity-52" />

@@ -3,7 +3,7 @@ import { Autocomplete } from '@base-ui/react/autocomplete'
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from 'motion/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuthUser } from '~/contexts/auth/auth'
-import { usePartyContext } from '~/screens/app.watch/use-party-context'
+import { useParty } from '~/screens/app.watch/use-party'
 import { UiPresenceAvatar } from '~/components/ui-presence-avatar/ui-presence-avatar'
 import { buttonClass } from '~/components/ui-button/ui-button'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
@@ -58,7 +58,7 @@ export function AppWatchHomeChatInvitationPanel({
   invitations: HostInvitations
   onClose: () => void
 }) {
-  const { party } = usePartyContext()
+  const party = useParty()
   const me = useAuthUser()
   const present = useIsPresent()
   const reducedMotion = useReducedMotion()

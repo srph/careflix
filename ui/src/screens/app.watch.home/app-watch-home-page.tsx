@@ -17,7 +17,10 @@ import { showsReactions, useActivityLevel } from './app-watch-home-activity-leve
 
 import { useUpdateEffect } from '~/hooks/use-update-effect'
 import { useReducer, useEffect, useRef } from 'react'
-import { usePartyContext } from '~/screens/app.watch/use-party-context'
+import { useParty } from '~/screens/app.watch/use-party'
+import { setPlayback } from '~/screens/app.watch/app-watch-party-updates'
+import { useSetParty } from '~/screens/app.watch/queries/app-watch-party-queries'
+import { usePusher } from '~/hooks/use-pusher'
 import { useAuthUser } from '~/contexts/auth/auth'
 import { useBufferState } from '~/hooks/use-buffer-state'
 import { useMediaMode } from '~/hooks/use-media-mode'
@@ -194,13 +197,14 @@ const reducer = (state: State, action: Action): State => {
  * @TODO Sync time every 5 minutes or so.
  */
 export function AppWatchHomePage(props: ReactComponentWrapper) {
-  const context = usePartyContext()
+  const party = useParty()
+  const setParty = useSetParty(party.id)
   const user = useAuthUser()
   const [activityLevel, setActivityLevel] = useActivityLevel(user.id)
   const { registerPlayer } = useInvitationOverlay()
 
   const [state, dispatch] = useReducer(reducer, {
-    time: context.party.current_time,
+    time: party.current_time,
     volume: 1,
     isComplete: false,
     isPlaying: false,
@@ -212,19 +216,19 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     isInvitationOpen: false,
     isKeyboardInfoOpen: false,
     isMuted: false,
-    isSubtitleEnabled: Boolean(context.party.video.subtitle_url)
+    isSubtitleEnabled: Boolean(party.video.subtitle_url)
   })
 
   // Other people's floats follow the Activity Overlay level while chat is closed.
-  const reactions = useReactions(context.party, user, showsReactions(activityLevel, state.isChatOpen))
+  const reactions = useReactions(party, user, showsReactions(activityLevel, state.isChatOpen))
 
   const $video = useRef<HTMLVideoElement>(null)
   const $pane = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    registerPlayer({ partyId: context.party.id, element: $pane.current! })
+    registerPlayer({ partyId: party.id, element: $pane.current! })
     return () => registerPlayer(null)
-  }, [context.party.id, registerPlayer])
+  }, [party.id, registerPlayer])
 
   const media = useMediaMode()
 
@@ -233,19 +237,26 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     $video.current!.currentTime = state.time
   }, [])
 
-  // Presence refreshes must not rewind playback. Each state event still syncs,
-  // even when its timestamp and play/pause values match the previous event.
-  useUpdateEffect(() => {
+  function syncPlayback(time: number, isPlaying: boolean) {
     dispatch({
       type: 'sync',
-      payload: {
-        time: context.party.current_time,
-        isPlaying: context.party.is_playing
-      }
+      payload: { time, isPlaying }
     })
 
-    $video.current!.currentTime = context.party.current_time
-  }, [context.playbackRevision])
+    $video.current!.currentTime = time
+  }
+
+  // Every state event syncs, even when its time and play/pause match the previous one.
+  usePusher(`private-party.${party.id}`, 'state', (event: { state: AppPartyState }) => {
+    setParty((current) => setPlayback(current, event.state))
+    syncPlayback(event.state.current_time, event.state.is_playing)
+  })
+
+  // A new video starts where the server says. This waits for the render that swaps the source,
+  // which would otherwise undo the seek.
+  useUpdateEffect(() => {
+    syncPlayback(party.current_time, party.is_playing)
+  }, [party.video.id])
 
   useUpdateEffect(() => {
     if (state.isPlaying) {
@@ -276,7 +287,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     dispatch({ type: 'change-video' })
 
     displayChangeEpisodeBuffer()
-  }, [context.party.video.id])
+  }, [party.video.id])
 
   function handleVideoClick() {
     if (media === 'desktop') {
@@ -350,7 +361,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
     $video.current!.currentTime = time
 
-    axios.put(`/api/parties/${context.party.id}/state`, {
+    axios.put(`/api/parties/${party.id}/state`, {
       is_playing: state.isPlaying,
       current_time: time
     })
@@ -361,7 +372,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
       type: 'controls:play'
     })
 
-    axios.put(`/api/parties/${context.party.id}/state`, {
+    axios.put(`/api/parties/${party.id}/state`, {
       is_playing: !state.isPlaying,
       current_time: state.time
     })
@@ -451,7 +462,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     })
   }
 
-  function handleChangeVideo(party: AppParty) {
+  function handleChangeVideo(next: AppParty) {
     dispatch({
       type: 'season-selection:toggle',
       payload: { isSeasonSelectionOpen: false }
@@ -459,7 +470,11 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
     handleOverlayClose()
 
-    context.onChangeVideo(party)
+    // The change-video response leaves out the room's invitations.
+    setParty((current) => ({ ...next, invitations: current.invitations }))
+
+    // Picking the same video keeps its source, so it can sync straight away.
+    if (String(next.video.id) === String(party.video.id)) syncPlayback(next.current_time, next.is_playing)
   }
 
   function handleToggleChat() {
@@ -512,14 +527,14 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
               state.isInitialized
                 ? {}
                 : {
-                    backgroundImage: `url(${getVideoPreviewImage(context.party)})`
+                    backgroundImage: `url(${getVideoPreviewImage(party)})`
                   }
             }
             onMouseMove={handleVideoHover}
             onClick={handleVideoClick}>
             <video
               className="pointer-events-none absolute inset-0 size-full sm:static"
-              src={context.party.video.video_url}
+              src={party.video.video_url}
               ref={$video}
               onTimeUpdate={handleTimeUpdate}
               onEnded={handleVideoEnded}
@@ -537,7 +552,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
                 </div>
 
                 <h4 className="text-base font-bold">
-                  {context.party.video.group.title}: {context.party.video.title}
+                  {party.video.group.title}: {party.video.title}
                 </h4>
               </div>
             </div>
@@ -553,7 +568,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
           {state.isInitialized && (
             <AppWatchHomeSubtitleSlot
-              video={context.party.video}
+              video={party.video}
               isEnabled={state.isSubtitleEnabled}
               isPlayerOpen={state.isOpen}
               time={state.time}
@@ -563,7 +578,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           <AppWatchHomeReactionLayer floats={reactions.floats} isLifted={state.isOpen} onDone={reactions.remove} />
 
           <AppWatchHomeActivityOverlay
-            party={context.party}
+            party={party}
             me={user}
             level={activityLevel}
             isChatOpen={state.isChatOpen}
@@ -572,7 +587,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           />
 
           <AppWatchHomePlayerModal
-            party={context.party}
+            party={party}
             time={state.time}
             volume={state.volume}
             getVideoElement={() => $video.current!}
@@ -600,18 +615,18 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           />
 
           <AppWatchHomeSeasonSelectionModal
-            party={context.party}
-            show={context.party.video.show}
+            party={party}
+            show={party.video.show}
             isOpen={state.isSeasonSelectionOpen}
             onClose={handleSeasonSelectionClose}
             onChangeVideo={handleChangeVideo}
           />
         </div>
 
-        <AppWatchHomeMobileTitleBar party={context.party} onOpenSeasonSelection={handleSeasonSelectionOpen} />
+        <AppWatchHomeMobileTitleBar party={party} onOpenSeasonSelection={handleSeasonSelectionOpen} />
 
         <AppWatchHomeChatWidget
-          party={context.party}
+          party={party}
           isChatOpen={state.isChatOpen}
           isInvitationOpen={state.isInvitationOpen}
           isSeasonSelectionOpen={state.isSeasonSelectionOpen}

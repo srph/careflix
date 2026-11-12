@@ -19,6 +19,7 @@ export const queryKeys = {
     createParty: () => ['home-create-party'] as const
   },
   watchParty: {
+    party: (partyId: AppId) => ['watch-party', String(partyId)] as const,
     inviteRecents: (partyId: AppId) => ['watch-party-invite-recents', String(partyId)] as const,
     inviteSearch: (partyId: AppId, term: string) => ['watch-party-invite-search', String(partyId), term] as const
   }

@@ -19,10 +19,10 @@ Legacy date-fns `1.30.1` is retained under the `date-fns-v1` npm alias to preser
 No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.g.:
 
 - `contexts/auth/auth.tsx` — auth/session state
-- `screens/app.watch/app-watch-context.ts` — the active watch party (see `usePartyContext`)
+- `screens/app.watch/app-watch-page.tsx` — loads the room's party with `usePartyQuery` and provides it to the room; read it with `useParty()`. Pusher events write to that query's cache.
 - `screens/app.watch.home/app-watch-home-page.tsx` — local player state (time, playing, volume, subtitles) via a single `useReducer`
 
-Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers.
+Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers, or written to the query cache.
 
 The authenticated home listing uses `@tanstack/react-query` through the wrapper hooks in
 `screens/app.home/app-home-queries.ts`. The shared provider in `lib/query` sets a 60-second
@@ -66,7 +66,7 @@ Older code is still being migrated; follow these in new and touched files.
 - **A screen's entrypoint is its page:** `app.watch/app-watch-page.tsx` → `AppWatchPage`.
 - **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`. Hooks keep their `use-` name: `app.watch.home/use-reactions.ts`.
 - **Tests sit next to the file** (`use-now.test.ts`) and select by role, text, label or `data-testid`, never class name. Expose state as `data-*` attributes.
-- **Nulls:** behind `PrivateRoute`, read the user with `useAuthUser()`; in the watch room, `usePartyContext()` always has a party. Prefer narrowing or a tighter type to `!`; `!` is fine for refs to elements that always render, and in tests.
+- **Nulls:** behind `PrivateRoute`, read the user with `useAuthUser()`; in the watch room, `useParty()` always has a party. Prefer narrowing or a tighter type to `!`; `!` is fine for refs to elements that always render, and in tests.
 - **Run Prettier** on files you change; it also sorts Tailwind classes.
 
 ## Styling

@@ -3,7 +3,9 @@ import { axios } from '~/lib/axios/axios'
 import { usePusher } from '~/hooks/use-pusher'
 import { usePresence } from '~/hooks/use-presence'
 import { useNow } from '~/hooks/use-now'
-import { usePartyContext } from '~/screens/app.watch/use-party-context'
+import { useParty } from '~/screens/app.watch/use-party'
+import { useSetParty } from '~/screens/app.watch/queries/app-watch-party-queries'
+import { acceptInvitation, addInvitation, removeInvitation } from '~/screens/app.watch/app-watch-party-updates'
 
 /** How long Joined, Declined or Expired shows before the row goes back to rest. */
 export const ANSWER_MS = 4000
@@ -85,9 +87,10 @@ export function reducer(state: State, action: Action): State {
 }
 
 export function useHostInvitations() {
-  const context = usePartyContext()
+  const party = useParty()
+  const setParty = useSetParty(party.id)
   const [state, dispatch] = useReducer(reducer, {
-    history: context.party.invitations || [],
+    history: party.invitations || [],
     answers: {},
     historyError: false,
     busy: {},
@@ -97,44 +100,44 @@ export function useHostInvitations() {
   const sendingTo = useRef(new Map<string, AppUser>())
   const presence = usePresence('presence-chat')
   const now = useNow({ interval: 1000 }).getTime()
-  const channel = `private-party.${context.party.id}`
+  const channel = `private-party.${party.id}`
 
   async function refreshHistory() {
-    const [error, response] = await axios.get(`/api/parties/${context.party.id}/invitations`)
+    const [error, response] = await axios.get(`/api/parties/${party.id}/invitations`)
     const failed = Boolean(error) || !Array.isArray(response?.data)
     dispatch({ type: 'history-error', failed })
     if (!failed) dispatch({ type: 'history', at: Date.now(), invitations: response.data })
   }
   useEffect(() => {
     refreshHistory()
-  }, [context.party.id])
+  }, [party.id])
   useEffect(() => {
-    dispatch({ type: 'history', at: Date.now(), invitations: context.party.invitations || [] })
-  }, [context.party.invitations])
+    dispatch({ type: 'history', at: Date.now(), invitations: party.invitations || [] })
+  }, [party.invitations])
 
   usePusher(channel, 'pusher:subscription_succeeded', refreshHistory)
   usePusher(channel, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
     dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    context.onInvite(event.invitation)
+    setParty((current) => addInvitation(current, event.invitation))
   })
   usePusher(channel, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
     dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    context.onCancel(event.invitation)
+    setParty((current) => removeInvitation(current, event.invitation))
   })
   usePusher(channel, 'invitation.declined', (event: { invitation: AppPartyInvitation }) => {
     dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    context.onDecline(event.invitation)
+    setParty((current) => removeInvitation(current, event.invitation))
   })
   usePusher(channel, 'invitation.accepted', (event: { invitation: AppPartyInvitation; member: AppPartyMember }) => {
     dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    context.onAccept(event.invitation, event.member)
+    setParty((current) => acceptInvitation(current, event.invitation, event.member))
   })
 
   const history = useMemo(
     () => new Map(state.history.map((invitation) => [String(invitation.recipient.id), invitation])),
     [state.history]
   )
-  const members = new Set(context.party.members.map((member) => String(member.id)))
+  const members = new Set(party.members.map((member) => String(member.id)))
   const pending = state.history.filter(
     (invitation) =>
       invitation.action === 'pending' &&
@@ -181,7 +184,7 @@ export function useHostInvitations() {
     operations.current.add(id)
     sendingTo.current.set(id, user)
     dispatch({ type: 'busy', id, busy: true })
-    const [error, response] = await axios.post(`/api/parties/${context.party.id}/invitations/send`, {
+    const [error, response] = await axios.post(`/api/parties/${party.id}/invitations/send`, {
       recipient_id: user.id
     })
     operations.current.delete(id)
@@ -189,7 +192,7 @@ export function useHostInvitations() {
     dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t send' : '' })
     if (!error) {
       dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
-      context.onInvite(response.data)
+      setParty((current) => addInvitation(current, response.data))
     }
   }
 
@@ -206,7 +209,7 @@ export function useHostInvitations() {
       return
     }
     dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
-    context.onCancel(response.data)
+    setParty((current) => removeInvitation(current, response.data))
   }
 
   return {

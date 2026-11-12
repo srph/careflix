@@ -14,7 +14,7 @@ import { WindowVhSetter } from '~/components/window-vh-setter/window-vh-setter'
 import App from '~/screens/app'
 import { AppHomePage } from '~/screens/app.home/app-home-page'
 import AppWatch from '~/screens/app.watch'
-import AppWatchHome from '~/screens/app.watch.home'
+import { AppWatchHomePage } from '~/screens/app.watch.home/app-watch-home-page'
 import AppSettings from '~/screens/app.settings'
 import AppSettingsProfile from '~/screens/app.settings-profile'
 import AppSettingsFaq from '~/screens/app.settings-faq'
@@ -59,7 +59,7 @@ const router = createBrowserRouter([{
         { path: '/settings/profile', element: <AppSettingsProfile /> },
         { path: '/settings/password', element: <Navigate to="/settings" replace /> },
         { path: '/settings/faq', element: <AppSettingsFaq /> },
-        { path: '/watch/:partyId', element: <AppWatch><AppWatchHome /></AppWatch> },
+        { path: '/watch/:partyId', element: <AppWatch><AppWatchHomePage /></AppWatch> },
       ] },
       // The previous router kept the app shell for unmatched URLs.
       { path: '*', element: null },

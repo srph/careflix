@@ -20,7 +20,7 @@ No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.
 
 - `contexts/auth/auth.tsx` — auth/session state
 - `screens/app.watch/Context` — the active watch party (see `usePartyContext`)
-- `screens/app.watch.home/index.tsx` — local player state (time, playing, volume, subtitles) via a single `useReducer`
+- `screens/app.watch.home/app-watch-home-page.tsx` — local player state (time, playing, volume, subtitles) via a single `useReducer`
 
 Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers.
 
@@ -57,7 +57,7 @@ Older code is still being migrated; follow these in new and touched files.
 - **Imports:** `~/` reaches anywhere in `src`. A relative path may go down into folders (`./stuff/types.ts`) and up one level at most (`../types.ts`); past that (`../../types.ts`), use `~/`.
 - **Shared components** get a folder of their own: `components/key-castr/key-castr.tsx`.
 - **A screen's entrypoint is its page:** `app.watch/app-watch-page.tsx` → `AppWatchPage`.
-- **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`.
+- **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`. Hooks keep their `use-` name: `app.watch.home/use-reactions.ts`.
 - **Tests sit next to the file** (`use-now.test.ts`) and select by role, text, label or `data-testid`, never class name. Expose state as `data-*` attributes.
 - **Run Prettier** on files you change; it also sorts Tailwind classes.
 
@@ -76,14 +76,14 @@ Tailwind `4.3.5` classes; tokens, keyframes and the focus ring live in `src/tail
 
 ## Video player
 
-There's no video library (no video.js/hls.js) — it's a plain HTML5 `<video>` element (`screens/app.watch.home/index.tsx`) with fully custom React-built chrome:
+There's no video library (no video.js/hls.js) — it's a plain HTML5 `<video>` element (`screens/app.watch.home/app-watch-home-page.tsx`) with fully custom React-built chrome:
 
-- `PlayerModal` — controls overlay (play/pause, seek, volume, fullscreen, chat toggle, subtitle toggle, episode selection)
-- `PlayerSeeker`, `VolumeControl`, `PlayerTooltip` — individual control widgets
-- `SubtitleSlot` — renders subtitles parsed client-side from a `.srt` via `lib/srt2obj`
-- `usePlayerHotkeys` — keyboard shortcuts (space, arrows, f, m, etc.)
+- `AppWatchHomePlayerModal` — controls overlay (play/pause, seek, volume, fullscreen, chat toggle, subtitle toggle, episode selection)
+- `AppWatchHomePlayerSeeker`, `AppWatchHomeVolumeControl`, `AppWatchHomePlayerTooltip` — individual control widgets
+- `AppWatchHomeSubtitleSlot` — renders subtitles parsed client-side from a `.srt` via `lib/srt2obj`
+- `usePlayerHotkeys` (`use-player-hotkeys.ts`) — keyboard shortcuts (space, arrows, f, m, etc.)
 
-Playback is kept in sync across party members by dispatching local player actions to the API, which re-broadcasts `PartyState`/`PartyVideoChanged` events over Pusher; the reducer in `screens/app.watch.home/index.tsx` applies incoming `sync`/`change-video` actions by imperatively setting `$video.current.currentTime`, `.play()`/`.pause()`, etc. on the video ref.
+Playback is kept in sync across party members by dispatching local player actions to the API, which re-broadcasts `PartyState`/`PartyVideoChanged` events over Pusher; the reducer in `screens/app.watch.home/app-watch-home-page.tsx` applies incoming `sync`/`change-video` actions by imperatively setting `$video.current.currentTime`, `.play()`/`.pause()`, etc. on the video ref.
 
 ## Commands
 

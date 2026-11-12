@@ -2,8 +2,9 @@ import * as React from 'react'
 import { UiModal } from '~/components/ui-modal/ui-modal'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { SeasonSelection } from '~/components/season-selection/season-selection'
-import { axios } from '~/lib/axios/axios'
 import { useMediaMode } from '~/hooks/use-media-mode'
+import { useShowGroupsQuery } from '~/queries/show-queries'
+import { useChangeVideoMutation } from '~/screens/app.watch/queries/app-watch-party-queries'
 
 interface Props {
   party: AppParty
@@ -19,17 +20,13 @@ interface Props {
  * @TODO Create party loader
  */
 export function AppWatchHomeSeasonSelectionModal(props: Props) {
-  async function handleVideoClick(video: AppShowVideo) {
-    const [err, res] = await axios.put(`/api/parties/${props.party.id}/change-video`, {
-      show_video_id: video.id
-    })
+  // Seasons load when the picker opens.
+  const groups = useShowGroupsQuery(props.show, props.isOpen)
+  const changeVideo = useChangeVideoMutation(props.party.id)
 
-    if (err) {
-      // Launch toast notification
-      return
-    }
-
-    props.onChangeVideo(res.data)
+  function handleVideoClick(video: AppShowVideo) {
+    // @TODO Launch toast notification on failure
+    changeVideo.mutateAsync(video).then(props.onChangeVideo, () => {})
   }
 
   const media = useMediaMode()
@@ -57,6 +54,7 @@ export function AppWatchHomeSeasonSelectionModal(props: Props) {
             </div>
 
             <SeasonSelection
+              groups={groups.data ?? []}
               show={props.show}
               currentVideo={props.party.video}
               onEpisodeClick={handleVideoClick}

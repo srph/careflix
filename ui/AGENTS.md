@@ -27,9 +27,9 @@ Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pushe
 The authenticated home listing uses `@tanstack/react-query` through the wrapper hooks in
 `screens/app.home/app-home-queries.ts`. The shared provider in `lib/query` sets a 60-second
 stale time and replaces the cache when the authenticated account changes. Other
-screens retain their existing fetching patterns. `SeasonSelection` accepts optional
-externally fetched groups so the listing's details modal can use Query without
-changing the watch room's data flow.
+screens retain their existing fetching patterns. The watch room loads through the hooks in
+`screens/app.watch/queries/`, with Pusher events written into those caches. `SeasonSelection`
+takes its groups from the caller (`useShowGroupsQuery`).
 
 Query conventions:
 

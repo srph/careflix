@@ -1,13 +1,9 @@
 import * as React from 'react'
 import { cn } from '~/utils/cn'
-import { useEffect, useState } from 'react'
-import { axios } from '~/lib/axios/axios'
+import { useMemo } from 'react'
+import { useSubtitleQuery } from '~/screens/app.watch/queries/app-watch-video-queries'
 import { placements, HAS_PLACEMENT_PATTERN } from './app-watch-home-subtitle-slot-constants'
-import { srt2obj, Track } from './app-watch-home-subtitle-slot-utils'
-
-interface State {
-  tracks: Track[]
-}
+import { srt2obj } from './app-watch-home-subtitle-slot-utils'
 
 interface Props {
   video: AppShowVideo
@@ -22,39 +18,22 @@ const SLOT =
   'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
 
 export function AppWatchHomeSubtitleSlot(props: Props) {
-  const [state, setState] = useState<State>(() => ({ tracks: [] }))
-
-  useEffect(() => {
-    let cancelled = false
-    setState({ tracks: [] })
-
-    async function loadSubtitles() {
-      if (!props.video.subtitle_url) return
-
-      try {
-        const [err, res] = await axios.get(`/api/videos/${props.video.id}/subtitle`, {
-          app: { validation: false }
-        })
-
-        if (cancelled || err || typeof res?.data?.subtitle !== 'string') return
-
-        setState({ tracks: srt2obj(res.data.subtitle) })
-      } catch {
-        // Missing or malformed subtitles should not interrupt the watch party.
-      }
+  const subtitle = useSubtitleQuery(props.video).data
+  const tracks = useMemo(() => {
+    if (!subtitle) return []
+    try {
+      return srt2obj(subtitle)
+    } catch {
+      // Missing or malformed subtitles should not interrupt the watch party.
+      return []
     }
-
-    void loadSubtitles()
-    return () => {
-      cancelled = true
-    }
-  }, [props.video.id, props.video.subtitle_url])
+  }, [subtitle])
 
   if (!props.video.subtitle_url) {
     return null
   }
 
-  if (!state.tracks.length) {
+  if (!tracks.length) {
     return null
   }
 
@@ -62,7 +41,7 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
     return null
   }
 
-  const subtitles = state.tracks.filter((track) => {
+  const subtitles = tracks.filter((track) => {
     return props.time >= track.start && props.time <= track.end
   })
 

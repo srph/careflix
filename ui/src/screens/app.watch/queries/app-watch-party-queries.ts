@@ -32,3 +32,16 @@ export function useSyncStateMutation(partyId: AppId) {
     }
   })
 }
+
+/** Switches the room to another episode; the room's cached party becomes the server's answer. */
+export function useChangeVideoMutation(partyId: AppId) {
+  const setParty = useSetParty(partyId)
+  return useMutation({
+    mutationFn: async (video: AppShowVideo): Promise<AppParty> => {
+      const [error, response] = await axios.put(`/api/parties/${partyId}/change-video`, { show_video_id: video.id })
+      if (error) throw error
+      return response.data
+    },
+    onSuccess: (party) => setParty(() => party)
+  })
+}

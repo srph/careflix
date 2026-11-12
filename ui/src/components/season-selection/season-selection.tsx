@@ -1,137 +1,35 @@
 import * as React from 'react'
 import { cn } from '~/utils/cn'
-import { useReducer, useMemo } from 'react'
-import { useAsyncEffect } from '~/hooks/use-async-effect'
+import { useMemo, useState } from 'react'
 import { UiSelect } from '~/components/ui-select/ui-select'
 import { StandardImageAspectRatio } from '~/components/standard-image-aspect-ratio/standard-image-aspect-ratio'
 import { getFormattedDurationWithoutSeconds } from '~/utils/date/get-formatted-duration-without-seconds'
-import { axios } from '~/lib/axios/axios'
 
 interface Props {
-  groups?: AppShowGroup[]
-  isDisabled?: boolean
-  party?: AppParty
+  /** The show's seasons; nothing shows until there are some. */
+  groups: AppShowGroup[]
   show: AppShow | null
   currentVideo?: AppShowVideo
-  onFetch?: (groups: AppShowGroup[]) => void
   onEpisodeClick: (video: AppShowVideo) => void
   mode?: 'dark' | 'light'
 }
 
-interface State {
-  groups: AppShowGroup[]
-  selectedGroupId: AppId
-  isLoading: boolean
-}
-
-type Action =
-  | ReducerAction<'request:init'>
-  | ReducerAction<'request:success', { groups: AppShowGroup[] }>
-  | ReducerAction<'request:error'>
-  | ReducerAction<'modal:close'>
-  | ReducerAction<'group:change', { id: AppId }>
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'request:init': {
-      return {
-        ...state,
-        groups: [],
-        isLoading: true
-      }
-    }
-
-    case 'request:success': {
-      return {
-        ...state,
-        groups: action.payload.groups,
-        selectedGroupId:
-          state.selectedGroupId === -1
-            ? // If no selectedGroupId was provided, we'll apply the first season if it exists.
-              action.payload.groups.length
-              ? action.payload.groups[0].id
-              : -1
-            : state.selectedGroupId,
-        isLoading: false
-      }
-    }
-
-    // @TODO
-    case 'request:error': {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-
-    case 'modal:close': {
-      return {
-        ...state,
-        groups: [],
-        selectedGroupId: -1
-      }
-    }
-
-    case 'group:change': {
-      return {
-        ...state,
-        selectedGroupId: action.payload.id
-      }
-    }
-  }
-}
-
 /**
- * @TODO Add group loader
  * @TODO For series with no shows, we'll show an empty placeholder.
- * @TODO Create party loader
  */
 export function SeasonSelection(props: Props) {
-  const [state, dispatch] = useReducer(reducer, {
-    groups: [],
-    isLoading: false,
-    selectedGroupId: props.currentVideo ? props.currentVideo.show_group_id : -1
-  })
-
-  const groups = props.groups ?? state.groups
-  const group = useMemo(() => {
-    return groups.find((group) => group.id === state.selectedGroupId) ?? groups[0]
-  }, [groups, state.selectedGroupId])
-
-  useAsyncEffect(
-    async () => {
-      if (props.groups != null || props.show == null || props.show.title_type === 'movie') {
-        return
-      }
-
-      dispatch({
-        type: 'request:init'
-      })
-
-      const [err, res] = await axios.get(`api/shows/${props.show.id}/groups`)
-
-      if (err != null) {
-        return dispatch({
-          type: 'request:error'
-        })
-      }
-
-      dispatch({
-        type: 'request:success',
-        payload: { groups: res.data }
-      })
-
-      props.onFetch?.(res.data)
-    },
-    null,
-    [props.show, props.groups]
+  const [selectedGroupId, setSelectedGroupId] = useState<AppId>(
+    props.currentVideo ? props.currentVideo.show_group_id : -1
   )
 
+  const groups = props.groups
+  // Without a selection, the first season.
+  const group = useMemo(() => {
+    return groups.find((group) => group.id === selectedGroupId) ?? groups[0]
+  }, [groups, selectedGroupId])
+
   function handleGroupChange(evt: React.FormEvent<HTMLSelectElement>) {
-    dispatch({
-      type: 'group:change',
-      payload: { id: Number(evt.currentTarget.value) }
-    })
+    setSelectedGroupId(Number(evt.currentTarget.value))
   }
 
   function handleEpisodeClick(video: AppShowVideo) {
@@ -145,7 +43,7 @@ export function SeasonSelection(props: Props) {
   }
 
   const show = props.show
-  if (!show || show.title_type === 'movie' || state.isLoading || !groups.length) {
+  if (!show || show.title_type === 'movie' || !groups.length) {
     return null
   }
 
@@ -170,7 +68,6 @@ export function SeasonSelection(props: Props) {
           return (
             <button
               type="button"
-              disabled={props.isDisabled}
               className={cn(
                 'flex w-full cursor-pointer items-center py-4 text-left not-last:border-b first:border-t',
                 light ? 'border-neutral-200 text-neutral-700' : 'border-neutral-800 text-white'

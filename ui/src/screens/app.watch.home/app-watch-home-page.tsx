@@ -21,7 +21,6 @@ import { usePlayerChrome } from './use-player-chrome'
 import { useUpdateEffect } from '~/hooks/use-update-effect'
 import { useEffect, useRef } from 'react'
 import { useParty } from '~/screens/app.watch/use-party'
-import { useSetParty } from '~/screens/app.watch/queries/app-watch-party-queries'
 import { useAuthUser } from '~/contexts/auth/auth'
 import { useBufferState } from '~/hooks/use-buffer-state'
 import { useMediaMode } from '~/hooks/use-media-mode'
@@ -34,7 +33,6 @@ import { getVideoPreviewImage } from '~/utils/shows/get-video-preview-image'
  */
 export function AppWatchHomePage(props: ReactComponentWrapper) {
   const party = useParty()
-  const setParty = useSetParty(party.id)
   const user = useAuthUser()
   const { registerPlayer } = useInvitationOverlay()
   const player = usePlayerSync(party)
@@ -106,9 +104,6 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     // FYI, the controls let overlay clicks pass through to the video, where handleVideoClick
     // does the right thing for desktop and mobile.
     chrome.closeControls()
-
-    // The change-video response leaves out the room's invitations.
-    setParty((current) => ({ ...next, invitations: current.invitations }))
 
     player.changedVideo(next)
   }

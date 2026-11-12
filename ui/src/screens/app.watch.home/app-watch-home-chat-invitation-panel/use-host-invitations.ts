@@ -1,11 +1,17 @@
-import { useEffect, useMemo, useReducer, useRef } from 'react'
-import { axios } from '~/lib/axios/axios'
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { usePusher } from '~/hooks/use-pusher'
 import { usePresence } from '~/hooks/use-presence'
 import { useNow } from '~/hooks/use-now'
+import { inOneRender } from '~/lib/query/in-one-render'
 import { useParty } from '~/screens/app.watch/use-party'
 import { useSetParty } from '~/screens/app.watch/queries/app-watch-party-queries'
-import { acceptInvitation, addInvitation, removeInvitation } from '~/screens/app.watch/app-watch-party-updates'
+import { addMember } from '~/screens/app.watch/app-watch-party-updates'
+import {
+  useCancelInviteMutation,
+  useInvitationsQuery,
+  useMergeInvitations,
+  useSendInviteMutation
+} from '~/screens/app.watch/queries/app-watch-invitation-queries'
 
 /** How long Joined, Declined or Expired shows before the row goes back to rest. */
 export const ANSWER_MS = 4000
@@ -13,40 +19,24 @@ export const ANSWER_MS = 4000
 export type InviteAnswer = 'joined' | 'declined' | 'expired'
 
 export type State = {
-  history: AppPartyInvitation[]
   /** Answers this tab saw arrive, by recipient id; each one shows for ANSWER_MS. */
   answers: Record<string, { kind: 'joined' | 'declined'; at: number }>
-  historyError: boolean
   busy: Record<string, boolean>
   errors: Record<string, string>
 }
 type Action =
-  | { type: 'history'; invitations: AppPartyInvitation[]; at: number }
+  | { type: 'history'; previous: AppPartyInvitation[]; history: AppPartyInvitation[]; at: number }
   | { type: 'prune'; at: number }
-  | { type: 'history-error'; failed: boolean }
   | { type: 'busy'; id: string; busy: boolean; error?: string }
 
-// A late search/snapshot/event must never undo a newer invitation or its answer.
-function mergeHistory(current: AppPartyInvitation[], incoming: AppPartyInvitation[]) {
-  const byPerson = new Map(current.map((invitation) => [String(invitation.recipient.id), invitation]))
-  for (const invitation of incoming) {
-    const id = String(invitation.recipient.id)
-    const previous = byPerson.get(id)
-    if (
-      !previous ||
-      Number(invitation.id) > Number(previous.id) ||
-      (String(invitation.id) === String(previous.id) &&
-        (previous.action === 'pending' || invitation.action !== 'pending'))
-    )
-      byPerson.set(id, invitation)
-  }
-  return Array.from(byPerson.values())
-}
-
 // Note an answer when a waiting invite we already had turns into Joined or Declined; a new invite clears it.
-function noteAnswers(state: State, history: AppPartyInvitation[], at: number) {
-  const previous = new Map(state.history.map((invitation) => [String(invitation.recipient.id), invitation]))
-  let answers = state.answers
+export function noteAnswers(
+  answers: State['answers'],
+  before: AppPartyInvitation[],
+  history: AppPartyInvitation[],
+  at: number
+) {
+  const previous = new Map(before.map((invitation) => [String(invitation.recipient.id), invitation]))
   for (const invitation of history) {
     const id = String(invitation.recipient.id)
     const before = previous.get(id)
@@ -65,18 +55,14 @@ function noteAnswers(state: State, history: AppPartyInvitation[], at: number) {
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'history': {
-      const history = mergeHistory(state.history, action.invitations)
-      return { ...state, history, answers: noteAnswers(state, history, action.at) }
-    }
+    case 'history':
+      return { ...state, answers: noteAnswers(state.answers, action.previous, action.history, action.at) }
     case 'prune': {
       const answers = Object.fromEntries(
         Object.entries(state.answers).filter(([, answer]) => answer.at + ANSWER_MS > action.at)
       )
       return { ...state, answers }
     }
-    case 'history-error':
-      return { ...state, historyError: action.failed }
     case 'busy':
       return {
         ...state,
@@ -89,56 +75,51 @@ export function reducer(state: State, action: Action): State {
 export function useHostInvitations() {
   const party = useParty()
   const setParty = useSetParty(party.id)
-  const [state, dispatch] = useReducer(reducer, {
-    history: party.invitations || [],
-    answers: {},
-    historyError: false,
-    busy: {},
-    errors: {}
-  })
+  const query = useInvitationsQuery(party)
+  const merge = useMergeInvitations(party.id)
+  const sendInvite = useSendInviteMutation(party.id)
+  const cancelInvite = useCancelInviteMutation()
+  const [state, dispatch] = useReducer(reducer, { answers: {}, busy: {}, errors: {} })
+  // Answers come from how the list changes, so they land in the same render as the change.
+  const [seen, setSeen] = useState(query.data)
+  if (seen !== query.data) {
+    setSeen(query.data)
+    dispatch({ type: 'history', previous: seen, history: query.data, at: Date.now() })
+  }
   const operations = useRef(new Set<string>())
   const sendingTo = useRef(new Map<string, AppUser>())
   const presence = usePresence('presence-chat')
   const now = useNow({ interval: 1000 }).getTime()
   const channel = `private-party.${party.id}`
 
-  async function refreshHistory() {
-    const [error, response] = await axios.get(`/api/parties/${party.id}/invitations`)
-    const failed = Boolean(error) || !Array.isArray(response?.data)
-    dispatch({ type: 'history-error', failed })
-    if (!failed) dispatch({ type: 'history', at: Date.now(), invitations: response.data })
+  function refreshHistory() {
+    void query.refetch()
   }
-  useEffect(() => {
-    refreshHistory()
-  }, [party.id])
-  useEffect(() => {
-    dispatch({ type: 'history', at: Date.now(), invitations: party.invitations || [] })
-  }, [party.invitations])
 
   usePusher(channel, 'pusher:subscription_succeeded', refreshHistory)
   usePusher(channel, 'invitation.sent', (event: { invitation: AppPartyInvitation }) => {
-    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    setParty((current) => addInvitation(current, event.invitation))
+    merge([event.invitation])
   })
   usePusher(channel, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
-    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    setParty((current) => removeInvitation(current, event.invitation))
+    merge([event.invitation])
   })
   usePusher(channel, 'invitation.declined', (event: { invitation: AppPartyInvitation }) => {
-    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    setParty((current) => removeInvitation(current, event.invitation))
+    merge([event.invitation])
   })
   usePusher(channel, 'invitation.accepted', (event: { invitation: AppPartyInvitation; member: AppPartyMember }) => {
-    dispatch({ type: 'history', at: Date.now(), invitations: [event.invitation] })
-    setParty((current) => acceptInvitation(current, event.invitation, event.member))
+    // Joined and the new member show together.
+    inOneRender(() => {
+      merge([event.invitation])
+      setParty((current) => addMember(current, event.member))
+    })
   })
 
   const history = useMemo(
-    () => new Map(state.history.map((invitation) => [String(invitation.recipient.id), invitation])),
-    [state.history]
+    () => new Map(query.data.map((invitation) => [String(invitation.recipient.id), invitation])),
+    [query.data]
   )
   const members = new Set(party.members.map((member) => String(member.id)))
-  const pending = state.history.filter(
+  const pending = query.data.filter(
     (invitation) =>
       invitation.action === 'pending' &&
       Date.parse(invitation.expires_at) > now &&
@@ -164,7 +145,7 @@ export function useHostInvitations() {
     return end <= now && now - end < ANSWER_MS ? 'expired' : null
   }
   // Fresh Declined and Expired answers, for the chat strip.
-  const answered = state.history.filter((invitation) => {
+  const answered = query.data.filter((invitation) => {
     const given = answer(String(invitation.recipient.id))
     return given === 'declined' || given === 'expired'
   })
@@ -184,16 +165,15 @@ export function useHostInvitations() {
     operations.current.add(id)
     sendingTo.current.set(id, user)
     dispatch({ type: 'busy', id, busy: true })
-    const [error, response] = await axios.post(`/api/parties/${party.id}/invitations/send`, {
-      recipient_id: user.id
-    })
+    const saved = await sendInvite.mutateAsync(user).catch(() => null)
     operations.current.delete(id)
-    sendingTo.current.delete(id)
-    dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t send' : '' })
-    if (!error) {
-      dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
-      setParty((current) => addInvitation(current, response.data))
+    // The row leaves Sending in the same render its invite shows up.
+    const settle = () => {
+      sendingTo.current.delete(id)
+      dispatch({ type: 'busy', id, busy: false, error: saved ? '' : 'Couldn’t send' })
     }
+    if (saved) inOneRender(() => merge([saved]), settle)
+    else settle()
   }
 
   async function cancel(invitation: AppPartyInvitation) {
@@ -201,19 +181,22 @@ export function useHostInvitations() {
     if (operations.current.has(id)) return
     operations.current.add(id)
     dispatch({ type: 'busy', id, busy: true })
-    const [error, response] = await axios.post(`/api/invitations/${invitation.id}/cancel`)
+    const saved = await cancelInvite.mutateAsync(invitation).catch(() => null)
     operations.current.delete(id)
-    dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t undo' : '' })
-    if (error) {
+    if (!saved) {
+      dispatch({ type: 'busy', id, busy: false, error: 'Couldn’t undo' })
       refreshHistory()
       return
     }
-    dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
-    setParty((current) => removeInvitation(current, response.data))
+    inOneRender(
+      () => merge([saved]),
+      () => dispatch({ type: 'busy', id, busy: false, error: '' })
+    )
   }
 
   return {
     ...state,
+    historyError: query.isError,
     now,
     pending,
     answered,

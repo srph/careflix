@@ -3,7 +3,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createQueryClient } from '~/lib/query/client'
 import { axios } from '~/lib/axios/axios'
-import { useInviteRecentsQuery, useInviteSearchQuery } from './app-watch-home-chat-invitation-panel-queries'
+import { useInviteRecentsQuery, useInviteSearchQuery } from './app-watch-invitation-queries'
 
 vi.mock('~/lib/axios/axios', () => ({ axios: { get: vi.fn() } }))
 const clients: ReturnType<typeof createQueryClient>[] = []

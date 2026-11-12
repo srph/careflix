@@ -5,7 +5,7 @@ import { UiPresenceAvatar } from '~/components/ui-presence-avatar/ui-presence-av
 import { useAuth } from '~/contexts/auth/auth'
 
 interface Props {
-  users?: AppUser[] | AppPartyMember[]
+  users: AppUser[] | AppPartyMember[]
   size?: 'sm' | 'm' | 'l' | 'xl'
   className?: string
   /** The wrapper around each avatar: its spacing, or a border that cuts it out of the next one. */
@@ -21,7 +21,7 @@ export function UiAvatarGroup(props: Props) {
     <div className={cn('flex items-center', props.className)}>
       {props.users.slice(0, 4).map((user, i) => (
         <div className={cn('not-last:mr-0.5', props.itemClassName)} key={i}>
-          {auth.data.id !== user.id && 'pivot' in user ? (
+          {auth.data?.id !== user.id && 'pivot' in user ? (
             <UiPresenceAvatar
               user={user}
               isActive={(user as AppPartyMember).pivot.is_active}

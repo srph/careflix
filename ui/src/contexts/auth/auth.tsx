@@ -153,10 +153,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
   }
 
   const updateUserData = (payload: Partial<AppUser>) => {
-    setData(data => ({
-      ...data,
-      ...payload
-    }))
+    setData(data => data && { ...data, ...payload })
   }
 
   /**
@@ -164,7 +161,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
    */
   const shiftInvitations = () => {
     setData(current => current && immer(current, draft => {
-      draft.invitations.shift()
+      draft.invitations?.shift()
     }))
   }
 
@@ -186,7 +183,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
    */
   const cancelInvitation = (particular: AppPartyInvitation) => {
     setData(current => current && immer(current, draft => {
-      const invitation = draft.invitations.find(invitation => invitation.id === particular.id)
+      const invitation = draft.invitations?.find(invitation => invitation.id === particular.id)
       if (invitation) invitation.action = 'cancelled'
     }))
   }
@@ -195,7 +192,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     // A resolved event can arrive before the original invitation on another tab.
     removedInvitations.current.add(String(id))
     setData(current => current && immer(current, draft => {
-      draft.invitations = draft.invitations.filter(invitation => invitation.id !== id)
+      draft.invitations = draft.invitations?.filter(invitation => invitation.id !== id)
     }))
   }
 
@@ -232,4 +229,14 @@ function useAuth() {
   return useContext(Context)
 }
 
-export { AuthProvider, useAuth }
+/**
+ * The signed-in user, for screens behind PrivateRoute: they never render without one,
+ * because PrivateRoute swaps in its redirect in the same render that clears the user.
+ */
+function useAuthUser(): AppUser {
+  const { data } = useContext(Context)
+  if (!data) throw new Error('useAuthUser needs a signed-in user')
+  return data
+}
+
+export { AuthProvider, useAuth, useAuthUser }

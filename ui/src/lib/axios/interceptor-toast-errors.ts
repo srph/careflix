@@ -12,7 +12,7 @@ export const interceptorToastErrors = {
      * @example Provide a custom error message
      * axios({ app: { validation: 'An error occured trying to create a contact } })
      */
-    return instance.interceptors.response.use(null, (err: AxiosError<{ errors: AppValidationBag }>) => {
+    return instance.interceptors.response.use(undefined, (err: AxiosError<{ errors: AppValidationBag }>) => {
       if (axios.isCancel(err)) return Promise.reject(err)
       if (err.config.method === 'get') {
         return Promise.reject(err)

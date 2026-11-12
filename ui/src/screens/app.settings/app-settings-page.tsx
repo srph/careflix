@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 
 import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/contexts/auth/auth'
 import { useIsPWA } from '~/hooks/use-is-pwa'
 
 import { config } from '~/config'
@@ -33,7 +33,7 @@ function MenuItem({ icon, children }: { icon: string; children: React.ReactNode 
  * Use this to create a route instead of typing everything down
  */
 export function AppSettingsPage() {
-  const auth = useAuth()
+  const user = useAuthUser()
   const isPWA = useIsPWA()
 
   return (
@@ -44,12 +44,12 @@ export function AppSettingsPage() {
         <div className="relative h-[calc(100%-50px)]">
           <div className="-mt-4 flex items-center px-4 pt-12 pb-8">
             <div className="mr-4 shrink-0">
-              <UiAvatar user={auth.data} size="l" />
+              <UiAvatar user={user} size="l" />
             </div>
 
             {/* min-w-0 lets the name shrink so it can end in an ellipsis. */}
             <div className="w-full min-w-0">
-              <h2 className="truncate text-2xl font-bold">{auth.data.name}</h2>
+              <h2 className="truncate text-2xl font-bold">{user.name}</h2>
               <div className="shrink-0 text-neutral-400">
                 <h6 className="font-label text-xs font-bold tracking-label uppercase">View Your Profile</h6>
               </div>

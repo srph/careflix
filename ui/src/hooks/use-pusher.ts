@@ -23,7 +23,7 @@ function usePusher(channelName: string, eventName: string, callback: Pusher.Even
     channel.bind(eventName, listener)
     return () => {
       channel.unbind(eventName, listener)
-      const remaining = counts.get(channelName) - 1
+      const remaining = (counts.get(channelName) ?? 1) - 1
       if (remaining) counts.set(channelName, remaining)
       else {
         counts.delete(channelName)

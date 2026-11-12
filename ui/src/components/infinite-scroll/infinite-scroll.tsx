@@ -10,7 +10,15 @@ interface Props {
   renderError?: (retry: () => void) => ReactNode
 }
 
-export function InfiniteScroll({ children, itemCount, hasMore, isLoading, threshold = 300, onLoadMore, renderError }: Props) {
+export function InfiniteScroll({
+  children,
+  itemCount,
+  hasMore,
+  isLoading,
+  threshold = 300,
+  onLoadMore,
+  renderError
+}: Props) {
   const sentinel = useRef<HTMLDivElement>(null)
   const inFlight = useRef(false)
   const nearEnd = useRef(false)
@@ -35,12 +43,17 @@ export function InfiniteScroll({ children, itemCount, hasMore, isLoading, thresh
   useEffect(() => {
     if (!hasMore || isLoading || error || !sentinel.current) return
     nearEnd.current = false
-    const observer = new IntersectionObserver(entries => {
-      nearEnd.current = entries.some(entry => entry.isIntersecting)
-      if (hasScrolled.current && nearEnd.current) void load()
-    }, { rootMargin: `${threshold}px 0px` })
+    const observer = new IntersectionObserver(
+      (entries) => {
+        nearEnd.current = entries.some((entry) => entry.isIntersecting)
+        // A page too short to scroll never fires a scroll event, so fill the screen without one.
+        const canScroll = document.documentElement.scrollHeight > window.innerHeight
+        if (nearEnd.current && (hasScrolled.current || !canScroll)) void load()
+      },
+      { rootMargin: `${threshold}px 0px` }
+    )
     observer.observe(sentinel.current)
-    // The replaced component loads in response to scrolling, not on first mount.
+    // Otherwise wait for a scroll, as the replaced component did, rather than loading on first mount.
     function onScroll() {
       hasScrolled.current = true
       if (nearEnd.current) void load()
@@ -56,8 +69,23 @@ export function InfiniteScroll({ children, itemCount, hasMore, isLoading, thresh
     <div aria-busy={isLoading}>
       {children}
       <div ref={sentinel} aria-hidden="true" style={{ height: 1 }} />
-      {error && (renderError ? renderError(() => { void load(true) })
-        : <div role="alert">Unable to load more. <button type="button" onClick={() => { void load(true) }}>Retry</button></div>)}
+      {error &&
+        (renderError ? (
+          renderError(() => {
+            void load(true)
+          })
+        ) : (
+          <div role="alert">
+            Unable to load more.{' '}
+            <button
+              type="button"
+              onClick={() => {
+                void load(true)
+              }}>
+              Retry
+            </button>
+          </div>
+        ))}
     </div>
   )
 }

@@ -26,10 +26,8 @@ interface AppCollection<T = any> {
   next_page_url: string | null
 }
 
-interface ReducerAction<T, P = {}> {
-  type: T
-  payload?: P
-}
+// An action declared with a payload must carry it; one declared without can't.
+type ReducerAction<T, P = never> = [P] extends [never] ? { type: T; payload?: undefined } : { type: T; payload: P }
 
 type AppId = string | number
 
@@ -101,6 +99,8 @@ interface AppShowVideo {
   updated_at: string
 }
 
+type AppPartyVideo = AppShowVideo & { show: AppShow; group: AppShowGroup | null }
+
 interface AppShowGroup {
   id: AppId
   show_id: AppId
@@ -140,7 +140,8 @@ interface AppParty {
   show_video_id: AppId
   is_playing: boolean
   current_time: number
-  video?: AppShowVideo
+  // Party::$with always loads video.show and video.group (null for a movie).
+  video: AppPartyVideo
   invitations?: AppPartyInvitation[]
   members: AppPartyMember[]
   last_activity_at: string

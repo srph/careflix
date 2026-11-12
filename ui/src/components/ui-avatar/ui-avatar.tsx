@@ -14,7 +14,7 @@ const SIZES: Partial<Record<NonNullable<Props['size']>, string>> = { sm: 'size-4
 export function UiAvatar(props: Props) {
   const className = cn(
     'inline-flex size-8 items-center justify-center overflow-hidden rounded-full font-bold text-white select-none',
-    SIZES[props.size],
+    props.size && SIZES[props.size],
     props.className
   )
 

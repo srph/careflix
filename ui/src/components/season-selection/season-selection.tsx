@@ -144,7 +144,8 @@ export function SeasonSelection(props: Props) {
     props.onEpisodeClick(video)
   }
 
-  if (props.show.title_type === 'movie' || state.isLoading || !groups.length) {
+  const show = props.show
+  if (!show || show.title_type === 'movie' || state.isLoading || !groups.length) {
     return null
   }
 
@@ -164,7 +165,7 @@ export function SeasonSelection(props: Props) {
 
       <section>
         {group.videos.map(video => {
-          const active = Boolean(props.currentVideo) && props.currentVideo.id === video.id
+          const active = props.currentVideo?.id === video.id
 
           return (
             <button
@@ -183,7 +184,7 @@ export function SeasonSelection(props: Props) {
                   </span>
                 )}
                 <div className="relative overflow-hidden rounded-sm">
-                  <StandardImageAspectRatio src={props.show.preview_image} />
+                  <StandardImageAspectRatio src={show.preview_image} />
                 </div>
               </div>
 

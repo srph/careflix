@@ -11,7 +11,7 @@ function useCountdownTimer(props: Props): number {
   React.useEffect(() => {
     let interval = setInterval(() => {
       if (remaining === 0) {
-        props.onComplete()
+        props.onComplete?.()
         clearInterval(interval)
       } else {
         setRemaining(remaining - 1)

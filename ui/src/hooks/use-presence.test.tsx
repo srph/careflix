@@ -20,7 +20,7 @@ function presenceChannel(name: string, ids: AppId[] = [], subscribed = false) {
     members: { each: (callback: (member: { id: string }) => void) => ids.forEach(id => callback({ id: String(id) })) },
     bind: (event: string, callback: () => void) => {
       if (!listeners.has(event)) listeners.set(event, new Set())
-      listeners.get(event).add(callback)
+      listeners.get(event)!.add(callback)
     },
     unbind: (event: string, callback: () => void) => listeners.get(event)?.delete(callback),
     update: (nextIds: AppId[], event = 'pusher:subscription_succeeded') => {

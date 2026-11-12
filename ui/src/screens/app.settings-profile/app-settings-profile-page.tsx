@@ -4,10 +4,10 @@ import { UiContainer } from '~/components/ui-container/ui-container'
 import { UiFormGroup } from '~/components/ui-form-group/ui-form-group'
 import { UiInput } from '~/components/ui-input/ui-input'
 import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/contexts/auth/auth'
 
 export function AppSettingsProfilePage() {
-  const { data: user } = useAuth()
+  const user = useAuthUser()
   return (
     <React.Fragment>
       <AppHeadingSettings title="Account Settings" backUrl="/settings" />

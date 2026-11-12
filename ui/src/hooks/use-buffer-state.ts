@@ -10,7 +10,7 @@ type Payload = [boolean, () => void]
 function useBufferState(props: Props): Payload {
   const [state, internalSetState] = useState(false)
   const counterRef = useRef<number>(0)
-  const timeoutRef = useRef<number>(null)
+  const timeoutRef = useRef<number | undefined>(undefined)
   
   function setState(): void {
     ++counterRef.current

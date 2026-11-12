@@ -1,9 +1,9 @@
-import instance from './instance'
+import { instance } from './instance'
 import { AxiosError } from './types'
 import { toast } from '~/components/toast/toast'
 import axios from 'axios'
 
-export default {
+export const interceptorToastErrors = {
   setup: (): number => {
     /**
      * @example Disable the default validation toast

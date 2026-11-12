@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 import { authError, returnToApp } from '~/lib/auth/discord'
 import Splash from '~/screens/login/Splash'
 

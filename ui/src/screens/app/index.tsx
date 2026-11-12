@@ -5,8 +5,8 @@ import { InvitationOverlayProvider } from './InvitationModal/Context'
 import AppHeading from './AppHeading'
 
 import { useCallback } from 'react'
-import { usePusher } from '~/hooks/usePusher'
-import { useAuth } from '~/contexts/Auth'
+import { usePusher } from '~/hooks/use-pusher'
+import { useAuth } from '~/contexts/auth/auth'
 
 function App(props: ReactComponentWrapper) {
   const auth = useAuth()

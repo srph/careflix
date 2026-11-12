@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react'
-import axios from '~/lib/axios'
-import { usePusher } from '~/hooks/usePusher'
-import usePresence from '~/hooks/usePresence'
-import { useNow } from '~/hooks/useNow'
+import { axios } from '~/lib/axios/axios'
+import { usePusher } from '~/hooks/use-pusher'
+import { usePresence } from '~/hooks/use-presence'
+import { useNow } from '~/hooks/use-now'
 import { usePartyContext } from '~/screens/app.watch/Context'
 
 /** How long Joined, Declined or Expired shows before the row goes back to rest. */

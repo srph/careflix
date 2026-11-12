@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useWindowSize from '~/hooks/useWindowSize'
+import { useWindowSize } from '~/hooks/use-window-size'
 
 /**
  * @NOTE Don't mount this twice; only on the root node.

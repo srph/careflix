@@ -1,8 +1,8 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 import { get } from '~/lib/query/get'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 
 export type ListingTab = 'all' | 'movie' | 'series' | 'parties'
 

@@ -1,5 +1,5 @@
-import s2o, { OriginalTrack } from '~/lib/srt2obj'
-import fromReadableTime from '~/utils/date/fromReadableTime'
+import { srt2obj as s2o, OriginalTrack } from '~/lib/srt2obj/srt2obj'
+import { fromReadableTime } from '~/utils/date/from-readable-time'
 
 export interface Track {
   index: string

@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import type { CSSProperties } from 'react'
 import { UiAvatarGroup } from '~/components/ui-avatar-group/ui-avatar-group'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 import Artwork from './Artwork'
 import { PARTY_BADGES, PARTY_CONTENT, PROGRESS } from './classes'
 import { partyDetails, partyStatus } from './format'

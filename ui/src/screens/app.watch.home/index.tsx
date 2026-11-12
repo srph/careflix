@@ -15,16 +15,16 @@ import useReactions from './useReactions'
 import ActivityOverlay from './ActivityOverlay'
 import { showsReactions, useActivityLevel } from './activityLevel'
 
-import useUpdateEffect from '~/hooks/useUpdateEffect'
+import { useUpdateEffect } from '~/hooks/use-update-effect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/Context'
-import { useAuth } from '~/contexts/Auth'
-import { useBufferState } from '~/hooks/useBufferState'
-import { useMediaMode } from '~/hooks/useMediaMode'
-import { useRouterBlock } from '~/hooks/useRouterBlock'
-import axios from '~/lib/axios'
+import { useAuth } from '~/contexts/auth/auth'
+import { useBufferState } from '~/hooks/use-buffer-state'
+import { useMediaMode } from '~/hooks/use-media-mode'
+import { useRouterBlock } from '~/hooks/use-router-block'
+import { axios } from '~/lib/axios/axios'
 
-import getVideoPreviewImage from '~/utils/shows/getVideoPreviewImage'
+import { getVideoPreviewImage } from '~/utils/shows/get-video-preview-image'
 
 interface State {
   time: number

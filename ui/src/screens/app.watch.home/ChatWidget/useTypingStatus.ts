@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import pusher from '~/lib/pusher'
-import usePusher from '~/hooks/usePusher'
+import { pusher } from '~/lib/pusher/pusher'
+import { usePusher } from '~/hooks/use-pusher'
 
 // Pusher client events go straight from browser to browser on the room's private channel.
 // The app needs "client events" enabled in the Pusher dashboard; without it, trigger is refused and nothing shows.

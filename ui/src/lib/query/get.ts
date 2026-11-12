@@ -1,5 +1,5 @@
 import axiosLibrary from 'axios'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 
 /** A cancellable GET for query functions: throws the Axios tuple's error so Query sees a failure. */
 export async function get<T>(url: string, params?: object, signal?: AbortSignal): Promise<T> {

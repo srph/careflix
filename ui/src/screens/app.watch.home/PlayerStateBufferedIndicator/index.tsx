@@ -1,6 +1,6 @@
 import * as React from 'react'
-import useUpdateEffect from '~/hooks/useUpdateEffect'
-import { useBufferState } from '~/hooks/useBufferState'
+import { useUpdateEffect } from '~/hooks/use-update-effect'
+import { useBufferState } from '~/hooks/use-buffer-state'
 
 interface Props {
   isPlaying: boolean

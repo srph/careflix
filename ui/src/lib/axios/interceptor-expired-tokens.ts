@@ -1,8 +1,8 @@
-import instance from './instance'
-import { AuthContext } from '~/contexts/Auth'
+import { instance } from './instance'
+import { AuthContext } from '~/contexts/auth/auth'
 import { AxiosError } from 'axios';
 
-export default {
+export const interceptorExpiredTokens = {
   setup: (auth: AuthContext): number => {
     return instance.interceptors.response.use(null, (err: AxiosError) => {
       const url = err.config?.url || ''

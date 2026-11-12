@@ -1,4 +1,4 @@
-import useLocalStorageState from '~/hooks/useLocalStorageState'
+import { useLocalStorageState } from '~/hooks/use-local-storage-state'
 
 /**
  * What the picture shows from the room while chat is closed:

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { usePropRef } from '~/hooks/usePropRef'
-import isFocusedToInput from '~/utils/dom/isFocusedToInput'
+import { usePropRef } from '~/hooks/use-prop-ref'
+import { isFocusedToInput } from '~/utils/dom/is-focused-to-input'
 
 interface Props {
   isDisabled: () => boolean

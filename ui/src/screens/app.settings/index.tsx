@@ -5,10 +5,10 @@ import { Link } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
-import { useAuth } from '~/contexts/Auth'
-import { useIsPWA } from '~/hooks/useIsPWA'
+import { useAuth } from '~/contexts/auth/auth'
+import { useIsPWA } from '~/hooks/use-is-pwa'
 
-import config from '~/config'
+import { config } from '~/config'
 import asset_author from '~/assets/author.jpg'
 
 const ITEM = 'flex items-center border-b border-neutral-900 p-4 text-white first:border-t'

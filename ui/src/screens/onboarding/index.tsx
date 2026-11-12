@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 import { authError, returnToApp } from '~/lib/auth/discord'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { cn } from '~/utils/cn'

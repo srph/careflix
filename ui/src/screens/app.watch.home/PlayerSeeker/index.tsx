@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { useState, useRef, useMemo } from 'react'
 import { UiInputSlider } from '~/components/ui-input-slider/ui-input-slider'
-import toReadableTime from '~/utils/date/toReadableTime'
-import clamp from '~/utils/clamp'
+import { toReadableTime } from '~/utils/date/to-readable-time'
+import { clamp } from '~/utils/clamp'
 
 interface Props {
   time: number

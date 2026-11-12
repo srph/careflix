@@ -7,7 +7,7 @@ const { client, channel } = vi.hoisted(() => {
   const client = { subscribe: vi.fn(() => channel), unsubscribe: vi.fn(), channel: vi.fn(() => channel) }
   return { client, channel }
 })
-vi.mock('~/lib/pusher', () => ({ default: () => client }))
+vi.mock('~/lib/pusher/pusher', () => ({ pusher: () => client }))
 
 const member = (id: AppId, name: string) => ({ id, name }) as AppPartyMember
 const party = { id: 9, members: [member(1, 'Kier'), member(2, 'Joyce'), member(3, 'Mira')] }

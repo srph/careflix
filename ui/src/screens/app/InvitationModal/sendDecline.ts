@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios'
 import { parse } from 'date-fns-v1'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 
 export const DECLINE_RETRY_DELAYS = [1000, 3000, 10000]
 

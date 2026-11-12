@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
-import pusher from '~/lib/pusher'
-import usePusher from '~/hooks/usePusher'
-import uuid from '~/lib/uuid'
+import { pusher } from '~/lib/pusher/pusher'
+import { usePusher } from '~/hooks/use-pusher'
+import { uuid } from '~/lib/uuid/uuid'
 
 // Reactions go browser to browser on the room's private channel, like typing pings, and are never stored.
 export const REACTION_EVENT = 'client-reaction'

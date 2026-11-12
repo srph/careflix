@@ -2,8 +2,8 @@ import * as React from 'react'
 import { UiModal } from '~/components/ui-modal/ui-modal'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { SeasonSelection } from '~/components/season-selection/season-selection'
-import axios from '~/lib/axios' 
-import { useMediaMode } from '~/hooks/useMediaMode'
+import { axios } from '~/lib/axios/axios' 
+import { useMediaMode } from '~/hooks/use-media-mode'
 
 interface Props {
   party: AppParty

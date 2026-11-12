@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 import Splash from './Splash'
 
 export default function Login() {

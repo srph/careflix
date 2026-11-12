@@ -1,8 +1,8 @@
-import instance from './instance'
-import pusher from '~/lib/pusher'
-import { AuthContext } from '~/contexts/Auth'
+import { instance } from './instance'
+import { pusher } from '~/lib/pusher/pusher'
+import { AuthContext } from '~/contexts/auth/auth'
 
-export default {
+export const interceptorPusher = {
   setup: (auth: AuthContext): number => {
     return instance.interceptors.request.use((config) => {
       if (auth.token != null) {

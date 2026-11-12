@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiPresenceAvatar } from '~/components/ui-presence-avatar/ui-presence-avatar'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 
 interface Props {
   users?: AppUser[] | AppPartyMember[]

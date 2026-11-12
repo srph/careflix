@@ -2,7 +2,7 @@ import * as React from 'react'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiNavigation } from '~/components/ui-navigation/ui-navigation'
 import { useLocation } from 'react-router'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 
 const headings: Record<string, { title: string; backUrl: string }> = {
   '/download': { title: 'Download The App', backUrl: '/' },

@@ -4,7 +4,7 @@ import { UiContainer } from '~/components/ui-container/ui-container'
 import { UiFormGroup } from '~/components/ui-form-group/ui-form-group'
 import { UiInput } from '~/components/ui-input/ui-input'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
-import { useAuth } from '~/contexts/Auth'
+import { useAuth } from '~/contexts/auth/auth'
 
 function AppSettingsProfile() {
   const { data: user } = useAuth()

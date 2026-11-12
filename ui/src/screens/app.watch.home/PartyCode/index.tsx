@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
-import useTransientState from '~/hooks/useTransientState'
+import { useTransientState } from '~/hooks/use-transient-state'
 import { toast } from '~/components/toast/toast'
 import { cn } from '~/utils/cn'
 

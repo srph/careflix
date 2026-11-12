@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { useEffect, useState } from 'react'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 import { placements, HAS_PLACEMENT_PATTERN } from './constants'
 import { srt2obj, Track } from './utils'
 

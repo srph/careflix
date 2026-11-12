@@ -14,7 +14,7 @@ const auth = vi.hoisted(() => ({
   },
 }))
 
-vi.mock('~/contexts/Auth', async () => {
+vi.mock('~/contexts/auth/auth', async () => {
   const { useSyncExternalStore } = await import('react')
   const subscribe = (listener: () => void) => {
     auth.listeners.add(listener)
@@ -32,8 +32,8 @@ vi.mock('~/contexts/Auth', async () => {
   }
 })
 vi.mock('./sendDecline', () => ({ sendDecline: vi.fn(() => new Promise(() => {})) }))
-vi.mock('~/lib/axios', () => ({ default: { post: vi.fn() } }))
-vi.mock('~/hooks/usePusher', () => ({ usePusher: () => {} }))
+vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
+vi.mock('~/hooks/use-pusher', () => ({ usePusher: () => {} }))
 vi.mock('~/screens/app.home/queries', () => ({ useShowGroupsQuery: () => ({ data: undefined }) }))
 vi.mock('react-router', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/' }) }))
 vi.mock('border-beam', () => ({ BorderBeam: () => null }))

@@ -2,14 +2,14 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import { QueryClientProvider, useQueryClient } from '@tanstack/react-query'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createQueryClient } from '~/lib/query/client'
-import { QueryProvider } from '~/lib/query/QueryProvider'
+import { QueryProvider } from '~/lib/query/query-provider'
 import { useCreatePartyMutation, useListingSearchQuery, useShowsQuery } from './queries'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 
 const session = vi.hoisted(() => ({ user: { id: 1 }, navigate: vi.fn() }))
-vi.mock('~/contexts/Auth', () => ({ useAuth: () => ({ data: session.user, isAuthenticated: true }) }))
+vi.mock('~/contexts/auth/auth', () => ({ useAuth: () => ({ data: session.user, isAuthenticated: true }) }))
 vi.mock('react-router', () => ({ useNavigate: () => session.navigate }))
-vi.mock('~/lib/axios', () => ({ default: { get: vi.fn(), post: vi.fn() } }))
+vi.mock('~/lib/axios/axios', () => ({ axios: { get: vi.fn(), post: vi.fn() } }))
 const clients: ReturnType<typeof createQueryClient>[] = []
 function setup() {
   const client = createQueryClient()

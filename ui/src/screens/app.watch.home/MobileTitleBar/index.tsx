@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { useIsPWA } from '~/hooks/useIsPWA'
-import useWindowSize from '~/hooks/useWindowSize'
+import { useIsPWA } from '~/hooks/use-is-pwa'
+import { useWindowSize } from '~/hooks/use-window-size'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { UiButton } from '~/components/ui-button/ui-button'
 import { UiModal } from '~/components/ui-modal/ui-modal'
-import getVideoDetails from '~/utils/shows/getVideoDetails'
+import { getVideoDetails } from '~/utils/shows/get-video-details'
 
 interface Props {
   party: AppParty

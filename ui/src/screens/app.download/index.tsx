@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useEffect } from 'react'
-import { useIsPWA } from '~/hooks/useIsPWA'
+import { useIsPWA } from '~/hooks/use-is-pwa'
 import { useNavigate } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'

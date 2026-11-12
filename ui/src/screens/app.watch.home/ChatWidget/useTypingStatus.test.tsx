@@ -7,7 +7,7 @@ const { client, channel } = vi.hoisted(() => {
   const client = { subscribe: vi.fn(() => channel), unsubscribe: vi.fn(), channel: vi.fn(() => channel) }
   return { client, channel }
 })
-vi.mock('~/lib/pusher', () => ({ default: () => client }))
+vi.mock('~/lib/pusher/pusher', () => ({ pusher: () => client }))
 
 const me = { id: 1, name: 'Kier' }
 const receive = (user: { id: AppId, name: string }) => {

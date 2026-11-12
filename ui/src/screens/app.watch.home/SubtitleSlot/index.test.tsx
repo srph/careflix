@@ -1,9 +1,9 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 import SubtitleSlot from './index'
 
-vi.mock('~/lib/axios', () => ({ default: { get: vi.fn() } }))
+vi.mock('~/lib/axios/axios', () => ({ axios: { get: vi.fn() } }))
 
 const video = { id: 1, subtitle_url: 'https://media.example.test/1.srt' } as AppShowVideo
 const cue = (text: string) => `1\n00:00:00,000 --> 00:00:05,000\n${text}\n\n`

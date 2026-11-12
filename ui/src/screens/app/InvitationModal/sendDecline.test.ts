@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import axios from '~/lib/axios'
+import { axios } from '~/lib/axios/axios'
 import { sendDecline } from './sendDecline'
 
-vi.mock('~/lib/axios', () => ({ default: { post: vi.fn() } }))
+vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
 
 const failure = (status?: number) => [Object.assign(new Error('Request failed'), status ? { response: { status } } : {})]
 const ok = [null, { data: {} }]

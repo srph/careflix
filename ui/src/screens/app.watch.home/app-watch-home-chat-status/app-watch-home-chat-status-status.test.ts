@@ -16,16 +16,16 @@ describe('chat status', () => {
 
   it('describes the latest playback change, skipping joins and messages', () => {
     const logs = [activity('created'), activity('paused', { seconds: 30 }), activity('joined'), message]
-    expect(latestStatusActivity(logs).kind).toBe('paused')
-    expect(latestStatusActivity([activity('created'), activity('joined')]).kind).toBe('created')
+    expect(latestStatusActivity(logs)!.kind).toBe('paused')
+    expect(latestStatusActivity([activity('created'), activity('joined')])!.kind).toBe('created')
     expect(latestStatusActivity([activity(null), message])).toBeNull()
   })
 
   it('tells a jump back from a skip ahead, and admits when it cannot', () => {
-    expect(seekDirection(activity('seeked', { seconds: 2327, from_seconds: 2481 }).activity)).toBe('back')
-    expect(seekDirection(activity('seeked', { seconds: 3000, from_seconds: 2481 }).activity)).toBe('ahead')
+    expect(seekDirection(activity('seeked', { seconds: 2327, from_seconds: 2481 }).activity!)).toBe('back')
+    expect(seekDirection(activity('seeked', { seconds: 3000, from_seconds: 2481 }).activity!)).toBe('ahead')
     // Rows recovered from old text have no starting point.
-    expect(seekDirection(activity('seeked', { seconds: 2327 }).activity)).toBeNull()
+    expect(seekDirection(activity('seeked', { seconds: 2327 }).activity!)).toBeNull()
   })
 
   it('only treats real arrivals as joins', () => {

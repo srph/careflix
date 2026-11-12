@@ -134,7 +134,10 @@ export function useHostInvitations() {
     return end <= now && now - end < ANSWER_MS ? 'expired' : null
   }
   // Fresh Declined and Expired answers, for the chat strip.
-  const answered = state.history.filter(invitation => ['declined', 'expired'].includes(answer(String(invitation.recipient.id))))
+  const answered = state.history.filter(invitation => {
+    const given = answer(String(invitation.recipient.id))
+    return given === 'declined' || given === 'expired'
+  })
   const pendingIds = new Set(pending.map(invitation => String(invitation.recipient.id)))
   const sending = Array.from(sendingTo.current.values()).filter(user => state.busy[String(user.id)] && !pendingIds.has(String(user.id)))
 

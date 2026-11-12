@@ -29,8 +29,9 @@ export function useTypingStatus(partyId: AppId, me: Pick<AppUser, 'id' | 'name'>
   const lastPing = useRef(0)
 
   usePusher(channelName, TYPING_EVENT, (data: { user?: Typer['user'] }) => {
-    if (!data?.user || String(data.user.id) === String(me.id)) return
-    setTypers(current => ({ ...current, [String(data.user.id)]: { user: data.user, until: Date.now() + TYPING_TTL } }))
+    const user = data?.user
+    if (!user || String(user.id) === String(me.id)) return
+    setTypers(current => ({ ...current, [String(user.id)]: { user, until: Date.now() + TYPING_TTL } }))
   })
 
   useEffect(() => {

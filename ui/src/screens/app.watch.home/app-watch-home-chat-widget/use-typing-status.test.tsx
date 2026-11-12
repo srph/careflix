@@ -11,7 +11,7 @@ vi.mock('~/lib/pusher/pusher', () => ({ pusher: () => client }))
 
 const me = { id: 1, name: 'Kier' }
 const receive = (user: { id: AppId, name: string }) => {
-  const handler = channel.bind.mock.calls.find(([event]) => event === TYPING_EVENT)[1]
+  const handler = channel.bind.mock.calls.find(([event]) => event === TYPING_EVENT)![1]
   act(() => handler({ user }))
 }
 

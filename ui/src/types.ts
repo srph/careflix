@@ -58,30 +58,35 @@ interface AppPartyInvitation {
 
 type AppPartyActivityKind = 'created' | 'joined' | 'joined_code' | 'accepted' | 'played' | 'paused' | 'seeked' | 'switched'
 
-interface AppPartyLog {
-  id: AppId
-  party_id: AppId
-  type: 'activity' | 'message'
-  activity?: {
-    id: string
-    text: string
-    // Older API builds and pre-migration rows that couldn't be read may leave these empty.
-    kind?: AppPartyActivityKind | null
-    meta?: { seconds?: number, from_seconds?: number, video_id?: AppId } | null
-    user: AppUser
-    created_at: string
-    updated_at: string
-  }
-  message?: {
-    id: string
-    text: string
-    user: AppUser
-    created_at: string
-    updated_at: string
-  }
+interface AppPartyActivity {
+  id: string
+  text: string
+  // Older API builds and pre-migration rows that couldn't be read may leave these empty.
+  kind?: AppPartyActivityKind | null
+  meta?: { seconds?: number, from_seconds?: number, video_id?: AppId } | null
+  user: AppUser
   created_at: string
   updated_at: string
 }
+
+interface AppPartyMessage {
+  id: string
+  text: string
+  user: AppUser
+  created_at: string
+  updated_at: string
+}
+
+// `type` says which of `activity` and `message` is set.
+type AppPartyLog = {
+  id: AppId
+  party_id: AppId
+  created_at: string
+  updated_at: string
+} & (
+  | { type: 'activity'; activity: AppPartyActivity; message?: null }
+  | { type: 'message'; message: AppPartyMessage; activity?: null }
+)
 
 interface AppShowVideo {
   id: AppId

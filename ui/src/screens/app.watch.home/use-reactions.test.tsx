@@ -13,7 +13,7 @@ const member = (id: AppId, name: string) => ({ id, name }) as AppPartyMember
 const party = { id: 9, members: [member(1, 'Kier'), member(2, 'Joyce'), member(3, 'Mira')] }
 const me = { id: 1 }
 const receive = (data: unknown) => {
-  const handler = channel.bind.mock.calls.find(([event]) => event === REACTION_EVENT)[1]
+  const handler = channel.bind.mock.calls.find(([event]) => event === REACTION_EVENT)![1]
   act(() => handler(data))
 }
 

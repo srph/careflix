@@ -11,14 +11,15 @@ export function AppWatchHomePartyCode({ code, chip = false }: { code?: string, c
   const reducedMotion = useReducedMotion()
   useEffect(resetCopied, [code])
   if (!code) return null
+  const text = code
 
   async function copy() {
     try {
-      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(code)
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(text)
       else {
         const field = document.createElement('textarea')
         const focused = document.activeElement as HTMLElement | null
-        field.value = code
+        field.value = text
         field.style.cssText = 'position:fixed;opacity:0;pointer-events:none'
         document.body.appendChild(field)
         try {
@@ -31,7 +32,7 @@ export function AppWatchHomePartyCode({ code, chip = false }: { code?: string, c
       }
       setCopied(true)
     } catch {
-      toast(`Couldn’t copy the code. You can share ${code.slice(0, 3)} ${code.slice(3)}.`)
+      toast(`Couldn’t copy the code. You can share ${text.slice(0, 3)} ${text.slice(3)}.`)
     }
   }
 

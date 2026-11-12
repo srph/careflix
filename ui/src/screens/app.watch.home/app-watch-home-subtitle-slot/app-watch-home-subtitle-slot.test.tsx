@@ -53,7 +53,7 @@ describe('subtitle loading', () => {
     expect(screen.queryByText('Stale subtitles')).toBeNull()
     expect(screen.getByText('Current subtitles')).toBeTruthy()
 
-    rerender(<AppWatchHomeSubtitleSlot {...props} video={{ ...video, id: 3, subtitle_url: null }} />)
+    rerender(<AppWatchHomeSubtitleSlot {...props} video={{ ...video, id: 3, subtitle_url: null as unknown as string }} />)
     await waitFor(() => expect(screen.queryByText('Current subtitles')).toBeNull())
     expect(axios.get).toHaveBeenCalledTimes(2)
   })

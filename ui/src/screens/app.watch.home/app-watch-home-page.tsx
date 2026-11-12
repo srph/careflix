@@ -18,7 +18,7 @@ import { showsReactions, useActivityLevel } from './app-watch-home-activity-leve
 import { useUpdateEffect } from '~/hooks/use-update-effect'
 import { useReducer, useEffect, useRef } from 'react'
 import { usePartyContext } from '~/screens/app.watch/use-party-context'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/contexts/auth/auth'
 import { useBufferState } from '~/hooks/use-buffer-state'
 import { useMediaMode } from '~/hooks/use-media-mode'
 import { useRouterBlock } from '~/hooks/use-router-block'
@@ -195,8 +195,8 @@ const reducer = (state: State, action: Action): State => {
  */
 export function AppWatchHomePage(props: ReactComponentWrapper) {
   const context = usePartyContext()
-  const auth = useAuth()
-  const [activityLevel, setActivityLevel] = useActivityLevel(auth.data.id)
+  const user = useAuthUser()
+  const [activityLevel, setActivityLevel] = useActivityLevel(user.id)
   const { registerPlayer } = useInvitationOverlay()
 
   const [state, dispatch] = useReducer(reducer, {
@@ -216,13 +216,13 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
   })
 
   // Other people's floats follow the Activity Overlay level while chat is closed.
-  const reactions = useReactions(context.party, auth.data, showsReactions(activityLevel, state.isChatOpen))
+  const reactions = useReactions(context.party, user, showsReactions(activityLevel, state.isChatOpen))
 
   const $video = useRef<HTMLVideoElement>(null)
   const $pane = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    registerPlayer({ partyId: context.party.id, element: $pane.current })
+    registerPlayer({ partyId: context.party.id, element: $pane.current! })
     return () => registerPlayer(null)
   }, [context.party.id, registerPlayer])
 
@@ -230,7 +230,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
   useEffect(() => {
     // Initialize the video to start on the current time.
-    $video.current.currentTime = state.time
+    $video.current!.currentTime = state.time
   }, [])
 
   // Presence refreshes must not rewind playback. Each state event still syncs,
@@ -244,7 +244,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
       }
     })
 
-    $video.current.currentTime = context.party.current_time
+    $video.current!.currentTime = context.party.current_time
   }, [context.playbackRevision])
 
   useUpdateEffect(() => {
@@ -255,12 +255,12 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           payload: { time: 0 }
         })
 
-        $video.current.currentTime = 0
+        $video.current!.currentTime = 0
       }
 
-      $video.current.play()
+      $video.current!.play()
     } else {
-      $video.current.pause()
+      $video.current!.pause()
     }
   }, [state.isPlaying])
 
@@ -291,7 +291,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     })
   }
 
-  const timeoutRef = useRef<number>(null)
+  const timeoutRef = useRef<number | undefined>(undefined)
 
   function handleVideoHover() {
     // We don't want this event to be called on mobile.
@@ -348,7 +348,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
       payload: { time }
     })
 
-    $video.current.currentTime = time
+    $video.current!.currentTime = time
 
     axios.put(`/api/parties/${context.party.id}/state`, {
       is_playing: state.isPlaying,
@@ -370,7 +370,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
   function handleTimeUpdate() {
     dispatch({
       type: 'time-update',
-      payload: { time: $video.current.currentTime }
+      payload: { time: $video.current!.currentTime }
     })
   }
 
@@ -476,11 +476,11 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
       payload: { volume }
     })
 
-    $video.current.volume = volume
+    $video.current!.volume = volume
   }
 
   function handleToggleMute() {
-    $video.current.muted = !state.isMuted
+    $video.current!.muted = !state.isMuted
     
     dispatch({
       type: 'toggle-mute'
@@ -556,7 +556,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
           <AppWatchHomeActivityOverlay
             party={context.party}
-            me={auth.data}
+            me={user}
             level={activityLevel}
             isChatOpen={state.isChatOpen}
             isLifted={state.isOpen}
@@ -567,7 +567,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
             party={context.party}
             time={state.time}
             volume={state.volume}
-            getVideoElement={() => $video.current}
+            getVideoElement={() => $video.current!}
             isOpen={state.isOpen}
             isPlaying={state.isPlaying}
             isChatOpen={state.isChatOpen}

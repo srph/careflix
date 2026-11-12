@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Autocomplete } from '@base-ui/react/autocomplete'
 import { AnimatePresence, motion, useIsPresent, useReducedMotion } from 'motion/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/contexts/auth/auth'
 import { usePartyContext } from '~/screens/app.watch/use-party-context'
 import { UiPresenceAvatar } from '~/components/ui-presence-avatar/ui-presence-avatar'
 import { buttonClass } from '~/components/ui-button/ui-button'
@@ -48,7 +48,7 @@ export function AppWatchHomeChatInvitationPanel({ invitations, onClose }: {
   onClose: () => void
 }) {
   const { party } = usePartyContext()
-  const auth = useAuth()
+  const me = useAuthUser()
   const present = useIsPresent()
   const reducedMotion = useReducedMotion()
   const client = useQueryClient()
@@ -95,7 +95,7 @@ export function AppWatchHomeChatInvitationPanel({ invitations, onClose }: {
   }
   // Party keeps the order people first showed up in; Recents keeps the server's order.
   const partyRows = Array.from(placements.current, ([id, placement]) => ({ user: people.get(id), placement }))
-    .filter(({ user, placement }) => user && placement.group === 'party')
+    .filter((row): row is typeof row & { user: AppUser } => Boolean(row.user) && row.placement.group === 'party')
   const recentsFailed = !recents.data && recents.isError && !recents.isFetching
   const recentsPending = !recents.data && !recentsFailed
   const recentRows = recentsPending ? [] : Array.from(people.values()).filter(user => placements.current.get(String(user.id))?.group === 'recents')
@@ -137,12 +137,12 @@ export function AppWatchHomeChatInvitationPanel({ invitations, onClose }: {
     const row = inviteRow({
       name: user.name, online: invitations.withPresence(user).is_online, member: memberIds.has(id), host: id === hostId, waiting,
       busy: Boolean(invitations.busy[id]), error: invitations.errors[id] || '', answer: invitations.answer(id),
-      minutes: waiting ? minutesLeft(invitation, invitations.now) : ''
+      minutes: waiting && invitation ? minutesLeft(invitation, invitations.now) : ''
     })
     return <motion.div key={user.id} {...motionProps}>
       <Autocomplete.Item value={user} disabled={row.busy || !row.action} nativeButton
         render={<button type="button" />} className={PERSON_BUTTON} data-testid="invite-person" aria-label={row.label} aria-busy={row.busy || undefined}
-        onClick={() => row.action === 'undo' ? invitations.cancel(invitation) : row.action && invitations.invite(user)}>
+        onClick={() => row.action === 'undo' ? invitation && invitations.cancel(invitation) : row.action && invitations.invite(user)}>
         <Face user={invitations.withPresence(user)} />
         <span className={`${DETAILS} gap-0.5`}><b className={NAME}>{user.name}</b><AppWatchHomeChatInvitationPanelRollingText text={row.status} className={`relative block h-4 ${SUBTEXT}`} lineClassName={row.tone ? TONES[row.tone] : undefined} /></span>
         <InviteAction row={row} />
@@ -182,7 +182,7 @@ export function AppWatchHomeChatInvitationPanel({ invitations, onClose }: {
                   {partyRows.map(({ user, placement }, index) => placement.member
                     ? <motion.div className={PERSON} data-testid="invite-person" key={user.id} {...cascade(3 + index)}>
                       <Face user={invitations.withPresence(user)} />
-                      <span className={`${DETAILS} gap-0.5`}><b className={NAME}>{user.name}{String(user.id) === String(auth.data.id) && <em className="ml-1.5 text-11 font-normal text-neutral-400 not-italic">(You)</em>}</b>
+                      <span className={`${DETAILS} gap-0.5`}><b className={NAME}>{user.name}{String(user.id) === String(me.id) && <em className="ml-1.5 text-11 font-normal text-neutral-400 not-italic">(You)</em>}</b>
                         <small className={SUBTEXT}>{String(user.id) === hostId ? 'Host 👑' : 'In the room'}</small></span>
                     </motion.div>
                     : person(user, cascade(3 + index)))}

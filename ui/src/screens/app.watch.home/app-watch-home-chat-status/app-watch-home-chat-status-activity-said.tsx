@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { movieTime, seekDirection } from './app-watch-home-chat-status-status'
 
-type Activity = AppPartyLog['activity']
+type Activity = AppPartyActivity
 
 const ICONS: Partial<Record<AppPartyActivityKind, string>> = {
   played: 'fa-play',
@@ -16,7 +16,7 @@ const ICONS: Partial<Record<AppPartyActivityKind, string>> = {
  */
 export function activityIcon(activity: Activity): string | undefined {
   if (activity.kind === 'seeked') return seekDirection(activity) === 'back' ? 'fa-backward' : 'fa-forward'
-  return ICONS[activity.kind]
+  return activity.kind ? ICONS[activity.kind] : undefined
 }
 
 /**

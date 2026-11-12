@@ -16,7 +16,7 @@ import { useTransientState } from '~/hooks/use-transient-state'
 import { AppWatchHomePartyCode } from '../app-watch-home-party-code'
 
 import { usePropRef } from '~/hooks/use-prop-ref'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/contexts/auth/auth'
 
 import { axios } from '~/lib/axios/axios'
 import { last } from '~/utils/last'
@@ -151,7 +151,7 @@ const BUBBLE_FRIEND = 'bg-neutral-800 not-first:rounded-tl-md not-last:rounded-b
 const BUBBLE_SELF = 'bg-pink-500 not-first:rounded-tr-md not-last:rounded-br-md'
 
 export function AppWatchHomeChatWidget(props: Props) {
-  const auth = useAuth()
+  const user = useAuthUser()
   const invitations = useHostInvitations()
   const inviteButton = useRef<HTMLButtonElement>(null)
   const wasInvitationOpen = useRef(false)
@@ -174,7 +174,7 @@ export function AppWatchHomeChatWidget(props: Props) {
   // One-off flag used to check if it's a message sent through pusher
   const isReceivingRef = useRef<boolean>(true)
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
-  const typing = useTypingStatus(props.party.id, auth.data)
+  const typing = useTypingStatus(props.party.id, user)
   // A friend who just arrived; the status row shows their hype line for a few seconds.
   const [joined, showJoined] = useTransientState<AppUser | null>(null, JOIN_FLASH_MS)
 
@@ -197,7 +197,7 @@ export function AppWatchHomeChatWidget(props: Props) {
         payload: { logs: res.data }
       })
 
-      scrollToBottom(chatbarRef.current)
+      scrollToBottom(chatbarRef.current!)
     },
     null,
     []
@@ -208,7 +208,7 @@ export function AppWatchHomeChatWidget(props: Props) {
       // Scroll to bottom whenever:
       // A new log gets sent by someone else while we're scrolled a bit from above.
       // We sent the message by ourself.
-      scrollToBottom(chatbarRef.current)
+      scrollToBottom(chatbarRef.current!)
     } else if (isReceivingRef.current) {
       // If we received a message while not scrolled to the bottom.
       // It may seem like it works if you remove the wrapping condition,
@@ -217,7 +217,7 @@ export function AppWatchHomeChatWidget(props: Props) {
       setHasUnreadMessages(true)
     }
 
-    lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current)
+    lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current!)
   }, [state.logs.length])
 
   const isWindowVisible = useWindowVisibility()
@@ -227,7 +227,7 @@ export function AppWatchHomeChatWidget(props: Props) {
 
     // If the user was scrolled to the bottom before receiving a new message
     // we'll keep the illusion that they still are.
-    shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current)
+    shouldScrollToBottomRef.current = isScrolledToBottom(chatbarRef.current!)
 
     dispatch({
       type: 'logs:push',
@@ -235,7 +235,7 @@ export function AppWatchHomeChatWidget(props: Props) {
     })
 
     const activity = event.log.type === 'activity' ? event.log.activity : null
-    if (isJoinActivity(activity) && String(activity.user.id) !== String(auth.data.id)) {
+    if (activity && isJoinActivity(activity) && String(activity.user.id) !== String(user.id)) {
       showJoined(activity.user)
     }
 
@@ -243,15 +243,15 @@ export function AppWatchHomeChatWidget(props: Props) {
 
     if (!isWindowVisible && event.log.type === 'message') {
       // Let's play a sound if the user receives a message while switched to another tab.
-      idleAudioRef.current.play()
+      idleAudioRef.current!.play()
     }
   })
 
   useEffect(() => {
     // @TODO Make a reusable component that does this kasi tangina nito hahahah
     // <Audio volume={pakyu} />
-    idleAudioRef.current.volume = 0.1
-    sendAudioRef.current.volume = 0.1
+    idleAudioRef.current!.volume = 0.1
+    sendAudioRef.current!.volume = 0.1
   }, [])
 
   const propsRef = usePropRef(props)
@@ -284,7 +284,7 @@ export function AppWatchHomeChatWidget(props: Props) {
       if (evt.keyCode === 191 && !evt.shiftKey) {
         // Otherwise, the `/` keydown would be appended to the input.
         setTimeout(() => {
-          inputRef.current.focus()
+          inputRef.current!.focus()
         }, 0)
       }
     }
@@ -300,7 +300,7 @@ export function AppWatchHomeChatWidget(props: Props) {
   // we want to keep them at the same position as they were from the bottom.
   // @TODO Maybe we can have a component that scrolls from the bottom.
   useEffect(() => {
-    scrollFromBottom(chatbarRef.current, lastScrollDistanceFromBottom.current)
+    scrollFromBottom(chatbarRef.current!, lastScrollDistanceFromBottom.current)
   }, [height])
 
   function handleInput(evt: React.FormEvent<HTMLTextAreaElement>) {
@@ -329,7 +329,7 @@ export function AppWatchHomeChatWidget(props: Props) {
       message: {
         id: uuid(),
         text: state.message.text,
-        user: auth.data,
+        user: user,
         created_at: date,
         updated_at: date
       },
@@ -346,7 +346,7 @@ export function AppWatchHomeChatWidget(props: Props) {
       payload: { log }
     })
 
-    sendAudioRef.current.play()
+    sendAudioRef.current!.play()
 
     const [err, res] = await axios.post(`/api/parties/${props.party.id}/logs/message`, {
       message: state.message.text
@@ -379,13 +379,13 @@ export function AppWatchHomeChatWidget(props: Props) {
     if (evt.keyCode === 27) {
       // We want to blur the input if the user presses escape to make it
       // convenient to access video player hotkeys without having to press anywhere
-      inputRef.current.blur()
+      inputRef.current!.blur()
     }
 
     if (evt.keyCode === 13 && !evt.shiftKey) {
       // We want the message to be sent if the user presses enter;
       // To make a new line, the user has to press shift.
-      buttonRef.current.click()
+      buttonRef.current!.click()
 
       // If we don't call this, we would send the message then make a new line.
       evt.preventDefault()
@@ -393,9 +393,9 @@ export function AppWatchHomeChatWidget(props: Props) {
   }
 
   function handleMessagesContainerScroll() {
-    lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current)
+    lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current!)
 
-    if (hasUnreadMessages && isScrolledToBottom(chatbarRef.current)) {
+    if (hasUnreadMessages && isScrolledToBottom(chatbarRef.current!)) {
       // We'll remove the "has unread messages" note when the user scrolls to the bottom.
       // This the removal of the unread messages when the user himself sends a message,
       // since it also auto-scrolls the user to the bottom of the list.
@@ -404,7 +404,7 @@ export function AppWatchHomeChatWidget(props: Props) {
   }
 
   function handleClickUnreadMessages() {
-    scrollToBottom(chatbarRef.current)
+    scrollToBottom(chatbarRef.current!)
   }
 
   return (
@@ -435,7 +435,7 @@ export function AppWatchHomeChatWidget(props: Props) {
           {/* A short chat sits on the composer; the auto margin (not justify-end) keeps the top reachable once it scrolls. */}
           <div data-testid="chat-messages" className="flex h-full flex-col gap-2 overflow-y-auto bg-neutral-900 px-3 py-4 *:first:mt-auto" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
             {grouped.map((group, i) => {
-              const isSelf = group.user.id === auth.data.id
+              const isSelf = group.user.id === user.id
               const previous = grouped[i - 1]
               // Mark the time at the start and after a quiet stretch, instead of stamping every message.
               const showTime = !previous || differenceInMinutes(parse(group.logs[0].created_at), parse(last(previous.logs).created_at)) >= TIME_BREAK_MINUTES
@@ -451,7 +451,7 @@ export function AppWatchHomeChatWidget(props: Props) {
 
                       <div className={cn('flex flex-col gap-0.5', isSelf ? 'items-end' : 'items-start')}>
                         {group.logs.map(log => (
-                          <div data-testid="chat-message" className={cn(BUBBLE, isSelf ? BUBBLE_SELF : BUBBLE_FRIEND)} key={log.id}>{log.message.text}</div>
+                          <div data-testid="chat-message" className={cn(BUBBLE, isSelf ? BUBBLE_SELF : BUBBLE_FRIEND)} key={log.id}>{log.message?.text}</div>
                         ))}
                       </div>
                     </div>
@@ -471,7 +471,7 @@ export function AppWatchHomeChatWidget(props: Props) {
 
         {/* A tray in the LayerCard style: the status row on top, the composer card flush below it. */}
         <div data-testid="chat-tray" className="mx-2.5 mt-1 mb-2.5 shrink-0 rounded-xl bg-neutral-800">
-          <AppWatchHomeChatStatus logs={state.logs} typing={typing.names} joined={joined} meId={auth.data.id} />
+          <AppWatchHomeChatStatus logs={state.logs} typing={typing.names} joined={joined} meId={user.id} />
 
           {/* The focus ring belongs to the field (text and send), drawn inside because the field is flush with the tray. */}
           <form onSubmit={handleMessage} data-testid="chat-composer"
@@ -519,6 +519,10 @@ export function AppWatchHomeChatWidget(props: Props) {
  * Suceeding logs
  * Succeeding messages sent by the same user
  */
+function logUser(log: AppPartyLog): AppUser {
+  return log.type === 'message' ? log.message.user : log.activity.user
+}
+
 function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
   if (logs.length === 0) {
     return []
@@ -529,7 +533,7 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
   const groups: GroupedLog[] = [
     {
       type: first.type,
-      user: first[first.type].user,
+      user: logUser(first),
       logs: [first]
     }
   ]
@@ -548,7 +552,7 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
       // Otherwise, we'll create a new group and push it there
       groups.push({
         type: log.type,
-        user: log[log.type].user,
+        user: logUser(log),
         logs: [log]
       })
     }

@@ -220,7 +220,8 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
     })
   }
 
-  const context = useMemo<ContextType>(() => {
+  const context = useMemo<ContextType | null>(() => {
+    if (!party) return null
     return {
       ...state,
       party,
@@ -236,7 +237,7 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
     return null
   }
 
-  if (!state.party) {
+  if (!state.party || !context) {
     return <div className="mx-auto my-20 max-w-120 p-6 text-center" role="alert">
       <p className="mb-4">We couldn’t load this room. Please try again.</p>
       <UiButton onClick={retry}>Retry</UiButton>

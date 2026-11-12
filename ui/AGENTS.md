@@ -7,7 +7,7 @@ React/TypeScript front-end for Care.tv — the watch party experience (synced vi
 - Vite `8.3.5` with `@vitejs/plugin-react` `6.2.0`; entry point `index.html`, configuration in `vite.config.ts`.
 - React / React DOM `19.3.1` with `createRoot`, native document titles, and the automatic JSX transform (primarily hooks-based)
 - React Router `8.5.1` with `createBrowserRouter`, layout outlets, and `useBlocker` for leave-party confirmation
-- TypeScript `7.0.2`, targeting `ES2022`, bundler module resolution, path alias `~/` → `src/` (see `tsconfig.json`). Preserve the existing non-strict checking policy during the migration.
+- TypeScript `7.0.2`, targeting `ES2022`, bundler module resolution, path alias `~/` → `src/` (see `tsconfig.json`). `strict` is on, null checks included.
 - Node `v26.13.0` LTS (pinned in `.nvmrc`, run `nvm install && nvm use`), npm `>=11` per `package.json` `engines`.
 
 Base UI `1.9.0` supplies Dialog, Tooltip, and Slider; Motion `14.9.0` supplies animations. Chat uses a native textarea with CSS auto-sizing and a scrollable fallback. `InfiniteScroll` and the migrated hook helpers live in this repository.
@@ -59,6 +59,7 @@ Older code is still being migrated; follow these in new and touched files.
 - **A screen's entrypoint is its page:** `app.watch/app-watch-page.tsx` → `AppWatchPage`.
 - **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`. Hooks keep their `use-` name: `app.watch.home/use-reactions.ts`.
 - **Tests sit next to the file** (`use-now.test.ts`) and select by role, text, label or `data-testid`, never class name. Expose state as `data-*` attributes.
+- **Nulls:** behind `PrivateRoute`, read the user with `useAuthUser()`; in the watch room, `usePartyContext()` always has a party. Prefer narrowing or a tighter type to `!`; `!` is fine for refs to elements that always render, and in tests.
 - **Run Prettier** on files you change; it also sorts Tailwind classes.
 
 ## Styling

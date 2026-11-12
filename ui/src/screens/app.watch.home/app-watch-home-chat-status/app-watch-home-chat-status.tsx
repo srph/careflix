@@ -24,7 +24,7 @@ export function AppWatchHomeChatStatus({ logs, typing, joined, meId }: Props) {
   const who = (user: AppUser) => String(user.id) === String(meId) ? 'You' : user.name
   const typer = typingLabel(typing)
   const activity = latestStatusActivity(logs)
-  let key: string
+  let key = ''
   let line: React.ReactNode = null
 
   // An arrival is brief, so it outranks typing; otherwise a busy chat could hide it entirely.

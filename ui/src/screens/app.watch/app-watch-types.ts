@@ -12,7 +12,8 @@ export interface Handlers {
   onChangeVideo: (party: AppParty) => void
 }
 
-export type ContextType = State & Handlers
+// Only provided once the party has loaded, so consumers always have one.
+export type ContextType = Omit<State, 'party'> & { party: AppParty } & Handlers
 
 export type Action = ReducerAction<'data:init'>
  | ReducerAction<'data:success', { party: AppParty }>

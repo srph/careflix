@@ -21,8 +21,7 @@
       "vite/client",
       "node"
     ],
-    "strict": true,
-    "strictNullChecks": false
+    "strict": true
   },
   "include": [
     "src"

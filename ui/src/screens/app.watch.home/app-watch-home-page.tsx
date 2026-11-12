@@ -3,7 +3,7 @@ import { useInvitationOverlay } from '~/screens/app/app-invitation-modal/app-inv
 import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { UiLoader } from '~/components/ui-loader/ui-loader'
-import { AppWatchHomePlayerModal } from './app-watch-home-player-modal'
+import { AppWatchHomePlayerControls } from './app-watch-home-player-controls'
 import { AppWatchHomeChatWidget } from './app-watch-home-chat-widget/app-watch-home-chat-widget'
 import { AppWatchHomeSubtitleSlot } from './app-watch-home-subtitle-slot/app-watch-home-subtitle-slot'
 import { AppWatchHomeSeasonSelectionModal } from './app-watch-home-season-selection-modal'
@@ -13,185 +13,21 @@ import { AppWatchHomeKeyboardInfoModal } from './app-watch-home-keyboard-info-mo
 import { AppWatchHomeReactionLayer } from './app-watch-home-reaction-layer'
 import { useReactions } from './use-reactions'
 import { AppWatchHomeActivityOverlay } from './app-watch-home-activity-overlay'
-import { showsReactions, useActivityLevel } from './app-watch-home-activity-level'
+import { showsReactions } from './app-watch-home-activity-level'
+import { AppWatchHomePlayerContext } from './app-watch-home-player-context'
+import { usePlayerSync } from './use-player-sync'
+import { usePlayerChrome } from './use-player-chrome'
 
 import { useUpdateEffect } from '~/hooks/use-update-effect'
-import { useReducer, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useParty } from '~/screens/app.watch/use-party'
-import { setPlayback } from '~/screens/app.watch/app-watch-party-updates'
 import { useSetParty } from '~/screens/app.watch/queries/app-watch-party-queries'
-import { usePusher } from '~/hooks/use-pusher'
 import { useAuthUser } from '~/contexts/auth/auth'
 import { useBufferState } from '~/hooks/use-buffer-state'
 import { useMediaMode } from '~/hooks/use-media-mode'
 import { useRouterBlock } from '~/hooks/use-router-block'
-import { axios } from '~/lib/axios/axios'
 
 import { getVideoPreviewImage } from '~/utils/shows/get-video-preview-image'
-
-interface State {
-  time: number
-  volume: number
-  isComplete: boolean
-  isPlaying: boolean
-  isOpen: boolean
-  isInitialized: boolean
-  isBuffering: boolean
-  isSeasonSelectionOpen: boolean
-  isChatOpen: boolean
-  isInvitationOpen: boolean
-  isKeyboardInfoOpen: boolean
-  isMuted: boolean
-  isSubtitleEnabled: boolean
-}
-
-type Action =
-  | ReducerAction<'init'>
-  | ReducerAction<'controls:open'>
-  | ReducerAction<'controls:close'>
-  | ReducerAction<'controls:seek', { time: number }>
-  | ReducerAction<'time-update', { time: number }>
-  | ReducerAction<'controls:play'>
-  | ReducerAction<'controls:pause'>
-  | ReducerAction<'video-complete'>
-  | ReducerAction<'sync', { time: number; isPlaying: boolean }>
-  | ReducerAction<'buffer', { isBuffering: boolean }>
-  | ReducerAction<'change-video'>
-  | ReducerAction<'change-volume', { volume: number }>
-  | ReducerAction<'season-selection:toggle', { isSeasonSelectionOpen: boolean }>
-  | ReducerAction<'invitation-modal:toggle', { isInvitationOpen: boolean }>
-  | ReducerAction<'keyboard-info-modal:toggle', { isKeyboardInfoOpen: boolean }>
-  | ReducerAction<'toggle-chat'>
-  | ReducerAction<'toggle-mute'>
-  | ReducerAction<'toggle-subtitle'>
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'init': {
-      return {
-        ...state,
-        isInitialized: true
-      }
-    }
-
-    case 'controls:open': {
-      return {
-        ...state,
-        isOpen: true
-      }
-    }
-
-    case 'controls:close': {
-      return {
-        ...state,
-        isOpen: false
-      }
-    }
-
-    case 'controls:seek': {
-      return {
-        ...state,
-        time: action.payload.time
-      }
-    }
-
-    case 'controls:play': {
-      return {
-        ...state,
-        isPlaying: !state.isPlaying
-      }
-    }
-
-    case 'sync': {
-      return {
-        ...state,
-        isPlaying: action.payload.isPlaying,
-        time: action.payload.time
-      }
-    }
-
-    case 'video-complete': {
-      return {
-        ...state,
-        isPlaying: false,
-        isComplete: false
-      }
-    }
-
-    case 'time-update': {
-      return {
-        ...state,
-        time: action.payload.time
-      }
-    }
-
-    case 'buffer': {
-      return {
-        ...state,
-        isBuffering: action.payload.isBuffering
-      }
-    }
-
-    case 'change-video': {
-      return {
-        ...state,
-        isInitialized: false,
-        isBuffering: false
-      }
-    }
-
-    case 'change-volume': {
-      return {
-        ...state,
-        volume: action.payload.volume
-      }
-    }
-
-    case 'season-selection:toggle': {
-      return {
-        ...state,
-        isSeasonSelectionOpen: action.payload.isSeasonSelectionOpen
-      }
-    }
-
-    case 'invitation-modal:toggle': {
-      return {
-        ...state,
-        isInvitationOpen: action.payload.isInvitationOpen
-      }
-    }
-
-    case 'keyboard-info-modal:toggle': {
-      return {
-        ...state,
-        isKeyboardInfoOpen: action.payload.isKeyboardInfoOpen
-      }
-    }
-
-    case 'toggle-chat': {
-      return {
-        ...state,
-        isChatOpen: !state.isChatOpen
-      }
-    }
-
-    case 'toggle-mute': {
-      return {
-        ...state,
-        isMuted: !state.isMuted
-      }
-    }
-
-    case 'toggle-subtitle': {
-      return {
-        ...state,
-        isSubtitleEnabled: !state.isSubtitleEnabled
-      }
-    }
-  }
-
-  return state
-}
 
 /**
  * @TODO Sync time every 5 minutes or so.
@@ -200,29 +36,14 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
   const party = useParty()
   const setParty = useSetParty(party.id)
   const user = useAuthUser()
-  const [activityLevel, setActivityLevel] = useActivityLevel(user.id)
   const { registerPlayer } = useInvitationOverlay()
-
-  const [state, dispatch] = useReducer(reducer, {
-    time: party.current_time,
-    volume: 1,
-    isComplete: false,
-    isPlaying: false,
-    isOpen: false,
-    isInitialized: false,
-    isBuffering: false,
-    isSeasonSelectionOpen: false,
-    isChatOpen: true,
-    isInvitationOpen: false,
-    isKeyboardInfoOpen: false,
-    isMuted: false,
-    isSubtitleEnabled: Boolean(party.video.subtitle_url)
-  })
+  const player = usePlayerSync(party)
+  const chrome = usePlayerChrome(party, user)
+  const { state } = player
 
   // Other people's floats follow the Activity Overlay level while chat is closed.
-  const reactions = useReactions(party, user, showsReactions(activityLevel, state.isChatOpen))
+  const reactions = useReactions(party, user, showsReactions(chrome.activityLevel, chrome.state.isChatOpen))
 
-  const $video = useRef<HTMLVideoElement>(null)
   const $pane = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -231,49 +52,6 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
   }, [party.id, registerPlayer])
 
   const media = useMediaMode()
-
-  useEffect(() => {
-    // Initialize the video to start on the current time.
-    $video.current!.currentTime = state.time
-  }, [])
-
-  function syncPlayback(time: number, isPlaying: boolean) {
-    dispatch({
-      type: 'sync',
-      payload: { time, isPlaying }
-    })
-
-    $video.current!.currentTime = time
-  }
-
-  // Every state event syncs, even when its time and play/pause match the previous one.
-  usePusher(`private-party.${party.id}`, 'state', (event: { state: AppPartyState }) => {
-    setParty((current) => setPlayback(current, event.state))
-    syncPlayback(event.state.current_time, event.state.is_playing)
-  })
-
-  // A new video starts where the server says. This waits for the render that swaps the source,
-  // which would otherwise undo the seek.
-  useUpdateEffect(() => {
-    syncPlayback(party.current_time, party.is_playing)
-  }, [party.video.id])
-
-  useUpdateEffect(() => {
-    if (state.isPlaying) {
-      if (state.isComplete) {
-        dispatch({
-          type: 'time-update',
-          payload: { time: 0 }
-        })
-
-        $video.current!.currentTime = 0
-      }
-
-      $video.current!.play()
-    } else {
-      $video.current!.pause()
-    }
-  }, [state.isPlaying])
 
   // Used to show the change episode notice momentarily
   const [changeEpisodeBuffer, displayChangeEpisodeBuffer] = useBufferState({
@@ -284,8 +62,6 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     // We're not putting any other conditions here (if it's a series, etc.)
     // because we're in the assumption that only series will have a change
     // of videos.
-    dispatch({ type: 'change-video' })
-
     displayChangeEpisodeBuffer()
   }, [party.video.id])
 
@@ -294,15 +70,11 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
       // If it's open, most probably it's been opened through hover (desktop).
       // On desktop, we want overlay clicks to toggle play; for mobile screens,
       // we want overlays to open the overlay.
-      return handlePlay()
+      return player.play()
     }
 
-    dispatch({
-      type: 'controls:open'
-    })
+    chrome.openControls()
   }
-
-  const timeoutRef = useRef<number | undefined>(undefined)
 
   function handleVideoHover() {
     // We don't want this event to be called on mobile.
@@ -310,85 +82,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
       return
     }
 
-    // No worries about optimizing this since `onMouseMove` no longer fires
-    // after we've opened the overlay; the overlay contains the entire player.
-    dispatch({
-      type: 'controls:open'
-    })
-
-    armControlsTimeout()
-  }
-
-  // The controls hide a while after the pointer last moved over the picture,
-  // except while the Activity Overlay menu is open from them.
-  const isActivityMenuOpenRef = useRef(false)
-
-  function armControlsTimeout() {
-    window.clearTimeout(timeoutRef.current)
-    if (isActivityMenuOpenRef.current) return
-
-    timeoutRef.current = window.setTimeout(() => {
-      dispatch({
-        type: 'controls:close'
-      })
-    }, 5000)
-  }
-
-  function handleActivityMenuOpenChange(open: boolean) {
-    isActivityMenuOpenRef.current = open
-    armControlsTimeout()
-  }
-
-  function handleOverlayClose() {
-    // FYI, AppWatchHomePlayerModal lets overlay clicks to pass through to the video.
-    // In turn, handleVideoOpen handles the proper action for desktop/mobile.
-    dispatch({
-      type: 'controls:close'
-    })
-  }
-
-  function handleVideoLoadedData() {
-    if (!state.isInitialized) {
-      dispatch({ type: 'init' })
-    }
-  }
-
-  function handleSeek(time: number) {
-    dispatch({
-      type: 'controls:seek',
-      payload: { time }
-    })
-
-    $video.current!.currentTime = time
-
-    axios.put(`/api/parties/${party.id}/state`, {
-      is_playing: state.isPlaying,
-      current_time: time
-    })
-  }
-
-  function handlePlay() {
-    dispatch({
-      type: 'controls:play'
-    })
-
-    axios.put(`/api/parties/${party.id}/state`, {
-      is_playing: !state.isPlaying,
-      current_time: state.time
-    })
-  }
-
-  function handleTimeUpdate() {
-    dispatch({
-      type: 'time-update',
-      payload: { time: $video.current!.currentTime }
-    })
-  }
-
-  function handleVideoEnded() {
-    dispatch({
-      type: 'video-complete'
-    })
+    chrome.showControlsForAWhile()
   }
 
   useRouterBlock(
@@ -406,110 +100,21 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
     [state.isPlaying]
   )
 
-  function handleVideoBufferStart() {
-    dispatch({
-      type: 'buffer',
-      payload: { isBuffering: true }
-    })
-  }
-
-  function handleVideoBufferEnd() {
-    dispatch({
-      type: 'buffer',
-      payload: { isBuffering: false }
-    })
-  }
-
-  function handleSeasonSelectionOpen() {
-    dispatch({
-      type: 'season-selection:toggle',
-      payload: { isSeasonSelectionOpen: true }
-    })
-  }
-
-  function handleSeasonSelectionClose() {
-    dispatch({
-      type: 'season-selection:toggle',
-      payload: { isSeasonSelectionOpen: false }
-    })
-  }
-
-  function handleInvitationOpen() {
-    dispatch({
-      type: 'invitation-modal:toggle',
-      payload: { isInvitationOpen: true }
-    })
-  }
-
-  function handleInvitationClose() {
-    dispatch({
-      type: 'invitation-modal:toggle',
-      payload: { isInvitationOpen: false }
-    })
-  }
-
-  function handleKeyboardInfoOpen() {
-    dispatch({
-      type: 'keyboard-info-modal:toggle',
-      payload: { isKeyboardInfoOpen: true }
-    })
-  }
-
-  function handleKeyboardInfoClose() {
-    dispatch({
-      type: 'keyboard-info-modal:toggle',
-      payload: { isKeyboardInfoOpen: false }
-    })
-  }
-
   function handleChangeVideo(next: AppParty) {
-    dispatch({
-      type: 'season-selection:toggle',
-      payload: { isSeasonSelectionOpen: false }
-    })
+    chrome.closeSeasonSelection()
 
-    handleOverlayClose()
+    // FYI, the controls let overlay clicks pass through to the video, where handleVideoClick
+    // does the right thing for desktop and mobile.
+    chrome.closeControls()
 
     // The change-video response leaves out the room's invitations.
     setParty((current) => ({ ...next, invitations: current.invitations }))
 
-    // Picking the same video keeps its source, so it can sync straight away.
-    if (String(next.video.id) === String(party.video.id)) syncPlayback(next.current_time, next.is_playing)
-  }
-
-  function handleToggleChat() {
-    dispatch({
-      type: 'toggle-chat'
-    })
-  }
-
-  function handleChangeVolume(volume: number) {
-    volume = Math.max(0, Math.min(volume, 1))
-
-    dispatch({
-      type: 'change-volume',
-      payload: { volume }
-    })
-
-    $video.current!.volume = volume
-  }
-
-  function handleToggleMute() {
-    $video.current!.muted = !state.isMuted
-
-    dispatch({
-      type: 'toggle-mute'
-    })
-  }
-
-  function handleToggleSubtitle() {
-    dispatch({
-      type: 'toggle-subtitle'
-    })
+    player.changedVideo(next)
   }
 
   return (
-    <React.Fragment>
+    <AppWatchHomePlayerContext.Provider value={{ player, chrome }}>
       {/* Phones stack the picture, title bar and chat. From `sm` the picture fills the window and the chat slides in beside it. */}
       <div className="flex h-(--window-vh) w-screen flex-col overflow-hidden sm:relative sm:flex-row">
         <div
@@ -517,7 +122,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           ref={$pane}
           className={cn(
             'relative w-full shrink-0 sm:shrink sm:transition-all sm:duration-200',
-            state.isChatOpen && 'sm:w-[calc(100%-var(--player-chat-pane-width))]'
+            chrome.state.isChatOpen && 'sm:w-[calc(100%-var(--player-chat-pane-width))]'
           )}>
           {/* cursor-pointer: see https://github.com/facebook/react/issues/2055 */}
           <div
@@ -535,12 +140,8 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
             <video
               className="pointer-events-none absolute inset-0 size-full sm:static"
               src={party.video.video_url}
-              ref={$video}
-              onTimeUpdate={handleTimeUpdate}
-              onEnded={handleVideoEnded}
-              onLoadedData={handleVideoLoadedData}
-              onWaiting={handleVideoBufferStart}
-              onPlaying={handleVideoBufferEnd}
+              ref={player.$video}
+              {...player.events}
             />
           </div>
 
@@ -569,77 +170,55 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           {state.isInitialized && (
             <AppWatchHomeSubtitleSlot
               video={party.video}
-              isEnabled={state.isSubtitleEnabled}
-              isPlayerOpen={state.isOpen}
+              isEnabled={chrome.state.isSubtitleEnabled}
+              isPlayerOpen={chrome.state.isOpen}
               time={state.time}
             />
           )}
 
-          <AppWatchHomeReactionLayer floats={reactions.floats} isLifted={state.isOpen} onDone={reactions.remove} />
+          <AppWatchHomeReactionLayer
+            floats={reactions.floats}
+            isLifted={chrome.state.isOpen}
+            onDone={reactions.remove}
+          />
 
           <AppWatchHomeActivityOverlay
             party={party}
             me={user}
-            level={activityLevel}
-            isChatOpen={state.isChatOpen}
-            isLifted={state.isOpen}
-            onOpenChat={handleToggleChat}
+            level={chrome.activityLevel}
+            isChatOpen={chrome.state.isChatOpen}
+            isLifted={chrome.state.isOpen}
+            onOpenChat={chrome.toggleChat}
           />
 
-          <AppWatchHomePlayerModal
-            party={party}
-            time={state.time}
-            volume={state.volume}
-            getVideoElement={() => $video.current!}
-            isOpen={state.isOpen}
-            isPlaying={state.isPlaying}
-            isChatOpen={state.isChatOpen}
-            isMuted={state.isMuted}
-            isSeasonSelectionOpen={state.isSeasonSelectionOpen}
-            isInvitationOpen={state.isInvitationOpen}
-            isKeyboardInfoOpen={state.isKeyboardInfoOpen}
-            isSubtitleEnabled={state.isSubtitleEnabled}
-            activityLevel={activityLevel}
-            onChangeActivityLevel={setActivityLevel}
-            onActivityMenuOpenChange={handleActivityMenuOpenChange}
-            onClose={handleOverlayClose}
-            onPlay={handlePlay}
-            onSeek={handleSeek}
-            onOpenSeasonSelection={handleSeasonSelectionOpen}
-            onOpenKeyboardInfo={handleKeyboardInfoOpen}
-            onCloseKeyboardInfo={handleKeyboardInfoClose}
-            onChangeVolume={handleChangeVolume}
-            onToggleChat={handleToggleChat}
-            onToggleMute={handleToggleMute}
-            onToggleSubtitle={handleToggleSubtitle}
-          />
+          <AppWatchHomePlayerControls />
 
           <AppWatchHomeSeasonSelectionModal
             party={party}
             show={party.video.show}
-            isOpen={state.isSeasonSelectionOpen}
-            onClose={handleSeasonSelectionClose}
+            isOpen={chrome.state.isSeasonSelectionOpen}
+            onClose={chrome.closeSeasonSelection}
             onChangeVideo={handleChangeVideo}
           />
         </div>
 
-        <AppWatchHomeMobileTitleBar party={party} onOpenSeasonSelection={handleSeasonSelectionOpen} />
+        <AppWatchHomeMobileTitleBar party={party} onOpenSeasonSelection={chrome.openSeasonSelection} />
 
         <AppWatchHomeChatWidget
           party={party}
-          isChatOpen={state.isChatOpen}
-          isInvitationOpen={state.isInvitationOpen}
-          isSeasonSelectionOpen={state.isSeasonSelectionOpen}
-          isKeyboardInfoOpen={state.isKeyboardInfoOpen}
-          onOpenInvitationModal={handleInvitationOpen}
-          onCloseInvitationModal={handleInvitationClose}
+          isChatOpen={chrome.state.isChatOpen}
+          isInvitationOpen={chrome.state.isInvitationOpen}
+          isSeasonSelectionOpen={chrome.state.isSeasonSelectionOpen}
+          isKeyboardInfoOpen={chrome.state.isKeyboardInfoOpen}
+          onOpenInvitationModal={chrome.openInvitation}
+          onCloseInvitationModal={chrome.closeInvitation}
           onReact={reactions.send}
         />
       </div>
 
       {props.children}
 
-      <AppWatchHomeKeyboardInfoModal isOpen={state.isKeyboardInfoOpen} onClose={handleKeyboardInfoClose} />
-    </React.Fragment>
+      <AppWatchHomeKeyboardInfoModal isOpen={chrome.state.isKeyboardInfoOpen} onClose={chrome.closeKeyboardInfo} />
+    </AppWatchHomePlayerContext.Provider>
   )
 }

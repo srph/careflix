@@ -15,36 +15,8 @@ import { AppWatchHomeVolumeControl } from './app-watch-home-volume-control'
 import { Tooltip } from '@base-ui/react/tooltip'
 import { AppWatchHomePlayerTooltip } from './app-watch-home-player-tooltip'
 import { AppWatchHomeActivityMenu } from './app-watch-home-activity-menu'
-import type { ActivityLevel } from './app-watch-home-activity-level'
-
-interface Props {
-  party: AppParty
-  time: number
-  volume: number
-  getVideoElement: () => HTMLVideoElement
-  isOpen: boolean
-  isPlaying: boolean
-  isChatOpen: boolean
-  isMuted: boolean
-  isSeasonSelectionOpen: boolean
-  isInvitationOpen: boolean
-  isKeyboardInfoOpen: boolean
-  isSubtitleEnabled: boolean
-  activityLevel: ActivityLevel
-  onChangeActivityLevel: (level: ActivityLevel) => void
-  // The Activity Overlay menu opened or shut; the controls stay up while it's open.
-  onActivityMenuOpenChange: (open: boolean) => void
-  onClose: () => void
-  onPlay: () => void
-  onSeek: (time: number) => void
-  onOpenSeasonSelection: () => void
-  onOpenKeyboardInfo: () => void
-  onCloseKeyboardInfo: () => void
-  onChangeVolume: (volume: number) => void
-  onToggleChat: () => void
-  onToggleMute: () => void
-  onToggleSubtitle: () => void
-}
+import { useParty } from '~/screens/app.watch/use-party'
+import { usePlayer } from './use-player'
 
 // An icon in the bottom bar. `CONTROL` ones (play, skip, volume) only show on desktop; phones and tablets use the buttons over the picture.
 const ITEM = 'relative mr-8 text-xl leading-none text-white lg:text-3xl'
@@ -53,10 +25,10 @@ const TIME = 'shrink-0 text-base leading-none tabular-nums not-last:mr-4 lg:not-
 const SECTION = 'flex items-center'
 const CENTER_ACTION = 'pointer-events-auto p-4 text-base leading-none'
 
-/**
- * @TODO We might not need to use a modal here since it's only an overlay on desktop screens.
- */
-export function AppWatchHomePlayerModal({ party, ...props }: Props) {
+/** The controls over the picture; they show while the pointer moves over it (desktop) or after a tap (phones). */
+export function AppWatchHomePlayerControls() {
+  const party = useParty()
+  const { player, chrome } = usePlayer()
   const { isExpanded: isIncomingInvitationOpen } = useInvitationOverlay()
   const overlayRef = useRef<HTMLDivElement>(null)
   const media = useMediaMode()
@@ -79,32 +51,32 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
 
   useEffect(() => {
     // When the player overlay closes, we also want volume control to close in case it's open.
-    if (!props.isOpen && isVolumeControlOpen) {
+    if (!chrome.state.isOpen && isVolumeControlOpen) {
       setIsVolumeControlOpen(false)
     }
-  }, [props.isOpen])
+  }, [chrome.state.isOpen])
 
   usePlayerHotkeys({
     isDisabled() {
       return (
         isIncomingInvitationOpen ||
         isActivityMenuOpen ||
-        props.isSeasonSelectionOpen ||
-        props.isInvitationOpen ||
-        props.isKeyboardInfoOpen
+        chrome.state.isSeasonSelectionOpen ||
+        chrome.state.isInvitationOpen ||
+        chrome.state.isKeyboardInfoOpen
       )
     },
     onFullscreen() {
       toggleIsFullsceen()
     },
     onToggleChat() {
-      props.onToggleChat()
+      chrome.toggleChat()
     },
     onToggleMute() {
-      props.onToggleMute()
+      player.toggleMute()
     },
     onPlay() {
-      props.onPlay()
+      player.play()
     },
     onForward() {
       handleForward()
@@ -113,33 +85,33 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
       handleBackward()
     },
     onIncreaseVolume() {
-      props.onChangeVolume((props.volume += 0.1))
+      player.changeVolume(player.state.volume + 0.1)
     },
     onDecreaseVolume() {
-      props.onChangeVolume((props.volume -= 0.1))
+      player.changeVolume(player.state.volume - 0.1)
     },
     onToggleKeyboardInfo() {
-      if (props.isKeyboardInfoOpen) {
-        props.onCloseKeyboardInfo()
+      if (chrome.state.isKeyboardInfoOpen) {
+        chrome.closeKeyboardInfo()
       } else {
-        props.onOpenKeyboardInfo()
+        chrome.openKeyboardInfo()
       }
     }
   })
 
   function handleForward() {
-    props.onSeek(Math.min(props.time + 10, party.video.duration))
+    player.seek(Math.min(player.state.time + 10, party.video.duration))
   }
 
   function handleBackward() {
-    props.onSeek(Math.max(props.time - 10, 0))
+    player.seek(Math.max(player.state.time - 10, 0))
   }
 
   function handleClickOverlay() {
     if (media === 'desktop') {
-      props.getVideoElement().click()
+      player.$video.current!.click()
     } else {
-      props.onClose()
+      chrome.closeControls()
     }
   }
 
@@ -166,7 +138,7 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
 
   function handleActivityMenuOpenChange(open: boolean) {
     setIsActivityMenuOpen(open)
-    props.onActivityMenuOpenChange(open)
+    chrome.activityMenuOpenChange(open)
   }
 
   function handleCloseRemainingTimeTooltip() {
@@ -180,7 +152,7 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
     <Tooltip.Provider>
       <div>
         <AnimatePresence initial={false}>
-          {props.isOpen && (
+          {chrome.state.isOpen && (
             <motion.div
               data-testid="player-chrome"
               className="pointer-events-auto absolute inset-0 z-(--zindex-player-overlay)"
@@ -212,9 +184,9 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
 
                 <UiPlainButton
                   className="pointer-events-auto mx-4 flex size-10 items-center justify-center rounded-full bg-pink-500 text-base leading-none text-white"
-                  aria-label={props.isPlaying ? 'Pause' : 'Play'}
-                  onClick={props.onPlay}>
-                  {props.isPlaying ? (
+                  aria-label={player.state.isPlaying ? 'Pause' : 'Play'}
+                  onClick={player.play}>
+                  {player.state.isPlaying ? (
                     <i className="fa fa-pause" />
                   ) : (
                     <span className="pl-0.5">
@@ -233,12 +205,16 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
                 {!isVolumeControlOpen && !isActivityMenuOpen && (isRemainingTimeTooltipOpen || !isTooltipOpen) && (
                   <div data-testid="player-controls" className="flex items-center p-4 sm:px-4 sm:py-0 lg:px-8">
                     <div className={TIME}>
-                      {toReadableTime(props.time, {
+                      {toReadableTime(player.state.time, {
                         max: party.video.duration > 3600 ? 'hh' : 'mm'
                       })}
                     </div>
 
-                    <AppWatchHomePlayerSeeker time={props.time} duration={party.video.duration} onSeek={props.onSeek} />
+                    <AppWatchHomePlayerSeeker
+                      time={player.state.time}
+                      duration={party.video.duration}
+                      onSeek={player.seek}
+                    />
 
                     <div className={TIME}>
                       <AppWatchHomePlayerTooltip
@@ -249,7 +225,7 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
                         onClose={handleCloseRemainingTimeTooltip}>
                         <UiPlainButton onClick={() => setIsRemainingTimeToggled(!isRemainingTimeToggled)}>
                           {isRemainingTimeToggled
-                            ? toReadableTime(party.video.duration - props.time)
+                            ? toReadableTime(party.video.duration - player.state.time)
                             : toReadableTime(party.video.duration)}
                         </UiPlainButton>
                       </AppWatchHomePlayerTooltip>
@@ -261,13 +237,13 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
                   {/* min-w-0 lets the title shorten with an ellipsis. */}
                   <div className={`${SECTION} min-w-0`}>
                     <AppWatchHomePlayerTooltip
-                      text={props.isPlaying ? 'Pause' : 'Play'}
+                      text={player.state.isPlaying ? 'Pause' : 'Play'}
                       align="left"
                       onOpen={handleOpenTooltip}
                       onClose={handleCloseTooltip}>
                       <div className={CONTROL}>
-                        <UiPlainButton aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
-                          {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
+                        <UiPlainButton aria-label={player.state.isPlaying ? 'Pause' : 'Play'} onClick={player.play}>
+                          {player.state.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
                         </UiPlainButton>
                       </div>
                     </AppWatchHomePlayerTooltip>
@@ -298,14 +274,14 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
 
                     <div className={CONTROL}>
                       <AppWatchHomeVolumeControl
-                        volume={props.volume}
-                        isMuted={props.isMuted}
+                        volume={player.state.volume}
+                        isMuted={player.state.isMuted}
                         isOpen={isVolumeControlOpen}
-                        isOverlayOpen={props.isOpen}
-                        onChangeVolume={props.onChangeVolume}
+                        isOverlayOpen={chrome.state.isOpen}
+                        onChangeVolume={player.changeVolume}
                         onOpen={handleOpenVolumeControl}
                         onClose={handleCloseVolumeControl}
-                        onToggleMute={props.onToggleMute}
+                        onToggleMute={player.toggleMute}
                         onOpenTooltip={handleOpenTooltip}
                         onCloseTooltip={handleCloseTooltip}
                       />
@@ -336,7 +312,7 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
                       onOpen={handleOpenTooltip}
                       onClose={handleCloseTooltip}>
                       <div className={`${ITEM} hidden lg:block`}>
-                        <UiPlainButton aria-label="View keyboard shortcuts" onClick={props.onOpenKeyboardInfo}>
+                        <UiPlainButton aria-label="View keyboard shortcuts" onClick={chrome.openKeyboardInfo}>
                           <i className="fa fa-keyboard-o" />
                         </UiPlainButton>
                       </div>
@@ -344,18 +320,18 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
 
                     {Boolean(party.video.subtitle_url) && (
                       <AppWatchHomePlayerTooltip
-                        text={props.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'}
+                        text={chrome.state.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'}
                         align="right"
                         onOpen={handleOpenTooltip}
                         onClose={handleCloseTooltip}>
                         <div
                           className={cn(
                             ITEM,
-                            !props.isSubtitleEnabled && 'opacity-50 transition-opacity duration-200'
+                            !chrome.state.isSubtitleEnabled && 'opacity-50 transition-opacity duration-200'
                           )}>
                           <UiPlainButton
-                            aria-label={props.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'}
-                            onClick={props.onToggleSubtitle}>
+                            aria-label={chrome.state.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'}
+                            onClick={chrome.toggleSubtitle}>
                             <i className="fa fa-align-center" />
                           </UiPlainButton>
                         </div>
@@ -368,7 +344,7 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
                         align="right"
                         onOpen={handleOpenTooltip}
                         onClose={handleCloseTooltip}>
-                        <div className={ITEM} onClick={props.onOpenSeasonSelection}>
+                        <div className={ITEM} onClick={chrome.openSeasonSelection}>
                           <UiPlainButton aria-label="Open Episode Selection">
                             <i className="fa fa-list-ol" />
                           </UiPlainButton>
@@ -396,23 +372,27 @@ export function AppWatchHomePlayerModal({ party, ...props }: Props) {
                       onClose={handleCloseTooltip}>
                       <div className={ITEM}>
                         <AppWatchHomeActivityMenu
-                          level={props.activityLevel}
-                          onChange={props.onChangeActivityLevel}
+                          level={chrome.activityLevel}
+                          onChange={chrome.setActivityLevel}
                           onOpenChange={handleActivityMenuOpenChange}
                         />
                       </div>
                     </AppWatchHomePlayerTooltip>
 
                     <AppWatchHomePlayerTooltip
-                      text={props.isChatOpen ? 'Close Chat' : 'Open Chat'}
+                      text={chrome.state.isChatOpen ? 'Close Chat' : 'Open Chat'}
                       align="right"
                       onOpen={handleOpenTooltip}
                       onClose={handleCloseTooltip}>
                       <div className={cn(ITEM, 'mr-0')}>
                         <UiPlainButton
-                          aria-label={props.isChatOpen ? 'Close Chat' : 'Open Chat'}
-                          onClick={props.onToggleChat}>
-                          {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
+                          aria-label={chrome.state.isChatOpen ? 'Close Chat' : 'Open Chat'}
+                          onClick={chrome.toggleChat}>
+                          {chrome.state.isChatOpen ? (
+                            <i className="fa fa-comment-o" />
+                          ) : (
+                            <i className="fa fa-comment" />
+                          )}
                         </UiPlainButton>
                       </div>
                     </AppWatchHomePlayerTooltip>

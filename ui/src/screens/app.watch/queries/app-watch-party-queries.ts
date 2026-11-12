@@ -1,4 +1,5 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { axios } from '~/lib/axios/axios'
 import { get } from '~/lib/query/get'
 import { queryKeys } from '~/query-keys'
 
@@ -21,4 +22,13 @@ export function useSetParty(partyId: AppId) {
   const client = useQueryClient()
   return (update: (party: AppParty) => AppParty) =>
     client.setQueryData<AppParty>(queryKeys.watchParty.party(partyId), (party) => party && update(party))
+}
+
+/** Tells the room you played, paused or seeked. A failure is ignored, as it always was. */
+export function useSyncStateMutation(partyId: AppId) {
+  return useMutation({
+    mutationFn: async (state: AppPartyState) => {
+      await axios.put(`/api/parties/${partyId}/state`, state)
+    }
+  })
 }

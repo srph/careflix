@@ -20,7 +20,7 @@ No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.
 
 - `contexts/auth/auth.tsx` — auth/session state
 - `screens/app.watch/app-watch-page.tsx` — loads the room's party with `usePartyQuery` and provides it to the room; read it with `useParty()`. Pusher events write to that query's cache.
-- `screens/app.watch.home/app-watch-home-page.tsx` — local player state (time, playing, volume, subtitles) via a single `useReducer`
+- `screens/app.watch.home/app-watch-home-page.tsx` — the player: `usePlayerSync` (time, playing, volume, and sync with the room) and `usePlayerChrome` (controls, chat, modals, subtitles), each a `useReducer`, shared with the controls through `usePlayer()`
 
 Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers, or written to the query cache.
 
@@ -86,12 +86,12 @@ Tailwind `4.3.5` classes; tokens, keyframes and the focus ring live in `src/tail
 
 There's no video library (no video.js/hls.js) — it's a plain HTML5 `<video>` element (`screens/app.watch.home/app-watch-home-page.tsx`) with fully custom React-built chrome:
 
-- `AppWatchHomePlayerModal` — controls overlay (play/pause, seek, volume, fullscreen, chat toggle, subtitle toggle, episode selection)
+- `AppWatchHomePlayerControls` — controls overlay (play/pause, seek, volume, fullscreen, chat toggle, subtitle toggle, episode selection)
 - `AppWatchHomePlayerSeeker`, `AppWatchHomeVolumeControl`, `AppWatchHomePlayerTooltip` — individual control widgets
 - `AppWatchHomeSubtitleSlot` — renders subtitles parsed client-side from a `.srt` via `lib/srt2obj`
 - `usePlayerHotkeys` (`use-player-hotkeys.ts`) — keyboard shortcuts (space, arrows, f, m, etc.)
 
-Playback is kept in sync across party members by dispatching local player actions to the API, which re-broadcasts `PartyState`/`PartyVideoChanged` events over Pusher; the reducer in `screens/app.watch.home/app-watch-home-page.tsx` applies incoming `sync`/`change-video` actions by imperatively setting `$video.current.currentTime`, `.play()`/`.pause()`, etc. on the video ref.
+Playback is kept in sync across party members by dispatching local player actions to the API, which re-broadcasts `PartyState`/`PartyVideoChanged` events over Pusher; `usePlayerSync` (`screens/app.watch.home/use-player-sync.ts`) applies incoming `state` events and video changes by imperatively setting `$video.current.currentTime`, `.play()`/`.pause()`, etc. on the video ref.
 
 ## Commands
 

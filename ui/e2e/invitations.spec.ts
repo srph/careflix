@@ -123,7 +123,7 @@ test('expiration stays visible, Dismiss skips stale invites, and cancellation up
   await expect(dialog(page)).not.toBeVisible()
 })
 
-test('failed actions retry and another invite preserves a request in flight', async ({ page }) => {
+test('a failed decline retries quietly, and the declined invite stays gone while it does', async ({ page }) => {
   const { emit, subscriptions } = await setup(page, [invite(0)])
   let attempts = 0
   let release: () => void
@@ -137,20 +137,26 @@ test('failed actions retry and another invite preserves a request in flight', as
   await expect.poll(() => subscriptions.has(`private-user.${viewer.id}`)).toBe(true)
   await open(page)
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
-  await expect(dialog(page).getByRole('alert')).toContainText('Could not decline')
-  await page.getByRole('button', { name: 'Decline', exact: true }).click()
-  await expect(page.getByRole('button', { name: 'Declining…' })).toBeDisabled()
+  // Optimistic: the invite is declined on screen at once, and the failed request never shows.
+  await expect(dialog(page)).toContainText('Declined Kier’s invitation to watch Velvet Static')
+  await expect(dialog(page).getByRole('alert')).toHaveCount(0)
+  await expect.poll(() => attempts).toBe(2)
+  // The retry is still in flight: a re-sent copy of the declined invite stays gone,
+  // a duplicate new invite shows once, and an unknown cancellation changes nothing.
+  emit('invitation.received', invite(0))
   emit('invitation.received', invite(1))
   emit('invitation.received', invite(1))
   emit('invitation.cancelled', { id: 999999 })
-  await expect(dialog(page).getByTestId('invitation-count')).toHaveText('1 of 2')
+  await expect(dialog(page)).toContainText('Mira invited you to watch Paper Moons')
+  await expect(dialog(page)).not.toContainText('Velvet Static')
   release!()
+  await open(page)
   await expect(dialog(page).getByRole('heading', { name: 'Paper Moons' })).toBeVisible()
-  await expect(dialog(page).getByTestId('invitation-count')).toHaveText('2 of 2')
+  await expect(dialog(page).getByTestId('invitation-count')).toHaveCount(0)
   expect(attempts).toBe(2)
 })
 
-test('the last decline waits for success, shows its confirmation pill, then dismisses', async ({ page }) => {
+test('the last decline shows its confirmation pill right away, then dismisses', async ({ page }) => {
   await setup(page, [invite(0)])
   let release: () => void
   const held = new Promise<void>(resolve => { release = resolve })
@@ -161,16 +167,13 @@ test('the last decline waits for success, shows its confirmation pill, then dism
   await page.goto('/')
   await open(page)
   await page.getByRole('button', { name: 'Decline', exact: true }).click()
-  await expect(page.getByRole('button', { name: 'Declining…' })).toBeDisabled()
-  await expect(dialog(page)).not.toContainText('Declined Kier')
-  await expect(dialog(page).getByTestId('invitation-card')).toHaveAttribute('data-expanded', 'true')
-
-  release!()
+  // The request is still held, but the decline doesn't wait for it.
   await expect(dialog(page)).toContainText('Declined Kier’s invitation to watch Velvet Static')
   await expect.poll(async () => (await dialog(page).getByTestId('invitation-card').boundingBox()).height).toBeCloseTo(40, 0)
   await expect(page.getByRole('button', { name: 'Respond', exact: true })).toHaveCount(0)
   await page.screenshot({ path: test.info().outputPath('invitation-declined.png') })
   await expect(dialog(page)).not.toBeVisible()
+  release!()
 })
 
 test('accepting with multiple invitations clears the declined queue, docks, and fades upward', async ({ page }) => {

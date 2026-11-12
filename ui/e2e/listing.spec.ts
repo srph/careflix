@@ -120,25 +120,32 @@ test('search groups titles and parties and opens details with the keyboard', asy
   await expect(input).toBeFocused()
 })
 
-test('search keeps earlier rows while a longer query loads, but not after the field is cleared', async ({ page }) => {
+test('search shows a skeleton for a new term, and a cached term comes back at once', async ({ page }) => {
   await catalog(page)
   let hold = false
-  let release: () => void = () => {}
+  const held: (() => void)[] = []
+  const release = () => held.splice(0).forEach(resolve => resolve())
   await page.route('**/api/**', async route => {
-    if (hold && new URL(route.request().url()).searchParams.has('q')) await new Promise<void>(resolve => { release = resolve })
+    if (hold && new URL(route.request().url()).searchParams.has('q')) await new Promise<void>(resolve => { held.push(resolve) })
     await route.fallback()
   })
   await page.goto('/')
   const input = page.getByRole('combobox', { name: 'Search titles and parties' })
   await input.fill('Hol')
   await expect(page.getByRole('option')).toHaveCount(2)
+  // A term that isn't cached yet shows the skeleton, not the previous term's rows.
   hold = true
   await input.press('l')
-  await page.waitForTimeout(400)
-  await expect(page.getByRole('option')).toHaveCount(2)
-  await expect(page.getByTestId('search-skeleton')).toHaveCount(0)
+  await expect(page.getByTestId('search-skeleton')).toBeVisible()
+  await expect(page.getByRole('option')).toHaveCount(0)
   await expect(page.getByTestId('search').getByTestId('loader')).toHaveCount(0)
   release()
+  await expect(page.getByTestId('search-skeleton')).toHaveCount(0)
+  await expect(page.getByRole('option').first()).toBeVisible()
+  // Going back to a term already searched shows its rows straight from the cache.
+  await input.press('Backspace')
+  await expect(page.getByRole('option')).toHaveCount(2)
+  await expect(page.getByTestId('search-skeleton')).toHaveCount(0)
   await input.press('Escape')
   await input.press('Escape')
   await expect(input).toHaveValue('')
@@ -361,7 +368,11 @@ for (const collection of ['titles', 'parties']) {
       await route.fallback()
     })
     await page.goto('/')
-    if (collection === 'parties') await page.getByRole('tab', { name: 'Parties', exact: true }).click()
+    // More loads on scroll, so make two party cards overflow the window.
+    if (collection === 'parties') {
+      await page.setViewportSize({ width: 1280, height: 400 })
+      await page.getByRole('tab', { name: 'Parties', exact: true }).click()
+    }
     const cards = page.getByTestId(collection === 'titles' ? 'show-card' : 'party-card')
     const skeletons = page.getByTestId(collection === 'titles' ? 'show-skeleton' : 'party-skeleton')
     await expect(cards).toHaveCount(2)

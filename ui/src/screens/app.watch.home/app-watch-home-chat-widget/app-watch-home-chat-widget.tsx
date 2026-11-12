@@ -32,6 +32,7 @@ import { differenceInMinutes, format, parse } from 'date-fns-v1'
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
 import { UiAvatarGroup } from '~/components/ui-avatar-group/ui-avatar-group'
+import { useActiveMembers } from '../use-active-members'
 import { isFocusedToInput } from '~/utils/dom/is-focused-to-input'
 
 interface State {
@@ -174,6 +175,7 @@ export function AppWatchHomeChatWidget(props: Props) {
   const isReceivingRef = useRef<boolean>(true)
   const isSubmittable = state.message.text.trimRight().trimLeft().length > 0
   const typing = useTypingStatus(props.party.id, user)
+  const members = useActiveMembers(props.party)
   // A friend who just arrived; the status row shows their hype line for a few seconds.
   const [joined, showJoined] = useTransientState<AppUser | null>(null, JOIN_FLASH_MS)
 
@@ -422,7 +424,7 @@ export function AppWatchHomeChatWidget(props: Props) {
           data-testid="chat-canopy"
           className="flex shrink-0 items-center gap-2 bg-neutral-900 pt-3 pr-3 pb-2 pl-3.5">
           <UiAvatarGroup
-            users={props.party.members}
+            users={members}
             className="mr-auto"
             itemClassName="not-last:-mr-2"
             avatarClassName="size-6 text-10 ring-2 ring-neutral-900"

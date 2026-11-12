@@ -4,7 +4,6 @@ import { useParams } from 'react-router'
 import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 import { UiButton } from '~/components/ui-button/ui-button'
 import { usePusher } from '~/hooks/use-pusher'
-import { usePresence } from '~/hooks/use-presence'
 
 import { AppWatchContext } from './app-watch-context'
 import { addMember } from './app-watch-party-updates'
@@ -28,20 +27,10 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
   const setParty = useSetParty(props.partyId)
   const party = query.data
 
-  const activeMembers = usePresence(party ? `presence-chat-party.${party.id}` : '')
-  const context = useMemo(() => {
-    if (!party) return null
-    if (!activeMembers) return { party }
-    return {
-      party: {
-        ...party,
-        members: party.members.map((member) => ({
-          ...member,
-          pivot: { ...member.pivot, is_active: activeMembers.has(String(member.id)) }
-        }))
-      }
-    }
-  }, [party, activeMembers])
+  const context = useMemo(() => (party ? { party } : null), [party])
+
+  // Being on the room's presence channel is what shows you as active to everyone else.
+  usePusher(party ? `presence-chat-party.${party.id}` : '', 'pusher:subscription_succeeded', () => {}, party == null)
 
   usePusher(
     party ? `private-party.${party.id}` : '',

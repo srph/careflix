@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiInputSlider from '~/components/UiInputSlider'
 import PlayerTooltip from '../PlayerTooltip'

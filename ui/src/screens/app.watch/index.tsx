@@ -11,7 +11,7 @@ import axios from '~/lib/axios'
 import immer from 'immer'
 
 import { Context } from './Context'
-import { State, ContextType, Action, RouteParams } from './types'
+import { State, ContextType, Action } from './types'
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {

@@ -392,7 +392,7 @@ function ChatWidget(props: Props) {
     }
   }
 
-  function handleMessagesContainerScroll(evt) {
+  function handleMessagesContainerScroll() {
     lastScrollDistanceFromBottom.current = getScrollDistanceFromBottom(chatbarRef.current)
 
     if (hasUnreadMessages && isScrolledToBottom(chatbarRef.current)) {

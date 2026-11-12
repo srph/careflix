@@ -69,7 +69,7 @@ function SubtitleSlot(props: Props) {
 
   return (
     <React.Fragment>
-      {placements.map((placement, i) => {
+      {placements.map(placement => {
         const placementSubtitles = subtitles.filter(subtitle => {
           // We want to position default tracks (tracks without specified positioning)
           // to be placed to the bottom center.

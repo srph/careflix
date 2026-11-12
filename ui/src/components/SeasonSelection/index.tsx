@@ -121,7 +121,7 @@ function ShowModal(props: Props) {
         payload: { groups: res.data }
       })
 
-      props.onFetch && props.onFetch(res.data)
+      props.onFetch?.(res.data)
     },
     null,
     [props.show, props.groups]

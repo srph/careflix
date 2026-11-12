@@ -7,7 +7,6 @@ import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 
 import { useAuth } from '~/contexts/Auth'
 import { useIsPWA } from '~/hooks/useIsPWA'
-import useWindowSize from '~/hooks/useWindowSize'
 
 import config from '~/config'
 import asset_author from '~/assets/author.jpg'
@@ -33,10 +32,9 @@ function MenuItem({ icon, children }: { icon: string; children: React.ReactNode 
 /**
  * Use this to create a route instead of typing everything down
  */
-function AppSettings(props: ReactComponentWrapper) {
+function AppSettings() {
   const auth = useAuth()
   const isPWA = useIsPWA()
-  const { width } = useWindowSize()
 
   return (
     <React.Fragment>

@@ -6,8 +6,8 @@ import { PARTY_GRID, SECTION_HEADING, SECTION_TITLE } from './classes'
 
 const CARD = '[data-testid="party-card"]'
 
-export default function PartySection({ parties, recent = false, total, onSeeAll, isLoadingMore = false }: {
-  parties: AppParty[]; recent?: boolean; total?: number; onSeeAll?: () => void; isLoadingMore?: boolean
+export default function PartySection({ parties, recent = false, onSeeAll, isLoadingMore = false }: {
+  parties: AppParty[]; recent?: boolean; onSeeAll?: () => void; isLoadingMore?: boolean
 }) {
   const grid = useRef<HTMLDivElement>(null)
   const hovered = useRef<HTMLElement | null>(null)

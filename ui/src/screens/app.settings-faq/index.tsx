@@ -14,7 +14,7 @@ import faqs from './faq'
 // Can you see our messages?
 // How do I request movies?
 // How do I report bugs?
-function AppSettingsFaq(props: ReactComponentWrapper) {
+function AppSettingsFaq() {
   return (
     <React.Fragment>
       <AppHeadingSettings title="FAQ" backUrl="/settings" />

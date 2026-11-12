@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useEffect } from 'react'
 import { useIsPWA } from '~/hooks/useIsPWA'
-import useWindowSize from '~/hooks/useWindowSize'
 import { useNavigate } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
@@ -30,7 +29,7 @@ function Highlight({ children }: { children: React.ReactNode }) {
   return <span className="border-b border-dashed border-neutral-400">{children}</span>
 }
 
-function AppDownload(props: ReactComponentWrapper) {
+function AppDownload() {
   const navigate = useNavigate()
   const isPWA = useIsPWA()
 

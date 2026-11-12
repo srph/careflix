@@ -6,7 +6,7 @@ import UiInput from '~/components/UiInput'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
 import { useAuth } from '~/contexts/Auth'
 
-function AppSettingsProfile(props: ReactComponentWrapper) {
+function AppSettingsProfile() {
   const { data: user } = useAuth()
   return (
     <React.Fragment>

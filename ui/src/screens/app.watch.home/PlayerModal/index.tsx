@@ -129,7 +129,7 @@ function PlayerModal({ party, ...props }: Props) {
     props.onSeek(Math.max(props.time - 10, 0))
   }
 
-  function handleClickOverlay(evt: React.MouseEvent<HTMLDivElement>) {
+  function handleClickOverlay() {
     if (media === 'desktop') {
       props.getVideoElement().click()
     } else {

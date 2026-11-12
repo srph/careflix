@@ -3,7 +3,7 @@ import { cn } from './cn'
 
 describe('cn', () => {
   it('joins class names and skips falsy ones', () => {
-    expect(cn('flex', false && 'hidden', { 'opacity-50': true, underline: false })).toBe('flex opacity-50')
+    expect(cn('flex', false, null, undefined, { 'opacity-50': true, underline: false })).toBe('flex opacity-50')
   })
 
   it('lets a later class override an earlier one for the same property', () => {

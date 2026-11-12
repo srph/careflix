@@ -1,17 +1,16 @@
-import './style.css'
 import { Dialog } from '@base-ui/react/dialog'
 import { BorderBeam } from 'border-beam'
 import { CANDY_LINE_STROKE_ONLY } from './beamFix'
 import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import cx from 'classnames'
 import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
 import { useAuth } from '~/contexts/Auth'
 import { useNow } from '~/hooks/useNow'
 import { usePusher } from '~/hooks/usePusher'
 import axios from '~/lib/axios'
+import { cn } from '~/utils/cn'
 import { easeOutSoft } from '~/utils/motion'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 import { clockTime, showMeta } from '~/screens/app.home/Listing/format'
@@ -23,6 +22,24 @@ import { sendDecline } from './sendDecline'
 
 const COLLAPSED_HEIGHT = 40
 const DECLINE_COOLDOWN = 500
+
+// Where the toast sits. Base UI marks it with data-starting-style and data-ending-style as it enters and leaves:
+// it rises in from below the screen and, unless it was put away, lifts out.
+const POPUP = 'fixed z-[calc(var(--zindex-modal)+1)] w-max max-w-[calc(100vw-24px)] -translate-x-1/2 outline-none [transition:left_.7s_var(--ease-out-soft),bottom_.7s_var(--ease-out-soft),opacity_.3s,translate_.55s_cubic-bezier(.2,.9,.3,1.12)] data-ending-style:opacity-0 data-starting-style:translate-y-[170%] data-starting-style:opacity-0 motion-reduce:translate-y-0! motion-reduce:[transition:none]!'
+// An answered toast (joined, declined, dismissed) leaves more slowly.
+const SLOW_EXIT = 'data-ending-style:[transition:opacity_.45s,translate_.45s]'
+// `overflow-clip`: focused controls must not scroll the shrinking card and hide its header.
+// Button rings are inset so the pill's rounded clip doesn't cut them.
+const CARD = 'relative w-max max-w-[calc(100vw-24px)] overflow-clip rounded-[20px] bg-neutral-900/97 text-white shadow-menu inset-ring inset-ring-neutral-800 backdrop-blur-md transition-[filter] duration-400 motion-reduce:transition-none [&_button]:focus-visible:-outline-offset-3 [&_button]:disabled:cursor-wait [&_button]:disabled:opacity-50'
+const LINE = 'flex min-h-10 items-center gap-1.75 px-2 sm:gap-2.25 [&_b]:font-semibold [&_b]:text-white'
+const FACE = 'size-6 text-11'
+const ACTION = 'min-h-8.5 flex-1 rounded-lg bg-neutral-800 px-3.75 py-1.75 text-13 leading-none font-semibold text-white transition-colors duration-150 enabled:hover:bg-neutral-700 enabled:focus-visible:bg-neutral-700 motion-reduce:transition-none'
+const NOTE = 'mx-3.25 mt-3 text-13'
+const DIMMED = 'brightness-70 grayscale'
+// The room's place in the video: a grey trough with a pink fill.
+const BAR = 'absolute inset-x-0 top-2 h-1'
+const TROUGH = 'overflow-hidden rounded-xs bg-neutral-700'
+const FILL = 'block h-full rounded-xs bg-pink-500'
 
 export default function InvitationModal() {
   const auth = useAuth()
@@ -224,6 +241,9 @@ export default function InvitationModal() {
   const docked = Boolean(state.joined) && (state.phase === 'docked' || state.phase === 'leaving')
   const declined = Boolean(state.declined)
   const showBeam = (!expanded && pending && !busy) || docked
+  // Dismissed and declined toasts are put away, so they sink. Joined stays up to sit over the player.
+  const sinks = declined || Boolean(state.dismissed)
+  const invalid = !pending && !busy
   const position = docked && dock ? dock : { left: '50%', bottom: location.pathname.startsWith('/watch/') ? 64 : 20 }
 
   return <>
@@ -234,7 +254,7 @@ export default function InvitationModal() {
       if (expanded) collapse()
     }}>
       <Dialog.Portal>
-        <Dialog.Popup data-testid="invitation-popup" className={cx('incoming-invitation-position', { 'is-confirmation': docked || declined, 'is-exit-down': declined || Boolean(state.dismissed) })} initialFocus={false}
+        <Dialog.Popup data-testid="invitation-popup" className={cn(POPUP, sinks ? 'data-ending-style:translate-y-2.5' : 'data-ending-style:-translate-y-2.5', (docked || sinks) && SLOW_EXIT)} initialFocus={false}
           aria-label="Watch invitation" style={position}>
           {invitation && header(false, true)}
           {pillWidth !== null && <motion.div initial={false} animate={{
@@ -245,8 +265,9 @@ export default function InvitationModal() {
             height: { duration: reducedMotion ? 0 : 0.5, ease: easeOutSoft },
             width: { duration: reducedMotion ? 0 : 0.5, ease: easeOutSoft },
             borderRadius: { duration: reducedMotion ? 0 : 0.45 },
-          }} data-testid="invitation-card" data-expanded={Boolean(expanded)} data-docked={Boolean(docked)} className={cx('incoming-invitation', { 'is-expanded': expanded, 'is-invalid': !pending && !busy, 'is-expired': status === 'expired', 'is-declined': declined, 'is-docked': docked })}>
-            <BorderBeam data-testid="invitation-beam" className={cx('invitation-beam', { 'is-on': showBeam })} aria-hidden="true"
+          }} data-testid="invitation-card" data-expanded={Boolean(expanded)} data-docked={Boolean(docked)} className={cn(CARD, expanded && 'max-h-[calc(100dvh-96px)]', declined && 'brightness-85 grayscale-85')}>
+            {/* The library styles its own root (position, radius) outside any layer, so those two need `!` to win. */}
+            <BorderBeam data-testid="invitation-beam" className={cn('pointer-events-none absolute! inset-0 z-3 rounded-[inherit]! opacity-0 transition-opacity duration-500 motion-reduce:transition-none', showBeam && 'opacity-100')} aria-hidden="true"
               size={docked ? 'pulse-inner' : 'line'} colorVariant={docked ? 'mono' : 'candy'} theme="dark"
               duration={docked ? 4 : 3.1} strength={1} brightness={docked ? 1 : 1.3}
               saturation={1.2} glowSize={1} hueRange={docked ? 0 : 30} staticColors={docked}
@@ -254,26 +275,27 @@ export default function InvitationModal() {
             {invitation && <>
               {header(expanded)}
               {/* Keep the preview mounted so the container clips it during collapse. */}
-              <div ref={setBody} className="invitation-body" data-testid="invitation-body" inert={!expanded} aria-hidden={!expanded}>
-                <motion.div key={invitation.id} className="invitation-content" data-testid="invitation-content"
+              <div ref={setBody} data-testid="invitation-body" inert={!expanded} aria-hidden={!expanded}
+                className={cn('absolute top-10 left-0 max-h-[calc(100dvh-136px)] w-[min(400px,calc(100vw-24px))] [scrollbar-width:thin] overflow-x-hidden overflow-y-auto pb-2 opacity-0 transition-opacity duration-300 motion-reduce:transition-none', expanded && 'opacity-100 delay-200')}>
+                <motion.div key={invitation.id} data-testid="invitation-content"
                   initial={expanded && !reducedMotion ? { opacity: 0, x: 32 } : false} animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: reducedMotion ? 0 : 0.5, ease: easeOutSoft }}>
                   {video && <>
-                    <img className="invitation-artwork" src={video.show.preview_image || video.preview_image} alt="" />
-                    <div className="invitation-info">
-                      <h3>{video.show.title}</h3>
-                      <p className="ui-subheading" data-testid="invitation-meta">{status === 'expired' ? `${invitation.sender.name}’s invitation expired`
+                    <img className={cn('mx-1.75 mt-0.5 block aspect-video w-[calc(100%-14px)] rounded-lg object-cover', invalid && DIMMED)} src={video.show.preview_image || video.preview_image} alt="" />
+                    <div className="px-3.25 pt-3.25">
+                      <h3 className={cn('text-lg/tight font-semibold', status === 'expired' && 'text-neutral-300')}>{video.show.title}</h3>
+                      <p className={cn('mt-1.25 font-label text-10 tracking-widest uppercase', status === 'expired' ? 'text-amber-300' : 'text-neutral-400')} data-testid="invitation-meta">{status === 'expired' ? `${invitation.sender.name}’s invitation expired`
                         : <>{video.show.title_type === 'series' ? `Series · ${getVideoDetails(video)}` : showMeta(video.show)}{video.show.title_type === 'movie' && <> · {durationLabel(video.duration)}</>}</>}</p>
                     </div>
                     <RoomTimeline party={party} invalid={!pending} expanded={expanded} />
                   </>}
-                  {!video && <p className="invitation-unavailable">The room preview is unavailable. You can still respond to the invitation.</p>}
-                  {state.error && <p role="alert" className="invitation-error">{state.error}</p>}
-                  <div className="invitation-actions">
+                  {!video && <p className={NOTE}>The room preview is unavailable. You can still respond to the invitation.</p>}
+                  {state.error && <p role="alert" className={`${NOTE} text-amber-300`}>{state.error}</p>}
+                  <div className="flex gap-2 px-2 pt-4.5">
                     {pending ? <>
-                      <UiPlainButton onClick={decline} disabled={busy}>Decline</UiPlainButton>
-                      <UiPlainButton className="is-primary" onClick={accept} disabled={busy}>Accept</UiPlainButton>
-                    </> : <UiPlainButton onClick={dismiss} disabled={busy}>Dismiss</UiPlainButton>}
+                      <UiPlainButton className={ACTION} onClick={decline} disabled={busy}>Decline</UiPlainButton>
+                      <UiPlainButton className={cn(ACTION, 'bg-pink-500 enabled:hover:bg-pink-400 enabled:focus-visible:bg-pink-400')} onClick={accept} disabled={busy}>Accept</UiPlainButton>
+                    </> : <UiPlainButton className={ACTION} onClick={dismiss} disabled={busy}>Dismiss</UiPlainButton>}
                   </div>
                 </motion.div>
               </div>
@@ -282,15 +304,16 @@ export default function InvitationModal() {
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
-    <audio className="invitation-notification-audio" ref={notificationRef}><source src={assetInvitation} type="audio/ogg" /></audio>
+    <audio className="hidden" ref={notificationRef}><source src={assetInvitation} type="audio/ogg" /></audio>
   </>
 
   function header(isExpanded: boolean, measurement = false) {
-    return <div ref={measurement ? setLine : undefined} className={cx('invitation-line', { 'invitation-width-probe': measurement })} data-testid={measurement ? undefined : 'invitation-line'}
+    // The hidden copy measures the collapsed line on its own, apart from the card's animated width.
+    return <div ref={measurement ? setLine : undefined} className={cn(LINE, measurement && 'pointer-events-none invisible absolute w-max')} data-testid={measurement ? undefined : 'invitation-line'}
       aria-hidden={measurement || undefined} inert={measurement || undefined}>
-      {docked ? <span className="invitation-joined-avatars">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</span>
-        : <UiAvatar user={invitation.sender} size="sm" />}
-      <p aria-live={measurement ? undefined : 'polite'} aria-atomic="true">
+      {docked ? <span className="flex flex-none">{[...roomMembers(party).filter(member => member.id !== auth.data.id), auth.data].slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" className={`${FACE} ring-2 ring-neutral-900 not-first:-ml-2`} />)}</span>
+        : <UiAvatar user={invitation.sender} size="sm" className={`${FACE} flex-none`} />}
+      <p className="min-w-0 flex-1 truncate text-xs text-neutral-400 sm:text-13" aria-live={measurement ? undefined : 'polite'} aria-atomic="true">
         {docked ? roomMembers(party).length ? <>You’re in with <b>{roomNames(party)}</b></> : <>You’re in the room</>
           : declined ? <>Declined <b>{invitation.sender.name}’s</b> invitation{video && <> to watch <b>{video.show.title}</b></>}</>
           : joining ? <>Joining <b>{invitation.sender.name}</b>{video && <> to watch <b>{video.show.title}</b></>}</>
@@ -298,10 +321,10 @@ export default function InvitationModal() {
           : status === 'withdrawn' ? <><b>{invitation.sender.name}</b> cancelled the invitation</>
           : <><b>{invitation.sender.name}</b> invited you to watch{!isExpanded && video && <> <b>{video.show.title}</b></>}</>}
       </p>
-      {isExpanded && queueLength + state.answered > 1 && <span className="invitation-count" data-testid="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
-      {joining && <span className="invitation-spinner" aria-label={measurement ? undefined : 'Joining room'} />}
-      {!isExpanded && !busy && <UiPlainButton ref={measurement ? undefined : respondRef} className={cx('invitation-respond', { 'is-dismiss': !pending })} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
-      {isExpanded && <UiPlainButton ref={closeRef} className="invitation-collapse" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
+      {isExpanded && queueLength + state.answered > 1 && <span className="flex-none text-xs leading-none text-neutral-400 tabular-nums" data-testid="invitation-count">{state.answered + 1} of {state.answered + queueLength}</span>}
+      {joining && <span className="mr-1.25 size-3.5 flex-none animate-spin rounded-full border-2 border-white/20 border-t-emerald-300 motion-reduce:animate-none" aria-label={measurement ? undefined : 'Joining room'} />}
+      {!isExpanded && !busy && <UiPlainButton ref={measurement ? undefined : respondRef} className={cn('min-h-6 flex-none rounded-full px-3 text-xs leading-none font-semibold text-white', pending ? 'bg-pink-500' : 'bg-neutral-800')} onClick={pending ? open : dismiss}>{pending ? 'Respond' : 'Dismiss'}</UiPlainButton>}
+      {isExpanded && <UiPlainButton ref={closeRef} className="h-8 w-7 flex-none text-xl leading-none text-neutral-400" aria-label="Collapse invitation" onClick={collapse} disabled={busy}>×</UiPlainButton>}
     </div>
   }
 }
@@ -332,16 +355,16 @@ function RoomTimeline({ party, invalid, expanded }: { party: AppParty; invalid: 
   const segmented = episodeIndex >= 0 && episodes.length > 0
   const position = segmented ? (episodeIndex + progress) / episodes.length : progress
   const members = roomMembers(party)
-  return <div className={cx('invitation-timeline', { 'is-invalid': invalid })}>
-    <div className="invitation-timeline-label">
-      <span>{members.length ? <><b>{roomNames(party)}</b> {members.length === 1 ? 'is' : 'are'}</> : 'The room is'} at <b>{segmented && `E${episodeIndex + 1}, `}{clockTime(party.current_time)}</b></span>
-      <span>{segmented ? `${season.title} · ${episodes.length} episodes` : `${durationLabel(Math.max(0, video.duration - party.current_time))} left`}</span>
+  return <div className={cn('px-3.25 pt-4.5', invalid && DIMMED)}>
+    <div className="mb-2.25 flex justify-between gap-1.5 text-11 text-neutral-400 sm:gap-2.5 sm:text-xs [&_b]:font-semibold [&_b]:text-white [&_b]:tabular-nums">
+      <span className="min-w-0">{members.length ? <><b>{roomNames(party)}</b> {members.length === 1 ? 'is' : 'are'}</> : 'The room is'} at <b>{segmented && `E${episodeIndex + 1}, `}{clockTime(party.current_time)}</b></span>
+      <span className="flex-none">{segmented ? `${season.title} · ${episodes.length} episodes` : `${durationLabel(Math.max(0, video.duration - party.current_time))} left`}</span>
     </div>
-    <div className="invitation-timeline-track" role="img" aria-label={`Room snapshot: ${clockTime(party.current_time)} of ${clockTime(video.duration)}`}>
-      {segmented ? <div className="invitation-segments" data-testid="invitation-segments">{episodes.map((episode, index) => <span key={episode.id}><i style={{ width: `${index === episodeIndex ? progress * 100 : 0}%` }} /></span>)}</div>
-        : <div className="invitation-progress"><i style={{ width: `${progress * 100}%` }} /></div>}
-      {members.length > 0 && <div className="invitation-playhead" style={{ left: `${position * 100}%` }}>{members.slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" />)}</div>}
+    <div className="relative mx-1.75 h-5" role="img" aria-label={`Room snapshot: ${clockTime(party.current_time)} of ${clockTime(video.duration)}`}>
+      {segmented ? <div className={`${BAR} flex gap-0.75`} data-testid="invitation-segments">{episodes.map((episode, index) => <span className={`${TROUGH} flex-1`} key={episode.id}><i className={FILL} style={{ width: `${index === episodeIndex ? progress * 100 : 0}%` }} /></span>)}</div>
+        : <div className={`${BAR} ${TROUGH}`}><i className={FILL} style={{ width: `${progress * 100}%` }} /></div>}
+      {members.length > 0 && <div className="absolute top-0 flex -translate-x-1/2" style={{ left: `${position * 100}%` }}>{members.slice(0, 3).map(member => <UiAvatar key={member.id} user={member} size="sm" className="size-5 text-10 ring-2 ring-neutral-900 not-first:-ml-1.5" />)}</div>}
     </div>
-    <p className="invitation-snapshot">Room snapshot</p>
+    <p className="mt-1.5 text-10 text-neutral-400">Room snapshot</p>
   </div>
 }

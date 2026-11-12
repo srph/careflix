@@ -111,7 +111,7 @@ test('expiration stays visible, Dismiss skips stale invites, and cancellation up
   await expect(dialog(page)).toContainText('Kier’s invitation expired')
   await expect(dialog(page).getByRole('heading', { name: 'Velvet Static' })).toHaveCSS('color', 'oklch(0.868 0.007 39.5)')
   await expect(dialog(page).getByTestId('invitation-meta')).toHaveText('Kier’s invitation expired')
-  await expect(dialog(page).getByTestId('invitation-meta')).toHaveCSS('color', 'rgb(247, 201, 72)')
+  await expect(dialog(page).getByTestId('invitation-meta')).toHaveCSS('color', 'oklch(0.879 0.169 91.605)')
   await expect(page.getByRole('button', { name: 'Accept', exact: true })).toHaveCount(0)
   await expect(page.getByRole('button', { name: /re-invite/i })).toHaveCount(0)
   await page.getByRole('button', { name: 'Dismiss', exact: true }).click()
@@ -209,10 +209,10 @@ test('accepting with multiple invitations clears the declined queue, docks, and 
       if (!popup.hasAttribute('data-ending-style')) return
       observer.disconnect()
       const started = performance.now()
+      const top = popup.getBoundingClientRect().top
       const record = () => {
         if (!popup.isConnected) { resolve(frames); return }
-        const style = getComputedStyle(popup)
-        frames.push({ opacity: Number(style.opacity), y: new DOMMatrixReadOnly(style.transform).f, elapsed: performance.now() - started })
+        frames.push({ opacity: Number(getComputedStyle(popup).opacity), y: popup.getBoundingClientRect().top - top, elapsed: performance.now() - started })
         if (performance.now() - started < 550) requestAnimationFrame(record)
         else resolve(frames)
       }

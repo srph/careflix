@@ -8,8 +8,18 @@ describe('player slider integration', () => {
     const onChange = vi.fn()
     function Player() {
       const [value, setValue] = useState(10)
-      return <UiInputSlider value={value} min={0} max={100} ariaLabel="Playback position"
-        onChange={next => { onChange(next); setValue(next) }} />
+      return (
+        <UiInputSlider
+          value={value}
+          min={0}
+          max={100}
+          ariaLabel="Playback position"
+          onChange={(next) => {
+            onChange(next)
+            setValue(next)
+          }}
+        />
+      )
     }
     render(<Player />)
     const slider = screen.getByRole('slider', { name: 'Playback position' })

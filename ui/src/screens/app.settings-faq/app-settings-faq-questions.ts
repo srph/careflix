@@ -1,15 +1,11 @@
 export const appSettingsFaqQuestions = [
   {
     title: 'What is Care.tv?',
-    content: [
-      'Care.tv is like Netflix with sync-play, chat, and invitation system.',
-    ]
+    content: ['Care.tv is like Netflix with sync-play, chat, and invitation system.']
   },
   {
     title: 'Is Care.tv connected to Netflix?',
-    content: [
-      'No.',
-    ]
+    content: ['No.']
   },
   {
     title: 'Who made Care.tv?',
@@ -27,8 +23,8 @@ export const appSettingsFaqQuestions = [
   {
     title: 'Can I share this with my friends?',
     content: [
-      "Of course, feel free to. In exchange, if you have the time, any sort of feedback would be nice.",
-      "Any public endorsements or appreciation is nice, but please try to keep our request access code private.",
+      'Of course, feel free to. In exchange, if you have the time, any sort of feedback would be nice.',
+      'Any public endorsements or appreciation is nice, but please try to keep our request access code private.'
     ]
   },
   {
@@ -51,7 +47,7 @@ export const appSettingsFaqQuestions = [
     title: 'Where do you get the money for server expenses?',
     content: [
       `Everything comes from my own pocket so far.`,
-      `Care.tv will always be free of charge. Afterall, it's for myself, my family, and some friends.`,
+      `Care.tv will always be free of charge. Afterall, it's for myself, my family, and some friends.`
     ]
   },
   {
@@ -60,7 +56,9 @@ export const appSettingsFaqQuestions = [
   },
   {
     title: 'How do I sign in?',
-    content: ['Continue with Discord. Care.tv uses your Discord profile and email when available; your Discord password stays with Discord.']
+    content: [
+      'Continue with Discord. Care.tv uses your Discord profile and email when available; your Discord password stays with Discord.'
+    ]
   },
   {
     title: 'Can you see our messages?',
@@ -71,9 +69,7 @@ export const appSettingsFaqQuestions = [
   },
   {
     title: 'How do I request movies?',
-    content: [
-      `Hit me up on :facebook or :twitter.`,
-    ]
+    content: [`Hit me up on :facebook or :twitter.`]
   },
   {
     title: 'How long does it take for a requested title to be available?',
@@ -110,5 +106,5 @@ export const appSettingsFaqQuestions = [
     content: [
       `Having multiple qualities for one title (this is called Adaptive Bitrate Streaming) can get very expensive fast, but this is in the roadmap.`
     ]
-  },
+  }
 ]

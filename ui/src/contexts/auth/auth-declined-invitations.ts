@@ -19,15 +19,20 @@ export function readDeclinedInvitations(userId: AppId, now = Date.now()): Declin
     return []
   }
   if (!Array.isArray(list)) return []
-  const live = list.filter((entry): entry is DeclinedInvitation =>
-    typeof entry?.id === 'string' && typeof entry?.expiresAt === 'string' && parse(entry.expiresAt).getTime() > now)
+  const live = list.filter(
+    (entry): entry is DeclinedInvitation =>
+      typeof entry?.id === 'string' && typeof entry?.expiresAt === 'string' && parse(entry.expiresAt).getTime() > now
+  )
   if (live.length !== list.length) write(userId, live)
   return live
 }
 
 export function rememberDeclinedInvitation(userId: AppId, invitation: AppPartyInvitation) {
   const id = String(invitation.id)
-  write(userId, [...readDeclinedInvitations(userId).filter(entry => entry.id !== id), { id, expiresAt: invitation.expires_at }])
+  write(userId, [
+    ...readDeclinedInvitations(userId).filter((entry) => entry.id !== id),
+    { id, expiresAt: invitation.expires_at }
+  ])
 }
 
 function write(userId: AppId, list: DeclinedInvitation[]) {

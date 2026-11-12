@@ -110,6 +110,4 @@ function usePlayerHotkeys(hookProps: Props): null {
   return null
 }
 
-export {
-  usePlayerHotkeys
-}
+export { usePlayerHotkeys }

@@ -26,27 +26,34 @@ type Action =
 
 // A late search/snapshot/event must never undo a newer invitation or its answer.
 function mergeHistory(current: AppPartyInvitation[], incoming: AppPartyInvitation[]) {
-  const byPerson = new Map(current.map(invitation => [String(invitation.recipient.id), invitation]))
+  const byPerson = new Map(current.map((invitation) => [String(invitation.recipient.id), invitation]))
   for (const invitation of incoming) {
     const id = String(invitation.recipient.id)
     const previous = byPerson.get(id)
-    if (!previous || Number(invitation.id) > Number(previous.id) ||
+    if (
+      !previous ||
+      Number(invitation.id) > Number(previous.id) ||
       (String(invitation.id) === String(previous.id) &&
-        (previous.action === 'pending' || invitation.action !== 'pending'))) byPerson.set(id, invitation)
+        (previous.action === 'pending' || invitation.action !== 'pending'))
+    )
+      byPerson.set(id, invitation)
   }
   return Array.from(byPerson.values())
 }
 
 // Note an answer when a waiting invite we already had turns into Joined or Declined; a new invite clears it.
 function noteAnswers(state: State, history: AppPartyInvitation[], at: number) {
-  const previous = new Map(state.history.map(invitation => [String(invitation.recipient.id), invitation]))
+  const previous = new Map(state.history.map((invitation) => [String(invitation.recipient.id), invitation]))
   let answers = state.answers
   for (const invitation of history) {
     const id = String(invitation.recipient.id)
     const before = previous.get(id)
     if (!before || before === invitation) continue
     if (String(before.id) !== String(invitation.id)) {
-      if (answers[id]) { answers = { ...answers }; delete answers[id] }
+      if (answers[id]) {
+        answers = { ...answers }
+        delete answers[id]
+      }
     } else if (before.action === 'pending' && (invitation.action === 'accepted' || invitation.action === 'declined')) {
       answers = { ...answers, [id]: { kind: invitation.action === 'accepted' ? 'joined' : 'declined', at } }
     }
@@ -61,22 +68,30 @@ export function reducer(state: State, action: Action): State {
       return { ...state, history, answers: noteAnswers(state, history, action.at) }
     }
     case 'prune': {
-      const answers = Object.fromEntries(Object.entries(state.answers).filter(([, answer]) => answer.at + ANSWER_MS > action.at))
+      const answers = Object.fromEntries(
+        Object.entries(state.answers).filter(([, answer]) => answer.at + ANSWER_MS > action.at)
+      )
       return { ...state, answers }
     }
-    case 'history-error': return { ...state, historyError: action.failed }
-    case 'busy': return {
-      ...state,
-      busy: { ...state.busy, [action.id]: action.busy },
-      errors: { ...state.errors, [action.id]: action.error || '' }
-    }
+    case 'history-error':
+      return { ...state, historyError: action.failed }
+    case 'busy':
+      return {
+        ...state,
+        busy: { ...state.busy, [action.id]: action.busy },
+        errors: { ...state.errors, [action.id]: action.error || '' }
+      }
   }
 }
 
 export function useHostInvitations() {
   const context = usePartyContext()
   const [state, dispatch] = useReducer(reducer, {
-    history: context.party.invitations || [], answers: {}, historyError: false, busy: {}, errors: {}
+    history: context.party.invitations || [],
+    answers: {},
+    historyError: false,
+    busy: {},
+    errors: {}
   })
   const operations = useRef(new Set<string>())
   const sendingTo = useRef(new Map<string, AppUser>())
@@ -90,7 +105,9 @@ export function useHostInvitations() {
     dispatch({ type: 'history-error', failed })
     if (!failed) dispatch({ type: 'history', at: Date.now(), invitations: response.data })
   }
-  useEffect(() => { refreshHistory() }, [context.party.id])
+  useEffect(() => {
+    refreshHistory()
+  }, [context.party.id])
   useEffect(() => {
     dispatch({ type: 'history', at: Date.now(), invitations: context.party.invitations || [] })
   }, [context.party.invitations])
@@ -113,15 +130,25 @@ export function useHostInvitations() {
     context.onAccept(event.invitation, event.member)
   })
 
-  const history = useMemo(() => new Map(state.history.map(invitation => [String(invitation.recipient.id), invitation])), [state.history])
-  const members = new Set(context.party.members.map(member => String(member.id)))
-  const pending = state.history.filter(invitation => invitation.action === 'pending' &&
-    Date.parse(invitation.expires_at) > now && !members.has(String(invitation.recipient.id)))
+  const history = useMemo(
+    () => new Map(state.history.map((invitation) => [String(invitation.recipient.id), invitation])),
+    [state.history]
+  )
+  const members = new Set(context.party.members.map((member) => String(member.id)))
+  const pending = state.history.filter(
+    (invitation) =>
+      invitation.action === 'pending' &&
+      Date.parse(invitation.expires_at) > now &&
+      !members.has(String(invitation.recipient.id))
+  )
 
   useEffect(() => {
-    const ends = Object.values(state.answers).map(answer => answer.at + ANSWER_MS)
+    const ends = Object.values(state.answers).map((answer) => answer.at + ANSWER_MS)
     if (!ends.length) return
-    const timer = setTimeout(() => dispatch({ type: 'prune', at: Date.now() }), Math.max(0, Math.min(...ends) - Date.now()))
+    const timer = setTimeout(
+      () => dispatch({ type: 'prune', at: Date.now() }),
+      Math.max(0, Math.min(...ends) - Date.now())
+    )
     return () => clearTimeout(timer)
   }, [state.answers])
 
@@ -134,20 +161,29 @@ export function useHostInvitations() {
     return end <= now && now - end < ANSWER_MS ? 'expired' : null
   }
   // Fresh Declined and Expired answers, for the chat strip.
-  const answered = state.history.filter(invitation => {
+  const answered = state.history.filter((invitation) => {
     const given = answer(String(invitation.recipient.id))
     return given === 'declined' || given === 'expired'
   })
-  const pendingIds = new Set(pending.map(invitation => String(invitation.recipient.id)))
-  const sending = Array.from(sendingTo.current.values()).filter(user => state.busy[String(user.id)] && !pendingIds.has(String(user.id)))
+  const pendingIds = new Set(pending.map((invitation) => String(invitation.recipient.id)))
+  const sending = Array.from(sendingTo.current.values()).filter(
+    (user) => state.busy[String(user.id)] && !pendingIds.has(String(user.id))
+  )
 
   async function invite(user: AppUser) {
     const id = String(user.id)
-    if (operations.current.has(id) || members.has(id) || pending.some(invitation => String(invitation.recipient.id) === id)) return
+    if (
+      operations.current.has(id) ||
+      members.has(id) ||
+      pending.some((invitation) => String(invitation.recipient.id) === id)
+    )
+      return
     operations.current.add(id)
     sendingTo.current.set(id, user)
     dispatch({ type: 'busy', id, busy: true })
-    const [error, response] = await axios.post(`/api/parties/${context.party.id}/invitations/send`, { recipient_id: user.id })
+    const [error, response] = await axios.post(`/api/parties/${context.party.id}/invitations/send`, {
+      recipient_id: user.id
+    })
     operations.current.delete(id)
     sendingTo.current.delete(id)
     dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t send' : '' })
@@ -165,14 +201,26 @@ export function useHostInvitations() {
     const [error, response] = await axios.post(`/api/invitations/${invitation.id}/cancel`)
     operations.current.delete(id)
     dispatch({ type: 'busy', id, busy: false, error: error ? 'Couldn’t undo' : '' })
-    if (error) { refreshHistory(); return }
+    if (error) {
+      refreshHistory()
+      return
+    }
     dispatch({ type: 'history', at: Date.now(), invitations: [response.data] })
     context.onCancel(response.data)
   }
 
   return {
-    ...state, now, pending, answered, sending, history, answer, invite, cancel, refreshHistory,
-    withPresence: (user: AppUser) => presence ? { ...user, is_online: presence.has(String(user.id)) } : user
+    ...state,
+    now,
+    pending,
+    answered,
+    sending,
+    history,
+    answer,
+    invite,
+    cancel,
+    refreshHistory,
+    withPresence: (user: AppUser) => (presence ? { ...user, is_online: presence.has(String(user.id)) } : user)
   }
 }
 

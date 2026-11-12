@@ -14,9 +14,19 @@ const clients: ReturnType<typeof createQueryClient>[] = []
 function setup() {
   const client = createQueryClient()
   clients.push(client)
-  return { client, wrapper: ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider> }
+  return {
+    client,
+    wrapper: ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    )
+  }
 }
-afterEach(() => { clients.forEach(client => client.clear()); clients.length = 0; vi.clearAllMocks(); session.user = { id: 1 } })
+afterEach(() => {
+  clients.forEach((client) => client.clear())
+  clients.length = 0
+  vi.clearAllMocks()
+  session.user = { id: 1 }
+})
 const page = { data: [{ id: 1 }], current_page: 1, last_page: 1 }
 
 describe('listing queries', () => {
@@ -40,11 +50,15 @@ describe('listing queries', () => {
 
   it('reports Axios tuple errors as query failures and allows retry', async () => {
     const error = Object.assign(new Error('Unavailable'), { response: { status: 422 } })
-    vi.mocked(axios.get).mockResolvedValueOnce([error] as any).mockResolvedValue([null, { data: page }] as any)
+    vi.mocked(axios.get)
+      .mockResolvedValueOnce([error] as any)
+      .mockResolvedValue([null, { data: page }] as any)
     const { wrapper } = setup()
     const hook = renderHook(() => useShowsQuery(), { wrapper })
     await waitFor(() => expect(hook.result.current.error).toBe(error))
-    await act(async () => { await hook.result.current.refetch() })
+    await act(async () => {
+      await hook.result.current.refetch()
+    })
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
   })
 
@@ -55,12 +69,20 @@ describe('listing queries', () => {
     expect(axios.get).not.toHaveBeenCalled()
     hook.rerender({ term: 'moon' })
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
-    expect(axios.get).toHaveBeenCalledWith('/api/shows', expect.objectContaining({ params: { q: 'moon', per_page: 5 } }))
-    expect(axios.get).toHaveBeenCalledWith('/api/me/parties', expect.objectContaining({ params: { q: 'moon', per_page: 4 } }))
+    expect(axios.get).toHaveBeenCalledWith(
+      '/api/shows',
+      expect.objectContaining({ params: { q: 'moon', per_page: 5 } })
+    )
+    expect(axios.get).toHaveBeenCalledWith(
+      '/api/me/parties',
+      expect.objectContaining({ params: { q: 'moon', per_page: 4 } })
+    )
   })
 
   it('starts pending on a new term instead of keeping the previous term’s results', async () => {
-    vi.mocked(axios.get).mockResolvedValueOnce([null, { data: page }] as any).mockResolvedValueOnce([null, { data: page }] as any)
+    vi.mocked(axios.get)
+      .mockResolvedValueOnce([null, { data: page }] as any)
+      .mockResolvedValueOnce([null, { data: page }] as any)
       .mockImplementation(() => new Promise(() => {}))
     const { wrapper } = setup()
     const hook = renderHook(({ term }) => useListingSearchQuery(term), { wrapper, initialProps: { term: 'moo' } })
@@ -78,7 +100,9 @@ describe('listing queries', () => {
     client.setQueryData(['listing', 1, 'parties'], page)
     client.setQueryData(['listing', 1, 'search', 'moon'], {})
     const hook = renderHook(() => useCreatePartyMutation(), { wrapper })
-    await act(async () => { await hook.result.current.mutateAsync({ id: 10 } as AppShowVideo) })
+    await act(async () => {
+      await hook.result.current.mutateAsync({ id: 10 } as AppShowVideo)
+    })
     expect(axios.post).toHaveBeenCalledWith('/api/parties', { show_video_id: 10 })
     expect(client.getQueryState(['listing', 1, 'parties'])!.isInvalidated).toBe(true)
     expect(client.getQueryState(['listing', 1, 'search', 'moon'])!.isInvalidated).toBe(true)

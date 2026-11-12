@@ -56,14 +56,15 @@ interface AppPartyInvitation {
   updated_at: string
 }
 
-type AppPartyActivityKind = 'created' | 'joined' | 'joined_code' | 'accepted' | 'played' | 'paused' | 'seeked' | 'switched'
+type AppPartyActivityKind =
+  'created' | 'joined' | 'joined_code' | 'accepted' | 'played' | 'paused' | 'seeked' | 'switched'
 
 interface AppPartyActivity {
   id: string
   text: string
   // Older API builds and pre-migration rows that couldn't be read may leave these empty.
   kind?: AppPartyActivityKind | null
-  meta?: { seconds?: number, from_seconds?: number, video_id?: AppId } | null
+  meta?: { seconds?: number; from_seconds?: number; video_id?: AppId } | null
   user: AppUser
   created_at: string
   updated_at: string
@@ -175,4 +176,3 @@ interface AppPartyState {
   is_playing: boolean
   current_time: number
 }
-

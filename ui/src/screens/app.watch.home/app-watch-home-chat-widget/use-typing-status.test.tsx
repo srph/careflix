@@ -10,12 +10,16 @@ const { client, channel } = vi.hoisted(() => {
 vi.mock('~/lib/pusher/pusher', () => ({ pusher: () => client }))
 
 const me = { id: 1, name: 'Kier' }
-const receive = (user: { id: AppId, name: string }) => {
+const receive = (user: { id: AppId; name: string }) => {
   const handler = channel.bind.mock.calls.find(([event]) => event === TYPING_EVENT)![1]
   act(() => handler({ user }))
 }
 
-beforeEach(() => { vi.useFakeTimers(); vi.clearAllMocks(); channel.subscribed = true })
+beforeEach(() => {
+  vi.useFakeTimers()
+  vi.clearAllMocks()
+  channel.subscribed = true
+})
 afterEach(() => vi.useRealTimers())
 
 describe('typing status', () => {
@@ -43,12 +47,18 @@ describe('typing status', () => {
 
   it('pings at most every few seconds, and again right after sending', () => {
     const { result } = renderHook(() => useTypingStatus(9, me))
-    act(() => { result.current.notify(); result.current.notify() })
+    act(() => {
+      result.current.notify()
+      result.current.notify()
+    })
     expect(channel.trigger).toHaveBeenCalledExactlyOnceWith(TYPING_EVENT, { user: me })
     act(() => vi.advanceTimersByTime(TYPING_PING_EVERY))
     act(() => result.current.notify())
     expect(channel.trigger).toHaveBeenCalledTimes(2)
-    act(() => { result.current.sent(); result.current.notify() })
+    act(() => {
+      result.current.sent()
+      result.current.notify()
+    })
     expect(channel.trigger).toHaveBeenCalledTimes(3)
   })
 

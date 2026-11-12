@@ -17,16 +17,9 @@ function AxiosManager({ children }: ReactComponentWrapper) {
   const auth = useAuth()
 
   useLayoutEffect(() => {
-    const requests = [
-      interceptorAppInit.setup(),
-      interceptorOauth.setup(auth),
-      interceptorPusher.setup(auth)
-    ]
+    const requests = [interceptorAppInit.setup(), interceptorOauth.setup(auth), interceptorPusher.setup(auth)]
 
-    const responses = [
-      interceptorExpiredTokens.setup(auth),
-      interceptorToastErrors.setup()
-    ]
+    const responses = [interceptorExpiredTokens.setup(auth), interceptorToastErrors.setup()]
 
     setIsInitialized(true)
 
@@ -38,7 +31,6 @@ function AxiosManager({ children }: ReactComponentWrapper) {
       responses.forEach((interceptor) => {
         instance.interceptors.response.eject(interceptor)
       })
-
     }
   }, [auth.token])
 

@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { searchView } from './app-watch-home-chat-invitation-panel-search-view'
 
 const joel = { id: 3, name: 'Joel' } as AppUser
-const query = (patch: { data?: AppUser[]; isError?: boolean; isFetching?: boolean }) => ({ isError: false, isFetching: false, ...patch })
+const query = (patch: { data?: AppUser[]; isError?: boolean; isFetching?: boolean }) => ({
+  isError: false,
+  isFetching: false,
+  ...patch
+})
 
 describe('invite search view', () => {
   it('shows the skeleton until the query has an answer', () => {

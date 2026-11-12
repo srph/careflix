@@ -3,7 +3,7 @@ import { useAsyncEffect } from '~/hooks/use-async-effect'
 import { axios } from '~/lib/axios/axios'
 
 interface State<T> {
-  data: T,
+  data: T
   isLoading: boolean
 }
 
@@ -48,32 +48,30 @@ function useRequest(endpoint: string) {
     isLoading: true
   })
 
-  useAsyncEffect(async () => {
-    dispatch({
-      type: 'data:init'
-    })
-
-    const [err, res] = await axios.get(endpoint)
-
-    if (err) {
-      return dispatch({
-        type: 'data:error',
+  useAsyncEffect(
+    async () => {
+      dispatch({
+        type: 'data:init'
       })
-    }
 
-    dispatch({
-      type: 'data:success',
-      payload: { data: res.data }
-    })
-  }, null, [endpoint])
+      const [err, res] = await axios.get(endpoint)
 
-  return [
-    state.data,
-    state.isLoading
-  ]
+      if (err) {
+        return dispatch({
+          type: 'data:error'
+        })
+      }
+
+      dispatch({
+        type: 'data:success',
+        payload: { data: res.data }
+      })
+    },
+    null,
+    [endpoint]
+  )
+
+  return [state.data, state.isLoading]
 }
 
-
-export {
-  useRequest
-}
+export { useRequest }

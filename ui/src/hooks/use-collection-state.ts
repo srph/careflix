@@ -15,6 +15,4 @@ function useCollectionState<T>() {
   }))
 }
 
-export {
-  useCollectionState
-}
+export { useCollectionState }

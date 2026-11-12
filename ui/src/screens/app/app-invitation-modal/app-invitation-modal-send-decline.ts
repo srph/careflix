@@ -20,6 +20,6 @@ export async function sendDecline(invitation: AppPartyInvitation): Promise<Decli
     if (status && status < 500 && status !== 429) return 'resolved'
     const wait = DECLINE_RETRY_DELAYS[attempt]
     if (wait == null || expiresAt <= Date.now() + wait) return 'gave-up'
-    await new Promise(resolve => setTimeout(resolve, wait))
+    await new Promise((resolve) => setTimeout(resolve, wait))
   }
 }

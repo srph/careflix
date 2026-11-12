@@ -13,7 +13,11 @@ describe('modal integration', () => {
 
   it('notifies the owner when Escape closes the modal', async () => {
     const onClose = vi.fn()
-    render(<UiModal isOpen onClose={onClose}><button>Movie action</button></UiModal>)
+    render(
+      <UiModal isOpen onClose={onClose}>
+        <button>Movie action</button>
+      </UiModal>
+    )
     await screen.findByRole('dialog')
     fireEvent.keyDown(document, { key: 'Escape' })
     await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1))

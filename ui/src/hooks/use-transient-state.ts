@@ -12,11 +12,14 @@ export function useTransientState<T>(rest: T, duration: number): [T, (value: T) 
 
   useEffect(() => () => clearTimeout(timer.current), [])
 
-  const show = useCallback((next: T) => {
-    clearTimeout(timer.current)
-    setValue(next)
-    timer.current = setTimeout(() => setValue(restRef.current), duration)
-  }, [duration])
+  const show = useCallback(
+    (next: T) => {
+      clearTimeout(timer.current)
+      setValue(next)
+      timer.current = setTimeout(() => setValue(restRef.current), duration)
+    },
+    [duration]
+  )
 
   const reset = useCallback(() => {
     clearTimeout(timer.current)

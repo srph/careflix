@@ -3,7 +3,7 @@ import { useState, useMemo } from 'react'
 type SetCallbackEvent = React.FormEvent<HTMLInputElement | HTMLSelectElement>
 
 type Payload<T> = {
-  state: T,
+  state: T
   set: (name: string) => (evt: SetCallbackEvent) => void
 }
 
@@ -15,7 +15,7 @@ type InitialState<T> = T | (() => T)
  */
 function useFormState<T>(initial: InitialState<T>): Payload<T> {
   const [state, setState] = useState<T>(initial)
-  
+
   return useMemo(() => {
     let out = {
       state,
@@ -28,11 +28,9 @@ function useFormState<T>(initial: InitialState<T>): Payload<T> {
         }
       }
     } as Payload<T>
-  
+
     return out
   }, [state])
 }
 
-export {
-  useFormState
-}
+export { useFormState }

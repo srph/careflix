@@ -7,9 +7,10 @@ import { LoginSplash } from '~/screens/login/login-splash'
 const ERRORS: Record<string, string> = {
   cancelled: 'Discord didn’t connect. No harm done.',
   expired: 'Your sign-in expired. Please try again.',
-  account_link_required: 'You already have a Care.tv account. Ask Kier to link your Discord account so you can keep your history.',
+  account_link_required:
+    'You already have a Care.tv account. Ask Kier to link your Discord account so you can keep your history.',
   not_configured: 'Discord login isn’t ready yet. Please try again later.',
-  connection_failed: 'Discord couldn’t connect. Please try again.',
+  connection_failed: 'Discord couldn’t connect. Please try again.'
 }
 
 export function AuthCallbackPage() {
@@ -32,9 +33,15 @@ export function AuthCallbackPage() {
       return
     }
     auth.exchangeDiscord(code).then(([err, result]) => {
-      if (err || !result) { setState('cancelled'); setError(authError(err)) }
-      else if (result.requires_request_access) navigate('/onboarding', { replace: true })
-      else { destination.current = returnToApp(); setName(result.user!.name.split(' ')[0]); setState('welcome') }
+      if (err || !result) {
+        setState('cancelled')
+        setError(authError(err))
+      } else if (result.requires_request_access) navigate('/onboarding', { replace: true })
+      else {
+        destination.current = returnToApp()
+        setName(result.user!.name.split(' ')[0])
+        setState('welcome')
+      }
     })
   }, [])
   useEffect(() => {
@@ -43,8 +50,14 @@ export function AuthCallbackPage() {
     return () => window.clearTimeout(timer)
   }, [state, navigate])
   const retry = async () => {
-    setError(''); setState('connecting')
-    try { await auth.startDiscord() } catch { setState('cancelled'); setError(ERRORS.connection_failed) }
+    setError('')
+    setState('connecting')
+    try {
+      await auth.startDiscord()
+    } catch {
+      setState('cancelled')
+      setError(ERRORS.connection_failed)
+    }
   }
   return <LoginSplash state={state} error={error} name={name} onDiscord={retry} />
 }

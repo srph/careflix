@@ -89,7 +89,9 @@ export function AppSettingsPage() {
               <UiAvatar img={asset_author} size="m" />
             </div>
 
-            <h6 className="font-label text-xs font-bold tracking-label uppercase text-neutral-400">Crafted by Kier Borromeo</h6>
+            <h6 className="font-label text-xs font-bold tracking-label text-neutral-400 uppercase">
+              Crafted by Kier Borromeo
+            </h6>
           </div>
         </div>
       </UiContainer>

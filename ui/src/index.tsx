@@ -29,7 +29,9 @@ function RootLayout() {
     <>
       <WindowVhSetter />
       <AuthProvider>
-        <AxiosManager><Outlet /></AxiosManager>
+        <AxiosManager>
+          <Outlet />
+        </AxiosManager>
       </AuthProvider>
       <Toast />
     </>
@@ -37,34 +39,60 @@ function RootLayout() {
 }
 
 function ApplicationLayout() {
-  return <QueryProvider><PusherManager><AppPage><Outlet /></AppPage></PusherManager></QueryProvider>
+  return (
+    <QueryProvider>
+      <PusherManager>
+        <AppPage>
+          <Outlet />
+        </AppPage>
+      </PusherManager>
+    </QueryProvider>
+  )
 }
 
-const router = createBrowserRouter([{
-  element: <RootLayout />,
-  children: [
-    { element: <GuestRoute />, children: [
-      { path: '/login', element: <LoginPage /> },
-      { path: '/register', element: <Navigate to="/login" replace /> },
-    ] },
-    { path: '/auth/callback', element: <AuthCallbackPage /> },
-    { path: '/onboarding', element: <OnboardingPage /> },
-    { path: '/request-access', element: <Navigate to="/onboarding" replace /> },
-    { path: '/logout', element: <LogoutPage /> },
-    { element: <ApplicationLayout />, children: [
-      { path: '/', element: <AppHomePage /> },
-      { path: '/download', element: <AppDownloadPage /> },
-      { element: <PrivateRoute />, children: [
-        { path: '/settings', element: <AppSettingsPage /> },
-        { path: '/settings/profile', element: <AppSettingsProfilePage /> },
-        { path: '/settings/password', element: <Navigate to="/settings" replace /> },
-        { path: '/settings/faq', element: <AppSettingsFaqPage /> },
-        { path: '/watch/:partyId', element: <AppWatchPage><AppWatchHomePage /></AppWatchPage> },
-      ] },
-      // The previous router kept the app shell for unmatched URLs.
-      { path: '*', element: null },
-    ] },
-  ],
-}])
+const router = createBrowserRouter([
+  {
+    element: <RootLayout />,
+    children: [
+      {
+        element: <GuestRoute />,
+        children: [
+          { path: '/login', element: <LoginPage /> },
+          { path: '/register', element: <Navigate to="/login" replace /> }
+        ]
+      },
+      { path: '/auth/callback', element: <AuthCallbackPage /> },
+      { path: '/onboarding', element: <OnboardingPage /> },
+      { path: '/request-access', element: <Navigate to="/onboarding" replace /> },
+      { path: '/logout', element: <LogoutPage /> },
+      {
+        element: <ApplicationLayout />,
+        children: [
+          { path: '/', element: <AppHomePage /> },
+          { path: '/download', element: <AppDownloadPage /> },
+          {
+            element: <PrivateRoute />,
+            children: [
+              { path: '/settings', element: <AppSettingsPage /> },
+              { path: '/settings/profile', element: <AppSettingsProfilePage /> },
+              { path: '/settings/password', element: <Navigate to="/settings" replace /> },
+              { path: '/settings/faq', element: <AppSettingsFaqPage /> },
+              {
+                path: '/watch/:partyId',
+                element: (
+                  <AppWatchPage>
+                    <AppWatchHomePage />
+                  </AppWatchPage>
+                )
+              }
+            ]
+          },
+          // The previous router kept the app shell for unmatched URLs.
+          { path: '*', element: null }
+        ]
+      }
+    ]
+  }
+])
 
 createRoot(document.getElementById('mount')!).render(<RouterProvider router={router} />)

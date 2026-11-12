@@ -2,7 +2,7 @@ import { parseStandardTime } from '~/utils/date/parse-standard-time'
 
 /**
  * For series, display season and episode index. For movies, display air date (2018)
- * 
+ *
  * @NOTE This assumes that video has `group`.
  */
 export function getVideoDetails(video: AppPartyVideo) {

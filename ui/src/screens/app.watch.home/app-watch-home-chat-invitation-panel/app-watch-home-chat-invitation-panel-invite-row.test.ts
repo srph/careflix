@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { inviteRow, InviteRowInput } from './app-watch-home-chat-invitation-panel-invite-row'
 
-const rest: InviteRowInput = { name: 'Mira', online: true, member: false, waiting: false, busy: false, error: '', answer: null, minutes: '30m' }
+const rest: InviteRowInput = {
+  name: 'Mira',
+  online: true,
+  member: false,
+  waiting: false,
+  busy: false,
+  error: '',
+  answer: null,
+  minutes: '30m'
+}
 const row = (patch: Partial<InviteRowInput>) => inviteRow({ ...rest, ...patch })
 
 describe('invite row', () => {
@@ -11,14 +20,27 @@ describe('invite row', () => {
   })
 
   it('keeps presence while sending, then says why a send failed', () => {
-    expect(row({ busy: true })).toMatchObject({ status: 'Online', action: 'invite', busy: true, label: 'Sending invite to Mira' })
+    expect(row({ busy: true })).toMatchObject({
+      status: 'Online',
+      action: 'invite',
+      busy: true,
+      label: 'Sending invite to Mira'
+    })
     expect(row({ error: 'Couldn’t send' })).toMatchObject({ status: 'Couldn’t send', tone: 'error', action: 'retry' })
   })
 
   it('shows the invite with Undo, and a failed undo in its place', () => {
     expect(row({ waiting: true })).toMatchObject({ status: 'Invited (30m)', tone: 'pink', action: 'undo' })
-    expect(row({ waiting: true, busy: true })).toMatchObject({ status: 'Invited (30m)', busy: true, label: 'Undoing invite to Mira' })
-    expect(row({ waiting: true, error: 'Couldn’t undo' })).toMatchObject({ status: 'Couldn’t undo', tone: 'error', action: 'undo' })
+    expect(row({ waiting: true, busy: true })).toMatchObject({
+      status: 'Invited (30m)',
+      busy: true,
+      label: 'Undoing invite to Mira'
+    })
+    expect(row({ waiting: true, error: 'Couldn’t undo' })).toMatchObject({
+      status: 'Couldn’t undo',
+      tone: 'error',
+      action: 'undo'
+    })
   })
 
   it('says each answer, then rests', () => {

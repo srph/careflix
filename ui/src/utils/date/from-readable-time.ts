@@ -4,9 +4,5 @@
 export function fromReadableTime(time: string): number {
   const [hour, minute, seconds] = time.split(',')[0].split(':')
 
-  return (
-    (Number(hour) * 60 * 60) +
-    (Number(minute) * 60) +
-    Number(seconds)
-  )
+  return Number(hour) * 60 * 60 + Number(minute) * 60 + Number(seconds)
 }

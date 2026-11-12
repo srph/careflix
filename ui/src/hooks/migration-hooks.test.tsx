@@ -23,7 +23,10 @@ describe('replacement hooks', () => {
     const cleanup = vi.fn()
     const effect = vi.fn(() => cleanup)
     const wrapper = ({ children }: PropsWithChildren) => <StrictMode>{children}</StrictMode>
-    const { rerender, unmount } = renderHook(({ value }) => useUpdateEffect(effect, [value]), { initialProps: { value: 1 }, wrapper })
+    const { rerender, unmount } = renderHook(({ value }) => useUpdateEffect(effect, [value]), {
+      initialProps: { value: 1 },
+      wrapper
+    })
     expect(effect).not.toHaveBeenCalled()
     rerender({ value: 2 })
     expect(effect).toHaveBeenCalledTimes(1)
@@ -34,7 +37,9 @@ describe('replacement hooks', () => {
   it('reruns async work for changed inputs and supplies results to cleanup', async () => {
     const effect = vi.fn(async () => 'loaded')
     const destroy = vi.fn()
-    const { rerender, unmount } = renderHook(({ endpoint }) => useAsyncEffect(effect, destroy, [endpoint]), { initialProps: { endpoint: 'first' } })
+    const { rerender, unmount } = renderHook(({ endpoint }) => useAsyncEffect(effect, destroy, [endpoint]), {
+      initialProps: { endpoint: 'first' }
+    })
     await waitFor(() => expect(effect).toHaveResolvedWith('loaded'))
     rerender({ endpoint: 'first' })
     expect(effect).toHaveBeenCalledTimes(1)

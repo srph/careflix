@@ -10,7 +10,10 @@ interface OwnProps {
 
 type Props = HTMLProps & OwnProps
 
-export const UiInput = React.forwardRef(function UiInput({ isDark, isRound, ...props }: Props, ref: React.ForwardedRef<HTMLInputElement>) {
+export const UiInput = React.forwardRef(function UiInput(
+  { isDark, isRound, ...props }: Props,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
   return (
     <input
       {...props}

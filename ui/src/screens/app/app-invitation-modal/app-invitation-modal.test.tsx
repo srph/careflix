@@ -10,27 +10,32 @@ const auth = vi.hoisted(() => ({
   declined: [] as AppId[],
   set(list: AppPartyInvitation[]) {
     auth.invitations = list
-    auth.listeners.forEach(listener => listener())
-  },
+    auth.listeners.forEach((listener) => listener())
+  }
 }))
 
 vi.mock('~/contexts/auth/auth', async () => {
   const { useSyncExternalStore } = await import('react')
   const subscribe = (listener: () => void) => {
     auth.listeners.add(listener)
-    return () => { auth.listeners.delete(listener) }
+    return () => {
+      auth.listeners.delete(listener)
+    }
   }
-  const removeInvitation = (id: AppId) => auth.set(auth.invitations.filter(invitation => invitation.id !== id))
+  const removeInvitation = (id: AppId) => auth.set(auth.invitations.filter((invitation) => invitation.id !== id))
   const useUser = () => ({ id: 1, invitations: useSyncExternalStore(subscribe, () => auth.invitations) })
   return {
     useAuthUser: useUser,
     useAuth: () => ({
       data: useUser(),
       removeInvitation,
-      declineInvitation: (invitation: AppPartyInvitation) => { auth.declined.push(invitation.id); removeInvitation(invitation.id) },
+      declineInvitation: (invitation: AppPartyInvitation) => {
+        auth.declined.push(invitation.id)
+        removeInvitation(invitation.id)
+      },
       receiveInvitation: () => {},
-      cancelInvitation: () => {},
-    }),
+      cancelInvitation: () => {}
+    })
   }
 })
 vi.mock('./app-invitation-modal-send-decline', () => ({ sendDecline: vi.fn(() => new Promise(() => {})) }))
@@ -40,20 +45,38 @@ vi.mock('~/screens/app.home/app-home-queries', () => ({ useShowGroupsQuery: () =
 vi.mock('react-router', () => ({ useNavigate: () => vi.fn(), useLocation: () => ({ pathname: '/' }) }))
 vi.mock('border-beam', () => ({ BorderBeam: (): null => null }))
 
-const invite = (id: number, name: string) => ({
-  id, action: 'pending', party: null, sender: { id: id + 100, name },
-  expires_at: new Date(Date.now() + 30 * 60_000).toISOString(),
-}) as unknown as AppPartyInvitation
+const invite = (id: number, name: string) =>
+  ({
+    id,
+    action: 'pending',
+    party: null,
+    sender: { id: id + 100, name },
+    expires_at: new Date(Date.now() + 30 * 60_000).toISOString()
+  }) as unknown as AppPartyInvitation
 
 function open() {
-  render(<InvitationOverlayProvider><AppInvitationModal /></InvitationOverlayProvider>)
+  render(
+    <InvitationOverlayProvider>
+      <AppInvitationModal />
+    </InvitationOverlayProvider>
+  )
   fireEvent.click(screen.getByRole('button', { name: 'Respond' }))
 }
 
 describe('InvitationModal decline', () => {
   beforeAll(() => {
-    globalThis.ResizeObserver ??= class { observe() {} unobserve() {} disconnect() {} } as any
-    window.matchMedia ??= (() => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} })) as any
+    globalThis.ResizeObserver ??= class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as any
+    window.matchMedia ??= (() => ({
+      matches: false,
+      addEventListener() {},
+      removeEventListener() {},
+      addListener() {},
+      removeListener() {}
+    })) as any
     HTMLMediaElement.prototype.play = () => Promise.resolve()
   })
   beforeEach(() => {
@@ -68,7 +91,10 @@ describe('InvitationModal decline', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Decline' }))
     expect(sendDecline).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }))
     expect(auth.declined).toEqual([1])
-    expect(screen.getAllByText((_, node) => node?.tagName === 'P' && node.textContent === 'Declined Kier’s invitation').length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText((_, node) => node?.tagName === 'P' && node.textContent === 'Declined Kier’s invitation')
+        .length
+    ).toBeGreaterThan(0)
     expect(screen.queryByText('Declining…')).toBeNull()
     expect(screen.queryByRole('alert')).toBeNull()
   })
@@ -78,9 +104,11 @@ describe('InvitationModal decline', () => {
     open()
     const decline = screen.getByRole('button', { name: 'Decline' })
     fireEvent.click(decline)
-    act(() => { fireEvent.click(screen.getByRole('button', { name: 'Decline' })) })
+    act(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'Decline' }))
+    })
     expect(sendDecline).toHaveBeenCalledTimes(1)
-    expect(auth.invitations.map(invitation => invitation.id)).toEqual([2])
+    expect(auth.invitations.map((invitation) => invitation.id)).toEqual([2])
     expect(screen.getByText('2 of 2')).toBeTruthy()
   })
 })

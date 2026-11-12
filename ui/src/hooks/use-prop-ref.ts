@@ -19,6 +19,4 @@ function usePropRef<T = any>(props: T) {
   return propRef
 }
 
-export {
-  usePropRef
-}
+export { usePropRef }

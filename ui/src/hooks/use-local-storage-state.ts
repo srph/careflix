@@ -26,7 +26,11 @@ function write<T>(key: string, value: T) {
  * Anything missing, unreadable or rejected by `isValid` falls back to `fallback`.
  * Changing `key` (another account) reads that key's value; other tabs' writes come through too.
  */
-export function useLocalStorageState<T>(key: string, fallback: T, isValid?: Guard<T>): [T, (next: T | ((current: T) => T)) => void] {
+export function useLocalStorageState<T>(
+  key: string,
+  fallback: T,
+  isValid?: Guard<T>
+): [T, (next: T | ((current: T) => T)) => void] {
   const [state, setState] = useState(() => ({ key, value: read(key, fallback, isValid) }))
   let current = state
   if (state.key !== key) {

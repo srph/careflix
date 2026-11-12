@@ -5,9 +5,5 @@ interface Props {
 }
 
 export function DummyComponent(props: Props) {
-  return (
-    <div>
-      {props.children}
-    </div>
-  )
+  return <div>{props.children}</div>
 }

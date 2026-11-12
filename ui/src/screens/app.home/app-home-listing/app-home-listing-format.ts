@@ -7,7 +7,9 @@ export function showMeta(show: AppShow, extended = false) {
   if (extended) {
     if (show.title_type === 'movie' && show.movie?.duration) {
       const minutes = Math.floor(show.movie.duration / 60)
-      parts.push(minutes >= 60 ? `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, '0')}m` : `${minutes}m`)
+      parts.push(
+        minutes >= 60 ? `${Math.floor(minutes / 60)}h ${String(minutes % 60).padStart(2, '0')}m` : `${minutes}m`
+      )
     } else if (show.title_type === 'series' && show.groups_count != null) {
       parts.push(`${show.groups_count} season${show.groups_count === 1 ? '' : 's'}`)
     }
@@ -30,7 +32,7 @@ export function partyDetails(party: AppParty) {
 }
 
 export function partyStatus(party: AppParty) {
-  const active = party.members?.some(member => Number(member.pivot?.is_active) === 1)
+  const active = party.members?.some((member) => Number(member.pivot?.is_active) === 1)
   if (active) return Number(party.is_playing) === 1 ? 'Watching now' : 'In the room'
   const timestamp = party.last_activity_at ?? ''
   const date = new Date(timestamp.includes(' ') ? timestamp.replace(' ', 'T') + 'Z' : timestamp).getTime()

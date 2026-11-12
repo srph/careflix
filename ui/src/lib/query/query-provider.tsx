@@ -5,7 +5,12 @@ import { createQueryClient } from './client'
 
 function QuerySession({ children }: ReactComponentWrapper) {
   const [client] = useState(createQueryClient)
-  useEffect(() => () => { client.clear() }, [client])
+  useEffect(
+    () => () => {
+      client.clear()
+    },
+    [client]
+  )
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>
 }
 

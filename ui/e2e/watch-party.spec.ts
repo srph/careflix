@@ -5,24 +5,58 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
   const viewer = { id: 90001, name: 'Viewer', email: 'viewer@example.test', avatar: null, is_online: true }
   const online = { ...viewer, id: 90002, name: 'Connected Friend', is_online: false, pivot: { is_active: false } }
   const offline = { ...viewer, id: 90003, name: 'Offline Friend', is_online: true, pivot: { is_active: true } }
-  const show = { id: 91001, title: 'Watch Regression Movie', title_type: 'movie', preview_image: null, air_start: '2020-01-01 00:00:00' }
-  const video = { id: 92001, title: show.title, show, duration: 120, subtitle_url: 'https://media.example.test/movie.srt', video_url: 'https://media.example.test/movie.mp4' }
-  const party = { id: 94001, video, current_time: 0, is_playing: false, invitations: [], members: [{ ...viewer, pivot: { is_active: false } }, online, offline] }
+  const show = {
+    id: 91001,
+    title: 'Watch Regression Movie',
+    title_type: 'movie',
+    preview_image: null,
+    air_start: '2020-01-01 00:00:00'
+  }
+  const video = {
+    id: 92001,
+    title: show.title,
+    show,
+    duration: 120,
+    subtitle_url: 'https://media.example.test/movie.srt',
+    video_url: 'https://media.example.test/movie.mp4'
+  }
+  const party = {
+    id: 94001,
+    video,
+    current_time: 0,
+    is_playing: false,
+    invitations: [],
+    members: [{ ...viewer, pivot: { is_active: false } }, online, offline]
+  }
   const room = `presence-chat-party.${party.id}`
   const subscriptions = new Set<string>()
   const errors: string[] = []
   const subtitlePaths: string[] = []
   let connection: WebSocketRoute
   let loadSearch: () => void
-  const searchReady = new Promise<void>(resolve => { loadSearch = resolve })
-  page.on('pageerror', error => errors.push(error.message))
-  await page.context().addCookies([{ name: 'app_token', value: 'watch-regression-fixture', url: test.info().project.use.baseURL as string }])
-  const emit = (channel: string, event: string, data: unknown) => connection.send(JSON.stringify({ channel, event, data: JSON.stringify(data) }))
-  const roster = (ids: number[]) => ({ presence: { ids: ids.map(String), hash: Object.fromEntries(ids.map(id => [id, {}])), count: ids.length } })
-  await page.routeWebSocket(/pusher/, socket => {
+  const searchReady = new Promise<void>((resolve) => {
+    loadSearch = resolve
+  })
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page
+    .context()
+    .addCookies([
+      { name: 'app_token', value: 'watch-regression-fixture', url: test.info().project.use.baseURL as string }
+    ])
+  const emit = (channel: string, event: string, data: unknown) =>
+    connection.send(JSON.stringify({ channel, event, data: JSON.stringify(data) }))
+  const roster = (ids: number[]) => ({
+    presence: { ids: ids.map(String), hash: Object.fromEntries(ids.map((id) => [id, {}])), count: ids.length }
+  })
+  await page.routeWebSocket(/pusher/, (socket) => {
     connection = socket
-    socket.send(JSON.stringify({ event: 'pusher:connection_established', data: JSON.stringify({ socket_id: '123.456', activity_timeout: 120 }) }))
-    socket.onMessage(message => {
+    socket.send(
+      JSON.stringify({
+        event: 'pusher:connection_established',
+        data: JSON.stringify({ socket_id: '123.456', activity_timeout: 120 })
+      })
+    )
+    socket.onMessage((message) => {
       const payload = JSON.parse(String(message))
       if (payload.event === 'pusher:subscribe') {
         subscriptions.add(payload.data.channel)
@@ -30,9 +64,11 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
       }
     })
   })
-  await page.route('**/broadcasting/auth', route => route.fulfill({ json: { auth: 'fixture:signature', channel_data: JSON.stringify({ user_id: viewer.id }) } }))
-  await page.route('https://media.example.test/**', route => route.fulfill({ status: 404, body: '' }))
-  await page.route('**/api/**', async route => {
+  await page.route('**/broadcasting/auth', (route) =>
+    route.fulfill({ json: { auth: 'fixture:signature', channel_data: JSON.stringify({ user_id: viewer.id }) } })
+  )
+  await page.route('https://media.example.test/**', (route) => route.fulfill({ status: 404, body: '' }))
+  await page.route('**/api/**', async (route) => {
     const path = new URL(route.request().url()).pathname
     let body: unknown = {}
     if (path === '/api/me') body = { ...viewer, invitations: [] }
@@ -51,8 +87,10 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
 
   await page.goto(`/watch/${party.id}`)
   await expect.poll(() => subscriptions.has(room)).toBe(true)
-  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(1)
-  await page.locator('video').evaluate(video => video.dispatchEvent(new Event('loadeddata')))
+  await expect(
+    page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')
+  ).toHaveCount(1)
+  await page.locator('video').evaluate((video) => video.dispatchEvent(new Event('loadeddata')))
   await expect(page.getByTestId('subtitle')).toHaveText('Watching together')
   expect(subtitlePaths).toEqual([`/api/videos/${video.id}/subtitle`])
   await page.locator('video').evaluate((video: HTMLVideoElement) => {
@@ -63,7 +101,8 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
   // Search results arrive after presence; stale API flags must not overwrite the roster.
   loadSearch()
   await page.getByRole('button', { name: 'Invite people' }).click()
-  const friend = (name: string) => page.getByTestId('invite-person').filter({ hasText: name }).getByTestId('presence-avatar')
+  const friend = (name: string) =>
+    page.getByTestId('invite-person').filter({ hasText: name }).getByTestId('presence-avatar')
   await expect(friend(online.name)).toHaveAttribute('data-online', 'true')
   await expect(friend(offline.name)).toHaveAttribute('data-online', 'false')
   emit('presence-chat', 'pusher_internal:member_removed', { user_id: String(online.id) })
@@ -71,12 +110,18 @@ test('watch subtitles and presence initialize from API and Pusher rosters', asyn
   await page.keyboard.press('Escape')
 
   emit(room, 'pusher_internal:member_removed', { user_id: String(online.id) })
-  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(0)
+  await expect(
+    page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')
+  ).toHaveCount(0)
   emit(room, 'pusher_internal:member_added', { user_id: String(offline.id), user_info: {} })
-  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(1)
+  await expect(
+    page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')
+  ).toHaveCount(1)
   // A replacement subscription roster must clear stale online members, too.
   emit(room, 'pusher_internal:subscription_succeeded', roster([viewer.id]))
-  await expect(page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(0)
+  await expect(
+    page.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')
+  ).toHaveCount(0)
   expect(await page.locator('video').evaluate((video: HTMLVideoElement) => video.currentTime)).toBe(2)
 
   const sync = () => emit(`private-party.${party.id}`, 'state', { state: { current_time: 3, is_playing: false } })

@@ -16,14 +16,14 @@ beforeAll(async () => {
     response.writeHead(302, { Location: 'https://discord.com/oauth2/authorize' })
     response.end()
   })
-  await new Promise<void>(resolve => api.listen(0, '127.0.0.1', resolve))
+  await new Promise<void>((resolve) => api.listen(0, '127.0.0.1', resolve))
   const apiPort = (api.address() as AddressInfo).port
   vi.stubEnv('VITE_API_BASE_URL', `http://127.0.0.1:${apiPort}`)
   const config = viteConfig({ command: 'serve', mode: 'test' })
   frontend = await createServer({
     ...config,
     configFile: false,
-    server: { ...config.server, host: '127.0.0.1', port: 0, strictPort: false, hmr: false, watch: null },
+    server: { ...config.server, host: '127.0.0.1', port: 0, strictPort: false, hmr: false, watch: null }
   })
   await frontend.listen()
   origin = `http://127.0.0.1:${(frontend.httpServer!.address() as AddressInfo).port}`
@@ -31,7 +31,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await frontend?.close()
-  if (api) await new Promise<void>(resolve => api.close(() => resolve()))
+  if (api) await new Promise<void>((resolve) => api.close(() => resolve()))
   vi.unstubAllEnvs()
 })
 

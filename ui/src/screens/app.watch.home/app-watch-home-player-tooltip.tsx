@@ -31,9 +31,12 @@ export function AppWatchHomePlayerTooltip({ padding = 32, ...props }: Props) {
   }
 
   // A control can leave while its tooltip shows, e.g. subtitles when the episode changes.
-  useEffect(() => () => {
-    if (isOpen.current) latest.current.onClose()
-  }, [])
+  useEffect(
+    () => () => {
+      if (isOpen.current) latest.current.onClose()
+    },
+    []
+  )
 
   return (
     <Tooltip.Root disabled={props.disabled} onOpenChange={handleOpenChange}>
@@ -41,11 +44,17 @@ export function AppWatchHomePlayerTooltip({ padding = 32, ...props }: Props) {
         {props.children}
       </Tooltip.Trigger>
       <Tooltip.Portal>
-        <Tooltip.Positioner side="top" align={props.align === 'left' ? 'start' : 'end'} sideOffset={padding}
+        <Tooltip.Positioner
+          side="top"
+          align={props.align === 'left' ? 'start' : 'end'}
+          sideOffset={padding}
           className="z-(--zindex-player-tooltip)">
           {/* Desktop only. Fades up on the way in and leaves at once; moving to the next control swaps it straight in. */}
-          <Tooltip.Popup data-testid="player-tooltip"
-            className="hidden rounded-sm bg-neutral-900 p-4 text-base leading-tight transition-[opacity,translate] duration-150 ease-out data-instant:[transition:none] data-starting-style:translate-y-1.5 data-starting-style:opacity-0 motion-reduce:data-starting-style:translate-y-0 lg:block">{props.text}</Tooltip.Popup>
+          <Tooltip.Popup
+            data-testid="player-tooltip"
+            className="hidden rounded-sm bg-neutral-900 p-4 text-base leading-tight transition-[opacity,translate] duration-150 ease-out data-instant:[transition:none] data-starting-style:translate-y-1.5 data-starting-style:opacity-0 motion-reduce:data-starting-style:translate-y-0 lg:block">
+            {props.text}
+          </Tooltip.Popup>
         </Tooltip.Positioner>
       </Tooltip.Portal>
     </Tooltip.Root>

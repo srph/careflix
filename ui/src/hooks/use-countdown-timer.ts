@@ -26,6 +26,4 @@ function useCountdownTimer(props: Props): number {
   return remaining
 }
 
-export {
-  useCountdownTimer
-}
+export { useCountdownTimer }

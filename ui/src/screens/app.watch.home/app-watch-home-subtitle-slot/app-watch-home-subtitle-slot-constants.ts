@@ -18,7 +18,8 @@ const placements: SubtitlePlacement[] = (['bottom', 'middle', 'top'] as const).f
     vertical,
     className: `${VERTICAL[vertical]} ${HORIZONTAL[horizontal]}`,
     indicator: `{\\an${row * 3 + column + 1}}`
-  })))
+  }))
+)
 
 const HAS_PLACEMENT_PATTERN = /{\\an\d}/
 

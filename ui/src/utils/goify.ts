@@ -6,7 +6,7 @@ export async function goify(promise: Promise<any>): Promise<AsyncGoReturn> {
   let data: any = null
   try {
     data = await promise
-  } catch(e) {
+  } catch (e) {
     if (import.meta.env.DEV) {
       console.error(e)
     }

@@ -4,9 +4,12 @@ import { sendDecline } from './app-invitation-modal-send-decline'
 
 vi.mock('~/lib/axios/axios', () => ({ axios: { post: vi.fn() } }))
 
-const failure = (status?: number) => [Object.assign(new Error('Request failed'), status ? { response: { status } } : {})]
+const failure = (status?: number) => [
+  Object.assign(new Error('Request failed'), status ? { response: { status } } : {})
+]
 const ok = [null, { data: {} }]
-const invitation = (minutes: number) => ({ id: 7, expires_at: new Date(Date.now() + minutes * 60_000).toISOString() }) as AppPartyInvitation
+const invitation = (minutes: number) =>
+  ({ id: 7, expires_at: new Date(Date.now() + minutes * 60_000).toISOString() }) as AppPartyInvitation
 
 describe('sendDecline', () => {
   beforeEach(() => vi.useFakeTimers())
@@ -39,7 +42,7 @@ describe('sendDecline', () => {
     expect(axios.post).toHaveBeenCalledTimes(4)
   })
 
-  it.each([401, 403, 404])('treats %i as already resolved', async status => {
+  it.each([401, 403, 404])('treats %i as already resolved', async (status) => {
     vi.mocked(axios.post).mockResolvedValue(failure(status) as any)
     await expect(sendDecline(invitation(30))).resolves.toBe('resolved')
     expect(axios.post).toHaveBeenCalledTimes(1)

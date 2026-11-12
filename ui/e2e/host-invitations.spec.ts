@@ -7,76 +7,131 @@ const leo = { ...host, id: 804, name: 'Leo', is_online: false }
 const ava = { ...host, id: 805, name: 'Ava', is_online: false }
 const people = [joyce, leo, ava]
 const invitation = (person = joyce, id = 1001, expires = Date.now() + 1800000) => ({
-  id, party_id: 880, recipient: person, sender: host, action: 'pending',
-  created_at: new Date().toISOString(), expires_at: new Date(expires).toISOString()
+  id,
+  party_id: 880,
+  recipient: person,
+  sender: host,
+  action: 'pending',
+  created_at: new Date().toISOString(),
+  expires_at: new Date(expires).toISOString()
 })
 
-async function room(page: Page, options: { history?: ReturnType<typeof invitation>[]; noRecents?: boolean; logs?: boolean } = {}) {
+async function room(
+  page: Page,
+  options: { history?: ReturnType<typeof invitation>[]; noRecents?: boolean; logs?: boolean } = {}
+) {
   const errors: string[] = []
-  page.on('pageerror', error => errors.push(error.message))
+  page.on('pageerror', (error) => errors.push(error.message))
   const party = {
-    id: 880, creator: host, join_code: '048291', invitations: options.history || [],
-    members: [host, mira].map(person => ({ ...person, pivot: { is_active: true } })),
-    current_time: 0, is_playing: false,
-    video: { id: 881, title: 'Velvet Static', duration: 7200, video_url: 'https://media.example.test/film.mp4',
-      show: { id: 882, title: 'Velvet Static', title_type: 'movie', air_start: '2020-01-01 00:00:00' } }
+    id: 880,
+    creator: host,
+    join_code: '048291',
+    invitations: options.history || [],
+    members: [host, mira].map((person) => ({ ...person, pivot: { is_active: true } })),
+    current_time: 0,
+    is_playing: false,
+    video: {
+      id: 881,
+      title: 'Velvet Static',
+      duration: 7200,
+      video_url: 'https://media.example.test/film.mp4',
+      show: { id: 882, title: 'Velvet Static', title_type: 'movie', air_start: '2020-01-01 00:00:00' }
+    }
   }
-  const history = new Map((options.history || []).map(item => [item.recipient.id, item]))
+  const history = new Map((options.history || []).map((item) => [item.recipient.id, item]))
   const failures = { search: 0, send: 0, cancel: 0, history: 0 }
   const heldSearches = new Map<string, Promise<void>>()
   const sent: number[] = []
   const searches: string[] = []
   let socket: WebSocketRoute
-  const emit = (event: string, data: object) => socket.send(JSON.stringify({ channel: 'private-party.880', event, data: JSON.stringify(data) }))
-  await page.context().addCookies([{ name: 'app_token', value: 'host-invite-fixture', url: test.info().project.use.baseURL as string }])
+  const emit = (event: string, data: object) =>
+    socket.send(JSON.stringify({ channel: 'private-party.880', event, data: JSON.stringify(data) }))
+  await page
+    .context()
+    .addCookies([{ name: 'app_token', value: 'host-invite-fixture', url: test.info().project.use.baseURL as string }])
   await page.addInitScript(() => {
     Object.defineProperty(navigator, 'clipboard', { value: { writeText: async () => {} }, configurable: true })
   })
-  await page.routeWebSocket(/pusher/, connection => {
+  await page.routeWebSocket(/pusher/, (connection) => {
     socket = connection
-    connection.send(JSON.stringify({ event: 'pusher:connection_established', data: JSON.stringify({ socket_id: '123.456', activity_timeout: 120 }) }))
-    connection.onMessage(message => {
+    connection.send(
+      JSON.stringify({
+        event: 'pusher:connection_established',
+        data: JSON.stringify({ socket_id: '123.456', activity_timeout: 120 })
+      })
+    )
+    connection.onMessage((message) => {
       const payload = JSON.parse(String(message))
       if (payload.event !== 'pusher:subscribe') return
       const ids = [host.id, mira.id, joyce.id].map(String)
-      connection.send(JSON.stringify({ channel: payload.data.channel, event: 'pusher_internal:subscription_succeeded',
-        data: JSON.stringify({ presence: { ids, hash: Object.fromEntries(ids.map(id => [id, {}])), count: ids.length } }) }))
+      connection.send(
+        JSON.stringify({
+          channel: payload.data.channel,
+          event: 'pusher_internal:subscription_succeeded',
+          data: JSON.stringify({
+            presence: { ids, hash: Object.fromEntries(ids.map((id) => [id, {}])), count: ids.length }
+          })
+        })
+      )
     })
   })
-  await page.route('**/broadcasting/auth', route => route.fulfill({ json: { auth: 'fixture:signature', channel_data: JSON.stringify({ user_id: host.id }) } }))
-  await page.route('https://media.example.test/**', route => route.fulfill({ status: 404, body: '' }))
-  await page.route('**/api/**', async route => {
+  await page.route('**/broadcasting/auth', (route) =>
+    route.fulfill({ json: { auth: 'fixture:signature', channel_data: JSON.stringify({ user_id: host.id }) } })
+  )
+  await page.route('https://media.example.test/**', (route) => route.fulfill({ status: 404, body: '' }))
+  await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url())
     const path = url.pathname
     let body: unknown = []
-    const failure = path.endsWith('/search') ? 'search' : path.endsWith('/send') ? 'send' : path.endsWith('/cancel') ? 'cancel' : path.endsWith('/invitations') ? 'history' : null
-    if (failure && failures[failure]-- > 0) return route.fulfill({ status: 500, json: { message: 'Fixture request failed' } })
+    const failure = path.endsWith('/search')
+      ? 'search'
+      : path.endsWith('/send')
+        ? 'send'
+        : path.endsWith('/cancel')
+          ? 'cancel'
+          : path.endsWith('/invitations')
+            ? 'history'
+            : null
+    if (failure && failures[failure]-- > 0)
+      return route.fulfill({ status: 500, json: { message: 'Fixture request failed' } })
     if (path === '/api/me') body = { ...host, invitations: [] }
     if (path === '/api/parties/880') body = party
-    if (path.endsWith('/logs') && options.logs) body = Array.from({ length: 30 }, (_, index) => ({
-      id: 3000 + index, party_id: 880, type: 'message', created_at: new Date().toISOString(),
-      message: { id: 4000 + index, user: mira, text: `Keep our conversation ${index + 1}`, created_at: new Date().toISOString() }
-    }))
+    if (path.endsWith('/logs') && options.logs)
+      body = Array.from({ length: 30 }, (_, index) => ({
+        id: 3000 + index,
+        party_id: 880,
+        type: 'message',
+        created_at: new Date().toISOString(),
+        message: {
+          id: 4000 + index,
+          user: mira,
+          text: `Keep our conversation ${index + 1}`,
+          created_at: new Date().toISOString()
+        }
+      }))
     if (path.endsWith('/invitations')) body = Array.from(history.values())
     if (path.endsWith('/search')) {
       const query = url.searchParams.get('search') || ''
       searches.push(query)
       await heldSearches.get(query)
       // Like the API: recents leave the room out; a search covers everyone but the viewer.
-      body = !query ? (options.noRecents ? [] : people)
-        : [mira, ...people].filter(person => person.name.toLowerCase().includes(query.toLowerCase()))
+      body = !query
+        ? options.noRecents
+          ? []
+          : people
+        : [mira, ...people].filter((person) => person.name.toLowerCase().includes(query.toLowerCase()))
     }
     if (path.endsWith('/send')) {
       const id = route.request().postDataJSON().recipient_id
       sent.push(id)
-      const person = people.find(person => person.id === id)!
+      const person = people.find((person) => person.id === id)!
       const item = invitation(person, 2000 + sent.length)
       history.set(person.id, item)
       body = item
     }
     if (path.endsWith('/cancel')) {
       const id = Number(path.split('/')[3])
-      const previous = Array.from(history.values()).find(item => item.id === id)!
+      const previous = Array.from(history.values()).find((item) => item.id === id)!
       const item = { ...previous, action: 'cancelled' }
       history.set(item.recipient.id, item)
       body = item
@@ -94,7 +149,10 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await composer.fill('Keep this draft')
   const messages = page.getByTestId('chat-messages')
   await expect(messages.getByText('Keep our conversation 30')).toBeVisible()
-  await messages.evaluate(element => { element.scrollTop = 80; element.dispatchEvent(new Event('scroll')) })
+  await messages.evaluate((element) => {
+    element.scrollTop = 80
+    element.dispatchEvent(new Event('scroll'))
+  })
   const trigger = page.getByRole('button', { name: 'Invite people' })
   await trigger.click()
   const panel = page.getByRole('region', { name: 'Invite', exact: true })
@@ -136,20 +194,29 @@ test('B5b2 replaces chat in place, supports keyboard invites, and preserves the 
   await input.press('Escape')
   // The list fades out with the rest of the panel instead of vanishing after it.
   const opacity = (selector: string) => {
-    let element = document.querySelector(selector) as HTMLElement | null, value = 1
-    while (element) { value *= Number(getComputedStyle(element).opacity); element = element.parentElement }
+    let element = document.querySelector(selector) as HTMLElement | null,
+      value = 1
+    while (element) {
+      value *= Number(getComputedStyle(element).opacity)
+      element = element.parentElement
+    }
     return value
   }
-  const closing = await page.waitForFunction(fn => {
-    const read = new Function(`return (${fn})`)() as (selector: string) => number
-    return document.querySelector('[data-testid="invite-heading"]') && read('[data-testid="invite-heading"]') < .7
-      ? read('[data-testid="invite-person"]') : null
-  }, opacity.toString(), { polling: 'raf' })
-  expect(await closing.jsonValue()).toBeLessThan(.9)
+  const closing = await page.waitForFunction(
+    (fn) => {
+      const read = new Function(`return (${fn})`)() as (selector: string) => number
+      return document.querySelector('[data-testid="invite-heading"]') && read('[data-testid="invite-heading"]') < 0.7
+        ? read('[data-testid="invite-person"]')
+        : null
+    },
+    opacity.toString(),
+    { polling: 'raf' }
+  )
+  expect(await closing.jsonValue()).toBeLessThan(0.9)
   await expect(panel).toHaveCount(0)
   await expect(trigger).toBeFocused()
   await expect(composer).toHaveValue('Keep this draft')
-  expect(await messages.evaluate(element => element.scrollTop)).toBe(80)
+  expect(await messages.evaluate((element) => element.scrollTop)).toBe(80)
   await expect(page.getByRole('button', { name: /Waiting on Joyce/ })).toBeVisible()
   await page.getByRole('button', { name: /Waiting on Joyce/ }).click()
   // Reopened, she sits with the party.
@@ -177,7 +244,10 @@ test('live declines, expiry, acceptance, and duplicate events update the panel a
   await expect(page.getByTestId('invite-strip')).toContainText('Leo declined')
   const avaInvite = invitation(ava, 1300)
   fixture.emit('invitation.sent', { invitation: avaInvite })
-  fixture.emit('invitation.accepted', { invitation: { ...avaInvite, action: 'accepted' }, member: { ...ava, pivot: { is_active: true } } })
+  fixture.emit('invitation.accepted', {
+    invitation: { ...avaInvite, action: 'accepted' },
+    member: { ...ava, pivot: { is_active: true } }
+  })
   fixture.emit('member.joined', { member: { ...ava, pivot: { is_active: true } } })
   const avaRow = panel.getByTestId('invite-person').filter({ hasText: 'Ava' })
   await expect(avaRow).toHaveCount(1)
@@ -219,9 +289,14 @@ test('search ignores late responses and request failures have working retries', 
   await pending.click()
   await expect(panel.getByRole('option', { name: 'Invite Joyce' })).toBeVisible()
   let release: () => void
-  fixture.heldSearches.set('Joy', new Promise<void>(resolve => { release = resolve }))
+  fixture.heldSearches.set(
+    'Joy',
+    new Promise<void>((resolve) => {
+      release = resolve
+    })
+  )
   const input = page.getByRole('combobox', { name: 'Search for your friends by username' })
-  const searchSent = page.waitForRequest(request => request.url().includes('search=Joy'))
+  const searchSent = page.waitForRequest((request) => request.url().includes('search=Joy'))
   await input.fill('Joy')
   // The list follows the search query, which waits out the debounce: the groups stay while you type...
   await expect(panel.getByText('Party', { exact: true })).toBeVisible()
@@ -247,7 +322,12 @@ test('search ignores late responses and request failures have working retries', 
   await input.fill('Ava')
   await expect(panel.getByRole('alert')).toContainText('Couldn’t search for “Ava”.', { timeout: 8000 })
   let answer: () => void
-  fixture.heldSearches.set('Ava', new Promise<void>(resolve => { answer = resolve }))
+  fixture.heldSearches.set(
+    'Ava',
+    new Promise<void>((resolve) => {
+      answer = resolve
+    })
+  )
   await panel.getByRole('button', { name: 'Retry', exact: true }).click()
   await expect(panel.getByTestId('invite-skeletons')).toBeVisible()
   answer!()

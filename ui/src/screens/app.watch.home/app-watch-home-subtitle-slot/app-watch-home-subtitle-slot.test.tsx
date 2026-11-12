@@ -9,7 +9,9 @@ const video = { id: 1, subtitle_url: 'https://media.example.test/1.srt' } as App
 const cue = (text: string) => `1\n00:00:00,000 --> 00:00:05,000\n${text}\n\n`
 const props = { video, time: 1, isEnabled: true, isPlayerOpen: false }
 
-beforeEach(() => { vi.mocked(axios.get).mockReset() })
+beforeEach(() => {
+  vi.mocked(axios.get).mockReset()
+})
 
 describe('subtitle loading', () => {
   it('requests the API from the root of a nested watch URL and displays its cue', async () => {
@@ -21,18 +23,15 @@ describe('subtitle loading', () => {
     window.history.replaceState({}, '', '/')
   })
 
-  it.each([
-    '<html>SPA fallback</html>',
-    {},
-    { subtitle: null },
-    { subtitle: '' },
-    { subtitle: 'Malformed cue\n\n' }
-  ])('ignores an invalid or empty subtitle response: %j', async data => {
-    vi.mocked(axios.get).mockResolvedValue([null, { data }] as any)
-    const { container } = render(<AppWatchHomeSubtitleSlot {...props} />)
-    await act(async () => {})
-    expect(container.innerHTML).toBe('')
-  })
+  it.each(['<html>SPA fallback</html>', {}, { subtitle: null }, { subtitle: '' }, { subtitle: 'Malformed cue\n\n' }])(
+    'ignores an invalid or empty subtitle response: %j',
+    async (data) => {
+      vi.mocked(axios.get).mockResolvedValue([null, { data }] as any)
+      const { container } = render(<AppWatchHomeSubtitleSlot {...props} />)
+      await act(async () => {})
+      expect(container.innerHTML).toBe('')
+    }
+  )
 
   it('handles a failed request without rejecting the effect', async () => {
     vi.mocked(axios.get).mockRejectedValue(new Error('Network unavailable'))
@@ -44,7 +43,12 @@ describe('subtitle loading', () => {
   it('loads changed subtitles and ignores an older response that arrives afterward', async () => {
     let finishOldRequest: (value: any) => void
     vi.mocked(axios.get)
-      .mockImplementationOnce(() => new Promise(resolve => { finishOldRequest = resolve }))
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finishOldRequest = resolve
+          })
+      )
       .mockResolvedValueOnce([null, { data: { subtitle: cue('Current subtitles') } }] as any)
     const { rerender } = render(<AppWatchHomeSubtitleSlot {...props} />)
     rerender(<AppWatchHomeSubtitleSlot {...props} video={{ ...video, id: 2 }} />)
@@ -53,7 +57,9 @@ describe('subtitle loading', () => {
     expect(screen.queryByText('Stale subtitles')).toBeNull()
     expect(screen.getByText('Current subtitles')).toBeTruthy()
 
-    rerender(<AppWatchHomeSubtitleSlot {...props} video={{ ...video, id: 3, subtitle_url: null as unknown as string }} />)
+    rerender(
+      <AppWatchHomeSubtitleSlot {...props} video={{ ...video, id: 3, subtitle_url: null as unknown as string }} />
+    )
     await waitFor(() => expect(screen.queryByText('Current subtitles')).toBeNull())
     expect(axios.get).toHaveBeenCalledTimes(2)
   })

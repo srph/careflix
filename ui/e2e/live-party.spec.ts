@@ -13,7 +13,9 @@ async function revealControls(page: Page) {
 }
 
 async function mediaReady(page: Page) {
-  await expect.poll(() => page.locator('video').evaluate((v: HTMLVideoElement) => v.readyState), { timeout: 45_000 }).toBeGreaterThanOrEqual(2)
+  await expect
+    .poll(() => page.locator('video').evaluate((v: HTMLVideoElement) => v.readyState), { timeout: 45_000 })
+    .toBeGreaterThanOrEqual(2)
 }
 
 async function sendMessage(page: Page, text: string) {
@@ -29,14 +31,19 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
   const [a, b] = fixtures.users
   await reserveLiveBudget(a.token, 50)
   const [profileA, profileB, groups] = await Promise.all([
-    api(a.token, '/api/me'), api(b.token, '/api/me'), api(a.token, `/api/shows/${fixtures.seriesId || 63}/groups`),
+    api(a.token, '/api/me'),
+    api(b.token, '/api/me'),
+    api(a.token, `/api/shows/${fixtures.seriesId || 63}/groups`)
   ])
-  const episodes = groups.flatMap(group => group.videos)
+  const episodes = groups.flatMap((group) => group.videos)
   expect(episodes.length).toBeGreaterThan(1)
   const party = await api(a.token, '/api/parties', 'POST', { show_video_id: episodes[0].id })
   // Seed enough short, valid messages to exercise scrolling without exceeding
   // the existing database's 255-character message column.
-  for (let i = 0; i < 3; i++) await api(a.token, `/api/parties/${party.id}/logs/message`, 'POST', { message: `History ${i}: ${'archive '.repeat(28)}` })
+  for (let i = 0; i < 3; i++)
+    await api(a.token, `/api/parties/${party.id}/logs/message`, 'POST', {
+      message: `History ${i}: ${'archive '.repeat(28)}`
+    })
   const contextA = await browser.newContext({ baseURL })
   const contextB = await browser.newContext({ baseURL, viewport: { width: 1280, height: 480 } })
   try {
@@ -49,14 +56,14 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     pageA.setDefaultTimeout(15_000)
     pageB.setDefaultTimeout(15_000)
     const errors: string[] = []
-    for (const page of [pageA, pageB]) page.on('pageerror', e => errors.push(e.message))
+    for (const page of [pageA, pageB]) page.on('pageerror', (e) => errors.push(e.message))
     let subscriptionsA = new Set<string>()
     let subscriptionsB = new Set<string>()
     const eventsB: string[] = []
     let connectionsB = 0
     let disconnectB: (() => Promise<void>) | undefined
     async function bridge(page: Page) {
-      await page.routeWebSocket(/pusher/, socket => {
+      await page.routeWebSocket(/pusher/, (socket) => {
         const server = socket.connectToServer()
         // A subscription acknowledgement from the closing connection must not
         // satisfy readiness for its replacement connection.
@@ -66,7 +73,7 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
           connectionsB++
           disconnectB = () => socket.close({ code: 1012, reason: 'Migration reconnect check' })
         } else subscriptionsA = subscriptions
-        server.onMessage(message => {
+        server.onMessage((message) => {
           const data = JSON.parse(message.toString())
           if (data.event === 'pusher_internal:subscription_succeeded') subscriptions.add(data.channel)
           if (page === pageB) eventsB.push(data.event)
@@ -92,14 +99,18 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await pageA.keyboard.press('Escape')
     await expect.poll(() => subscriptionsA.has(`presence-chat-party.${party.id}`)).toBe(true)
     await expect.poll(() => subscriptionsB.has(`presence-chat-party.${party.id}`)).toBe(true)
-    await expect(pageA.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')).toHaveCount(1)
+    await expect(
+      pageA.getByTestId('chat-canopy').locator('[data-testid="presence-avatar"][data-online="true"]')
+    ).toHaveCount(1)
 
     const message = `Migration chat ${Date.now()}`
     await sendMessage(pageA, message)
     await expect(pageB.getByTestId('chat-messages').getByText(message, { exact: true })).toBeVisible()
     await expect(pageB.getByTestId('chat-messages').getByText(message, { exact: true })).toHaveCount(1)
 
-    await pageB.getByTestId('chat-messages').evaluate(element => { element.scrollTop = 0 })
+    await pageB.getByTestId('chat-messages').evaluate((element) => {
+      element.scrollTop = 0
+    })
     const unread = `Unread ${Date.now()}`
     await sendMessage(pageA, unread)
     await expect(pageB.getByRole('button', { name: 'You have unread messages' })).toBeVisible()
@@ -111,14 +122,17 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await revealControls(pageA)
     await pageA.getByTestId('player-actions').getByRole('button', { name: 'Play', exact: true }).click()
     await expect.poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(false)
-    await expect.poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.currentTime)).toBeGreaterThan(0.5)
+    await expect
+      .poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.currentTime))
+      .toBeGreaterThan(0.5)
     await revealControls(pageA)
     await pageA.getByTestId('player-actions').getByRole('button', { name: 'Pause', exact: true }).click()
     await expect.poll(() => pageB.locator('video').evaluate((v: HTMLVideoElement) => v.paused)).toBe(true)
 
     const seeks: { current_time: number }[] = []
-    pageA.on('request', request => {
-      if (request.method() === 'PUT' && request.url().endsWith(`/api/parties/${party.id}/state`)) seeks.push(request.postDataJSON())
+    pageA.on('request', (request) => {
+      if (request.method() === 'PUT' && request.url().endsWith(`/api/parties/${party.id}/state`))
+        seeks.push(request.postDataJSON())
     })
     await revealControls(pageA)
     const slider = pageA.getByRole('slider', { name: 'Playback position' })
@@ -131,7 +145,13 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     expect(seeks).toHaveLength(0)
     await pageA.mouse.up()
     await expect.poll(() => seeks.length).toBe(1)
-    await expect.poll(async () => Math.abs(await pageB.locator('video').evaluate((v: HTMLVideoElement) => v.currentTime) - seeks[0].current_time)).toBeLessThan(2)
+    await expect
+      .poll(async () =>
+        Math.abs(
+          (await pageB.locator('video').evaluate((v: HTMLVideoElement) => v.currentTime)) - seeks[0].current_time
+        )
+      )
+      .toBeLessThan(2)
     console.info('Live party: playback and committed seek verified')
 
     const subtitles = await api(a.token, `/api/videos/${episodes[0].id}/subtitle`)
@@ -145,14 +165,23 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
     await api(a.token, `/api/parties/${party.id}/state`, 'PUT', { is_playing: false, current_time: cueTime })
     await expect(pageA.getByTestId('subtitle').first()).toBeVisible()
     await revealControls(pageA)
-    await pageA.getByTestId('player-actions').getByRole('button', { name: /subtitles$/ }).click()
+    await pageA
+      .getByTestId('player-actions')
+      .getByRole('button', { name: /subtitles$/ })
+      .click()
     await expect(pageA.getByTestId('subtitle')).toHaveCount(0)
-    await pageA.getByTestId('player-actions').getByRole('button', { name: /subtitles$/ }).click()
+    await pageA
+      .getByTestId('player-actions')
+      .getByRole('button', { name: /subtitles$/ })
+      .click()
     await expect(pageA.getByTestId('subtitle').first()).toBeVisible()
 
     await revealControls(pageA)
     await pageA.getByTestId('player-actions').getByRole('button', { name: 'Open Episode Selection' }).click()
-    await pageA.getByRole('dialog').getByRole('button', { name: new RegExp(episodes[1].title) }).click()
+    await pageA
+      .getByRole('dialog')
+      .getByRole('button', { name: new RegExp(episodes[1].title) })
+      .click()
     await expect(pageA.locator('video')).toHaveAttribute('src', episodes[1].video_url)
     await expect.poll(() => eventsB.includes('video-changed')).toBe(true)
     await test.step('Known baseline defect: remote episode stays stale until reload', async () => {
@@ -160,7 +189,11 @@ test('live invitations, presence, chat, playback, seek, episodes and reconnect',
       // There is no video-changed listener in either version. This is parity
       // evidence, not a passing claim for remote episode synchronization.
       await expect(pageB.locator('video')).toHaveAttribute('src', episodes[0].video_url)
-      info.annotations.push({ type: 'baseline-defect', description: 'Remote episode changes require reload; missing video-changed listener is outside migration repair scope.' })
+      info.annotations.push({
+        type: 'baseline-defect',
+        description:
+          'Remote episode changes require reload; missing video-changed listener is outside migration repair scope.'
+      })
     })
     await pageA.keyboard.press('Escape')
     await pageB.reload()

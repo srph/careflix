@@ -6,7 +6,7 @@ import { AppWatchHomePlayerTooltip } from './app-watch-home-player-tooltip'
 
 interface Props {
   volume: number
-  // @TODO Remove this in-case we don't use it for 
+  // @TODO Remove this in-case we don't use it for
   // https://github.com/swiftcarrot/react-input-slider/pull/47
   // https://www.notion.so/Improve-volume-handle-to-not-close-when-we-re-still-dragging-eb8b056b918e4efbb04999a29cfb7552
   isOpen: boolean
@@ -28,7 +28,8 @@ export function AppWatchHomeVolumeControl(props: Props) {
 
   return (
     <div
-      data-testid="volume-control" className="group flex items-center py-4"
+      data-testid="volume-control"
+      className="group flex items-center py-4"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}>
       <div className={props.isMuted ? 'text-red-500 group-hover:mr-4' : 'group-hover:mr-4'}>
@@ -46,7 +47,7 @@ export function AppWatchHomeVolumeControl(props: Props) {
       {/* The slider opens on hover: it widens at once and fades in; on the way out it fades after a beat. */}
       <div className="w-0 opacity-0 transition-[width,opacity] delay-[0ms,200ms] duration-[200ms,400ms] group-hover:w-20 group-hover:opacity-100 group-hover:delay-0">
         <UiInputSlider
-        ariaLabel="Volume"
+          ariaLabel="Volume"
           value={props.volume}
           min={0}
           max={1}
@@ -59,7 +60,7 @@ export function AppWatchHomeVolumeControl(props: Props) {
               cursor: 'pointer'
             },
             thumb: {
-              display: isHovered ? 'block' : 'none',
+              display: isHovered ? 'block' : 'none'
             }
           }}
         />

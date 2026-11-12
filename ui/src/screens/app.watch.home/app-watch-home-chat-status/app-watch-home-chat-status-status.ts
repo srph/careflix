@@ -52,7 +52,7 @@ export function hypeFor(userId: AppId): [string, string] {
   return HYPE[Math.abs(hash) % HYPE.length]
 }
 
-export function typingLabel(names: string[]): { subject: string, verb: string } | null {
+export function typingLabel(names: string[]): { subject: string; verb: string } | null {
   if (!names.length) return null
   if (names.length === 1) return { subject: names[0], verb: 'is typing' }
   if (names.length === 2) return { subject: `${names[0]} and ${names[1]}`, verb: 'are typing' }

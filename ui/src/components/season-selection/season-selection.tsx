@@ -95,7 +95,7 @@ export function SeasonSelection(props: Props) {
 
   const groups = props.groups ?? state.groups
   const group = useMemo(() => {
-    return groups.find(group => group.id === state.selectedGroupId) ?? groups[0]
+    return groups.find((group) => group.id === state.selectedGroupId) ?? groups[0]
   }, [groups, state.selectedGroupId])
 
   useAsyncEffect(
@@ -155,7 +155,7 @@ export function SeasonSelection(props: Props) {
     <React.Fragment>
       <div className="mb-4 w-1/2">
         <UiSelect value={group.id} onChange={handleGroupChange} mode={props.mode}>
-          {groups.map(group => (
+          {groups.map((group) => (
             <option value={group.id} key={group.id}>
               {group.title}
             </option>
@@ -164,7 +164,7 @@ export function SeasonSelection(props: Props) {
       </div>
 
       <section>
-        {group.videos.map(video => {
+        {group.videos.map((video) => {
           const active = props.currentVideo?.id === video.id
 
           return (
@@ -190,7 +190,9 @@ export function SeasonSelection(props: Props) {
 
               <div className="mr-6 w-full">
                 <div className="text-neutral-400">
-                  <h5 className="font-label text-xs font-bold uppercase">{getFormattedDurationWithoutSeconds(video.duration)}</h5>
+                  <h5 className="font-label text-xs font-bold uppercase">
+                    {getFormattedDurationWithoutSeconds(video.duration)}
+                  </h5>
                 </div>
 
                 <h3 className="text-xl font-bold">{video.title}</h3>

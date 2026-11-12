@@ -6,15 +6,32 @@ import { useLocalStorageState } from '~/hooks/use-local-storage-state'
  */
 export const ACTIVITY_LEVELS = ['all', 'activity', 'off'] as const
 
-export type ActivityLevel = typeof ACTIVITY_LEVELS[number]
+export type ActivityLevel = (typeof ACTIVITY_LEVELS)[number]
 
-export const ACTIVITY_COPY: Record<ActivityLevel, { label: string, description: string, toast: string, icon: string }> = {
-  all: { label: 'Everything', description: 'Messages, reactions, joins and pauses.', toast: 'Showing everything', icon: 'fa-bell' },
-  activity: { label: 'Just joins and pauses', description: 'Who came in and who paused. No messages or reactions.', toast: 'Showing joins and pauses only', icon: 'fa-bell-o' },
-  off: { label: 'Off', description: 'Nothing on the picture while chat is closed.', toast: 'Activity off', icon: 'fa-bell-slash' }
-}
+export const ACTIVITY_COPY: Record<ActivityLevel, { label: string; description: string; toast: string; icon: string }> =
+  {
+    all: {
+      label: 'Everything',
+      description: 'Messages, reactions, joins and pauses.',
+      toast: 'Showing everything',
+      icon: 'fa-bell'
+    },
+    activity: {
+      label: 'Just joins and pauses',
+      description: 'Who came in and who paused. No messages or reactions.',
+      toast: 'Showing joins and pauses only',
+      icon: 'fa-bell-o'
+    },
+    off: {
+      label: 'Off',
+      description: 'Nothing on the picture while chat is closed.',
+      toast: 'Activity off',
+      icon: 'fa-bell-slash'
+    }
+  }
 
-export const isActivityLevel =(value: unknown): value is ActivityLevel => ACTIVITY_LEVELS.includes(value as ActivityLevel)
+export const isActivityLevel = (value: unknown): value is ActivityLevel =>
+  ACTIVITY_LEVELS.includes(value as ActivityLevel)
 
 // "Just joins and pauses"
 const KEY_KINDS: AppPartyActivityKind[] = ['joined', 'joined_code', 'paused']

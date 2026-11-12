@@ -8,7 +8,7 @@ interface Props {
 }
 
 interface Shortcut {
-  name: string,
+  name: string
   combo: string
 }
 
@@ -21,7 +21,7 @@ const shortcuts: Shortcut[] = [
   { name: 'Focus to chat input (while chat is open)', combo: '/' },
   { name: 'Open keyboard shortcuts info', combo: '?' },
   { name: 'Increase volume', combo: '↑' },
-  { name: 'Decrease volume', combo: '↓' },
+  { name: 'Decrease volume', combo: '↓' }
 ]
 
 export function AppWatchHomeKeyboardInfoModal(props: Props) {
@@ -34,22 +34,24 @@ export function AppWatchHomeKeyboardInfoModal(props: Props) {
       <div className="flex items-center justify-between p-4">
         <h5 className="font-label text-xs font-bold tracking-label uppercase">Keyboard Shortcuts</h5>
 
-        <UiPlainButton className="flex size-8 items-center justify-center rounded-full bg-neutral-400 text-white" onClick={props.onClose}>
+        <UiPlainButton
+          className="flex size-8 items-center justify-center rounded-full bg-neutral-400 text-white"
+          onClick={props.onClose}>
           <i className="fa fa-close" />
         </UiPlainButton>
       </div>
 
-      {shortcuts.map((shortcut, i) =>
+      {shortcuts.map((shortcut, i) => (
         <div className="flex items-center border-neutral-800 p-4 not-last:border-b" key={i}>
-          <div>
-            {shortcut.name}
-          </div>
+          <div>{shortcut.name}</div>
 
           <div className="ml-auto flex shrink-0">
-            <code className="inline-block rounded-xs border border-neutral-400 bg-neutral-700 px-2 py-1 uppercase">{shortcut.combo}</code>
+            <code className="inline-block rounded-xs border border-neutral-400 bg-neutral-700 px-2 py-1 uppercase">
+              {shortcut.combo}
+            </code>
           </div>
         </div>
-      )}
+      ))}
     </UiModal>
   )
 }

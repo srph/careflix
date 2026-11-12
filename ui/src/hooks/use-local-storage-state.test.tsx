@@ -29,16 +29,20 @@ describe('local storage state', () => {
   })
 
   it('takes an updater, and still updates when storage refuses the write', () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('full') })
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('full')
+    })
     const { result } = renderHook(() => useLocalStorageState('n', 1))
-    act(() => result.current[1](n => n + 1))
-    act(() => result.current[1](n => n + 1))
+    act(() => result.current[1]((n) => n + 1))
+    act(() => result.current[1]((n) => n + 1))
     expect(result.current[0]).toBe(3)
   })
 
   it('reads the new key when it changes', () => {
     localStorage.setItem('user.2', '"b"')
-    const { result, rerender } = renderHook(({ id }) => useLocalStorageState(`user.${id}`, 'a', isLevel), { initialProps: { id: 1 } })
+    const { result, rerender } = renderHook(({ id }) => useLocalStorageState(`user.${id}`, 'a', isLevel), {
+      initialProps: { id: 1 }
+    })
     expect(result.current[0]).toBe('a')
     rerender({ id: 2 })
     expect(result.current[0]).toBe('b')
@@ -50,7 +54,9 @@ describe('local storage state', () => {
   it('follows writes from other tabs', () => {
     const { result } = renderHook(() => useLocalStorageState('k', 'a', isLevel))
     localStorage.setItem('k', '"b"')
-    act(() => { window.dispatchEvent(new StorageEvent('storage', { key: 'k' })) })
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: 'k' }))
+    })
     expect(result.current[0]).toBe('b')
   })
 })

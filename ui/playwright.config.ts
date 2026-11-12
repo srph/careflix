@@ -14,13 +14,13 @@ export default defineConfig({
     trace: 'retain-on-failure',
     // E2E_SCREENSHOTS=1 keeps a full-page screenshot of where every test ends, for before/after comparisons.
     screenshot: process.env.E2E_SCREENSHOTS ? { mode: 'on', fullPage: true } : 'only-on-failure',
-    actionTimeout: 15_000,
+    actionTimeout: 15_000
   },
   projects: [
     {
       name: 'chromium',
       testIgnore: '**/live-party.spec.ts',
-      use: { ...devices['Desktop Chrome'], channel: process.env.E2E_CHROME_CHANNEL || undefined },
+      use: { ...devices['Desktop Chrome'], channel: process.env.E2E_CHROME_CHANNEL || undefined }
     },
     { name: 'firefox', testIgnore: '**/live-party.spec.ts', use: { ...devices['Desktop Firefox'] } },
     { name: 'webkit', testIgnore: '**/live-party.spec.ts', use: { ...devices['Desktop Safari'] } },
@@ -34,13 +34,15 @@ export default defineConfig({
         // A controlled media session: browser autoplay permission is not an app migration.
         launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] },
         // Live OAuth credentials must not be captured in traces.
-        trace: 'off',
-      },
-    },
+        trace: 'off'
+      }
+    }
   ],
-  webServer: externalServer ? undefined : {
-    command: 'npm run start -- --host 127.0.0.1 --port 8486',
-    url: 'http://localhost:8486',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: externalServer
+    ? undefined
+    : {
+        command: 'npm run start -- --host 127.0.0.1 --port 8486',
+        url: 'http://localhost:8486',
+        reuseExistingServer: !process.env.CI
+      }
 })

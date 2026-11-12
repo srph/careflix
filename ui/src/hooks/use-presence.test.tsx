@@ -17,7 +17,9 @@ function presenceChannel(name: string, ids: AppId[] = [], subscribed = false) {
   const listeners = new Map<string, Set<() => void>>()
   const channel = {
     subscribed,
-    members: { each: (callback: (member: { id: string }) => void) => ids.forEach(id => callback({ id: String(id) })) },
+    members: {
+      each: (callback: (member: { id: string }) => void) => ids.forEach((id) => callback({ id: String(id) }))
+    },
     bind: (event: string, callback: () => void) => {
       if (!listeners.has(event)) listeners.set(event, new Set())
       listeners.get(event)!.add(callback)
@@ -26,7 +28,7 @@ function presenceChannel(name: string, ids: AppId[] = [], subscribed = false) {
     update: (nextIds: AppId[], event = 'pusher:subscription_succeeded') => {
       ids = nextIds
       channel.subscribed = true
-      listeners.get(event)?.forEach(callback => callback())
+      listeners.get(event)?.forEach((callback) => callback())
     }
   }
   channels.set(name, channel)

@@ -12,14 +12,20 @@ describe('invitation clock', () => {
   it('updates the current time at the requested interval', () => {
     const { result } = renderHook(() => useNow({ interval: 1000 }))
     const initial = result.current.getTime()
-    act(() => { vi.advanceTimersByTime(2000) })
+    act(() => {
+      vi.advanceTimersByTime(2000)
+    })
     expect(result.current.getTime()).toBe(initial + 2000)
   })
 
   it('uses a changed interval after rerendering', () => {
-    const { result, rerender } = renderHook(({ interval }) => useNow({ interval }), { initialProps: { interval: 1000 } })
+    const { result, rerender } = renderHook(({ interval }) => useNow({ interval }), {
+      initialProps: { interval: 1000 }
+    })
     rerender({ interval: 200 })
-    act(() => { vi.advanceTimersByTime(200) })
+    act(() => {
+      vi.advanceTimersByTime(200)
+    })
     expect(result.current.toISOString()).toBe('2026-11-02T00:00:00.200Z')
   })
 

@@ -10,7 +10,5 @@ const SECONDS_REGEX = /[0-9]{1,2}s$/
  * Otherwise we'll get a blank string!
  */
 export function getFormattedDurationWithoutSeconds(seconds: number): string {
-  return getFormattedDuration(seconds)
-    .replace(SECONDS_REGEX, '')
-    .trimRight()
+  return getFormattedDuration(seconds).replace(SECONDS_REGEX, '').trimRight()
 }

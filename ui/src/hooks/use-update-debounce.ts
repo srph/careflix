@@ -1,9 +1,13 @@
 import { useEffect, useRef } from 'react'
 
-function useUpdateDebounce (fn: () => void, ms: number, args: any[]) {
-  if (ms === void 0) { ms = 0; }
-  if (args === void 0) { args = []; }
-  
+function useUpdateDebounce(fn: () => void, ms: number, args: any[]) {
+  if (ms === void 0) {
+    ms = 0
+  }
+  if (args === void 0) {
+    args = []
+  }
+
   const isInitRef = useRef<boolean>(false)
 
   useEffect(function () {
@@ -11,15 +15,13 @@ function useUpdateDebounce (fn: () => void, ms: number, args: any[]) {
       isInitRef.current = true
       return
     }
-    
-    var handle = setTimeout(fn, ms);
+
+    var handle = setTimeout(fn, ms)
     return function () {
       // if args change then clear timeout
-      clearTimeout(handle);
-    };
-  }, args);
-};
-
-export {
-  useUpdateDebounce
+      clearTimeout(handle)
+    }
+  }, args)
 }
+
+export { useUpdateDebounce }

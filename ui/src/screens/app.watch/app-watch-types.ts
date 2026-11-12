@@ -15,16 +15,17 @@ export interface Handlers {
 // Only provided once the party has loaded, so consumers always have one.
 export type ContextType = Omit<State, 'party'> & { party: AppParty } & Handlers
 
-export type Action = ReducerAction<'data:init'>
- | ReducerAction<'data:success', { party: AppParty }>
- | ReducerAction<'data:error'>
- | ReducerAction<'data:update', { party: AppParty }>
- | ReducerAction<'data:sync-state', { state: AppPartyState }>
- | ReducerAction<'invitation.send', { invitation: AppPartyInvitation }>
- | ReducerAction<'invitation.cancel', { invitation: AppPartyInvitation }>
- | ReducerAction<'invitation.accept', { invitation: AppPartyInvitation, member: AppPartyMember }>
- | ReducerAction<'invitation.decline', { invitation: AppPartyInvitation }>
- | ReducerAction<'member.join', { member: AppPartyMember }>
+export type Action =
+  | ReducerAction<'data:init'>
+  | ReducerAction<'data:success', { party: AppParty }>
+  | ReducerAction<'data:error'>
+  | ReducerAction<'data:update', { party: AppParty }>
+  | ReducerAction<'data:sync-state', { state: AppPartyState }>
+  | ReducerAction<'invitation.send', { invitation: AppPartyInvitation }>
+  | ReducerAction<'invitation.cancel', { invitation: AppPartyInvitation }>
+  | ReducerAction<'invitation.accept', { invitation: AppPartyInvitation; member: AppPartyMember }>
+  | ReducerAction<'invitation.decline', { invitation: AppPartyInvitation }>
+  | ReducerAction<'member.join', { member: AppPartyMember }>
 
 export interface RouteParams {
   partyId: string

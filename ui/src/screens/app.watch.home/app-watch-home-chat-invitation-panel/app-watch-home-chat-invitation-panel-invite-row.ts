@@ -28,20 +28,39 @@ export type InviteRow = {
 }
 
 /** What one person's row says and offers in the host's invite panel. */
-export function inviteRow({ name, online, member, host, waiting, busy, error, answer, minutes }: InviteRowInput): InviteRow {
+export function inviteRow({
+  name,
+  online,
+  member,
+  host,
+  waiting,
+  busy,
+  error,
+  answer,
+  minutes
+}: InviteRowInput): InviteRow {
   const presence = online ? 'Online' : 'Offline'
-  if (member) return answer === 'joined'
-    ? { status: 'Joined', tone: 'success', action: null, busy: false, label: `${name} joined` }
-    : host ? { status: 'Host 👑', tone: '', action: null, busy: false, label: `${name}, host, in the room` }
-    : { status: 'In the room', tone: '', action: null, busy: false, label: `${name}, in the room` }
-  if (waiting) return {
-    status: !busy && error ? error : `Invited (${minutes})`, tone: !busy && error ? 'error' : 'pink',
-    action: 'undo', busy, label: busy ? `Undoing invite to ${name}` : `Undo invite to ${name}`
-  }
+  if (member)
+    return answer === 'joined'
+      ? { status: 'Joined', tone: 'success', action: null, busy: false, label: `${name} joined` }
+      : host
+        ? { status: 'Host 👑', tone: '', action: null, busy: false, label: `${name}, host, in the room` }
+        : { status: 'In the room', tone: '', action: null, busy: false, label: `${name}, in the room` }
+  if (waiting)
+    return {
+      status: !busy && error ? error : `Invited (${minutes})`,
+      tone: !busy && error ? 'error' : 'pink',
+      action: 'undo',
+      busy,
+      label: busy ? `Undoing invite to ${name}` : `Undo invite to ${name}`
+    }
   if (busy) return { status: presence, tone: '', action: 'invite', busy, label: `Sending invite to ${name}` }
   if (error) return { status: error, tone: 'error', action: 'retry', busy, label: `Retry invite to ${name}` }
   return {
-    status: answer === 'declined' ? 'Declined' : answer === 'expired' ? 'Expired' : presence, tone: '',
-    action: 'invite', busy, label: `Invite ${name}`
+    status: answer === 'declined' ? 'Declined' : answer === 'expired' ? 'Expired' : presence,
+    tone: '',
+    action: 'invite',
+    busy,
+    label: `Invite ${name}`
   }
 }

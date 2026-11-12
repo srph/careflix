@@ -2,7 +2,7 @@ import * as React from 'react'
 import { UiModal } from '~/components/ui-modal/ui-modal'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { SeasonSelection } from '~/components/season-selection/season-selection'
-import { axios } from '~/lib/axios/axios' 
+import { axios } from '~/lib/axios/axios'
 import { useMediaMode } from '~/hooks/use-media-mode'
 
 interface Props {
@@ -51,12 +51,17 @@ export function AppWatchHomeSeasonSelectionModal(props: Props) {
             <div className="absolute top-4 right-4">
               <UiPlainButton onClick={props.onClose}>
                 <div className="flex size-8 items-center justify-center rounded-full bg-neutral-400 text-white">
-                  <i className='fa fa-close' />
+                  <i className="fa fa-close" />
                 </div>
               </UiPlainButton>
             </div>
 
-            <SeasonSelection show={props.show} currentVideo={props.party.video} onEpisodeClick={handleVideoClick} mode={media === 'desktop' ? 'light' : 'dark'} />
+            <SeasonSelection
+              show={props.show}
+              currentVideo={props.party.video}
+              onEpisodeClick={handleVideoClick}
+              mode={media === 'desktop' ? 'light' : 'dark'}
+            />
           </React.Fragment>
         )}
       </UiModal>

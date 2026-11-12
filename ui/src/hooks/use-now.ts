@@ -18,6 +18,4 @@ function useNow(props: Props) {
   return now
 }
 
-export {
-  useNow
-}
+export { useNow }

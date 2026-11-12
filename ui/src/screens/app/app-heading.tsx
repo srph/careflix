@@ -8,7 +8,7 @@ const headings: Record<string, { title: string; backUrl: string }> = {
   '/download': { title: 'Download The App', backUrl: '/' },
   '/settings': { title: 'Settings', backUrl: '/' },
   '/settings/profile': { title: 'Account Settings', backUrl: '/settings' },
-  '/settings/faq': { title: 'FAQ', backUrl: '/settings' },
+  '/settings/faq': { title: 'FAQ', backUrl: '/settings' }
 }
 
 export function AppHeading() {
@@ -20,7 +20,9 @@ export function AppHeading() {
     <UiNavigation>
       {heading ? <UiNavigation.BackAction to={heading.backUrl} /> : <UiNavigation.Action />}
       {heading ? <UiNavigation.Title>{heading.title}</UiNavigation.Title> : <UiNavigation.Logo />}
-      <UiNavigation.Action to="/settings"><UiAvatar user={auth.data} /></UiNavigation.Action>
+      <UiNavigation.Action to="/settings">
+        <UiAvatar user={auth.data} />
+      </UiNavigation.Action>
     </UiNavigation>
   )
 }

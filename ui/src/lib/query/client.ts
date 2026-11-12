@@ -9,8 +9,8 @@ export function createQueryClient() {
         retry: (count, error) => {
           const status = (error as AxiosError).response?.status
           return !(status !== undefined && status >= 400 && status < 500) && count < 2
-        },
-      },
-    },
+        }
+      }
+    }
   })
 }

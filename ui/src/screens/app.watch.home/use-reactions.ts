@@ -9,7 +9,7 @@ export const REACTIONS = ['😂', '😱', '😭', '❤️', '🔥', '👀'] as c
 // Oldest floats make way once a crowd laugh fills the picture.
 export const MAX_FLOATS = 24
 
-export type Reaction = typeof REACTIONS[number]
+export type Reaction = (typeof REACTIONS)[number]
 
 // Each float picks its own smooth path so a burst never looks copy-pasted.
 export interface FloatPath {
@@ -41,7 +41,7 @@ export const isReaction = (emoji: unknown): emoji is Reaction => REACTIONS.inclu
 
 export function makePath(random: () => number = Math.random): FloatPath {
   const between = (a: number, b: number) => a + random() * (b - a)
-  const side = random() < .5 ? -1 : 1
+  const side = random() < 0.5 ? -1 : 1
   return {
     x: random(),
     duration: between(2.6, 3.6),
@@ -65,25 +65,28 @@ export function useReactions(party: Pick<AppParty, 'id' | 'members'>, me: Pick<A
   isShowingOthers.current = showOthers
 
   const add = useCallback((emoji: Reaction, name: string) => {
-    setFloats(current => [...current, { id: uuid(), emoji, name, path: makePath() }].slice(-MAX_FLOATS))
+    setFloats((current) => [...current, { id: uuid(), emoji, name, path: makePath() }].slice(-MAX_FLOATS))
   }, [])
 
-  usePusher(channelName, REACTION_EVENT, (data: { userId?: AppId, emoji?: unknown }) => {
+  usePusher(channelName, REACTION_EVENT, (data: { userId?: AppId; emoji?: unknown }) => {
     if (!data || !isReaction(data.emoji) || String(data.userId) === String(me.id) || !isShowingOthers.current) return
     // The name comes from the party, not the payload.
-    const member = members.current.find(member => String(member.id) === String(data.userId))
+    const member = members.current.find((member) => String(member.id) === String(data.userId))
     if (member) add(data.emoji, member.name)
   })
 
   // Your own float shows straight away; Pusher doesn't echo client events back to the sender.
-  const send = useCallback((emoji: Reaction) => {
-    add(emoji, 'You')
-    const channel = pusher()?.channel(channelName)
-    if (channel?.subscribed) channel.trigger(REACTION_EVENT, { userId: me.id, emoji })
-  }, [add, channelName, me.id])
+  const send = useCallback(
+    (emoji: Reaction) => {
+      add(emoji, 'You')
+      const channel = pusher()?.channel(channelName)
+      if (channel?.subscribed) channel.trigger(REACTION_EVENT, { userId: me.id, emoji })
+    },
+    [add, channelName, me.id]
+  )
 
   const remove = useCallback((id: string) => {
-    setFloats(current => current.filter(float => float.id !== id))
+    setFloats((current) => current.filter((float) => float.id !== id))
   }, [])
 
   return { floats, send, remove }

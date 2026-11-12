@@ -16,11 +16,11 @@ export function toReadableTime(seconds: number, settings: Settings = {}): string
   const ss = remaining.seconds
 
   if (hh >= 1 || settings.max === 'hh') {
-    return [hh, mm, ss].map(t => String(t).padStart(2, '0')).join(':')
+    return [hh, mm, ss].map((t) => String(t).padStart(2, '0')).join(':')
   }
 
   if (mm >= 1 || settings.max === 'mm') {
-    return [mm, ss].map(t => String(t).padStart(2, '0')).join(':')
+    return [mm, ss].map((t) => String(t).padStart(2, '0')).join(':')
   }
 
   return `${ss}`

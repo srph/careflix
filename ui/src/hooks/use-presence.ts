@@ -14,7 +14,7 @@ export function usePresence(channelName: string) {
     }
 
     const ids = new Set<string>()
-    channel.members.each(member => ids.add(String(member.id)))
+    channel.members.each((member) => ids.add(String(member.id)))
     setSnapshot({ channel: channelName, ids })
   }
 

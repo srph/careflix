@@ -50,18 +50,25 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         playbackRevision: state.playbackRevision + 1,
-        party: { ...state.party, current_time: action.payload.state.current_time, is_playing: action.payload.state.is_playing }
+        party: {
+          ...state.party,
+          current_time: action.payload.state.current_time,
+          is_playing: action.payload.state.is_playing
+        }
       }
     }
 
     case 'invitation.send': {
       if (!state.party) return state
-      if (state.party.members.some(member => String(member.id) === String(action.payload.invitation.recipient.id)) ||
-        state.party.invitations?.some(invitation => invitation.id === action.payload.invitation.id)) return state
+      if (
+        state.party.members.some((member) => String(member.id) === String(action.payload.invitation.recipient.id)) ||
+        state.party.invitations?.some((invitation) => invitation.id === action.payload.invitation.id)
+      )
+        return state
       return {
         ...state,
-        party: immer(state.party, draft => {
-          (draft.invitations ??= []).push(action.payload.invitation)
+        party: immer(state.party, (draft) => {
+          ;(draft.invitations ??= []).push(action.payload.invitation)
         })
       }
     }
@@ -70,8 +77,10 @@ const reducer = (state: State, action: Action): State => {
       if (!state.party) return state
       return {
         ...state,
-        party: immer(state.party, draft => {
-          draft.invitations = (draft.invitations ?? []).filter(invitation => invitation.id !== action.payload.invitation.id)
+        party: immer(state.party, (draft) => {
+          draft.invitations = (draft.invitations ?? []).filter(
+            (invitation) => invitation.id !== action.payload.invitation.id
+          )
         })
       }
     }
@@ -80,9 +89,12 @@ const reducer = (state: State, action: Action): State => {
       if (!state.party) return state
       return {
         ...state,
-        party: immer(state.party, draft => {
-          if (!draft.members.some(member => String(member.id) === String(action.payload.member.id))) draft.members.push(action.payload.member)
-          draft.invitations = (draft.invitations ?? []).filter(invitation => invitation.id !== action.payload.invitation.id)
+        party: immer(state.party, (draft) => {
+          if (!draft.members.some((member) => String(member.id) === String(action.payload.member.id)))
+            draft.members.push(action.payload.member)
+          draft.invitations = (draft.invitations ?? []).filter(
+            (invitation) => invitation.id !== action.payload.invitation.id
+          )
         })
       }
     }
@@ -91,8 +103,9 @@ const reducer = (state: State, action: Action): State => {
       if (!state.party) return state
       return {
         ...state,
-        party: immer(state.party, draft => {
-          if (!draft.members.some(member => String(member.id) === String(action.payload.member.id))) draft.members.push(action.payload.member)
+        party: immer(state.party, (draft) => {
+          if (!draft.members.some((member) => String(member.id) === String(action.payload.member.id)))
+            draft.members.push(action.payload.member)
         })
       }
     }
@@ -101,8 +114,10 @@ const reducer = (state: State, action: Action): State => {
       if (!state.party) return state
       return {
         ...state,
-        party: immer(state.party, draft => {
-          draft.invitations = (draft.invitations ?? []).filter(invitation => invitation.id !== action.payload.invitation.id)
+        party: immer(state.party, (draft) => {
+          draft.invitations = (draft.invitations ?? []).filter(
+            (invitation) => invitation.id !== action.payload.invitation.id
+          )
         })
       }
     }
@@ -117,11 +132,15 @@ const reducer = (state: State, action: Action): State => {
 export function AppWatchPage(props: ReactComponentWrapper) {
   const params = useParams<'partyId'>()
   // Switching rooms must reset the player, chat, and all room subscriptions together.
-  return <WatchRoom key={params.partyId} partyId={params.partyId!}>{props.children}</WatchRoom>
+  return (
+    <WatchRoom key={params.partyId} partyId={params.partyId!}>
+      {props.children}
+    </WatchRoom>
+  )
 }
 
 function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
-  const [attempt, retry] = useReducer(value => value + 1, 0)
+  const [attempt, retry] = useReducer((value) => value + 1, 0)
 
   const [state, dispatch] = useReducer(reducer, {
     party: null,
@@ -157,21 +176,26 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
     if (!state.party || !activeMembers) return state.party
     return {
       ...state.party,
-      members: state.party.members.map(member => ({
+      members: state.party.members.map((member) => ({
         ...member,
         pivot: { ...member.pivot, is_active: activeMembers.has(String(member.id)) }
       }))
     }
   }, [state.party, activeMembers])
 
-  usePusher(state.party ? `private-party.${state.party.id}` : '', 'member.joined', (event: { member: AppPartyMember }) => {
-    dispatch({ type: 'member.join', payload: { member: event.member } })
-  }, state.party == null)
+  usePusher(
+    state.party ? `private-party.${state.party.id}` : '',
+    'member.joined',
+    (event: { member: AppPartyMember }) => {
+      dispatch({ type: 'member.join', payload: { member: event.member } })
+    },
+    state.party == null
+  )
 
   usePusher(
     state.party ? `private-party.${state.party.id}` : '',
     'state',
-    function(event: { state: AppPartyState }) {
+    function (event: { state: AppPartyState }) {
       dispatch({
         type: 'data:sync-state',
         payload: { state: event.state }
@@ -238,10 +262,12 @@ function WatchRoom(props: ReactComponentWrapper & { partyId: string }) {
   }
 
   if (!state.party || !context) {
-    return <div className="mx-auto my-20 max-w-120 p-6 text-center" role="alert">
-      <p className="mb-4">We couldn’t load this room. Please try again.</p>
-      <UiButton onClick={retry}>Retry</UiButton>
-    </div>
+    return (
+      <div className="mx-auto my-20 max-w-120 p-6 text-center" role="alert">
+        <p className="mb-4">We couldn’t load this room. Please try again.</p>
+        <UiButton onClick={retry}>Retry</UiButton>
+      </div>
+    )
   }
 
   return (

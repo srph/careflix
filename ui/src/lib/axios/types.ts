@@ -1,4 +1,4 @@
-import { AxiosRequestConfig as BaseAxiosRequestConfig, AxiosError as BaseAxiosError, AxiosResponse } from 'axios';
+import { AxiosRequestConfig as BaseAxiosRequestConfig, AxiosError as BaseAxiosError, AxiosResponse } from 'axios'
 
 export interface AxiosRequestConfig extends BaseAxiosRequestConfig {
   app?: {

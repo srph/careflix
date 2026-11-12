@@ -11,9 +11,15 @@ function setup({ retry = true } = {}) {
   const client = createQueryClient()
   if (!retry) client.setDefaultOptions({ queries: { ...client.getDefaultOptions().queries, retry: false } })
   clients.push(client)
-  return ({ children }: { children: React.ReactNode }) => <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  return ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+  )
 }
-afterEach(() => { clients.forEach(client => client.clear()); clients.length = 0; vi.clearAllMocks() })
+afterEach(() => {
+  clients.forEach((client) => client.clear())
+  clients.length = 0
+  vi.clearAllMocks()
+})
 const theo = { id: 2, name: 'Theo' }
 
 describe('invite queries', () => {
@@ -21,7 +27,10 @@ describe('invite queries', () => {
     vi.mocked(axios.get).mockResolvedValue([null, { data: [theo] }] as any)
     const hook = renderHook(() => useInviteRecentsQuery(9), { wrapper: setup() })
     await waitFor(() => expect(hook.result.current.data).toEqual([theo]))
-    expect(axios.get).toHaveBeenCalledWith('/api/parties/9/invitations/search', expect.objectContaining({ params: undefined }))
+    expect(axios.get).toHaveBeenCalledWith(
+      '/api/parties/9/invitations/search',
+      expect.objectContaining({ params: undefined })
+    )
   })
 
   it('searches only with a term, and caches each term', async () => {
@@ -31,7 +40,10 @@ describe('invite queries', () => {
     expect(axios.get).not.toHaveBeenCalled()
     hook.rerender({ term: 'th' })
     await waitFor(() => expect(hook.result.current.data).toEqual([theo]))
-    expect(axios.get).toHaveBeenCalledWith('/api/parties/9/invitations/search', expect.objectContaining({ params: { search: 'th' } }))
+    expect(axios.get).toHaveBeenCalledWith(
+      '/api/parties/9/invitations/search',
+      expect.objectContaining({ params: { search: 'th' } })
+    )
     hook.rerender({ term: '' })
     hook.rerender({ term: 'th' })
     expect(hook.result.current.data).toEqual([theo])

@@ -3,5 +3,9 @@ import { useAuth } from '~/contexts/auth/auth'
 
 export function PrivateRoute() {
   const location = useLocation()
-  return useAuth().isAuthenticated ? <Outlet /> : <Navigate to="/login" state={{ from: location.pathname + location.search }} replace />
+  return useAuth().isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" state={{ from: location.pathname + location.search }} replace />
+  )
 }

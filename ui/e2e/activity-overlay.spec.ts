@@ -4,21 +4,53 @@ const viewer = { id: 95101, name: 'Kier', email: 'kier@example.test', avatar: nu
 const joyce = { ...viewer, id: 95102, name: 'Joyce', email: 'joyce@example.test' }
 const mira = { ...viewer, id: 95103, name: 'Mira', email: 'mira@example.test' }
 const leo = { ...viewer, id: 95104, name: 'Leo', email: 'leo@example.test' }
-const show = { id: 96101, title: 'Activity Overlay Movie', title_type: 'movie', preview_image: null, air_start: '2020-01-01 00:00:00' }
-const video = { id: 97101, title: show.title, show, duration: 7200, subtitle_url: null, video_url: 'https://media.example.test/movie.mp4' }
-const party = { id: 98101, join_code: '482913', video, current_time: 2472, is_playing: false, invitations: [],
-  members: [viewer, joyce, mira, leo].map(user => ({ ...user, pivot: { is_active: true } })) }
+const show = {
+  id: 96101,
+  title: 'Activity Overlay Movie',
+  title_type: 'movie',
+  preview_image: null,
+  air_start: '2020-01-01 00:00:00'
+}
+const video = {
+  id: 97101,
+  title: show.title,
+  show,
+  duration: 7200,
+  subtitle_url: null,
+  video_url: 'https://media.example.test/movie.mp4'
+}
+const party = {
+  id: 98101,
+  join_code: '482913',
+  video,
+  current_time: 2472,
+  is_playing: false,
+  invitations: [],
+  members: [viewer, joyce, mira, leo].map((user) => ({ ...user, pivot: { is_active: true } }))
+}
 const channel = `private-party.${party.id}`
 const at = '2026-11-11 21:00:00'
 
 let id = 0
 const activity = (user, kind: string, meta = null) => {
   const key = ++id
-  return { id: key, party_id: party.id, type: 'activity', created_at: at, activity: { id: key, text: kind, kind, meta, user, created_at: at, updated_at: at } }
+  return {
+    id: key,
+    party_id: party.id,
+    type: 'activity',
+    created_at: at,
+    activity: { id: key, text: kind, kind, meta, user, created_at: at, updated_at: at }
+  }
 }
 const message = (user, text: string) => {
   const key = ++id
-  return { id: key, party_id: party.id, type: 'message', created_at: at, message: { id: key, text, user, created_at: at, updated_at: at } }
+  return {
+    id: key,
+    party_id: party.id,
+    type: 'message',
+    created_at: at,
+    message: { id: key, text, user, created_at: at, updated_at: at }
+  }
 }
 
 test.skip(({ isMobile }) => isMobile, 'The Activity Overlay starts at 640px; phones go without it for now.')
@@ -27,23 +59,41 @@ async function room(page) {
   let connection: WebSocketRoute
   const subscribed = new Set<string>()
   const errors: string[] = []
-  page.on('pageerror', error => errors.push(error.message))
-  await page.context().addCookies([{ name: 'app_token', value: 'activity-overlay-fixture', url: test.info().project.use.baseURL as string }])
-  const emit = (event: string, data: unknown) => connection.send(JSON.stringify({ channel, event, data: JSON.stringify(data) }))
-  await page.routeWebSocket(/pusher/, socket => {
+  page.on('pageerror', (error) => errors.push(error.message))
+  await page
+    .context()
+    .addCookies([
+      { name: 'app_token', value: 'activity-overlay-fixture', url: test.info().project.use.baseURL as string }
+    ])
+  const emit = (event: string, data: unknown) =>
+    connection.send(JSON.stringify({ channel, event, data: JSON.stringify(data) }))
+  await page.routeWebSocket(/pusher/, (socket) => {
     connection = socket
-    socket.send(JSON.stringify({ event: 'pusher:connection_established', data: JSON.stringify({ socket_id: '123.456', activity_timeout: 120 }) }))
-    socket.onMessage(raw => {
+    socket.send(
+      JSON.stringify({
+        event: 'pusher:connection_established',
+        data: JSON.stringify({ socket_id: '123.456', activity_timeout: 120 })
+      })
+    )
+    socket.onMessage((raw) => {
       const payload = JSON.parse(String(raw))
       if (payload.event === 'pusher:subscribe') {
         subscribed.add(payload.data.channel)
-        connection.send(JSON.stringify({ channel: payload.data.channel, event: 'pusher_internal:subscription_succeeded', data: JSON.stringify({ presence: { ids: [], hash: {}, count: 0 } }) }))
+        connection.send(
+          JSON.stringify({
+            channel: payload.data.channel,
+            event: 'pusher_internal:subscription_succeeded',
+            data: JSON.stringify({ presence: { ids: [], hash: {}, count: 0 } })
+          })
+        )
       }
     })
   })
-  await page.route('**/broadcasting/auth', route => route.fulfill({ json: { auth: 'fixture:signature', channel_data: JSON.stringify({ user_id: viewer.id }) } }))
-  await page.route('https://media.example.test/**', route => route.fulfill({ status: 404, body: '' }))
-  await page.route('**/api/**', async route => {
+  await page.route('**/broadcasting/auth', (route) =>
+    route.fulfill({ json: { auth: 'fixture:signature', channel_data: JSON.stringify({ user_id: viewer.id }) } })
+  )
+  await page.route('https://media.example.test/**', (route) => route.fulfill({ status: 404, body: '' }))
+  await page.route('**/api/**', async (route) => {
     const path = new URL(route.request().url()).pathname
     let body: unknown = {}
     if (path === '/api/me') body = { ...viewer, invitations: [] }
@@ -81,7 +131,12 @@ test('shows the room on the picture while chat is closed, filtered by the bell',
   fixture.emit('log', { log: activity(mira, 'paused', { seconds: 2472 }) })
   fixture.emit('log', { log: message(viewer, 'mine never shows') })
   fixture.emit('client-typing', { user: { id: leo.id, name: 'Leo' } })
-  await expect(overlay.getByTestId('activity-text')).toHaveText(['Joyce WHO is he', /^Leo (just joined|is here)\.$/, 'Mira paused at 41:12', 'Leo is typing'])
+  await expect(overlay.getByTestId('activity-text')).toHaveText([
+    'Joyce WHO is he',
+    /^Leo (just joined|is here)\.$/,
+    'Mira paused at 41:12',
+    'Leo is typing'
+  ])
   await page.screenshot({ path: test.info().outputPath('activity-overlay-all.png') })
 
   // A friend's reaction floats at Everything.
@@ -90,8 +145,10 @@ test('shows the room on the picture while chat is closed, filtered by the bell',
 
   await openMenu(page)
   await expect(page.getByRole('menuitemradio', { name: /^Everything/ })).toHaveAttribute('aria-checked', 'true')
-  await page.getByRole('menu').evaluate(element => Promise.all(element.getAnimations().map(animation => animation.finished)))
-  const origin = await page.getByRole('menu').evaluate(element => getComputedStyle(element).transformOrigin)
+  await page
+    .getByRole('menu')
+    .evaluate((element) => Promise.all(element.getAnimations().map((animation) => animation.finished)))
+  const origin = await page.getByRole('menu').evaluate((element) => getComputedStyle(element).transformOrigin)
   const bell = await page.getByRole('button', { name: 'Activity Overlay' }).boundingBox()
   const menu = await page.getByRole('menu').boundingBox()
   // The menu grows from the bell's centre.
@@ -101,7 +158,10 @@ test('shows the room on the picture while chat is closed, filtered by the bell',
   await page.getByRole('menuitemradio', { name: /^Just joins and pauses/ }).click()
   await expect(page.getByRole('menu')).toBeHidden()
   await expect(page.getByTestId('activity-toast')).toHaveText('Showing joins and pauses only')
-  await expect(overlay.getByTestId('activity-text')).toHaveText([/^Leo (just joined|is here)\.$/, 'Mira paused at 41:12'])
+  await expect(overlay.getByTestId('activity-text')).toHaveText([
+    /^Leo (just joined|is here)\.$/,
+    'Mira paused at 41:12'
+  ])
   await expect(page.getByRole('button', { name: 'Activity Overlay' })).toHaveAttribute('data-level', 'activity')
 
   fixture.emit('log', { log: message(joyce, 'hidden at this level') })
@@ -128,7 +188,7 @@ test('remembers the level for the account and shows nothing when off', async ({ 
   await openMenu(page)
   await page.getByRole('menuitemradio', { name: /^Off/ }).click()
   await expect(page.getByTestId('activity-toast')).toHaveText('Activity off')
-  expect(await page.evaluate(key => localStorage.getItem(key), `care.activity-overlay.${viewer.id}`)).toBe('"off"')
+  expect(await page.evaluate((key) => localStorage.getItem(key), `care.activity-overlay.${viewer.id}`)).toBe('"off"')
 
   await page.reload()
   const again = await room(page)

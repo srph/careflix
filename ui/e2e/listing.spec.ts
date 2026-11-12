@@ -1,26 +1,71 @@
 import { expect, test, type Page } from '@playwright/test'
 
 // HTTP fixtures exercise the page independently of local accounts and Pusher.
-const art = (color: string) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540"><defs><linearGradient id="a" x2="1" y2="1"><stop stop-color="${color}"/><stop offset="1" stop-color="#0b1020"/></linearGradient></defs><path fill="url(#a)" d="M0 0h960v540H0z"/><circle cx="700" cy="180" r="100" fill="#ffffff12"/><path d="M0 440 400 160 960 500v40H0z" fill="#060a1233"/></svg>`)
-const titles = ['Velvet Static', 'Hollow County', 'Paper Moons', 'Orbit Diner', 'Night Ferry', 'The Understudies', 'The Long Lunch', 'Signal & Noise']
+const art = (color: string) =>
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540"><defs><linearGradient id="a" x2="1" y2="1"><stop stop-color="${color}"/><stop offset="1" stop-color="#0b1020"/></linearGradient></defs><path fill="url(#a)" d="M0 0h960v540H0z"/><circle cx="700" cy="180" r="100" fill="#ffffff12"/><path d="M0 440 400 160 960 500v40H0z" fill="#060a1233"/></svg>`
+  )
+const titles = [
+  'Velvet Static',
+  'Hollow County',
+  'Paper Moons',
+  'Orbit Diner',
+  'Night Ferry',
+  'The Understudies',
+  'The Long Lunch',
+  'Signal & Noise'
+]
 const shows = titles.map((title, index) => ({
-  id: index + 1, title, title_type: index % 2 ? 'series' : 'movie', preview_image: art(['#7a1f4d', '#24442a', '#60304c', '#7d532b'][index % 4]),
-  synopsis: ['A late-night radio host starts hearing tomorrow’s callers tonight.', 'A small-town clerk keeps finding the same name in every cold case.', 'Two sisters keep their late father’s lantern shop open for one last festival.'][index % 3],
-  air_start: '2025-01-01 00:00:00', air_end: index % 2 ? '2026-01-01 00:00:00' : null, language: 'English', age_rating: 'R', groups_count: 2,
-  movie: index % 2 ? null : { id: 100 + index, duration: 7440 },
+  id: index + 1,
+  title,
+  title_type: index % 2 ? 'series' : 'movie',
+  preview_image: art(['#7a1f4d', '#24442a', '#60304c', '#7d532b'][index % 4]),
+  synopsis: [
+    'A late-night radio host starts hearing tomorrow’s callers tonight.',
+    'A small-town clerk keeps finding the same name in every cold case.',
+    'Two sisters keep their late father’s lantern shop open for one last festival.'
+  ][index % 3],
+  air_start: '2025-01-01 00:00:00',
+  air_end: index % 2 ? '2026-01-01 00:00:00' : null,
+  language: 'English',
+  age_rating: 'R',
+  groups_count: 2,
+  movie: index % 2 ? null : { id: 100 + index, duration: 7440 }
 }))
 const user = { id: 90001, name: 'Kier', email: 'listing@example.test', avatar: null, invitations: [], is_online: true }
 const parties = [shows[1], shows[3], shows[0], shows[6]].map((show, index) => ({
-  id: 200 + index, video: { id: 500 + index, show, title: 'The Ledger', group: { id: 1, title: 'Season 2' }, preview_image: null, duration: 7440, video_url: '', subtitle_url: null },
-  members: [{ ...user, pivot: { is_active: false } }, { id: 90002, name: 'Joyce', avatar: null, pivot: { is_active: index < 2 } }],
-  is_playing: index === 0, current_time: 1520, last_activity_at: '2026-11-02T18:00:00+08:00', invitations: [],
+  id: 200 + index,
+  video: {
+    id: 500 + index,
+    show,
+    title: 'The Ledger',
+    group: { id: 1, title: 'Season 2' },
+    preview_image: null,
+    duration: 7440,
+    video_url: '',
+    subtitle_url: null
+  },
+  members: [
+    { ...user, pivot: { is_active: false } },
+    { id: 90002, name: 'Joyce', avatar: null, pivot: { is_active: index < 2 } }
+  ],
+  is_playing: index === 0,
+  current_time: 1520,
+  last_activity_at: '2026-11-02T18:00:00+08:00',
+  invitations: []
 }))
 
-async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolean; pageSize?: number; parties?: typeof parties } = {}) {
-  await page.context().addCookies([{ name: 'app_token', value: 'listing-test-token', url: test.info().project.use.baseURL as string }])
-  await page.routeWebSocket(/pusher/, socket => socket.close())
+async function catalog(
+  page: Page,
+  options: { failOnce?: boolean; empty?: boolean; pageSize?: number; parties?: typeof parties } = {}
+) {
+  await page
+    .context()
+    .addCookies([{ name: 'app_token', value: 'listing-test-token', url: test.info().project.use.baseURL as string }])
+  await page.routeWebSocket(/pusher/, (socket) => socket.close())
   let failed = false
-  await page.route('**/api/**', async route => {
+  await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url())
     const path = url.pathname
     let body: unknown = {}
@@ -32,21 +77,53 @@ async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolea
       }
       const q = (url.searchParams.get('q') || '').toLowerCase()
       const type = url.searchParams.get('title_type')
-      const source = options.empty ? [] : path === '/api/shows'
-        ? shows.filter(show => (!type || show.title_type === type) && show.title.toLowerCase().includes(q))
-        : (options.parties ?? parties).filter(party => party.video.show.title.toLowerCase().includes(q) && (!url.searchParams.has('show_id') || party.video.show.id === Number(url.searchParams.get('show_id'))))
+      const source = options.empty
+        ? []
+        : path === '/api/shows'
+          ? shows.filter((show) => (!type || show.title_type === type) && show.title.toLowerCase().includes(q))
+          : (options.parties ?? parties).filter(
+              (party) =>
+                party.video.show.title.toLowerCase().includes(q) &&
+                (!url.searchParams.has('show_id') || party.video.show.id === Number(url.searchParams.get('show_id')))
+            )
       const perPage = Number(url.searchParams.get('per_page') || options.pageSize || 6)
       const current = Number(url.searchParams.get('page') || 1)
-      body = { data: source.slice((current - 1) * perPage, current * perPage), total: source.length, current_page: current, last_page: Math.max(1, Math.ceil(source.length / perPage)) }
+      body = {
+        data: source.slice((current - 1) * perPage, current * perPage),
+        total: source.length,
+        current_page: current,
+        last_page: Math.max(1, Math.ceil(source.length / perPage))
+      }
     }
-    if (/\/api\/shows\/\d+\/groups/.test(path)) body = [
-      { id: 1, title: 'Season 1', videos: [
-        { id: 701, title: 'The first episode', synopsis: 'A name in the records leads Joyce to an unexpected visitor.', duration: 1800 },
-        { id: 702, title: 'The visitor book', synopsis: 'The night shift runs long, and a stranger signs the visitor book twice.', duration: 2400, preview_image: art('#343864') },
-        { id: 703, title: 'Three years late', synopsis: 'A letter arrives with an answer nobody was looking for.', duration: 2100 },
-      ] },
-      { id: 2, title: 'Season 2', videos: [{ id: 801, title: 'A new beginning', duration: 2700 }] },
-    ]
+    if (/\/api\/shows\/\d+\/groups/.test(path))
+      body = [
+        {
+          id: 1,
+          title: 'Season 1',
+          videos: [
+            {
+              id: 701,
+              title: 'The first episode',
+              synopsis: 'A name in the records leads Joyce to an unexpected visitor.',
+              duration: 1800
+            },
+            {
+              id: 702,
+              title: 'The visitor book',
+              synopsis: 'The night shift runs long, and a stranger signs the visitor book twice.',
+              duration: 2400,
+              preview_image: art('#343864')
+            },
+            {
+              id: 703,
+              title: 'Three years late',
+              synopsis: 'A letter arrives with an answer nobody was looking for.',
+              duration: 2100
+            }
+          ]
+        },
+        { id: 2, title: 'Season 2', videos: [{ id: 801, title: 'A new beginning', duration: 2700 }] }
+      ]
     if (/\/api\/parties\/\d+$/.test(path)) body = parties[0]
     // Entering a room loads its chat history and pending invites.
     if (/\/api\/parties\/\d+\/(logs|invitations)$/.test(path)) body = []
@@ -57,7 +134,9 @@ async function catalog(page: Page, options: { failOnce?: boolean; empty?: boolea
 test('listing matches the chosen structure and filters with cached tab results', async ({ page, isMobile }) => {
   await catalog(page)
   const requests: string[] = []
-  page.on('request', request => { if (new URL(request.url()).pathname === '/api/shows') requests.push(request.url()) })
+  page.on('request', (request) => {
+    if (new URL(request.url()).pathname === '/api/shows') requests.push(request.url())
+  })
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'All titles', exact: true })).toBeVisible()
   await expect(page.getByRole('region', { name: 'Recent parties' }).getByTestId('party-card')).toHaveCount(3)
@@ -71,7 +150,7 @@ test('listing matches the chosen structure and filters with cached tab results',
   await expect(page.getByTestId('show-card')).toHaveCount(4)
   await page.getByRole('tab', { name: 'All', exact: true }).click()
   await expect(page.getByTestId('show-card')).toHaveCount(6)
-  expect(requests.filter(url => !new URL(url).searchParams.has('title_type'))).toHaveLength(1)
+  expect(requests.filter((url) => !new URL(url).searchParams.has('title_type'))).toHaveLength(1)
   await expect(page.locator('body')).not.toContainText(' · R')
   if (!isMobile) {
     const cards = page.getByTestId('party-card')
@@ -124,9 +203,12 @@ test('search shows a skeleton for a new term, and a cached term comes back at on
   await catalog(page)
   let hold = false
   const held: (() => void)[] = []
-  const release = () => held.splice(0).forEach(resolve => resolve())
-  await page.route('**/api/**', async route => {
-    if (hold && new URL(route.request().url()).searchParams.has('q')) await new Promise<void>(resolve => { held.push(resolve) })
+  const release = () => held.splice(0).forEach((resolve) => resolve())
+  await page.route('**/api/**', async (route) => {
+    if (hold && new URL(route.request().url()).searchParams.has('q'))
+      await new Promise<void>((resolve) => {
+        held.push(resolve)
+      })
     await route.fallback()
   })
   await page.goto('/')
@@ -158,9 +240,11 @@ test('search shows a skeleton for a new term, and a cached term comes back at on
 test('search skeletons match result rows and remain decorative while requests are pending', async ({ page }) => {
   await catalog(page)
   let releaseSearch: () => void
-  const searchReady = new Promise<void>(resolve => { releaseSearch = resolve })
+  const searchReady = new Promise<void>((resolve) => {
+    releaseSearch = resolve
+  })
   const searchRequests: string[] = []
-  await page.route('**/api/**', async route => {
+  await page.route('**/api/**', async (route) => {
     if (new URL(route.request().url()).searchParams.has('q')) {
       searchRequests.push(route.request().url())
       await searchReady
@@ -246,9 +330,13 @@ test('listing skeletons load independently and an empty recent section collapses
   await catalog(page)
   let releaseTitles = () => {}
   let releaseParties = () => {}
-  const titlesReady = new Promise<void>(resolve => { releaseTitles = resolve })
-  const partiesReady = new Promise<void>(resolve => { releaseParties = resolve })
-  await page.route('**/api/**', async route => {
+  const titlesReady = new Promise<void>((resolve) => {
+    releaseTitles = resolve
+  })
+  const partiesReady = new Promise<void>((resolve) => {
+    releaseParties = resolve
+  })
+  await page.route('**/api/**', async (route) => {
     const path = new URL(route.request().url()).pathname
     if (path === '/api/shows') await titlesReady
     if (path === '/api/me/parties') {
@@ -295,8 +383,10 @@ for (const tab of ['All', 'Movies', 'Series', 'Parties']) {
     await catalog(page)
     let attempts = 0
     let releaseRetry = () => {}
-    const retryReady = new Promise<void>(resolve => { releaseRetry = resolve })
-    await page.route('**/api/**', async route => {
+    const retryReady = new Promise<void>((resolve) => {
+      releaseRetry = resolve
+    })
+    await page.route('**/api/**', async (route) => {
       const url = new URL(route.request().url())
       const target = tab === 'Parties' ? '/api/me/parties' : '/api/shows'
       const type = tab === 'Movies' ? 'movie' : tab === 'Series' ? 'series' : null
@@ -310,12 +400,15 @@ for (const tab of ['All', 'Movies', 'Series', 'Parties']) {
     await page.goto('/')
     if (tab !== 'All') await page.getByRole('tab', { name: tab, exact: true }).click()
     const placeholder = page.getByRole('region', { name: tab === 'Parties' ? 'All parties' : 'Featured', exact: true })
-    await expect(placeholder.getByRole('alert')).toContainText(tab === 'Parties' ? "Your parties didn't load" : "Titles didn't load")
+    await expect(placeholder.getByRole('alert')).toContainText(
+      tab === 'Parties' ? "Your parties didn't load" : "Titles didn't load"
+    )
     await expect(placeholder).toHaveAttribute('aria-busy', 'false')
     await expect(placeholder.getByTestId('skeleton').first()).toHaveCSS('animation-name', 'none')
     if (tab === 'Parties') await expect(page.getByRole('region', { name: 'Featured', exact: true })).toHaveCount(0)
     if (tab === 'All') await expect(page.getByTestId('party-card')).toHaveCount(3)
-    if (tab !== 'Parties') await expect(page.locator('[data-testid="catalog-placeholder"][data-frozen="true"]')).toHaveCount(1)
+    if (tab !== 'Parties')
+      await expect(page.locator('[data-testid="catalog-placeholder"][data-frozen="true"]')).toHaveCount(1)
     await page.screenshot({ path: test.info().outputPath(`listing-${tab.toLowerCase()}-failed.png`), fullPage: true })
     await placeholder.getByRole('button', { name: tab === 'Parties' ? 'Retry' : 'Try again', exact: true }).click()
     await expect(placeholder).toHaveAttribute('aria-busy', 'true')
@@ -331,7 +424,7 @@ for (const tab of ['All', 'Movies', 'Series', 'Parties']) {
 test('recent parties can fail and recover while the catalog remains usable', async ({ page }) => {
   await catalog(page, { pageSize: shows.length })
   let fail = true
-  await page.route('**/api/me/parties*', async route => {
+  await page.route('**/api/me/parties*', async (route) => {
     if (fail) return route.fulfill({ status: 422, json: { message: 'Fixture unavailable' } })
     await route.fallback()
   })
@@ -341,7 +434,11 @@ test('recent parties can fail and recover while the catalog remains usable', asy
   await expect(recent.getByRole('alert')).toContainText("Your parties didn't load")
   await expect(recent.getByTestId('party-skeleton')).toHaveCount(3)
   await expect(recent.getByTestId('skeleton').first()).toHaveCSS('animation-name', 'none')
-  await expect(page.getByRole('region', { name: 'Featured', exact: true }).getByRole('button', { name: 'Start a party', exact: true })).toBeVisible()
+  await expect(
+    page
+      .getByRole('region', { name: 'Featured', exact: true })
+      .getByRole('button', { name: 'Start a party', exact: true })
+  ).toBeVisible()
   await page.screenshot({ path: test.info().outputPath('listing-recent-parties-failed.png'), fullPage: true })
   fail = false
   await recent.getByRole('button', { name: 'Retry', exact: true }).click()
@@ -355,10 +452,15 @@ for (const collection of ['titles', 'parties']) {
     await catalog(page, { pageSize: 2 })
     let attempts = 0
     let releaseMore = () => {}
-    const moreReady = new Promise<void>(resolve => { releaseMore = resolve })
-    await page.route('**/api/**', async route => {
+    const moreReady = new Promise<void>((resolve) => {
+      releaseMore = resolve
+    })
+    await page.route('**/api/**', async (route) => {
       const url = new URL(route.request().url())
-      if (url.pathname === (collection === 'titles' ? '/api/shows' : '/api/me/parties') && url.searchParams.get('page') === '2') {
+      if (
+        url.pathname === (collection === 'titles' ? '/api/shows' : '/api/me/parties') &&
+        url.searchParams.get('page') === '2'
+      ) {
         attempts++
         if (attempts === 1) {
           await moreReady
@@ -398,7 +500,7 @@ for (const collection of ['titles', 'parties']) {
 test('movie and series actions create a party with the selected video', async ({ page }) => {
   await catalog(page)
   const videos: number[] = []
-  await page.route('**/api/parties', async route => {
+  await page.route('**/api/parties', async (route) => {
     videos.push(route.request().postDataJSON().show_video_id)
     await route.fulfill({ json: { ...parties[0], id: 222 } })
   })
@@ -409,7 +511,10 @@ test('movie and series actions create a party with the selected video', async ({
   expect(videos).toEqual([100])
   await page.goto('/')
   await page.getByRole('button', { name: 'Details for Hollow County', exact: true }).click()
-  await page.getByRole('dialog').getByRole('button', { name: /The first episode/ }).click()
+  await page
+    .getByRole('dialog')
+    .getByRole('button', { name: /The first episode/ })
+    .click()
   await expect(page).toHaveURL(/\/watch\/222$/)
   expect(videos).toEqual([100, 701])
 })
@@ -421,11 +526,16 @@ test('F2b series details show your room, preserve the selected season, and suppo
   await opener.click()
   const dialog = page.getByRole('dialog', { name: 'Hollow County', exact: true })
   await expect(dialog.getByTestId('live-room')).toContainText('Your room with Joyce')
-  await expect(dialog.getByRole('link', { name: 'Join your room for Hollow County' })).toHaveAttribute('href', '/watch/200')
+  await expect(dialog.getByRole('link', { name: 'Join your room for Hollow County' })).toHaveAttribute(
+    'href',
+    '/watch/200'
+  )
   await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toHaveCount(1)
   await expect(dialog.getByRole('tab', { name: 'Episodes', exact: true })).toHaveAttribute('aria-selected', 'true')
   await expect(dialog.getByTestId('episode')).toHaveCount(3)
-  await expect(dialog.getByText('The night shift runs long, and a stranger signs the visitor book twice.')).toBeVisible()
+  await expect(
+    dialog.getByText('The night shift runs long, and a stranger signs the visitor book twice.')
+  ).toBeVisible()
   await dialog.screenshot({ path: test.info().outputPath('show-detail-series.png') })
   await dialog.getByRole('combobox', { name: 'Season', exact: true }).selectOption('2')
   await expect(dialog.getByText('A new beginning', { exact: true })).toBeVisible()
@@ -439,7 +549,7 @@ test('F2b series details show your room, preserve the selected season, and suppo
   await expect(dialog.getByTestId('show-facts')).toContainText('2h 30m')
   await expect(dialog.getByTestId('show-seasons')).toContainText('3 episodes · 1h 45m')
   await expect(dialog.getByTestId('show-seasons')).toContainText('1 episode · 45m')
-  await expect.poll(() => dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await expect.poll(() => dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
   await dialog.screenshot({ path: test.info().outputPath('show-detail-facts.png') })
   await dialog.getByRole('tab', { name: 'Episodes', exact: true }).click()
   await expect(dialog.getByRole('combobox', { name: 'Season', exact: true })).toHaveValue('2')
@@ -461,7 +571,7 @@ test('F2b hides absent parties and shows a movie details table without a lone ta
   await expect(dialog.getByTestId('show-facts')).toContainText('Released2025')
   await expect(dialog.getByTestId('show-facts')).toContainText('Runtime2h 04m')
   await expect(dialog.getByTestId('show-facts')).toContainText('LanguageEnglish')
-  await expect.poll(() => dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  await expect.poll(() => dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
   await dialog.screenshot({ path: test.info().outputPath('show-detail-no-parties.png') })
   await dialog.getByRole('button', { name: 'Close details' }).click()
   await page.getByRole('button', { name: 'Details for The Understudies', exact: true }).click()
@@ -475,11 +585,13 @@ test('F2b hides absent parties and shows a movie details table without a lone ta
 test('F2b loads title-specific history pages and rejoins the selected existing party', async ({ page }) => {
   await catalog(page)
   const older = { ...parties[2], id: 400 }
-  await page.route('**/api/me/parties*', async route => {
+  await page.route('**/api/me/parties*', async (route) => {
     const url = new URL(route.request().url())
     if (url.searchParams.get('show_id') !== '1') return route.fallback()
     const current = Number(url.searchParams.get('page') || 1)
-    await route.fulfill({ json: { data: [current === 1 ? parties[2] : older], current_page: current, last_page: 2, total: 2 } })
+    await route.fulfill({
+      json: { data: [current === 1 ? parties[2] : older], current_page: current, last_page: 2, total: 2 }
+    })
   })
   await page.goto('/')
   await page.getByRole('button', { name: 'Details for Velvet Static', exact: true }).click()
@@ -498,9 +610,12 @@ test('F2b recovers episode and title-history failures without losing the details
   await catalog(page)
   let failGroups = true
   let failParties = true
-  await page.route('**/api/**', async route => {
+  await page.route('**/api/**', async (route) => {
     const url = new URL(route.request().url())
-    if ((failGroups && url.pathname === '/api/shows/2/groups') || (failParties && url.pathname === '/api/me/parties' && url.searchParams.has('show_id'))) {
+    if (
+      (failGroups && url.pathname === '/api/shows/2/groups') ||
+      (failParties && url.pathname === '/api/me/parties' && url.searchParams.has('show_id'))
+    ) {
       return route.fulfill({ status: 422, json: { message: 'Fixture unavailable' } })
     }
     await route.fallback()
@@ -512,11 +627,19 @@ test('F2b recovers episode and title-history failures without losing the details
   await expect(dialog.getByRole('alert').filter({ hasText: 'Unable to load episodes.' })).toBeVisible()
   await expect(dialog.getByRole('alert').filter({ hasText: 'Unable to load your parties.' })).toBeVisible()
   failGroups = false
-  await dialog.getByRole('alert').filter({ hasText: 'Unable to load episodes.' }).getByRole('button', { name: 'Retry' }).click()
+  await dialog
+    .getByRole('alert')
+    .filter({ hasText: 'Unable to load episodes.' })
+    .getByRole('button', { name: 'Retry' })
+    .click()
   await expect(dialog.getByTestId('episode')).toHaveCount(3)
   await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeEnabled()
   failParties = false
-  await dialog.getByRole('alert').filter({ hasText: 'Unable to load your parties.' }).getByRole('button', { name: 'Retry' }).click()
+  await dialog
+    .getByRole('alert')
+    .filter({ hasText: 'Unable to load your parties.' })
+    .getByRole('button', { name: 'Retry' })
+    .click()
   await expect(dialog.getByTestId('live-room')).toBeVisible()
   await expect(dialog.getByRole('tab', { name: 'Parties', exact: true })).toBeVisible()
   await expect(dialog.getByRole('alert')).toHaveCount(0)
@@ -525,12 +648,17 @@ test('F2b recovers episode and title-history failures without losing the details
 test('F2b starts the selected season and prevents duplicate requests while creating a party', async ({ page }) => {
   await catalog(page)
   let releaseCreate = () => {}
-  const createReady = new Promise<void>(resolve => { releaseCreate = resolve })
+  const createReady = new Promise<void>((resolve) => {
+    releaseCreate = resolve
+  })
   const videos: number[] = []
-  await page.route('**/api/parties', async route => {
+  await page.route('**/api/parties', async (route) => {
     videos.push(route.request().postDataJSON().show_video_id)
     await createReady
-    await route.fulfill({ status: 422, json: { message: 'Fixture unavailable', errors: { show_video_id: ['Fixture unavailable'] } } })
+    await route.fulfill({
+      status: 422,
+      json: { message: 'Fixture unavailable', errors: { show_video_id: ['Fixture unavailable'] } }
+    })
   })
   await page.goto('/')
   await page.getByRole('button', { name: 'Details for Hollow County', exact: true }).click()
@@ -552,9 +680,13 @@ for (const first of ['episodes', 'parties']) {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     let releaseEpisodes = () => {}
     let releaseParties = () => {}
-    const episodesReady = new Promise<void>(resolve => { releaseEpisodes = resolve })
-    const partiesReady = new Promise<void>(resolve => { releaseParties = resolve })
-    await page.route('**/api/**', async route => {
+    const episodesReady = new Promise<void>((resolve) => {
+      releaseEpisodes = resolve
+    })
+    const partiesReady = new Promise<void>((resolve) => {
+      releaseParties = resolve
+    })
+    await page.route('**/api/**', async (route) => {
       const url = new URL(route.request().url())
       if (url.pathname === '/api/shows/2/groups') await episodesReady
       if (url.pathname === '/api/me/parties' && url.searchParams.has('show_id')) await partiesReady
@@ -566,11 +698,12 @@ for (const first of ['episodes', 'parties']) {
     await expect(dialog).toHaveCSS('opacity', '1')
     // A late web-font swap rewraps the synopsis, which would read as a layout shift.
     await page.evaluate(() => document.fonts.ready)
-    const geometry = () => dialog.evaluate(element => {
-      const frame = element.getBoundingClientRect()
-      const heading = element.querySelector('[data-testid="show-heading"]')!.getBoundingClientRect()
-      return { height: frame.height, width: frame.width, heading: heading.top - frame.top }
-    })
+    const geometry = () =>
+      dialog.evaluate((element) => {
+        const frame = element.getBoundingClientRect()
+        const heading = element.querySelector('[data-testid="show-heading"]')!.getBoundingClientRect()
+        return { height: frame.height, width: frame.width, heading: heading.top - frame.top }
+      })
     const initial = await geometry()
     try {
       if (first === 'episodes') {
@@ -586,14 +719,15 @@ for (const first of ['episodes', 'parties']) {
       releaseParties()
       await expect(dialog.getByRole('button', { name: 'Start Party', exact: true })).toBeEnabled()
       await expect(dialog.getByTestId('live-room')).toBeVisible()
-      if (first === 'parties') await expect(dialog.getByRole('tab', { name: 'Details', exact: true })).toHaveAttribute('aria-selected', 'true')
+      if (first === 'parties')
+        await expect(dialog.getByRole('tab', { name: 'Details', exact: true })).toHaveAttribute('aria-selected', 'true')
       await expect.poll(geometry).toEqual(initial)
       for (const name of ['Parties', 'Details', 'Episodes']) {
         await dialog.getByRole('tab', { name, exact: true }).click()
         await expect.poll(geometry).toEqual(initial)
       }
       await expect(dialog.getByText('The first episode', { exact: true })).toBeVisible()
-      await expect.poll(() => dialog.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+      await expect.poll(() => dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true)
     } finally {
       releaseEpisodes()
       releaseParties()

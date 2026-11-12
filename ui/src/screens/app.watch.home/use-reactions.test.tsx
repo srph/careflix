@@ -17,7 +17,10 @@ const receive = (data: unknown) => {
   act(() => handler(data))
 }
 
-beforeEach(() => { vi.clearAllMocks(); channel.subscribed = true })
+beforeEach(() => {
+  vi.clearAllMocks()
+  channel.subscribed = true
+})
 
 describe('reactions', () => {
   it('floats your own reaction straight away and tells the room', () => {
@@ -52,13 +55,15 @@ describe('reactions', () => {
   })
 
   it('drops friends’ reactions while hidden, keeps your own, and picks up again after', () => {
-    const { result, rerender } = renderHook(({ show }) => useReactions(party, me, show), { initialProps: { show: false } })
+    const { result, rerender } = renderHook(({ show }) => useReactions(party, me, show), {
+      initialProps: { show: false }
+    })
     receive({ userId: 2, emoji: '🔥' })
     act(() => result.current.send('😂'))
     expect(result.current.floats).toMatchObject([{ emoji: '😂', name: 'You' }])
     rerender({ show: true })
     receive({ userId: 3, emoji: '😭' })
-    expect(result.current.floats.map(float => float.name)).toEqual(['You', 'Mira'])
+    expect(result.current.floats.map((float) => float.name)).toEqual(['You', 'Mira'])
   })
 
   it('still floats locally before the room channel is subscribed', () => {
@@ -70,7 +75,7 @@ describe('reactions', () => {
   })
 
   it('keeps every path inside its ranges', () => {
-    for (const r of [0, .999]) {
+    for (const r of [0, 0.999]) {
       const path = makePath(() => r)
       expect(path.duration).toBeGreaterThanOrEqual(2.6)
       expect(path.duration).toBeLessThanOrEqual(3.6)

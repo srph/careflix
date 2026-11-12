@@ -19,6 +19,4 @@ function useRouterBlock(callback: Callback, _dependencies?: unknown[]) {
   }, [blocker])
 }
 
-export {
-  useRouterBlock
-}
+export { useRouterBlock }

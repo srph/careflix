@@ -33,6 +33,4 @@ function usePusher(channelName: string, eventName: string, callback: Pusher.Even
   }, [channelName, eventName, isDisabled])
 }
 
-export {
-  usePusher
-}
+export { usePusher }

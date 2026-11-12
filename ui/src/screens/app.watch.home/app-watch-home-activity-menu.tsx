@@ -19,7 +19,7 @@ interface Props {
  */
 export function AppWatchHomeActivityMenu(props: Props) {
   return (
-    <Menu.Root onOpenChange={open => props.onOpenChange(open)}>
+    <Menu.Root onOpenChange={(open) => props.onOpenChange(open)}>
       <Menu.Trigger render={<UiPlainButton aria-label="Activity Overlay" data-level={props.level} />}>
         <i className={cx('fa', ACTIVITY_COPY[props.level].icon)} aria-hidden="true" />
       </Menu.Trigger>
@@ -31,11 +31,20 @@ export function AppWatchHomeActivityMenu(props: Props) {
             <Menu.Arrow className="size-0" />
 
             <Menu.Group>
-              <Menu.GroupLabel className="px-2.5 py-1.5 text-11 leading-none font-bold tracking-wider text-neutral-400 uppercase">Activity Overlay</Menu.GroupLabel>
+              <Menu.GroupLabel className="px-2.5 py-1.5 text-11 leading-none font-bold tracking-wider text-neutral-400 uppercase">
+                Activity Overlay
+              </Menu.GroupLabel>
 
-              <Menu.RadioGroup value={props.level} onValueChange={value => { if (isActivityLevel(value)) props.onChange(value) }}>
-                {ACTIVITY_LEVELS.map(level => (
-                  <Menu.RadioItem key={level} value={level} closeOnClick
+              <Menu.RadioGroup
+                value={props.level}
+                onValueChange={(value) => {
+                  if (isActivityLevel(value)) props.onChange(value)
+                }}>
+                {ACTIVITY_LEVELS.map((level) => (
+                  <Menu.RadioItem
+                    key={level}
+                    value={level}
+                    closeOnClick
                     className="group flex cursor-pointer items-center gap-3.5 rounded-lg py-1.5 pr-2.5 pl-1.5 not-first:mt-0.5 focus-visible:-outline-offset-2 data-highlighted:bg-white/6">
                     <AppWatchHomeActivityMenuPreview level={level} />
                     <span className="flex min-w-0 flex-col gap-0.75">

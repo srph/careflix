@@ -8,7 +8,7 @@ export function pusher() {
   return instance
 }
 
-pusher.set = function(auth: AuthContext) {
+pusher.set = function (auth: AuthContext) {
   instance = new Pusher(config.api.pusherKey, {
     cluster: config.api.pusherCluster,
     encrypted: true,
@@ -21,7 +21,7 @@ pusher.set = function(auth: AuthContext) {
   })
 }
 
-pusher.unset = function() {
+pusher.unset = function () {
   instance?.disconnect()
   instance = null
 }

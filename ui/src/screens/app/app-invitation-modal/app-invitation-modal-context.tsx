@@ -9,7 +9,7 @@ const Context = createContext({
   isExpanded: false,
   setExpanded: (_value: boolean) => {},
   player: null as Player | null,
-  registerPlayer: (_player: Player | null) => {},
+  registerPlayer: (_player: Player | null) => {}
 })
 
 export function InvitationOverlayProvider({ children }: ReactComponentWrapper) {

@@ -1,4 +1,3 @@
-
 import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
@@ -105,13 +104,13 @@ const reducer = (state: State, action: Action) => {
     }
 
     case 'chat:input': {
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.message.text = action.payload.input
       })
     }
 
     case 'chat:init': {
-      return immer(state, draft => {
+      return immer(state, (draft) => {
         draft.message.text = ''
         draft.logs.push(action.payload.log)
       })
@@ -125,8 +124,8 @@ const reducer = (state: State, action: Action) => {
     }
 
     case 'chat:success': {
-      return immer(state, draft => {
-        const index = draft.logs.findIndex(log => log.id === action.payload.id)
+      return immer(state, (draft) => {
+        const index = draft.logs.findIndex((log) => log.id === action.payload.id)
         draft.logs[index] = action.payload.log
       })
     }
@@ -370,7 +369,7 @@ export function AppWatchHomeChatWidget(props: Props) {
 
   // Activity lines live in the status row, so the list only groups messages.
   const grouped = useMemo(() => {
-    return groupPartyLogs(state.logs.filter(log => log.type === 'message'))
+    return groupPartyLogs(state.logs.filter((log) => log.type === 'message'))
   }, [state.logs])
 
   const inputRef = useRef<HTMLTextAreaElement>(null)
@@ -409,22 +408,36 @@ export function AppWatchHomeChatWidget(props: Props) {
 
   return (
     <div
-      data-testid="chat-pane" data-open={props.isChatOpen}
+      data-testid="chat-pane"
+      data-open={props.isChatOpen}
       // Under the picture on phones; from `sm` a column that slides in from the right edge.
-      className={cn('relative flex h-full min-h-0 shrink flex-col overflow-hidden bg-neutral-900 sm:absolute sm:inset-y-0 sm:w-(--player-chat-pane-width) sm:shrink-0 sm:transition-all sm:duration-200',
-        props.isChatOpen ? 'sm:right-0' : 'sm:right-[calc(-1*var(--player-chat-pane-width))]')}>
+      className={cn(
+        'relative flex h-full min-h-0 shrink flex-col overflow-hidden bg-neutral-900 sm:absolute sm:inset-y-0 sm:w-(--player-chat-pane-width) sm:shrink-0 sm:transition-all sm:duration-200',
+        props.isChatOpen ? 'sm:right-0' : 'sm:right-[calc(-1*var(--player-chat-pane-width))]'
+      )}>
       {/* The invite panel is a solid sheet over this, so the chat stays put underneath; it only can't be reached. */}
       <div data-testid="chat-content" className="flex min-h-0 flex-1 flex-col" inert={props.isInvitationOpen}>
         {/* Faces, the party code chip and invite in one row. */}
-        <div data-testid="chat-canopy" className="flex shrink-0 items-center gap-2 bg-neutral-900 pt-3 pr-3 pb-2 pl-3.5">
-          <UiAvatarGroup users={props.party.members} className="mr-auto" itemClassName="not-last:-mr-2"
-            avatarClassName="size-6 text-10 ring-2 ring-neutral-900" statusClassName="-right-0.5 -bottom-0.5 size-2.5" />
+        <div
+          data-testid="chat-canopy"
+          className="flex shrink-0 items-center gap-2 bg-neutral-900 pt-3 pr-3 pb-2 pl-3.5">
+          <UiAvatarGroup
+            users={props.party.members}
+            className="mr-auto"
+            itemClassName="not-last:-mr-2"
+            avatarClassName="size-6 text-10 ring-2 ring-neutral-900"
+            statusClassName="-right-0.5 -bottom-0.5 size-2.5"
+          />
 
           <AppWatchHomePartyCode code={props.party.join_code} chip />
 
-          <UiPlainButton type="button" ref={inviteButton}
+          <UiPlainButton
+            type="button"
+            ref={inviteButton}
             className="flex size-7.5 flex-none items-center justify-center rounded-full bg-neutral-800 text-13 leading-none text-white transition-colors duration-200 hover:bg-neutral-700 motion-reduce:[transition:none]"
-            aria-label="Invite people" aria-expanded={props.isInvitationOpen} onClick={props.onOpenInvitationModal}>
+            aria-label="Invite people"
+            aria-expanded={props.isInvitationOpen}
+            onClick={props.onOpenInvitationModal}>
             <i className="fa fa-user-plus" aria-hidden="true" />
           </UiPlainButton>
         </div>
@@ -433,25 +446,50 @@ export function AppWatchHomeChatWidget(props: Props) {
         {/* Friends on the left with a small face and name, yours in pink on the right. */}
         <div className="relative min-h-0 flex-1">
           {/* A short chat sits on the composer; the auto margin (not justify-end) keeps the top reachable once it scrolls. */}
-          <div data-testid="chat-messages" className="flex h-full flex-col gap-2 overflow-y-auto bg-neutral-900 px-3 py-4 *:first:mt-auto" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
+          <div
+            data-testid="chat-messages"
+            className="flex h-full flex-col gap-2 overflow-y-auto bg-neutral-900 px-3 py-4 *:first:mt-auto"
+            ref={chatbarRef}
+            onScroll={handleMessagesContainerScroll}>
             {grouped.map((group, i) => {
               const isSelf = group.user.id === user.id
               const previous = grouped[i - 1]
               // Mark the time at the start and after a quiet stretch, instead of stamping every message.
-              const showTime = !previous || differenceInMinutes(parse(group.logs[0].created_at), parse(last(previous.logs).created_at)) >= TIME_BREAK_MINUTES
+              const showTime =
+                !previous ||
+                differenceInMinutes(parse(group.logs[0].created_at), parse(last(previous.logs).created_at)) >=
+                  TIME_BREAK_MINUTES
 
               return (
                 <React.Fragment key={i}>
-                  {showTime && <div data-testid="chat-time" className="mt-1.5 text-center text-11 leading-none text-neutral-400">{format(parse(group.logs[0].created_at), 'h:mm A')}</div>}
-                  <div data-testid="chat-group" data-self={isSelf} className={cn('flex gap-2', isSelf && 'justify-end')}>
-                    {!isSelf && <div className="mt-4.75 flex-none"><UiAvatar user={group.user} className="size-6 text-10" /></div>}
+                  {showTime && (
+                    <div data-testid="chat-time" className="mt-1.5 text-center text-11 leading-none text-neutral-400">
+                      {format(parse(group.logs[0].created_at), 'h:mm A')}
+                    </div>
+                  )}
+                  <div
+                    data-testid="chat-group"
+                    data-self={isSelf}
+                    className={cn('flex gap-2', isSelf && 'justify-end')}>
+                    {!isSelf && (
+                      <div className="mt-4.75 flex-none">
+                        <UiAvatar user={group.user} className="size-6 text-10" />
+                      </div>
+                    )}
 
                     <div className="max-w-4/5 min-w-0">
-                      {!isSelf && <div className="mb-0.5 ml-1 text-xs leading-none text-neutral-400">{group.user.name}</div>}
+                      {!isSelf && (
+                        <div className="mb-0.5 ml-1 text-xs leading-none text-neutral-400">{group.user.name}</div>
+                      )}
 
                       <div className={cn('flex flex-col gap-0.5', isSelf ? 'items-end' : 'items-start')}>
-                        {group.logs.map(log => (
-                          <div data-testid="chat-message" className={cn(BUBBLE, isSelf ? BUBBLE_SELF : BUBBLE_FRIEND)} key={log.id}>{log.message?.text}</div>
+                        {group.logs.map((log) => (
+                          <div
+                            data-testid="chat-message"
+                            className={cn(BUBBLE, isSelf ? BUBBLE_SELF : BUBBLE_FRIEND)}
+                            key={log.id}>
+                            {log.message?.text}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -462,7 +500,10 @@ export function AppWatchHomeChatWidget(props: Props) {
           </div>
 
           {hasUnreadMessages && (
-            <UiPlainButton type="button" className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold whitespace-nowrap text-neutral-950 shadow-pop" onClick={handleClickUnreadMessages}>
+            <UiPlainButton
+              type="button"
+              className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold whitespace-nowrap text-neutral-950 shadow-pop"
+              onClick={handleClickUnreadMessages}>
               New messages
               <i className="fa fa-arrow-down" aria-hidden="true" />
             </UiPlainButton>
@@ -474,7 +515,9 @@ export function AppWatchHomeChatWidget(props: Props) {
           <AppWatchHomeChatStatus logs={state.logs} typing={typing.names} joined={joined} meId={user.id} />
 
           {/* The focus ring belongs to the field (text and send), drawn inside because the field is flush with the tray. */}
-          <form onSubmit={handleMessage} data-testid="chat-composer"
+          <form
+            onSubmit={handleMessage}
+            data-testid="chat-composer"
             className="relative flex min-h-11 items-end gap-1 rounded-xl bg-neutral-900 pr-1.5 pl-3.75 ring-1 ring-neutral-700 transition-colors duration-150 focus-within:bg-neutral-950 has-[textarea:focus-visible]:outline-2 has-[textarea:focus-visible]:-outline-offset-2 has-[textarea:focus-visible]:outline-pink-700 motion-reduce:[transition:none]">
             <textarea
               rows={1}
@@ -488,7 +531,10 @@ export function AppWatchHomeChatWidget(props: Props) {
               className="block field-sizing-content max-h-33 min-h-11 min-w-0 flex-1 resize-none overflow-y-auto py-3 text-sm/5 text-white outline-none not-supports-[field-sizing:content]:h-11 placeholder:text-neutral-500"
             />
 
-            <UiPlainButton disabled={!isSubmittable} ref={buttonRef} aria-label="Send message"
+            <UiPlainButton
+              disabled={!isSubmittable}
+              ref={buttonRef}
+              aria-label="Send message"
               className="mb-1.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-pink-500 text-13 leading-none text-white transition-[filter] duration-150 not-disabled:hover:brightness-112 disabled:cursor-default motion-reduce:[transition:none]">
               <i className="fa fa-arrow-up" aria-hidden="true" />
             </UiPlainButton>
@@ -496,10 +542,15 @@ export function AppWatchHomeChatWidget(props: Props) {
         </div>
 
         <AppWatchHomeChatWidgetReactionRow onReact={props.onReact} />
-
       </div>
       <AnimatePresence>
-        {props.isInvitationOpen && <AppWatchHomeChatInvitationPanel key="host-invites" invitations={invitations} onClose={props.onCloseInvitationModal} />}
+        {props.isInvitationOpen && (
+          <AppWatchHomeChatInvitationPanel
+            key="host-invites"
+            invitations={invitations}
+            onClose={props.onCloseInvitationModal}
+          />
+        )}
       </AnimatePresence>
 
       <audio className="hidden" ref={idleAudioRef}>
@@ -539,7 +590,7 @@ function groupPartyLogs(logs: AppPartyLog[]): GroupedLog[] {
   ]
 
   // Since we've initialized the group with the first log, we'll start with the second log.
-  logs.slice(1).forEach(log => {
+  logs.slice(1).forEach((log) => {
     const recent = last(groups)
 
     // We'll add it to the last group if it fits the criteria

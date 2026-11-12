@@ -1,4 +1,3 @@
-
 import * as React from 'react'
 import { AppInvitationModal } from './app-invitation-modal/app-invitation-modal'
 import { InvitationOverlayProvider } from './app-invitation-modal/app-invitation-modal-context'
@@ -24,7 +23,7 @@ export function AppPage(props: ReactComponentWrapper) {
           <AppInvitationModal key={auth.data?.id} />
         </React.Fragment>
       )}
-      
+
       {props.children}
     </InvitationOverlayProvider>
   )

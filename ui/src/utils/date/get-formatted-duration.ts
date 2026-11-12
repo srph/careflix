@@ -5,7 +5,7 @@ import { getRemainingTime } from './get-remaining-time'
  */
 export function getFormattedDuration(seconds: number): string {
   const remaining = getRemainingTime(seconds)
-  
+
   if (remaining.hours >= 1) {
     return `${remaining.hours}h ${remaining.minutes}m ${remaining.seconds}s`
   }

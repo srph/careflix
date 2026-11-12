@@ -48,14 +48,16 @@ export function returnToApp() {
 }
 
 export async function beginDiscord(returnTo = '/') {
-  const secret = Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join('')
+  const secret = Array.from(crypto.getRandomValues(new Uint8Array(32)), (byte) =>
+    byte.toString(16).padStart(2, '0')
+  ).join('')
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secret))
-  const challenge = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('')
+  const challenge = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join('')
   clearDiscordFlow()
   sessionStorage.setItem(VERIFIER, secret)
   sessionStorage.setItem(RETURN_TO, returnTo)
   // Give the button's reaction pile a moment to shake off before navigating.
-  await new Promise(resolve => window.setTimeout(resolve, 180))
+  await new Promise((resolve) => window.setTimeout(resolve, 180))
   window.location.assign(`${config.api.baseUrl}/auth/discord?challenge=${challenge}`)
 }
 

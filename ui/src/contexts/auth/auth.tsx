@@ -5,7 +5,15 @@ import immer from 'immer'
 import { axios } from '~/lib/axios/axios'
 import { useNavigate } from 'react-router'
 import { toast } from '~/components/toast/toast'
-import { beginDiscord, clearDiscordFlow, pendingOnboarding, saveOnboarding, verifier, type DiscordAuthResult, type Onboarding } from '~/lib/auth/discord'
+import {
+  beginDiscord,
+  clearDiscordFlow,
+  pendingOnboarding,
+  saveOnboarding,
+  verifier,
+  type DiscordAuthResult,
+  type Onboarding
+} from '~/lib/auth/discord'
 import { readDeclinedInvitations, rememberDeclinedInvitation } from './auth-declined-invitations'
 
 export interface AuthContext {
@@ -66,7 +74,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       }
 
       const [err, res] = await axios.get('/api/me', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       })
 
       if (err) {
@@ -95,7 +103,7 @@ function AuthProvider({ children }: ReactComponentWrapper) {
       path: '/',
       expires: new Date(result.expires_at),
       secure: window.location.protocol === 'https:',
-      sameSite: 'lax',
+      sameSite: 'lax'
     })
     clearDiscordFlow()
     setOnboarding(null)
@@ -105,20 +113,33 @@ function AuthProvider({ children }: ReactComponentWrapper) {
 
   const exchangeDiscord = (ticket: string): Promise<AsyncGoReturn<DiscordAuthResult>> => {
     if (!exchanges.current.has(ticket)) {
-      exchanges.current.set(ticket, (async () => {
-        const [err, response] = await axios.post('/api/auth/discord/exchange', { ticket, verifier: verifier() }, { app: { validation: false } })
-        if (err) return [err] as AsyncGoReturn<DiscordAuthResult>
-        acceptResult(response.data)
-        return [null, response.data] as AsyncGoReturn<DiscordAuthResult>
-      })())
+      exchanges.current.set(
+        ticket,
+        (async () => {
+          const [err, response] = await axios.post(
+            '/api/auth/discord/exchange',
+            { ticket, verifier: verifier() },
+            { app: { validation: false } }
+          )
+          if (err) return [err] as AsyncGoReturn<DiscordAuthResult>
+          acceptResult(response.data)
+          return [null, response.data] as AsyncGoReturn<DiscordAuthResult>
+        })()
+      )
     }
     return exchanges.current.get(ticket)!
   }
 
   const requestAccess = async (code: string): Promise<AsyncGoReturn<DiscordAuthResult>> => {
-    const [err, response] = await axios.post('/api/auth/request', {
-      ticket: onboarding?.ticket, verifier: verifier(), request_access: code,
-    }, { app: { validation: false } })
+    const [err, response] = await axios.post(
+      '/api/auth/request',
+      {
+        ticket: onboarding?.ticket,
+        verifier: verifier(),
+        request_access: code
+      },
+      { app: { validation: false } }
+    )
     if (err) return [err]
     acceptResult(response.data)
     return [null, response.data]
@@ -129,9 +150,17 @@ function AuthProvider({ children }: ReactComponentWrapper) {
   }
 
   const logout = async (notify = true) => {
-    const revocation = token ? axios.post('/api/logout', {}, {
-      headers: { Authorization: `Bearer ${token}` }, app: { validation: false }, timeout: 5000,
-    }) : Promise.resolve()
+    const revocation = token
+      ? axios.post(
+          '/api/logout',
+          {},
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            app: { validation: false },
+            timeout: 5000
+          }
+        )
+      : Promise.resolve()
     removedInvitations.current.clear()
     exchanges.current.clear()
     clearDiscordFlow()
@@ -149,20 +178,27 @@ function AuthProvider({ children }: ReactComponentWrapper) {
     if (!user) return user
     for (const entry of readDeclinedInvitations(user.id)) removedInvitations.current.add(entry.id)
     if (!user.invitations?.length) return user
-    return { ...user, invitations: user.invitations.filter(invitation => !removedInvitations.current.has(String(invitation.id))) }
+    return {
+      ...user,
+      invitations: user.invitations.filter((invitation) => !removedInvitations.current.has(String(invitation.id)))
+    }
   }
 
   const updateUserData = (payload: Partial<AppUser>) => {
-    setData(data => data && { ...data, ...payload })
+    setData((data) => data && { ...data, ...payload })
   }
 
   /**
    * Remove the first invitation (called after accepted / declined / expired)
    */
   const shiftInvitations = () => {
-    setData(current => current && immer(current, draft => {
-      draft.invitations?.shift()
-    }))
+    setData(
+      (current) =>
+        current &&
+        immer(current, (draft) => {
+          draft.invitations?.shift()
+        })
+    )
   }
 
   /**
@@ -170,30 +206,42 @@ function AuthProvider({ children }: ReactComponentWrapper) {
    */
   const receiveInvitation = (invitation: AppPartyInvitation) => {
     if (removedInvitations.current.has(String(invitation.id))) return
-    setData(current => current && immer(current, draft => {
-      if (!draft.invitations) draft.invitations = []
-      if (!draft.invitations.some(item => item.id === invitation.id)) {
-        draft.invitations.push(invitation)
-      }
-    }))
+    setData(
+      (current) =>
+        current &&
+        immer(current, (draft) => {
+          if (!draft.invitations) draft.invitations = []
+          if (!draft.invitations.some((item) => item.id === invitation.id)) {
+            draft.invitations.push(invitation)
+          }
+        })
+    )
   }
 
   /**
    * Push the received invitation
    */
   const cancelInvitation = (particular: AppPartyInvitation) => {
-    setData(current => current && immer(current, draft => {
-      const invitation = draft.invitations?.find(invitation => invitation.id === particular.id)
-      if (invitation) invitation.action = 'cancelled'
-    }))
+    setData(
+      (current) =>
+        current &&
+        immer(current, (draft) => {
+          const invitation = draft.invitations?.find((invitation) => invitation.id === particular.id)
+          if (invitation) invitation.action = 'cancelled'
+        })
+    )
   }
 
   const removeInvitation = (id: AppId) => {
     // A resolved event can arrive before the original invitation on another tab.
     removedInvitations.current.add(String(id))
-    setData(current => current && immer(current, draft => {
-      draft.invitations = draft.invitations?.filter(invitation => invitation.id !== id)
-    }))
+    setData(
+      (current) =>
+        current &&
+        immer(current, (draft) => {
+          draft.invitations = draft.invitations?.filter((invitation) => invitation.id !== id)
+        })
+    )
   }
 
   const declineInvitation = (invitation: AppPartyInvitation) => {

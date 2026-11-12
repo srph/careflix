@@ -9,8 +9,8 @@ export const interceptorPusher = {
         const socketId = pusher()?.connection.socket_id
         if (socketId) config.headers['X-Socket-ID'] = socketId
       }
-      
-      return config;
+
+      return config
     })
   }
 }

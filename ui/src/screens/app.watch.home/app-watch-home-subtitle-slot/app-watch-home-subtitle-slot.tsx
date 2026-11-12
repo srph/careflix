@@ -18,7 +18,8 @@ interface Props {
 
 // White text with a black edge. <font> tags in a subtitle file keep their colour but not their own size or face.
 // The md step is the only place 768px is used: a hotfix for a split-screen setup on a small laptop.
-const SLOT = 'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
+const SLOT =
+  'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
 
 export function AppWatchHomeSubtitleSlot(props: Props) {
   const [state, setState] = useState<State>(() => ({ tracks: [] }))
@@ -44,7 +45,9 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
     }
 
     void loadSubtitles()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [props.video.id, props.video.subtitle_url])
 
   if (!props.video.subtitle_url) {
@@ -59,7 +62,7 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
     return null
   }
 
-  const subtitles = state.tracks.filter(track => {
+  const subtitles = state.tracks.filter((track) => {
     return props.time >= track.start && props.time <= track.end
   })
 
@@ -69,8 +72,8 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
 
   return (
     <React.Fragment>
-      {placements.map(placement => {
-        const placementSubtitles = subtitles.filter(subtitle => {
+      {placements.map((placement) => {
+        const placementSubtitles = subtitles.filter((subtitle) => {
           // We want to position default tracks (tracks without specified positioning)
           // to be placed to the bottom center.
           if (placement.key === 'bottom-center' && !HAS_PLACEMENT_PATTERN.test(subtitle.text)) {
@@ -81,11 +84,16 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
         })
 
         // While the controls are up, subtitles hide on phones and tablets; on desktop the bottom row lifts above the controls.
-        const className = cn(SLOT, placement.className, props.isPlayerOpen && 'hidden lg:block', props.isPlayerOpen && placement.vertical === 'bottom' && 'lg:pb-45')
+        const className = cn(
+          SLOT,
+          placement.className,
+          props.isPlayerOpen && 'hidden lg:block',
+          props.isPlayerOpen && placement.vertical === 'bottom' && 'lg:pb-45'
+        )
 
         return (
           <div key={placement.key} className={className}>
-            {placementSubtitles.map(subtitle => (
+            {placementSubtitles.map((subtitle) => (
               <p
                 data-testid="subtitle"
                 key={subtitle.index}

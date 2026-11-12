@@ -13,9 +13,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     envPrefix: [],
     resolve: { alias: { '~': fileURLToPath(new URL('./src', import.meta.url)) } },
-    define: Object.fromEntries(publicKeys.map(key => [
-      `import.meta.env.VITE_${key}`, JSON.stringify(env[`VITE_${key}`] ?? env[key] ?? ''),
-    ])),
+    define: Object.fromEntries(
+      publicKeys.map((key) => [`import.meta.env.VITE_${key}`, JSON.stringify(env[`VITE_${key}`] ?? env[key] ?? '')])
+    ),
     server: {
       host: '127.0.0.1',
       strictPort: true,
@@ -24,8 +24,8 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '^/(api|broadcasting)(/|$)': { target: apiTarget, changeOrigin: true },
         // Vite matches the full request URL, including the query string.
-        '^/auth/discord(?:[/?]|$)': { target: apiTarget, changeOrigin: true },
-      },
-    },
+        '^/auth/discord(?:[/?]|$)': { target: apiTarget, changeOrigin: true }
+      }
+    }
   }
 })

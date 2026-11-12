@@ -4,7 +4,5 @@ import { ImageAspectRatio, Props as ImageAspectRatioProps } from '~/components/i
 type Props = Omit<ImageAspectRatioProps, 'ratio'>
 
 export function StandardImageAspectRatio(props: Props) {
-  return (
-    <ImageAspectRatio {...props} ratio={9/16 * 100} />
-  )
+  return <ImageAspectRatio {...props} ratio={(9 / 16) * 100} />
 }

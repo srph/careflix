@@ -5,13 +5,16 @@ import { useRouterBlock } from './use-router-block'
 
 function renderRoom(playing = true, destination = '/') {
   function Room() {
-    useRouterBlock(location => playing && !location.pathname.startsWith('/watch') ? 'Leave the party?' : null)
+    useRouterBlock((location) => (playing && !location.pathname.startsWith('/watch') ? 'Leave the party?' : null))
     return <Link to={destination}>Browse</Link>
   }
-  const router = createMemoryRouter([
-    { path: '/watch/:id', element: <Room /> },
-    { path: '/', element: <p>Movie catalog</p> },
-  ], { initialEntries: ['/watch/1'] })
+  const router = createMemoryRouter(
+    [
+      { path: '/watch/:id', element: <Room /> },
+      { path: '/', element: <p>Movie catalog</p> }
+    ],
+    { initialEntries: ['/watch/1'] }
+  )
   render(<RouterProvider router={router} />)
   return router
 }

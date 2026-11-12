@@ -381,7 +381,7 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
   }
 
   useRouterBlock(
-    location => {
+    (location) => {
       if (!state.isPlaying) {
         return
       }
@@ -481,12 +481,11 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
   function handleToggleMute() {
     $video.current!.muted = !state.isMuted
-    
+
     dispatch({
       type: 'toggle-mute'
     })
   }
-
 
   function handleToggleSubtitle() {
     dispatch({
@@ -496,15 +495,19 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
 
   return (
     <React.Fragment>
-
       {/* Phones stack the picture, title bar and chat. From `sm` the picture fills the window and the chat slides in beside it. */}
       <div className="flex h-(--window-vh) w-screen flex-col overflow-hidden sm:relative sm:flex-row">
         <div
-          data-testid="video-pane" ref={$pane}
-          className={cn('relative w-full shrink-0 sm:shrink sm:transition-all sm:duration-200', state.isChatOpen && 'sm:w-[calc(100%-var(--player-chat-pane-width))]')}>
+          data-testid="video-pane"
+          ref={$pane}
+          className={cn(
+            'relative w-full shrink-0 sm:shrink sm:transition-all sm:duration-200',
+            state.isChatOpen && 'sm:w-[calc(100%-var(--player-chat-pane-width))]'
+          )}>
           {/* cursor-pointer: see https://github.com/facebook/react/issues/2055 */}
           <div
-            data-testid="video-stage" className="relative w-full cursor-pointer bg-black bg-cover pb-[56.25%]"
+            data-testid="video-stage"
+            className="relative w-full cursor-pointer bg-black bg-cover pb-[56.25%]"
             style={
               state.isInitialized
                 ? {}
@@ -549,7 +552,12 @@ export function AppWatchHomePage(props: ReactComponentWrapper) {
           )}
 
           {state.isInitialized && (
-            <AppWatchHomeSubtitleSlot video={context.party.video} isEnabled={state.isSubtitleEnabled} isPlayerOpen={state.isOpen} time={state.time} />
+            <AppWatchHomeSubtitleSlot
+              video={context.party.video}
+              isEnabled={state.isSubtitleEnabled}
+              isPlayerOpen={state.isOpen}
+              time={state.time}
+            />
           )}
 
           <AppWatchHomeReactionLayer floats={reactions.floats} isLifted={state.isOpen} onDone={reactions.remove} />

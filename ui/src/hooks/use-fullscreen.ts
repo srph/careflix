@@ -37,6 +37,4 @@ function useFullscreen(): ReturnValue {
   return [isFullscreen, toggleFullscreen]
 }
 
-export {
-  useFullscreen
-}
+export { useFullscreen }

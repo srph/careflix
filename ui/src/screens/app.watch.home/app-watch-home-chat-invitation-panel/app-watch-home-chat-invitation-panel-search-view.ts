@@ -1,8 +1,5 @@
 export type SearchView =
-  | { kind: 'skeleton' }
-  | { kind: 'results'; users: AppUser[] }
-  | { kind: 'empty' }
-  | { kind: 'error' }
+  { kind: 'skeleton' } | { kind: 'results'; users: AppUser[] } | { kind: 'empty' } | { kind: 'error' }
 
 /**
  * What the invite search list shows for its query (which runs on the debounced term): the skeleton until the

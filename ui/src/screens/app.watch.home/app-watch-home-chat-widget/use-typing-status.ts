@@ -11,7 +11,7 @@ export const TYPING_TTL = 4000
 export const TYPING_PING_EVERY = 2500
 
 interface Typer {
-  user: { id: AppId, name: string }
+  user: { id: AppId; name: string }
   until: number
 }
 
@@ -31,13 +31,16 @@ export function useTypingStatus(partyId: AppId, me: Pick<AppUser, 'id' | 'name'>
   usePusher(channelName, TYPING_EVENT, (data: { user?: Typer['user'] }) => {
     const user = data?.user
     if (!user || String(user.id) === String(me.id)) return
-    setTypers(current => ({ ...current, [String(user.id)]: { user, until: Date.now() + TYPING_TTL } }))
+    setTypers((current) => ({ ...current, [String(user.id)]: { user, until: Date.now() + TYPING_TTL } }))
   })
 
   useEffect(() => {
-    const untils = Object.values(typers).map(typer => typer.until)
+    const untils = Object.values(typers).map((typer) => typer.until)
     if (!untils.length) return
-    const timer = setTimeout(() => setTypers(current => pruneTypers(current, Date.now())), Math.max(0, Math.min(...untils) - Date.now()) + 10)
+    const timer = setTimeout(
+      () => setTypers((current) => pruneTypers(current, Date.now())),
+      Math.max(0, Math.min(...untils) - Date.now()) + 10
+    )
     return () => clearTimeout(timer)
   }, [typers])
 
@@ -52,16 +55,18 @@ export function useTypingStatus(partyId: AppId, me: Pick<AppUser, 'id' | 'name'>
   }, [channelName, me.id, me.name])
 
   // After sending, the next keystroke should announce itself straight away.
-  const sent = useCallback(() => { lastPing.current = 0 }, [])
+  const sent = useCallback(() => {
+    lastPing.current = 0
+  }, [])
 
   // A typer's message arriving means they're done.
   const clear = useCallback((userId: AppId) => {
-    setTypers(current => {
+    setTypers((current) => {
       if (!current[String(userId)]) return current
       const { [String(userId)]: _, ...rest } = current
       return rest
     })
   }, [])
 
-  return { names: Object.values(typers).map(typer => typer.user.name), notify, sent, clear }
+  return { names: Object.values(typers).map((typer) => typer.user.name), notify, sent, clear }
 }

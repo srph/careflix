@@ -11,7 +11,7 @@ function useBufferState(props: Props): Payload {
   const [state, internalSetState] = useState(false)
   const counterRef = useRef<number>(0)
   const timeoutRef = useRef<number | undefined>(undefined)
-  
+
   function setState(): void {
     ++counterRef.current
     internalSetState(false)
@@ -32,6 +32,4 @@ function useBufferState(props: Props): Payload {
   return [state, setState]
 }
 
-export {
-  useBufferState
-}
+export { useBufferState }

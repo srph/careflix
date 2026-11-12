@@ -9,6 +9,8 @@
     "start": "vite --port 8484",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
+    "format": "prettier --write src e2e *.config.ts",
+    "format:check": "prettier --check src e2e *.config.ts",
     "build": "npm run typecheck && vite build",
     "preview": "vite preview --port 8484",
     "test:e2e": "playwright test",

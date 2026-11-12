@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from 'react'
 
 function useIsPWA(): boolean {
   return useMemo(() => {
@@ -6,6 +6,4 @@ function useIsPWA(): boolean {
   }, [])
 }
 
-export {
-  useIsPWA
-}
+export { useIsPWA }

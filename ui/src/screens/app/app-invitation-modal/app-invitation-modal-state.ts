@@ -17,7 +17,15 @@ export interface State {
   answered: number
 }
 
-export const initialState: State = { action: null, joined: null, declined: null, dismissed: null, phase: 'respond', error: null, answered: 0 }
+export const initialState: State = {
+  action: null,
+  joined: null,
+  declined: null,
+  dismissed: null,
+  phase: 'respond',
+  error: null,
+  answered: 0
+}
 
 type Action =
   | { type: 'request' }
@@ -32,14 +40,23 @@ type Action =
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
-    case 'request': return { ...state, action: 'accept', error: null }
-    case 'error': return { ...state, action: null, error: action.message }
-    case 'advance': return { ...state, action: null, error: null, answered: state.answered + 1 }
-    case 'joined': return { ...state, action: null, phase: 'joining', joined: action.invitation }
-    case 'declined': return { ...state, action: null, phase: 'declined', declined: action.invitation }
-    case 'dismissed': return { ...state, dismissed: action.invitation }
-    case 'docked': return state.phase === 'joining' ? { ...state, phase: 'docked' } : state
-    case 'leave': return { ...state, phase: 'leaving' }
-    case 'reset': return initialState
+    case 'request':
+      return { ...state, action: 'accept', error: null }
+    case 'error':
+      return { ...state, action: null, error: action.message }
+    case 'advance':
+      return { ...state, action: null, error: null, answered: state.answered + 1 }
+    case 'joined':
+      return { ...state, action: null, phase: 'joining', joined: action.invitation }
+    case 'declined':
+      return { ...state, action: null, phase: 'declined', declined: action.invitation }
+    case 'dismissed':
+      return { ...state, dismissed: action.invitation }
+    case 'docked':
+      return state.phase === 'joining' ? { ...state, phase: 'docked' } : state
+    case 'leave':
+      return { ...state, phase: 'leaving' }
+    case 'reset':
+      return initialState
   }
 }

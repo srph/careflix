@@ -2,13 +2,17 @@ import { clockTime } from './app-home-listing/app-home-listing-format'
 
 export function previewStatus(party: AppPartyPreview) {
   if (party.is_member) return 'You’re already in this party'
-  if (party.video.show.title_type === 'series') return [party.video.group?.title, party.video.title].filter(Boolean).join(' · ')
-  const active = party.members.some(member => member.pivot.is_active)
+  if (party.video.show.title_type === 'series')
+    return [party.video.group?.title, party.video.title].filter(Boolean).join(' · ')
+  const active = party.members.some((member) => member.pivot.is_active)
   if (!active) {
     const elapsed = Date.now() - new Date(party.last_activity_at).getTime()
     if (!Number.isFinite(elapsed)) return 'Previously watched'
     const days = Math.max(0, Math.floor(elapsed / 86_400_000))
-    if (days >= 30) { const months = Math.floor(days / 30); return `Last watched ${months} month${months === 1 ? '' : 's'} ago` }
+    if (days >= 30) {
+      const months = Math.floor(days / 30)
+      return `Last watched ${months} month${months === 1 ? '' : 's'} ago`
+    }
     if (days >= 1) return days === 1 ? 'Last watched yesterday' : `Last watched ${days} days ago`
     return 'Last watched today'
   }

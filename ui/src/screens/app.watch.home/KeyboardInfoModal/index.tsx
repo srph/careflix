@@ -1,6 +1,6 @@
 import * as React from 'react'
-import UiPlainButton from '~/components/UiPlainButton'
-import UiModal from '~/components/UiModal'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
+import { UiModal } from '~/components/ui-modal/ui-modal'
 
 interface Props {
   isOpen: boolean

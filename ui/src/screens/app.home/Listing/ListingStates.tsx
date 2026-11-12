@@ -1,6 +1,6 @@
-import UiButton from '~/components/UiButton'
+import { UiButton } from '~/components/ui-button/ui-button'
 import type { ComponentProps } from 'react'
-import UiSkeleton from '~/components/UiSkeleton'
+import { UiSkeleton } from '~/components/ui-skeleton/ui-skeleton'
 import { cn } from '~/utils/cn'
 import { FEATURED, FEATURED_COPY, FEATURED_LIST, FEATURED_LIST_ITEM, FEATURED_STAGE, PARTY_BADGES, PARTY_CONTENT, PARTY_GRID, SECTION_HEADING, SECTION_TITLE, SHOW_GRID } from './classes'
 

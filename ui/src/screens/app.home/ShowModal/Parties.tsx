@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import UiAvatarGroup from '~/components/UiAvatarGroup'
+import { UiAvatarGroup } from '~/components/ui-avatar-group/ui-avatar-group'
 import { useAuth } from '~/contexts/Auth'
 import { cn } from '~/utils/cn'
 import { partyStatus } from '../Listing/format'

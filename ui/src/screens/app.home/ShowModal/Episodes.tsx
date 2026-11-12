@@ -1,4 +1,4 @@
-import UiSelect from '~/components/UiSelect'
+import { UiSelect } from '~/components/ui-select/ui-select'
 import Artwork from '../Listing/Artwork'
 import { EPISODE_ART, EPISODE_GRID, EPISODE_HEADING, STATUS } from './classes'
 import { duration, totalDuration } from './format'

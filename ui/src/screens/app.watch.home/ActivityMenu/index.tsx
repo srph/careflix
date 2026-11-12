@@ -1,7 +1,7 @@
 import * as React from 'react'
 import cx from 'classnames'
 import { Menu } from '@base-ui/react/menu'
-import UiPlainButton from '~/components/UiPlainButton'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { ACTIVITY_COPY, ACTIVITY_LEVELS, type ActivityLevel, isActivityLevel } from '../activityLevel'
 import Preview from './Preview'
 

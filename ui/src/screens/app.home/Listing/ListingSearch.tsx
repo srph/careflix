@@ -1,7 +1,7 @@
 import { Autocomplete } from '@base-ui/react/autocomplete'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import UiSkeleton from '~/components/UiSkeleton'
+import { UiSkeleton } from '~/components/ui-skeleton/ui-skeleton'
 import { useListingSearchQuery } from '../queries'
 import Artwork from './Artwork'
 import { partyDetails, partyStatus, showMeta } from './format'

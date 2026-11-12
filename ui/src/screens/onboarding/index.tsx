@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router'
 import { useAuth } from '~/contexts/Auth'
 import { authError, returnToApp } from '~/lib/auth/discord'
-import UiAvatar from '~/components/UiAvatar'
+import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { cn } from '~/utils/cn'
 import Splash, { DISCORD_BUTTON, Spinner } from '~/screens/login/Splash'
 

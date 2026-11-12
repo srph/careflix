@@ -2,7 +2,7 @@ import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
 
 import * as React from 'react'
 import { cn } from '~/utils/cn'
-import UiLoader from '~/components/UiLoader'
+import { UiLoader } from '~/components/ui-loader/ui-loader'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
 import SubtitleSlot from './SubtitleSlot'

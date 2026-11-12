@@ -1,6 +1,6 @@
 import * as React from 'react'
-import UiAvatar from '~/components/UiAvatar'
-import UiContainer from '~/components/UiContainer'
+import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
+import { UiContainer } from '~/components/ui-container/ui-container'
 import { Link } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'

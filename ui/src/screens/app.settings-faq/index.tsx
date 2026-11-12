@@ -1,7 +1,7 @@
 import * as React from 'react'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
-import UiContainer from '~/components/UiContainer'
-import UiAccordion from '~/components/UiAccordion'
+import { UiContainer } from '~/components/ui-container/ui-container'
+import { UiAccordion } from '~/components/ui-accordion/ui-accordion'
 
 import asset_faqImage from '~/assets/faq-img.svg'
 import faqs from './faq'

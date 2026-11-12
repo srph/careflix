@@ -26,7 +26,7 @@
   --zindex-modal: 1000;
 
   --player-chat-pane-width: 320px;
-  /* The real viewport height; components/WindowVhSetter keeps it current on body. */
+  /* The real viewport height; components/window-vh-setter keeps it current on body. */
   --window-vh: 0px;
 
   /* Neutrals are Tailwind's taupe, under the name the app already uses. */

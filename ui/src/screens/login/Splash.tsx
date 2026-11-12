@@ -1,6 +1,6 @@
 import { useRef, type ReactNode } from 'react'
 import { Link } from 'react-router'
-import PageTitle from '~/components/PageTitle'
+import { PageTitle } from '~/components/page-title/page-title'
 import { cn } from '~/utils/cn'
 import FriendAvatars from './FriendAvatars'
 import ReactionCanvas from './ReactionCanvas'

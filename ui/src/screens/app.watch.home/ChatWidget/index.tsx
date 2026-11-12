@@ -1,8 +1,8 @@
 
 import * as React from 'react'
 import { cn } from '~/utils/cn'
-import UiAvatar from '~/components/UiAvatar'
-import UiPlainButton from '~/components/UiPlainButton'
+import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import ChatInvitationPanel from '../ChatInvitationPanel'
 import useHostInvitations from '../ChatInvitationPanel/useHostInvitations'
 import { AnimatePresence } from 'motion/react'
@@ -32,7 +32,7 @@ import { differenceInMinutes, format, parse } from 'date-fns-v1'
 
 import asset_chatInactive from '~/assets/audio/chat-inactive.ogg'
 import asset_chatSend from '~/assets/audio/chat-send.ogg'
-import UiAvatarGroup from '~/components/UiAvatarGroup'
+import { UiAvatarGroup } from '~/components/ui-avatar-group/ui-avatar-group'
 import isFocusedToInput from '~/utils/dom/isFocusedToInput'
 
 interface State {

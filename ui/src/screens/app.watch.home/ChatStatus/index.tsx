@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { cn } from '~/utils/cn'
-import UiAvatar from '~/components/UiAvatar'
+import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { hypeFor, latestStatusActivity, typingLabel } from './status'
 import { ActivitySaid, TypingDots, activityIcon } from './ActivitySaid'
 

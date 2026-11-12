@@ -1,6 +1,6 @@
 import instance from './instance'
 import { AxiosError } from './types'
-import { toast } from '~/components/Toast'
+import { toast } from '~/components/toast/toast'
 import axios from 'axios'
 
 export default {

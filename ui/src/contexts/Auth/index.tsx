@@ -4,7 +4,7 @@ import * as cookie from 'cookie-machine'
 import immer from 'immer'
 import axios from '~/lib/axios'
 import { useNavigate } from 'react-router'
-import { toast } from '~/components/Toast'
+import { toast } from '~/components/toast/toast'
 import { beginDiscord, clearDiscordFlow, pendingOnboarding, saveOnboarding, verifier, type DiscordAuthResult, type Onboarding } from '~/lib/auth/discord'
 import { readDeclinedInvitations, rememberDeclinedInvitation } from './declinedInvitations'
 

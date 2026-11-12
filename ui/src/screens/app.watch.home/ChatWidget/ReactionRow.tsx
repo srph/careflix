@@ -1,5 +1,5 @@
 import * as React from 'react'
-import UiPlainButton from '~/components/UiPlainButton'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { REACTIONS, Reaction } from '../useReactions'
 
 interface Props {

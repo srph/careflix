@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useState, useRef, useMemo } from 'react'
-import UiInputSlider from '~/components/UiInputSlider'
+import { UiInputSlider } from '~/components/ui-input-slider/ui-input-slider'
 import toReadableTime from '~/utils/date/toReadableTime'
 import clamp from '~/utils/clamp'
 

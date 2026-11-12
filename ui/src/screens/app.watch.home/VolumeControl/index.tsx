@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
-import UiPlainButton from '~/components/UiPlainButton'
-import UiInputSlider from '~/components/UiInputSlider'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
+import { UiInputSlider } from '~/components/ui-input-slider/ui-input-slider'
 import PlayerTooltip from '../PlayerTooltip'
 
 interface Props {

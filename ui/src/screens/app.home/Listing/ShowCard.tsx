@@ -1,4 +1,4 @@
-import UiPlainButton from '~/components/UiPlainButton'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import Artwork from './Artwork'
 import { showMeta } from './format'
 

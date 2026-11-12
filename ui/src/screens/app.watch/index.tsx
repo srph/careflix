@@ -1,6 +1,6 @@
 import * as React from 'react'
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
-import UiButton from '~/components/UiButton'
+import { UiButton } from '~/components/ui-button/ui-button'
 
 import { useReducer, useMemo } from 'react'
 import { usePusher } from '~/hooks/usePusher'

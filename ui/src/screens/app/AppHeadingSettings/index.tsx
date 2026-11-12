@@ -1,4 +1,4 @@
-import PageTitle from '~/components/PageTitle'
+import { PageTitle } from '~/components/page-title/page-title'
 
 interface Props {
   title: string

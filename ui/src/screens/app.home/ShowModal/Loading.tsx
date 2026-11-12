@@ -1,4 +1,4 @@
-import UiSkeleton from '~/components/UiSkeleton'
+import { UiSkeleton } from '~/components/ui-skeleton/ui-skeleton'
 import { cn } from '~/utils/cn'
 import { EPISODE_ART, EPISODE_GRID, EPISODE_HEADING, PANE, PARTY_ROW_LINE, TAB_BAR, TAB_COLUMN } from './classes'
 

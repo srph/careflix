@@ -2,9 +2,9 @@ import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { useIsPWA } from '~/hooks/useIsPWA'
 import useWindowSize from '~/hooks/useWindowSize'
-import UiPlainButton from '~/components/UiPlainButton'
-import UiButton from '~/components/UiButton'
-import UiModal from '~/components/UiModal'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
+import { UiButton } from '~/components/ui-button/ui-button'
+import { UiModal } from '~/components/ui-modal/ui-modal'
 import getVideoDetails from '~/utils/shows/getVideoDetails'
 
 interface Props {

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { airYears, duration, totalDuration } from './format'
-import UiSkeleton from '~/components/UiSkeleton'
+import { UiSkeleton } from '~/components/ui-skeleton/ui-skeleton'
 
 const SEASONS = 'grid gap-1.5'
 

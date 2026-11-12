@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import UiPlainButton from '~/components/UiPlainButton'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import useTransientState from '~/hooks/useTransientState'
-import { toast } from '~/components/Toast'
+import { toast } from '~/components/toast/toast'
 import { cn } from '~/utils/cn'
 
 // `chip` is the compact header version in the chat; the default row with its label sits in the invite panel.

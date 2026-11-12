@@ -1,7 +1,7 @@
 import * as React from 'react'
-import UiModal from '~/components/UiModal'
-import UiPlainButton from '~/components/UiPlainButton'
-import SeasonSelection from '~/components/SeasonSelection'
+import { UiModal } from '~/components/ui-modal/ui-modal'
+import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
+import { SeasonSelection } from '~/components/season-selection/season-selection'
 import axios from '~/lib/axios' 
 import { useMediaMode } from '~/hooks/useMediaMode'
 

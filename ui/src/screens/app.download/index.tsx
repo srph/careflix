@@ -4,8 +4,8 @@ import { useIsPWA } from '~/hooks/useIsPWA'
 import { useNavigate } from 'react-router'
 
 import AppHeadingSettings from '~/screens/app/AppHeadingSettings'
-import UiContainer from '~/components/UiContainer'
-import UiAccordion from '~/components/UiAccordion'
+import { UiContainer } from '~/components/ui-container/ui-container'
+import { UiAccordion } from '~/components/ui-accordion/ui-accordion'
 
 import asset_downloadImage from '~/assets/download-img.svg'
 import asset_downloadStep1 from '~/assets/download-step-1.png'

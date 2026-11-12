@@ -158,8 +158,11 @@ export function AppWatchHomeChatInvitationPanel({ invitations, onClose }: {
     onKeyDownCapture={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose() }
     }}>
-    {/* The mirror of opening: what's on the sheet goes first, then the empty sheet fades to the chat. */}
-    <motion.div className="flex min-h-0 flex-1 flex-col" exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : CONTENT_FADE } }}>
+    {/* The mirror of opening: what's on the sheet goes first, then the empty sheet fades to the chat.
+        `animate` is what it comes back to when the panel reopens mid-close: without it, a reopen after this
+        fade has finished but before the sheet's has leaves the contents at 0 on a solid sheet. */}
+    <motion.div className="flex min-h-0 flex-1 flex-col" initial={false} animate={{ opacity: 1, transition: { duration: reducedMotion ? 0 : CONTENT_FADE } }}
+      exit={{ opacity: 0, transition: { duration: reducedMotion ? 0 : CONTENT_FADE } }}>
       <motion.div className="flex flex-none items-center gap-2 pt-4 pr-4 pb-1.5 pl-5" data-testid="invite-heading" {...cascade(0)}>
         <h3 className="text-lg font-bold">Invite</h3>
         <UiPlainButton type="button" onClick={onClose} aria-label="Close invite" className="ml-auto grid size-8 place-items-center rounded-full text-neutral-400 hover:bg-neutral-800 hover:text-white"><i className="fa fa-close" aria-hidden="true" /></UiPlainButton>

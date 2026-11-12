@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
@@ -61,10 +60,10 @@ function KeyCastr() {
   }, [])
 
   return (
-    <div className='key-castr'>
+    <div className="pointer-events-none fixed top-8 left-8 z-5000 flex flex-col">
       <AnimatePresence initial={false}>
       {state.messages.map(message =>
-        <motion.div className='item' key={message.id}
+        <motion.div className="relative inline-block w-auto self-stretch rounded-sm bg-black/75 p-3 text-xl text-white uppercase not-last:mb-4" key={message.id}
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
           {message.text}

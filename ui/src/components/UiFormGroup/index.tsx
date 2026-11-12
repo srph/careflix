@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 
 interface Props {
@@ -9,14 +8,14 @@ interface Props {
 
 function UiFormGroup(props: Props) {
   return (
-    <div className="ui-form-group">
-      <label className="label">{props.label}</label>
-      
+    <div className="[&_a]:text-sky-500">
+      <label className="mb-1 block leading-none font-semibold text-neutral-400">{props.label}</label>
+
       {props.children}
 
       {Boolean(props.hint) && (
-        <span className="hint">
-          <span className="icon">
+        <span className="mt-1 block text-sm text-neutral-400">
+          <span className="mr-2 inline-block">
             <i className="fa fa-info-circle" />
           </span>
 

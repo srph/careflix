@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import UiLogo from '~/components/UiLogo'
 import UiContainer from '~/components/UiContainer'
@@ -10,9 +9,9 @@ interface Props {
 
 function UiNavigation(props: Props) {
   return (
-    <div className="ui-navigation-shape">
+    <div className="bg-neutral-900">
       <UiContainer size="xl">
-        <div data-testid="navigation" className="ui-navigation">
+        <div data-testid="navigation" className="flex h-12.5 items-center justify-between">
           {props.children}
         </div>
       </UiContainer>
@@ -20,45 +19,43 @@ function UiNavigation(props: Props) {
   )
 }
 
-type ActionProps = {
-  children?: React.ReactNode
-} | LinkProps;
+type ActionProps =
+  | {
+      children?: React.ReactNode
+    }
+  | LinkProps
 
-UiNavigation.Action = function(props: ActionProps) {
+UiNavigation.Action = function (props: ActionProps) {
   return (
-    <div className="action">
-      {props.children && (
-        <Link {...(props as LinkProps)} />
-      )}
+    <div className="w-1/4 text-neutral-400 last:text-right">
+      {props.children && <Link {...(props as LinkProps)} className="inline-block text-neutral-400 no-underline" />}
     </div>
   )
 }
 
-type BackActionProps = ActionProps;
+type BackActionProps = ActionProps
 
-UiNavigation.BackAction = function(props: BackActionProps) {
+UiNavigation.BackAction = function (props: BackActionProps) {
   return (
-    <div className="action is-back">
-      <Link aria-label="Go Back" {...(props as LinkProps)}>
+    <div className="-ml-2 w-1/4 text-neutral-400 last:text-right">
+      <Link aria-label="Go Back" {...(props as LinkProps)} className="inline-block p-2 text-neutral-400 no-underline">
         <i className="fa fa-angle-left" />
-        <span className="action-text">
-          <h5 className="ui-subheading is-compact">Go Back</h5>
+        <span className="ml-2 hidden uppercase sm:inline-block">
+          <h5 className="inline-block font-label text-xs font-bold uppercase">Go Back</h5>
         </span>
       </Link>
     </div>
   )
 }
 
-UiNavigation.Title = function(props: Props) {
-  return (
-    <h6 className="ui-subheading">{props.children}</h6>
-  )
+UiNavigation.Title = function (props: Props) {
+  return <h6 className="font-label text-xs font-bold tracking-label uppercase">{props.children}</h6>
 }
 
-UiNavigation.Logo = function() {
+UiNavigation.Logo = function () {
   return (
-    <div className="logo">
-      <Link to="/">
+    <div className="w-1/2 text-center">
+      <Link to="/" className="no-underline">
         <UiLogo />
       </Link>
     </div>

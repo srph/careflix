@@ -1,6 +1,5 @@
-import './style.css'
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import { useReducer, useMemo } from 'react'
 import { useAsyncEffect } from '~/hooks/useAsyncEffect'
 import UiSelect from '~/components/UiSelect'
@@ -149,12 +148,11 @@ function ShowModal(props: Props) {
     return null
   }
 
+  const light = props.mode === 'light'
+
   return (
     <React.Fragment>
-      <div
-        className={cx('c-season-selection-select', {
-          'is-light': props.mode === 'light'
-        })}>
+      <div className="mb-4 w-1/2">
         <UiSelect value={group.id} onChange={handleGroupChange} mode={props.mode}>
           {groups.map(group => (
             <option value={group.id} key={group.id}>
@@ -172,32 +170,33 @@ function ShowModal(props: Props) {
             <button
               type="button"
               disabled={props.isDisabled}
-              className={cx('c-season-selection-episode', {
-                'is-light': props.mode === 'light'
-              })}
+              className={cn(
+                'flex w-full cursor-pointer items-center border-0 bg-transparent py-4 text-left not-last:border-b first:border-t',
+                light ? 'border-neutral-200 text-neutral-700' : 'border-neutral-800 text-white'
+              )}
               key={video.id}
               onClick={() => handleEpisodeClick(video)}>
-              <div className="thumbnail">
+              <div className="relative mr-3 w-30 shrink-0">
                 {active && (
-                  <span className="playlabel">
-                    <h5 className="ui-subheading">Playing</h5>
+                  <span className="absolute top-1 right-1 z-1 inline-block rounded-sm bg-pink-500 p-1 text-white">
+                    <h5 className="font-label text-10 leading-none font-bold tracking-label uppercase">Playing</h5>
                   </span>
                 )}
-                <div className="img">
+                <div className="relative overflow-hidden rounded-sm">
                   <StandardImageAspectRatio src={props.show.preview_image} />
                 </div>
               </div>
 
-              <div className="info">
-                <div className="meta">
-                  <h5 className="ui-subheading is-compact">{getFormattedDurationWithoutSeconds(video.duration)}</h5>
+              <div className="mr-6 w-full">
+                <div className="text-neutral-400">
+                  <h5 className="font-label text-xs font-bold uppercase">{getFormattedDurationWithoutSeconds(video.duration)}</h5>
                 </div>
 
-                <h3 className="title">{video.title}</h3>
+                <h3 className="text-xl font-bold">{video.title}</h3>
               </div>
 
               {!active && (
-                <span className="play">
+                <span className={cn('shrink-0', light ? 'text-neutral-300' : 'text-neutral-400')}>
                   <i className="fa fa-play" />
                 </span>
               )}

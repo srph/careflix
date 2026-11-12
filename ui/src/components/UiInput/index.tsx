@@ -1,6 +1,5 @@
-import './style.css'
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 
 type HTMLProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'className'>
 
@@ -13,10 +12,15 @@ type Props = HTMLProps & OwnProps
 
 function UiInput({ isDark, isRound, ...props }: Props, ref: React.MutableRefObject<HTMLInputElement>) {
   return (
-    <input {...props} ref={ref} className={cx('ui-input', {
-      'is-dark': isDark,
-      'is-round': isRound
-    })} />
+    <input
+      {...props}
+      ref={ref}
+      className={cn(
+        'block h-12.5 w-full border border-transparent px-4 py-0 text-sm text-neutral-400 focus:bg-neutral-950',
+        isDark ? 'bg-neutral-950' : 'bg-neutral-900',
+        isRound ? 'rounded-full' : 'rounded-sm'
+      )}
+    />
   )
 }
 

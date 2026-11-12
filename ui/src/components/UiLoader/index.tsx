@@ -1,6 +1,5 @@
-import './style.css'
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import asset_loader from '~/assets/loader.svg'
 
 interface Props {
@@ -8,12 +7,17 @@ interface Props {
 }
 
 /**
+ * The image is half a ring, so it turns around its right edge.
  * @source https://projects.lukehaas.me/css-loaders/
  */
 function UiLoader(props: Props) {
   return (
-    <div data-testid="loader" className={cx('ui-loader', { 'is-large': props.size === 'large' })}>
-      <img src={asset_loader} alt="Loading..." />
+    <div data-testid="loader" className="text-center">
+      <img
+        src={asset_loader}
+        alt="Loading..."
+        className={cn('inline origin-right animate-[spin_1s_ease_infinite]', props.size === 'large' ? 'w-8' : 'w-4')}
+      />
     </div>
   )
 }

@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 
 export type Props = React.ImgHTMLAttributes<HTMLImageElement> & {
@@ -9,8 +8,8 @@ function ImageAspectRatio(props: Props) {
   const { ratio, ...imgProps } = props
 
   return (
-    <div className="c-image-aspect-ratio" style={{ paddingBottom: `${ratio}%` }}>
-      <img {...imgProps} />
+    <div className="relative w-full" style={{ paddingBottom: `${ratio}%` }}>
+      <img {...imgProps} className="absolute inset-0 size-full" />
     </div>
   )
 }

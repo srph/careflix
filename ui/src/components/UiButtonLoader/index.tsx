@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import UiButton, { UiButtonProps } from '~/components/UiButton'
 import UiLoader from '~/components/UiLoader'

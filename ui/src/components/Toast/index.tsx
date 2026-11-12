@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
@@ -60,15 +59,15 @@ function Toast() {
   }, [])
 
   return (
-    <div data-testid="toasts" className="toast-container">
-      <div className='toast-float'>
+    <div data-testid="toasts" className="pointer-events-none fixed inset-x-8 bottom-8 z-1000 flex justify-center">
+      <div className="flex flex-col">
       <AnimatePresence initial={false}>
         {state.messages.map(message =>
-          <motion.div className='item' key={message.id}
+          <motion.div className="pointer-events-auto relative inline-block rounded-sm bg-pink-500 p-3 pr-6 text-xs text-white not-last:mb-4" key={message.id}
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.3, ease: 'easeOut' }}>
             {message.text}
-            <button className='close' onClick={() => close(message.id)}>
+            <button className="absolute top-3 right-3 cursor-pointer border-0 bg-transparent p-0 text-white opacity-40" onClick={() => close(message.id)}>
               ×
             </button>
           </motion.div>

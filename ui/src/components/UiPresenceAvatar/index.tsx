@@ -1,13 +1,16 @@
-import './style.css'
 import * as React from 'react'
 import UiAvatar from '~/components/UiAvatar'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 
 interface Props {
   user: AppUser
   size?: 'sm' | 'm' | 'l' | 'xl'
   // Used to check if a user is active in the party
   isActive?: boolean
+  className?: string
+  avatarClassName?: string
+  /** The presence dot: its size and position, or `hidden`. */
+  statusClassName?: string
 }
 
 function UiPresenceAvatar(props: Props) {
@@ -15,15 +18,18 @@ function UiPresenceAvatar(props: Props) {
 
   return (
     <div
-      data-testid="presence-avatar" data-online={Boolean(isActive)} className={cx('ui-presence-avatar', {
-        'is-sm': props.size === 'sm',
-        'is-m': props.size === 'm',
-        'is-l': props.size === 'l',
-        'is-xl': props.size === 'xl',
-        'is-online': isActive
-      })}>
-      <UiAvatar user={props.user} size={props.size} />
-      <div className="status" />
+      data-testid="presence-avatar"
+      data-online={Boolean(isActive)}
+      className={cn('relative', isActive ? 'opacity-100 transition-all duration-200' : 'opacity-50', props.className)}>
+      <UiAvatar user={props.user} size={props.size} className={props.avatarClassName} />
+      <div
+        className={cn(
+          'absolute -right-1 -bottom-1 rounded-full border-2 border-neutral-900',
+          props.size === 'm' ? 'size-5' : 'size-4',
+          isActive ? 'bg-emerald-300' : 'bg-neutral-400',
+          props.statusClassName
+        )}
+      />
     </div>
   )
 }

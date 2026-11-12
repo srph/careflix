@@ -9,7 +9,19 @@ const merge = extendTailwindMerge({
       font: ['label'],
       tracking: ['label'],
       shadow: ['pop', 'menu', 'modal', 'glow'],
-      'text-shadow': ['default'],
+      'text-shadow': ['default', 'outline'],
+      animate: [
+        'skeleton',
+        'sweep',
+        'fill',
+        'blink',
+        'shake',
+        'status-in',
+        'typing-dot',
+        'busy-dot',
+        'now-playing',
+        'fade-out'
+      ],
       ease: ['out-soft', 'emphasized', 'out-back', 'in-circ', 'out-circ', 'in-out-expo']
     }
   }

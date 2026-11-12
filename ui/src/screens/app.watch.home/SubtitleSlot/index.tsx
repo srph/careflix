@@ -1,7 +1,5 @@
-import './style.css'
-
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import { useEffect, useState } from 'react'
 import axios from '~/lib/axios'
 import { placements, HAS_PLACEMENT_PATTERN } from './constants'
@@ -17,6 +15,10 @@ interface Props {
   isEnabled: boolean
   isPlayerOpen: boolean
 }
+
+// White text with a black edge. <font> tags in a subtitle file keep their colour but not their own size or face.
+// The md step is the only place 768px is used: a hotfix for a split-screen setup on a small laptop.
+const SLOT = 'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) m-0 p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
 
 function SubtitleSlot(props: Props) {
   const [state, setState] = useState<State>(() => ({ tracks: [] }))
@@ -71,23 +73,21 @@ function SubtitleSlot(props: Props) {
         const placementSubtitles = subtitles.filter(subtitle => {
           // We want to position default tracks (tracks without specified positioning)
           // to be placed to the bottom center.
-          if (placement.className === 'is-bottom-center-subtitle' && !HAS_PLACEMENT_PATTERN.test(subtitle.text)) {
+          if (placement.key === 'bottom-center' && !HAS_PLACEMENT_PATTERN.test(subtitle.text)) {
             return true
           }
 
           return subtitle.text.includes(placement.indicator)
         })
 
-        const className = cx('subtitle-slot', {
-          'is-player-open': props.isPlayerOpen,
-          [placement.className]: true
-        })
+        // While the controls are up, subtitles hide on phones and tablets; on desktop the bottom row lifts above the controls.
+        const className = cn(SLOT, placement.className, props.isPlayerOpen && 'hidden lg:block', props.isPlayerOpen && placement.vertical === 'bottom' && 'lg:pb-45')
 
         return (
-          <div key={placement.className} className={className}>
+          <div key={placement.key} className={className}>
             {placementSubtitles.map(subtitle => (
               <p
-                className="subtitle" data-testid="subtitle"
+                data-testid="subtitle"
                 key={subtitle.index}
                 dangerouslySetInnerHTML={{
                   __html: subtitle.text.replace('\n', '<br />').replace(placement.indicator, '')

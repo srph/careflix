@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import { useState, useRef, useMemo } from 'react'
 import UiInputSlider from '~/components/UiInputSlider'
@@ -42,12 +41,12 @@ function PlayerSeeker(props: Props) {
 
   return (
     <div
-      data-testid="player-seeker" className="slider app-watch-player-seeker"
+      data-testid="player-seeker" className="relative mr-4 w-full lg:mr-8 lg:py-4"
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}>
       {percentage != -1 && (
-        <div className="time" style={{ transform: `translateX(${translateX})` }}>
+        <div className="pointer-events-none absolute -top-8 left-0 w-20 rounded-sm bg-neutral-700 p-2 text-center" style={{ transform: `translateX(${translateX})` }}>
           {toReadableTime(props.duration * percentage, {
             max: props.duration > 3600 ? 'hh' : 'mm'
           })}
@@ -61,9 +60,9 @@ function PlayerSeeker(props: Props) {
         max={props.duration}
         onChange={handleSeek}
         styles={{
-          active: { background: 'var(--color-primary)' },
+          active: { background: 'var(--color-pink-500)' },
           thumb: {
-            background: 'var(--color-primary)',
+            background: 'var(--color-pink-500)',
             height: 28,
             width: 28
           },

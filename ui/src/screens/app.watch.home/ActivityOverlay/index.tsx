@@ -1,8 +1,6 @@
-import './style.css'
-
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import { AnimatePresence, motion } from 'motion/react'
 import UiAvatar from '~/components/UiAvatar'
 import usePusher from '~/hooks/usePusher'
@@ -12,7 +10,7 @@ import useUpdateEffect from '~/hooks/useUpdateEffect'
 import { easeOutSoft } from '~/utils/motion'
 import useTypingStatus from '../ChatWidget/useTypingStatus'
 import { hypeFor, isJoinActivity, typingLabel } from '../ChatStatus/status'
-import { ActivitySaid, activityIcon } from '../ChatStatus/ActivitySaid'
+import { ActivitySaid, TypingDots, activityIcon } from '../ChatStatus/ActivitySaid'
 import { ACTIVITY_COPY, type ActivityLevel, showsOnOverlay } from '../activityLevel'
 
 interface Props {
@@ -37,8 +35,16 @@ export const LINE_MS = 8000
 export const MAX_LINES = 4
 const TOAST_MS = 2200
 
+// A line is a pill over the picture. Newest is brightest; older lines step back.
+const LINE = 'pointer-events-auto flex max-w-full cursor-pointer items-center gap-2 rounded-2xl border-0 bg-black/42 py-1.25 pr-3.5 pl-1.25 text-left text-base/snug text-neutral-200 transition-[opacity,background-color] duration-[.3s,.15s] text-shadow-default hover:bg-black/62 data-[age="1"]:opacity-88 data-[age="2"]:opacity-74 data-[age="3"]:opacity-60 data-[age="4"]:opacity-50'
+const TEXT = 'line-clamp-2 min-w-0 wrap-anywhere'
+const NAME = 'font-bold text-white'
+// The avatar, the icon disc and the typing dots all fill the same 24px slot, so names line up.
+const SLOT = 'inline-flex size-6 flex-none items-center justify-center'
+const AVATAR = 'size-6 flex-none text-11'
+
 /**
- * The room over the bottom-left of the picture while chat is closed: new messages, joins and
+ * The room over the bottom-left of the picture while chat is closed, from 640px up: new messages, joins and
  * playback, and who's typing, filtered by the level chosen from the bell. Clicking a line opens chat.
  * Also owns the note at the top of the picture when the level changes.
  */
@@ -79,18 +85,20 @@ function ActivityOverlay(props: Props) {
 
   return (
     <>
-      <div className={cx('activity-overlay', { 'is-lifted': props.isLifted })} role="log" aria-label="Room activity">
+      {/* Sits above the player overlay so its lines stay clickable while the controls are up. */}
+      <div role="log" aria-label="Room activity"
+        className={cn('pointer-events-none absolute bottom-8 left-8 z-[calc(var(--zindex-player-reactions)+1)] hidden max-w-[min(440px,40%)] flex-col items-start gap-2 transition-[translate] duration-200 motion-reduce:[transition:none] sm:flex', props.isLifted && '-translate-y-28')}>
         <AnimatePresence initial={false}>
           {lines.map((line, i) => (
             <motion.div
               key={line.id}
-              className="item"
+              className="max-w-full"
               layout="position"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -24, transition: { duration: 0.26, ease: [0.4, 0, 1, 1] } }}
               transition={{ duration: 0.32, ease: easeOutSoft }}>
-              <button type="button" className="line" data-testid="activity-line" data-age={count - 1 - i} onClick={props.onOpenChat}>
+              <button type="button" className={LINE} data-testid="activity-line" data-age={count - 1 - i} onClick={props.onOpenChat}>
                 <LineContent log={line.log} />
               </button>
             </motion.div>
@@ -99,15 +107,15 @@ function ActivityOverlay(props: Props) {
           {typer && (
             <motion.div
               key="typing"
-              className="item"
+              className="max-w-full"
               layout="position"
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, transition: { duration: 0.2 } }}
               transition={{ duration: 0.32, ease: easeOutSoft }}>
-              <button type="button" className="line is-typing" data-testid="activity-line" data-age={0} onClick={props.onOpenChat}>
-                <span className="dots" aria-hidden="true"><i /><i /><i /></span>
-                <span className="text" data-testid="activity-text"><b>{typer.subject}</b> {typer.verb}</span>
+              <button type="button" className={LINE} data-testid="activity-line" data-age={0} onClick={props.onOpenChat}>
+                <TypingDots className={`${SLOT} gap-0.5`} dot="size-1 bg-neutral-200" />
+                <span className={TEXT} data-testid="activity-text"><b className={NAME}>{typer.subject}</b> {typer.verb}</span>
               </button>
             </motion.div>
           )}
@@ -118,13 +126,13 @@ function ActivityOverlay(props: Props) {
         {toast && (
           <motion.div
             key={toast}
-            className="activity-overlay-toast" data-testid="activity-toast"
+            className="pointer-events-none absolute inset-x-0 top-6 z-(--zindex-player-tooltip) mx-auto hidden w-max items-center gap-2 rounded-full bg-neutral-900 px-3.5 py-2 text-13/4 font-semibold text-white shadow-pop sm:flex" data-testid="activity-toast"
             role="status"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: easeOutSoft }}>
-            <i className={cx('fa', ACTIVITY_COPY[toast].icon)} aria-hidden="true" />
+            <i className={cn('fa', ACTIVITY_COPY[toast].icon)} aria-hidden="true" />
             {ACTIVITY_COPY[toast].toast}
           </motion.div>
         )}
@@ -136,22 +144,22 @@ function ActivityOverlay(props: Props) {
 function LineContent({ log }: { log: AppPartyLog }) {
   if (log.type === 'message') {
     return <>
-      <UiAvatar user={log.message.user} />
-      <span className="text" data-testid="activity-text"><b>{log.message.user.name}</b> {log.message.text}</span>
+      <UiAvatar user={log.message.user} className={AVATAR} />
+      <span className={TEXT} data-testid="activity-text"><b className={NAME}>{log.message.user.name}</b> {log.message.text}</span>
     </>
   }
 
   const activity = log.activity
   if (isJoinActivity(activity)) {
     return <>
-      <UiAvatar user={activity.user} />
-      <span className="text" data-testid="activity-text"><b>{activity.user.name}</b> {hypeFor(activity.user.id)[0]}</span>
+      <UiAvatar user={activity.user} className={AVATAR} />
+      <span className={TEXT} data-testid="activity-text"><b className={NAME}>{activity.user.name}</b> {hypeFor(activity.user.id)[0]}</span>
     </>
   }
 
   return <>
-    <span className="icon" aria-hidden="true"><i className={cx('fa', activityIcon(activity))} /></span>
-    <span className="text" data-testid="activity-text"><b>{activity.user.name}</b> <ActivitySaid activity={activity} /></span>
+    <span className={`${SLOT} rounded-full bg-white/12 text-10 text-white`} aria-hidden="true"><i className={cn('fa', activityIcon(activity))} /></span>
+    <span className={TEXT} data-testid="activity-text"><b className={NAME}>{activity.user.name}</b> <ActivitySaid activity={activity} /></span>
   </>
 }
 

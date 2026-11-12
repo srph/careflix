@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import { useEffect, useRef } from 'react'
 import { Tooltip } from '@base-ui/react/tooltip'
@@ -43,8 +42,10 @@ export default function PlayerTooltip({ padding = 32, ...props }: Props) {
       </Tooltip.Trigger>
       <Tooltip.Portal>
         <Tooltip.Positioner side="top" align={props.align === 'left' ? 'start' : 'end'} sideOffset={padding}
-          className="app-watch-player-tooltip-popover-container">
-          <Tooltip.Popup className="app-watch-player-tooltip-popover" data-testid="player-tooltip">{props.text}</Tooltip.Popup>
+          className="z-(--zindex-player-tooltip)">
+          {/* Desktop only. Fades up on the way in and leaves at once; moving to the next control swaps it straight in. */}
+          <Tooltip.Popup data-testid="player-tooltip"
+            className="hidden rounded-sm bg-neutral-900 p-4 text-base leading-tight transition-[opacity,translate] duration-150 ease-out data-instant:[transition:none] data-starting-style:translate-y-1.5 data-starting-style:opacity-0 motion-reduce:data-starting-style:translate-y-0 lg:block">{props.text}</Tooltip.Popup>
         </Tooltip.Positioner>
       </Tooltip.Portal>
     </Tooltip.Root>

@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import useUpdateEffect from '~/hooks/useUpdateEffect'
 import { useBufferState } from '~/hooks/useBufferState'
@@ -19,7 +18,7 @@ function PlayerStateBufferedIndicator(props: Props) {
   }
 
   return (
-    <div className="app-watch-player-state-buffered-indicator">
+    <div className="pointer-events-none absolute top-[calc(50%-60px)] left-[calc(50%-60px)] z-(--zindex-player-state-buffered-indicator) hidden size-30 animate-fade-out items-center justify-center rounded-full bg-black/75 text-5xl leading-none text-white opacity-0 select-none lg:flex">
       {props.isPlaying ? <i className="fa fa-play" /> : <i className="fa fa-pause" />}
     </div>
   )

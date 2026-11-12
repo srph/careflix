@@ -1,9 +1,11 @@
-import './style.css'
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import UiAvatar from '~/components/UiAvatar'
 import { hypeFor, latestStatusActivity, typingLabel } from './status'
-import { ActivitySaid, activityIcon } from './ActivitySaid'
+import { ActivitySaid, TypingDots, activityIcon } from './ActivitySaid'
+
+const TEXT = 'truncate'
+const NAME = 'font-semibold text-white'
 
 interface Props {
   logs: AppPartyLog[]
@@ -30,26 +32,27 @@ function ChatStatus({ logs, typing, joined, meId }: Props) {
     const [lead, kicker] = hypeFor(joined.id)
     key = `joined:${joined.id}`
     line = <>
-      <UiAvatar user={joined} size="sm" />
-      <span className="text"><b>{joined.name}</b> {lead} <span className="kicker">{kicker}</span></span>
+      <UiAvatar user={joined} size="sm" className="flex-none" />
+      <span className={TEXT}><b className={NAME}>{joined.name}</b> {lead} <span className="text-pink-300">{kicker}</span></span>
     </>
   } else if (typer) {
     key = `typing:${typer.subject}`
     line = <>
-      <span className="dots" aria-hidden="true"><i /><i /><i /></span>
-      <span className="text"><b>{typer.subject}</b> {typer.verb}</span>
+      <TypingDots className="gap-0.75" dot="size-1.25 bg-neutral-400" />
+      <span className={TEXT}><b className={NAME}>{typer.subject}</b> {typer.verb}</span>
     </>
   } else if (activity) {
     key = `activity:${activity.id}`
     line = <>
-      <i className={cx('fa', activityIcon(activity), 'icon', { 'is-playing': activity.kind === 'played' })} aria-hidden="true" />
-      <span className="text"><b>{who(activity.user)}</b> <ActivitySaid activity={activity} /></span>
+      <i className={cn('fa flex-none text-10 leading-none', activityIcon(activity), activity.kind === 'played' && 'text-pink-500')} aria-hidden="true" />
+      <span className={TEXT}><b className={NAME}>{who(activity.user)}</b> <ActivitySaid activity={activity} /></span>
     </>
   }
 
   return (
-    <div data-testid="chat-status" className="watch-screen-chat-status" role="status">
-      {line && <div className="line" key={key}>{line}</div>}
+    // The tray's header row. Its left edge lines up with the composer's placeholder.
+    <div data-testid="chat-status" className="flex h-8 items-center overflow-hidden pr-3 pl-3.75 text-xs text-neutral-400" role="status">
+      {line && <div className="flex min-w-0 animate-status-in items-center gap-1.75 whitespace-nowrap motion-reduce:animate-none" key={key}>{line}</div>}
     </div>
   )
 }

@@ -1,7 +1,6 @@
-import './style.css'
 
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
 import ChatInvitationPanel from '../ChatInvitationPanel'
@@ -145,6 +144,11 @@ const init: State = {
   isSending: {},
   isLoading: false
 }
+
+// Bubbles from the same person tighten the corners where they meet.
+const BUBBLE = 'max-w-full rounded-2xl px-3 py-1.75 text-sm wrap-anywhere whitespace-pre-wrap'
+const BUBBLE_FRIEND = 'bg-neutral-800 not-first:rounded-tl-md not-last:rounded-bl-md'
+const BUBBLE_SELF = 'bg-pink-500 not-first:rounded-tr-md not-last:rounded-br-md'
 
 function ChatWidget(props: Props) {
   const auth = useAuth()
@@ -405,25 +409,31 @@ function ChatWidget(props: Props) {
 
   return (
     <div
-      data-testid="chat-pane" data-open={props.isChatOpen} className={cx('watch-screen-chat', {
-        'is-chat-open': props.isChatOpen
-      })}>
+      data-testid="chat-pane" data-open={props.isChatOpen}
+      // Under the picture on phones; from `sm` a column that slides in from the right edge.
+      className={cn('relative flex h-full min-h-0 shrink flex-col overflow-hidden bg-neutral-900 sm:absolute sm:inset-y-0 sm:w-(--player-chat-pane-width) sm:shrink-0 sm:transition-all sm:duration-200',
+        props.isChatOpen ? 'sm:right-0' : 'sm:right-[calc(-1*var(--player-chat-pane-width))]')}>
       {/* The invite panel is a solid sheet over this, so the chat stays put underneath; it only can't be reached. */}
-      <div data-testid="chat-content" className="watch-screen-chat-content" inert={props.isInvitationOpen}>
-        <div data-testid="chat-canopy" className="watch-screen-canopy">
-          <UiAvatarGroup users={props.party.members} />
+      <div data-testid="chat-content" className="flex min-h-0 flex-1 flex-col" inert={props.isInvitationOpen}>
+        {/* Faces, the party code chip and invite in one row. */}
+        <div data-testid="chat-canopy" className="flex shrink-0 items-center gap-2 bg-neutral-900 pt-3 pr-3 pb-2 pl-3.5">
+          <UiAvatarGroup users={props.party.members} className="mr-auto" itemClassName="not-last:-mr-2"
+            avatarClassName="size-6 text-10 ring-2 ring-neutral-900" statusClassName="-right-0.5 -bottom-0.5 size-2.5" />
 
           <PartyCode code={props.party.join_code} chip />
 
-          <UiPlainButton type="button" className="invite" ref={inviteButton}
+          <UiPlainButton type="button" ref={inviteButton}
+            className="flex size-7.5 flex-none items-center justify-center rounded-full bg-neutral-800 text-13 leading-none text-white transition-colors duration-200 hover:bg-neutral-700 motion-reduce:[transition:none]"
             aria-label="Invite people" aria-expanded={props.isInvitationOpen} onClick={props.onOpenInvitationModal}>
             <i className="fa fa-user-plus" aria-hidden="true" />
           </UiPlainButton>
         </div>
 
         <InviteStrip invitations={invitations} onOpen={props.onOpenInvitationModal} />
-        <div className="watch-screen-chat-messages-container">
-          <div data-testid="chat-messages" className="watch-screen-chat-messages" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
+        {/* Friends on the left with a small face and name, yours in pink on the right. */}
+        <div className="relative min-h-0 flex-1">
+          {/* A short chat sits on the composer; the auto margin (not justify-end) keeps the top reachable once it scrolls. */}
+          <div data-testid="chat-messages" className="flex h-full flex-col gap-2 overflow-y-auto bg-neutral-900 px-3 py-4 *:first:mt-auto" ref={chatbarRef} onScroll={handleMessagesContainerScroll}>
             {grouped.map((group, i) => {
               const isSelf = group.user.id === auth.data.id
               const previous = grouped[i - 1]
@@ -432,16 +442,16 @@ function ChatWidget(props: Props) {
 
               return (
                 <React.Fragment key={i}>
-                  {showTime && <div data-testid="chat-time" className="watch-screen-chat-time">{format(parse(group.logs[0].created_at), 'h:mm A')}</div>}
-                  <div data-testid="chat-group" data-self={isSelf} className={cx('watch-screen-chat-group', { 'is-self': isSelf })}>
-                    {!isSelf && <div className="avatar"><UiAvatar user={group.user} /></div>}
+                  {showTime && <div data-testid="chat-time" className="mt-1.5 text-center text-11 leading-none text-neutral-400">{format(parse(group.logs[0].created_at), 'h:mm A')}</div>}
+                  <div data-testid="chat-group" data-self={isSelf} className={cn('flex gap-2', isSelf && 'justify-end')}>
+                    {!isSelf && <div className="mt-4.75 flex-none"><UiAvatar user={group.user} className="size-6 text-10" /></div>}
 
-                    <div className="messages">
-                      {!isSelf && <div className="name">{group.user.name}</div>}
+                    <div className="max-w-4/5 min-w-0">
+                      {!isSelf && <div className="mb-0.5 ml-1 text-xs leading-none text-neutral-400">{group.user.name}</div>}
 
-                      <div className="list">
+                      <div className={cn('flex flex-col gap-0.5', isSelf ? 'items-end' : 'items-start')}>
                         {group.logs.map(log => (
-                          <div data-testid="chat-message" className="message" key={log.id}>{log.message.text}</div>
+                          <div data-testid="chat-message" className={cn(BUBBLE, isSelf ? BUBBLE_SELF : BUBBLE_FRIEND)} key={log.id}>{log.message.text}</div>
                         ))}
                       </div>
                     </div>
@@ -452,7 +462,7 @@ function ChatWidget(props: Props) {
           </div>
 
           {hasUnreadMessages && (
-            <UiPlainButton type="button" className="watch-screen-chatbar-unread-note" onClick={handleClickUnreadMessages}>
+            <UiPlainButton type="button" className="absolute bottom-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-xs font-semibold whitespace-nowrap text-neutral-950 shadow-pop" onClick={handleClickUnreadMessages}>
               New messages
               <i className="fa fa-arrow-down" aria-hidden="true" />
             </UiPlainButton>
@@ -460,10 +470,12 @@ function ChatWidget(props: Props) {
         </div>
 
         {/* A tray in the LayerCard style: the status row on top, the composer card flush below it. */}
-        <div data-testid="chat-tray" className="watch-screen-chatbar">
+        <div data-testid="chat-tray" className="mx-2.5 mt-1 mb-2.5 shrink-0 rounded-xl bg-neutral-800">
           <ChatStatus logs={state.logs} typing={typing.names} joined={joined} meId={auth.data.id} />
 
-          <form onSubmit={handleMessage} className="watch-screen-chatbar-input" data-testid="chat-composer">
+          {/* The focus ring belongs to the field (text and send), drawn inside because the field is flush with the tray. */}
+          <form onSubmit={handleMessage} data-testid="chat-composer"
+            className="relative m-0 flex min-h-11 items-end gap-1 rounded-xl bg-neutral-900 pr-1.5 pl-3.75 ring-1 ring-neutral-700 transition-colors duration-150 focus-within:bg-neutral-950 has-[textarea:focus-visible]:outline-2 has-[textarea:focus-visible]:-outline-offset-2 has-[textarea:focus-visible]:outline-pink-700 motion-reduce:[transition:none]">
             <textarea
               rows={1}
               placeholder="Message"
@@ -472,10 +484,12 @@ function ChatWidget(props: Props) {
               ref={inputRef}
               onChange={handleInput}
               onKeyDown={handleInputKeyDown}
-              className="textarea"
+              // Grows with the message where the browser can; elsewhere it stays one line tall and scrolls.
+              className="block field-sizing-content max-h-33 min-h-11 min-w-0 flex-1 resize-none overflow-y-auto border-0 bg-transparent px-0 py-3 text-sm/5 text-white outline-none not-supports-[field-sizing:content]:h-11 placeholder:text-neutral-500"
             />
 
-            <UiPlainButton className="button" disabled={!isSubmittable} ref={buttonRef} aria-label="Send message">
+            <UiPlainButton disabled={!isSubmittable} ref={buttonRef} aria-label="Send message"
+              className="mb-1.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-pink-500 text-13 leading-none text-white transition-[filter] duration-150 not-disabled:hover:brightness-112 disabled:cursor-default motion-reduce:[transition:none]">
               <i className="fa fa-arrow-up" aria-hidden="true" />
             </UiPlainButton>
           </form>
@@ -488,11 +502,11 @@ function ChatWidget(props: Props) {
         {props.isInvitationOpen && <ChatInvitationPanel key="host-invites" invitations={invitations} onClose={props.onCloseInvitationModal} />}
       </AnimatePresence>
 
-      <audio className="chat-notification-audio" ref={idleAudioRef}>
+      <audio className="hidden" ref={idleAudioRef}>
         <source src={asset_chatInactive} type="audio/ogg" />
       </audio>
 
-      <audio className="chat-notification-audio" ref={sendAudioRef}>
+      <audio className="hidden" ref={sendAudioRef}>
         <source src={asset_chatSend} type="audio/ogg" />
       </audio>
     </div>

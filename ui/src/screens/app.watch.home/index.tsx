@@ -1,8 +1,7 @@
-import './style.css'
 import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
 
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import UiLoader from '~/components/UiLoader'
 import PlayerModal from './PlayerModal'
 import ChatWidget from './ChatWidget'
@@ -200,11 +199,6 @@ function AppWatchHome(props: ReactComponentWrapper) {
   const [activityLevel, setActivityLevel] = useActivityLevel(auth.data.id)
   const { registerPlayer } = useInvitationOverlay()
 
-  useEffect(() => {
-    document.body.classList.add("watch-screen-html-body")
-    return () => document.body.classList.remove("watch-screen-html-body")
-  }, [])
-
   const [state, dispatch] = useReducer(reducer, {
     time: context.party.current_time,
     volume: 1,
@@ -225,9 +219,10 @@ function AppWatchHome(props: ReactComponentWrapper) {
   const reactions = useReactions(context.party, auth.data, showsReactions(activityLevel, state.isChatOpen))
 
   const $video = useRef<HTMLVideoElement>(null)
+  const $pane = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    registerPlayer({ partyId: context.party.id, element: $video.current.closest('.watch-screen-video') as HTMLElement })
+    registerPlayer({ partyId: context.party.id, element: $pane.current })
     return () => registerPlayer(null)
   }, [context.party.id, registerPlayer])
 
@@ -502,14 +497,14 @@ function AppWatchHome(props: ReactComponentWrapper) {
   return (
     <React.Fragment>
 
-      <div className="watch-screen">
+      {/* Phones stack the picture, title bar and chat. From `sm` the picture fills the window and the chat slides in beside it. */}
+      <div className="flex h-(--window-vh) w-screen flex-col overflow-hidden sm:relative sm:flex-row">
         <div
-          data-testid="video-pane" className={cx('watch-screen-video', {
-            'has-overlay': changeEpisodeBuffer,
-            'is-chat-open': state.isChatOpen
-          })}>
+          data-testid="video-pane" ref={$pane}
+          className={cn('relative w-full shrink-0 sm:shrink sm:transition-all sm:duration-200', state.isChatOpen && 'sm:w-[calc(100%-var(--player-chat-pane-width))]')}>
+          {/* cursor-pointer: see https://github.com/facebook/react/issues/2055 */}
           <div
-            data-testid="video-stage" className="stage"
+            data-testid="video-stage" className="relative w-full cursor-pointer bg-black bg-cover pb-[56.25%]"
             style={
               state.isInitialized
                 ? {}
@@ -520,6 +515,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
             onMouseMove={handleVideoHover}
             onClick={handleVideoClick}>
             <video
+              className="pointer-events-none absolute inset-0 size-full sm:static"
               src={context.party.video.video_url}
               ref={$video}
               onTimeUpdate={handleTimeUpdate}
@@ -531,13 +527,13 @@ function AppWatchHome(props: ReactComponentWrapper) {
           </div>
 
           {changeEpisodeBuffer && (
-            <div className="watch-screen-message">
-              <div className="content">
-                <div className="status">
-                  <h5 className="ui-subheading">Now Playing</h5>
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-center">
+              <div className="relative animate-now-playing">
+                <div className="mb-1 opacity-75">
+                  <h5 className="font-label text-xs font-bold tracking-label uppercase">Now Playing</h5>
                 </div>
 
-                <h4>
+                <h4 className="text-base font-bold">
                   {context.party.video.group.title}: {context.party.video.title}
                 </h4>
               </div>
@@ -547,7 +543,7 @@ function AppWatchHome(props: ReactComponentWrapper) {
           <PlayerStateBufferedIndicator isPlaying={state.isPlaying} />
 
           {state.isBuffering && (
-            <div className="watch-screen-video-loader">
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/75">
               <UiLoader size="large" />
             </div>
           )}

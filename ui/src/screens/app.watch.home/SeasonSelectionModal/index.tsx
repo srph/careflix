@@ -1,6 +1,4 @@
-import './style.css'
 import * as React from 'react'
-import cx from 'classnames'
 import UiModal from '~/components/UiModal'
 import UiPlainButton from '~/components/UiPlainButton'
 import SeasonSelection from '~/components/SeasonSelection'
@@ -45,14 +43,14 @@ function ShowModal(props: Props) {
       <UiModal
         isOpen={props.isOpen}
         shouldCloseOnOverlayClick={false}
-        overlayClassName="watch-home-season-selection-overlay"
-        modalClassName="watch-home-season-selection-modal"
+        overlayClassName="bg-neutral-950 sm:bg-black/75"
+        modalClassName="relative sm:mx-auto sm:my-16 sm:w-90 sm:rounded-sm sm:bg-white"
         onClose={props.onClose}>
         {() => (
           <React.Fragment>
-            <div className="watch-home-season-selection-close">
+            <div className="absolute top-4 right-4">
               <UiPlainButton onClick={props.onClose}>
-                <div className="watch-home-season-selection-close-button">
+                <div className="flex size-8 items-center justify-center rounded-full bg-neutral-400 text-white">
                   <i className='fa fa-close' />
                 </div>
               </UiPlainButton>

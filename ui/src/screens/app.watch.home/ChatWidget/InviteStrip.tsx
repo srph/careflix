@@ -1,4 +1,4 @@
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import UiAvatar from '~/components/UiAvatar'
 import UiPlainButton from '~/components/UiPlainButton'
@@ -28,14 +28,16 @@ export default function InviteStrip({ invitations, onOpen }: { invitations: Host
   } : null
 
   return <AnimatePresence initial={false}>
-    {strip && <motion.div key="invite-strip" className="host-invite-waiting-slot"
+    {strip && <motion.div key="invite-strip" className="flex-none overflow-hidden"
       initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
       transition={{ duration: reducedMotion ? 0 : .28, ease: easeOutSoft }}>
-      <UiPlainButton type="button" data-testid="invite-strip" className={cx('host-invite-waiting', { 'is-muted': strip.muted })}
+      <UiPlainButton type="button" data-testid="invite-strip"
+        className={cn('mx-3 mb-2.5 flex w-[calc(100%-24px)] items-center gap-2.5 rounded-xl border py-1.75 pr-3 pl-2 text-left text-13 transition-colors duration-350',
+          strip.muted ? 'border-neutral-700 bg-neutral-800 text-neutral-200' : 'border-pink-500/20 bg-pink-500/8 text-pink-200')}
         aria-label={strip.label} disabled={answered && invitations.busy[String(answered.recipient.id)]} onClick={strip.onClick}>
-        <span className="host-invite-waiting-avatars">{strip.users.slice(0, 3).map(user => <UiAvatar key={user.id} user={user} size="sm" />)}</span>
-        <RollingText text={strip.text} className="host-invite-waiting-text" />
-        <RollingText text={strip.right} className="host-invite-waiting-right" lineClassName={strip.muted ? 'is-action' : undefined} />
+        <span className="flex flex-none">{strip.users.slice(0, 3).map(user => <UiAvatar key={user.id} user={user} size="sm" className="not-first:-ml-2 not-first:ring-2 not-first:ring-neutral-900" />)}</span>
+        <RollingText text={strip.text} className="relative h-4.5 min-w-0 flex-1 leading-4.5" />
+        <RollingText text={strip.right} className="relative h-4.5 min-w-10 flex-none text-xs/4.5 text-neutral-400 tabular-nums" lineClassName={strip.muted ? 'text-right text-pink-300 underline' : 'text-right'} />
       </UiPlainButton>
     </motion.div>}
   </AnimatePresence>

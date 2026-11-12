@@ -1,7 +1,6 @@
-import './style.css'
 import { useInvitationOverlay } from '~/screens/app/InvitationModal/Context'
 import * as React from 'react'
-import cx from 'classnames'
+import { cn } from '~/utils/cn'
 import { useState, useRef, useEffect } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import UiPlainButton from '~/components/UiPlainButton'
@@ -46,6 +45,13 @@ interface Props {
   onToggleMute: () => void
   onToggleSubtitle: () => void
 }
+
+// An icon in the bottom bar. `CONTROL` ones (play, skip, volume) only show on desktop; phones and tablets use the buttons over the picture.
+const ITEM = 'relative mr-8 text-xl leading-none text-white lg:text-3xl'
+const CONTROL = `${ITEM} hidden lg:flex`
+const TIME = 'shrink-0 text-base leading-none tabular-nums not-last:mr-4 lg:not-last:mr-8'
+const SECTION = 'flex items-center'
+const CENTER_ACTION = 'pointer-events-auto p-4 text-base leading-none'
 
 /**
  * @TODO We might not need to use a modal here since it's only an overlay on desktop screens.
@@ -169,41 +175,41 @@ function PlayerModal({ party, ...props }: Props) {
     <div>
       <AnimatePresence initial={false}>
       {props.isOpen && (
-        <motion.div data-testid="player-chrome" className="watch-player-container" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
-          <div className="watch-player-overlay" ref={overlayRef} onClick={handleClickOverlay} />
+        <motion.div data-testid="player-chrome" className="pointer-events-auto absolute inset-0 z-(--zindex-player-overlay)" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }}>
+          <div className="absolute inset-0 bg-black/70 sm:bg-transparent sm:bg-linear-to-t sm:from-black/75 sm:to-transparent" ref={overlayRef} onClick={handleClickOverlay} />
 
-          <Link to="/" className="watch-player-browse">
-            <span className="icon">
+          <Link to="/" className="absolute top-4 left-4 text-base leading-none text-white no-underline text-shadow-[0_1px_2px_rgb(0_0_0/0.5)] lg:text-xl">
+            <span className="mr-4">
               <i className="fa fa-long-arrow-left" />
             </span>
             Back to Browse
           </Link>
 
-          <div data-testid="player-mobile-actions" className="watch-player-mobile-actions">
-            <UiPlainButton className="action" aria-label="Rewind by 10 seconds" onClick={handleBackward}>
+          <div data-testid="player-mobile-actions" className="pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-center lg:hidden">
+            <UiPlainButton className={CENTER_ACTION} aria-label="Rewind by 10 seconds" onClick={handleBackward}>
               <i className="fa fa-backward" />
             </UiPlainButton>
 
-            <UiPlainButton className="toggle" aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
+            <UiPlainButton className="pointer-events-auto mx-4 flex size-10 items-center justify-center rounded-full bg-pink-500 text-base leading-none text-white" aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
               {props.isPlaying ? (
                 <i className="fa fa-pause" />
               ) : (
-                <span className="play">
+                <span className="pl-0.5">
                   <i className="fa fa-play" />
                 </span>
               )}
             </UiPlainButton>
 
-            <UiPlainButton className="action" aria-label="Forward by 10 seconds" onClick={handleForward}>
+            <UiPlainButton className={CENTER_ACTION} aria-label="Forward by 10 seconds" onClick={handleForward}>
               <i className="fa fa-forward" />
             </UiPlainButton>
           </div>
 
-          <div className="watch-player-contents">
+          <div className="absolute inset-x-0 bottom-0 z-(--zindex-player-overlay-elements)">
             {/* The Activity Overlay menu sits over the seek bar, so the bar and its times step aside, like for the volume. */}
             {!isVolumeControlOpen && !isActivityMenuOpen && (isRemainingTimeTooltipOpen || !isTooltipOpen) && (
-              <div data-testid="player-controls" className="watch-player-controls">
-                <div className="time">
+              <div data-testid="player-controls" className="flex items-center p-4 sm:px-4 sm:py-0 lg:px-8">
+                <div className={TIME}>
                   {toReadableTime(props.time, {
                     max: party.video.duration > 3600 ? 'hh' : 'mm'
                   })}
@@ -211,7 +217,7 @@ function PlayerModal({ party, ...props }: Props) {
 
                 <PlayerSeeker time={props.time} duration={party.video.duration} onSeek={props.onSeek} />
 
-                <div className="time">
+                <div className={TIME}>
                   <PlayerTooltip
                     text={isRemainingTimeToggled ? 'Display remaining time' : 'Display duration'}
                     align="right"
@@ -228,15 +234,16 @@ function PlayerModal({ party, ...props }: Props) {
               </div>
             )}
 
-            <div data-testid="player-actions" className="watch-player-modal-actions">
-              <div className="section">
+            <div data-testid="player-actions" className="hidden items-center justify-between p-4 sm:flex lg:px-8">
+              {/* min-w-0 lets the title shorten with an ellipsis. */}
+              <div className={`${SECTION} min-w-0`}>
                 <PlayerTooltip
                   text={props.isPlaying ? 'Pause' : 'Play'}
                   align="left"
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-control">
-                    <UiPlainButton className="icon" aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
+                  <div className={CONTROL}>
+                    <UiPlainButton aria-label={props.isPlaying ? 'Pause' : 'Play'} onClick={props.onPlay}>
                       {props.isPlaying ? <i className="fa fa-pause" /> : <i className="fa fa-play" />}
                     </UiPlainButton>
                   </div>
@@ -247,8 +254,8 @@ function PlayerModal({ party, ...props }: Props) {
                   align="left"
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-control">
-                    <UiPlainButton className="icon" aria-label="Rewind by 10 seconds" onClick={handleBackward}>
+                  <div className={CONTROL}>
+                    <UiPlainButton aria-label="Rewind by 10 seconds" onClick={handleBackward}>
                       <i className="fa fa-backward" />
                     </UiPlainButton>
                   </div>
@@ -259,14 +266,14 @@ function PlayerModal({ party, ...props }: Props) {
                   align="left"
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-control">
-                    <UiPlainButton className="icon" aria-label="Forward by 10 seconds" onClick={handleForward}>
+                  <div className={CONTROL}>
+                    <UiPlainButton aria-label="Forward by 10 seconds" onClick={handleForward}>
                       <i className="fa fa-forward" />
                     </UiPlainButton>
                   </div>
                 </PlayerTooltip>
 
-                <div className="watch-player-modal-action-item is-control">
+                <div className={CONTROL}>
                   <VolumeControl
                     volume={props.volume}
                     isMuted={props.isMuted}
@@ -281,13 +288,13 @@ function PlayerModal({ party, ...props }: Props) {
                   />
                 </div>
 
-                <h3 className="watch-player-modal-title">
-                  <span className="title">{party.video.show.title}</span>
-                  <span className="info">{getVideoDetails(party.video)}</span>
+                <h3 className="max-w-full truncate pr-8 text-xl leading-none font-medium">
+                  <span>{party.video.show.title}</span>
+                  <span className="ml-2 opacity-75">{getVideoDetails(party.video)}</span>
                 </h3>
               </div>
 
-              <div className="section">
+              <div className={`${SECTION} shrink-0`}>
                 {/* <div className="action">
                   <UiPlainButton className="icon">
                     <i className="fa fa-info-circle" />
@@ -305,8 +312,8 @@ function PlayerModal({ party, ...props }: Props) {
                   align="right"
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-keyboard-icon">
-                    <UiPlainButton className="icon" aria-label="View keyboard shortcuts" onClick={props.onOpenKeyboardInfo}>
+                  <div className={`${ITEM} hidden lg:block`}>
+                    <UiPlainButton aria-label="View keyboard shortcuts" onClick={props.onOpenKeyboardInfo}>
                       <i className="fa fa-keyboard-o" />
                     </UiPlainButton>
                   </div>
@@ -318,11 +325,8 @@ function PlayerModal({ party, ...props }: Props) {
                     align="right"
                     onOpen={handleOpenTooltip}
                     onClose={handleCloseTooltip}>
-                    <div
-                      className={cx('watch-player-modal-action-item', {
-                        'is-subtitle-disabled': !props.isSubtitleEnabled
-                      })}>
-                      <UiPlainButton className="icon" aria-label={props.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'} onClick={props.onToggleSubtitle}>
+                    <div className={cn(ITEM, !props.isSubtitleEnabled && 'opacity-50 transition-opacity duration-200')}>
+                      <UiPlainButton aria-label={props.isSubtitleEnabled ? 'Disable subtitles' : 'Enable subtitles'} onClick={props.onToggleSubtitle}>
                         <i className="fa fa-align-center" />
                       </UiPlainButton>
                     </div>
@@ -335,8 +339,8 @@ function PlayerModal({ party, ...props }: Props) {
                     align="right"
                     onOpen={handleOpenTooltip}
                     onClose={handleCloseTooltip}>
-                    <div className="watch-player-modal-action-item" onClick={props.onOpenSeasonSelection}>
-                      <UiPlainButton className="icon" aria-label="Open Episode Selection">
+                    <div className={ITEM} onClick={props.onOpenSeasonSelection}>
+                      <UiPlainButton aria-label="Open Episode Selection">
                         <i className="fa fa-list-ol" />
                       </UiPlainButton>
                     </div>
@@ -348,8 +352,8 @@ function PlayerModal({ party, ...props }: Props) {
                   align="right"
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-fs-icon" onClick={toggleIsFullsceen}>
-                    <UiPlainButton className="icon" aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}>
+                  <div className={ITEM} onClick={toggleIsFullsceen}>
+                    <UiPlainButton aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}>
                       {isFullscreen ? <i className="fa fa-compress" /> : <i className="fa fa-expand" />}
                     </UiPlainButton>
                   </div>
@@ -361,7 +365,7 @@ function PlayerModal({ party, ...props }: Props) {
                   disabled={isActivityMenuOpen}
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-activity-icon">
+                  <div className={ITEM}>
                     <ActivityMenu
                       level={props.activityLevel}
                       onChange={props.onChangeActivityLevel}
@@ -375,8 +379,8 @@ function PlayerModal({ party, ...props }: Props) {
                   align="right"
                   onOpen={handleOpenTooltip}
                   onClose={handleCloseTooltip}>
-                  <div className="watch-player-modal-action-item is-chat-icon">
-                    <UiPlainButton className="icon" aria-label={props.isChatOpen ? 'Close Chat' : 'Open Chat'} onClick={props.onToggleChat}>
+                  <div className={cn(ITEM, 'mr-0')}>
+                    <UiPlainButton aria-label={props.isChatOpen ? 'Close Chat' : 'Open Chat'} onClick={props.onToggleChat}>
                       {props.isChatOpen ? <i className="fa fa-comment-o" /> : <i className="fa fa-comment" />}
                     </UiPlainButton>
                   </div>

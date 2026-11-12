@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiModal from '~/components/UiModal'
@@ -30,24 +29,24 @@ function PlayerKeyboardInfoModal(props: Props) {
     <UiModal
       isOpen={props.isOpen}
       onClose={props.onClose}
-      overlayClassName="app-watch-keyboard-info-overlay"
-      modalClassName="app-watch-keyboard-info-modal">
-      <div className="heading">
-        <h5 className="ui-subheading">Keyboard Shortcuts</h5>
+      overlayClassName="bg-neutral-900 lg:bg-black/75"
+      modalClassName="p-0 lg:mx-auto lg:my-20 lg:w-120 lg:rounded-sm lg:bg-neutral-900">
+      <div className="flex items-center justify-between p-4">
+        <h5 className="font-label text-xs font-bold tracking-label uppercase">Keyboard Shortcuts</h5>
 
-        <UiPlainButton className="close" onClick={props.onClose}>
+        <UiPlainButton className="flex size-8 items-center justify-center rounded-full bg-neutral-400 text-white" onClick={props.onClose}>
           <i className="fa fa-close" />
         </UiPlainButton>
       </div>
 
       {shortcuts.map((shortcut, i) =>
-        <div className="app-watch-keyboard-info-item" key={i}>
-          <div className="description">
+        <div className="flex items-center border-neutral-800 p-4 not-last:border-b" key={i}>
+          <div>
             {shortcut.name}
           </div>
 
-          <div className="combo">
-            <code>{shortcut.combo}</code>
+          <div className="ml-auto flex shrink-0">
+            <code className="inline-block rounded-xs border border-neutral-400 bg-neutral-700 px-2 py-1 uppercase">{shortcut.combo}</code>
           </div>
         </div>
       )}

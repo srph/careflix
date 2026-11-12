@@ -1,27 +1,24 @@
-import kebabCase from 'lodash.kebabcase'
-
-const raw = {
-  TOP_LEFT_SUBTITLE: '{\\an7}',
-  TOP_CENTER_SUBTITLE: '{\\an8}',
-  TOP_RIGHT_SUBTITLE: '{\\an9}',
-  MIDDLE_LEFT_SUBTITLE: '{\\an4}',
-  MIDDLE_CENTER_SUBTITLE: '{\\an5}',
-  MIDDLE_RIGHT_SUBTITLE: '{\\an6}',
-  BOTTOM_LEFT_SUBTITLE: '{\\an1}',
-  BOTTOM_CENTER_SUBTITLE: '{\\an2}',
-  BOTTOM_RIGHT_SUBTITLE: '{\\an3}',
-}
+const VERTICAL = { bottom: 'bottom-0', middle: 'top-1/2 -translate-y-1/2', top: 'top-0' }
+const HORIZONTAL = { left: 'text-left', center: 'text-center', right: 'text-right' }
 
 interface SubtitlePlacement {
+  key: string
+  vertical: keyof typeof VERTICAL
   className: string
   indicator: string
 }
 
-const placements: SubtitlePlacement[] = Object.keys(raw)
-  .map(key => ({
-    className: `is-${kebabCase(key)}`,
-    indicator: raw[key]
-  }))
+/**
+ * The nine places a subtitle can sit. A cue picks one with a tag numbered like a keypad:
+ * {\an1} is bottom left, {\an5} the middle, {\an9} top right.
+ */
+const placements: SubtitlePlacement[] = (['bottom', 'middle', 'top'] as const).flatMap((vertical, row) =>
+  (['left', 'center', 'right'] as const).map((horizontal, column) => ({
+    key: `${vertical}-${horizontal}`,
+    vertical,
+    className: `${VERTICAL[vertical]} ${HORIZONTAL[horizontal]}`,
+    indicator: `{\\an${row * 3 + column + 1}}`
+  })))
 
 const HAS_PLACEMENT_PATTERN = /{\\an\d}/
 

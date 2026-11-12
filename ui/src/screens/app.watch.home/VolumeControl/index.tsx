@@ -1,7 +1,5 @@
-import './style.css'
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import cx from 'classnames'
 import UiPlainButton from '~/components/UiPlainButton'
 import UiInputSlider from '~/components/UiInputSlider'
 import PlayerTooltip from '../PlayerTooltip'
@@ -30,12 +28,10 @@ function VolumeControl(props: Props) {
 
   return (
     <div
-      data-testid="volume-control" className={cx('app-watch-volume-control-action', {
-        'is-muted': props.isMuted
-      })}
+      data-testid="volume-control" className="group flex items-center py-4"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}>
-      <div className="icon">
+      <div className={props.isMuted ? 'text-red-500 group-hover:mr-4' : 'group-hover:mr-4'}>
         <PlayerTooltip
           text={props.isMuted ? 'Unmute' : 'Mute'}
           align="left"
@@ -47,7 +43,8 @@ function VolumeControl(props: Props) {
         </PlayerTooltip>
       </div>
 
-      <div className="slider">
+      {/* The slider opens on hover: it widens at once and fades in; on the way out it fades after a beat. */}
+      <div className="w-0 opacity-0 transition-[width,opacity] delay-[0ms,200ms] duration-[200ms,400ms] group-hover:w-20 group-hover:opacity-100 group-hover:delay-0">
         <UiInputSlider
         ariaLabel="Volume"
           value={props.volume}
@@ -56,7 +53,7 @@ function VolumeControl(props: Props) {
           step={0.1}
           onChange={props.onChangeVolume}
           styles={{
-            active: { background: 'var(--color-primary)' },
+            active: { background: 'var(--color-pink-500)' },
             track: {
               width: '100%',
               cursor: 'pointer'

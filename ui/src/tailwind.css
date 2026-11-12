@@ -1,13 +1,34 @@
 /**
- * Tailwind v4: theme tokens and utilities.
- * Preflight is left out until the old stylesheets are gone; sanitize.css still does the reset.
+ * Tailwind v4: the reset (Preflight), theme tokens and utilities.
+ * FontAwesome sits in the base layer with the reset, so a utility can override it.
+ * CSS outside a layer (a library's injected styles) still beats everything here.
  */
-@layer theme, base, components, utilities;
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/utilities.css' layer(utilities);
+@import 'tailwindcss';
+@import 'font-awesome/css/font-awesome.css' layer(base);
 
-/* `static` keeps every token in the output: the old stylesheets read them through var(). */
+@layer base {
+  /* Keyboard focus: one darker-pink ring, 3px out. A component only changes the offset where a parent would clip it. */
+  :focus-visible {
+    outline: 2px solid var(--color-pink-700);
+    outline-offset: 3px;
+  }
+}
+
+/* `static` keeps every token in the output: inline styles and arbitrary values read them through var(). */
 @theme static {
+  /* Stacking order: the watch room's layers over the picture, then modals over everything. */
+  --zindex-player-overlay: 500;
+  --zindex-player-overlay-elements: 501;
+  --zindex-player-reactions: 540;
+  --zindex-player-subtitles: 550;
+  --zindex-player-state-buffered-indicator: 600;
+  --zindex-player-tooltip: 700;
+  --zindex-modal: 1000;
+
+  --player-chat-pane-width: 320px;
+  /* The real viewport height; components/WindowVhSetter keeps it current on body. */
+  --window-vh: 0px;
+
   /* Neutrals are Tailwind's taupe, under the name the app already uses. */
   --color-neutral-50: oklch(98.6% 0.002 67.8);
   --color-neutral-100: oklch(96% 0.002 17.2);
@@ -24,10 +45,13 @@
   --font-sans: 'halyard-display', sans-serif;
   --font-label: 'Work Sans', sans-serif;
 
-  /* Sizes between Tailwind's steps, named by their pixel size. They leave line height alone. */
+  /* Sizes between Tailwind's steps, named by their pixel size: 10/14, 11/16 and 13/18. */
   --text-10: 0.625rem;
+  --text-10--line-height: calc(0.875 / 0.625);
   --text-11: 0.6875rem;
+  --text-11--line-height: calc(1 / 0.6875);
   --text-13: 0.8125rem;
+  --text-13--line-height: calc(1.125 / 0.8125);
 
   --tracking-label: 0.08em;
 
@@ -38,6 +62,8 @@
   --shadow-glow: 0 10px 30px -8px oklch(65.6% 0.241 354.308 / 0.55);
 
   --text-shadow-default: 0 1px 1px var(--color-neutral-950);
+  /* Subtitles: a hard black edge on every side. */
+  --text-shadow-outline: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 
   /* Easings. Motion can't read these, so utils/motion.ts mirrors the ones it needs. */
   --ease-out-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -46,4 +72,290 @@
   --ease-in-circ: cubic-bezier(0.55, 0, 1, 0.45);
   --ease-out-circ: cubic-bezier(0, 0.55, 0.45, 1);
   --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+
+  --animate-skeleton: skeleton-pulse 1.6s ease-in-out infinite alternate;
+  /* A wrong access code. */
+  --animate-shake: shake 0.4s;
+  /* Login: the gap for the friends' faces opens, then each face drops in and settles. */
+  --animate-friends-open: friends-open 0.5s var(--ease-out-soft) 0.3s backwards;
+  --animate-friend-drop: friend-drop 0.9s linear 0.85s both;
+  /* Listing: the bar under the featured title that is showing, and the placeholders' moving sheen. */
+  --animate-fill: fill 6s linear forwards;
+  --animate-sweep: skeleton-sweep 1.8s linear infinite;
+  /* The text cursor in an empty party-code cell. */
+  --animate-blink: blink 1s steps(1) infinite;
+
+  @keyframes skeleton-pulse {
+    to {
+      opacity: 0.35;
+    }
+  }
+
+  @keyframes fill {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes skeleton-sweep {
+    from {
+      background-position: 100vw 0;
+    }
+    to {
+      background-position: -100vw 0;
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes shake {
+    25%,
+    75% {
+      transform: translateX(-4px);
+    }
+    50% {
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes friends-open {
+    from {
+      width: 0;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  @keyframes friend-drop {
+    0% {
+      transform: translateY(-3.4em);
+      opacity: 0;
+      animation-timing-function: var(--ease-in-circ);
+    }
+    12% {
+      opacity: 1;
+    }
+    48% {
+      transform: translateY(0) scale(1.14, 0.84);
+      animation-timing-function: var(--ease-out-circ);
+    }
+    68% {
+      transform: translateY(-0.42em) scale(0.97, 1.04);
+      animation-timing-function: var(--ease-in-circ);
+    }
+    84% {
+      transform: translateY(0) scale(1.05, 0.95);
+      animation-timing-function: ease-out;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  /* Watch room. A new line in the chat status row. */
+  --animate-status-in: status-in 0.3s var(--ease-out-soft);
+  /* Three dots bobbing in turn: someone typing, and a busy invite button. */
+  --animate-typing-dot: typing-dot 1.2s infinite;
+  --animate-busy-dot: busy-dot 1s ease-in-out infinite;
+  /* The "Now Playing" note when the episode changes: in, hold, out. */
+  --animate-now-playing: now-playing 4s ease;
+  /* The play or pause mark that flashes in the middle of the picture. */
+  --animate-fade-out: fade-out 0.4s ease-in-out;
+  /* A reaction's emoji pops in, then the sender's name drops under it. */
+  --animate-reaction-pop: reaction-pop 0.6s var(--ease-out-back) backwards;
+  --animate-reaction-name: reaction-name 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) 0.18s backwards;
+
+  @keyframes status-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes typing-dot {
+    0%,
+    60%,
+    100% {
+      opacity: 0.35;
+      transform: none;
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes busy-dot {
+    0%,
+    80%,
+    100% {
+      opacity: 0.3;
+      transform: none;
+    }
+    40% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+  }
+
+  @keyframes now-playing {
+    0% {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    15%,
+    85% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes reaction-pop {
+    from {
+      transform: scale(0);
+    }
+  }
+
+  @keyframes reaction-name {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.6);
+    }
+  }
+
+  /* A reaction floats up its lane, sways, and melts out from 60% of the way. Each float sets its own path. */
+  @keyframes reaction-rise {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-1 * min(var(--rise) * 1cqh, 300px)));
+    }
+  }
+
+  @keyframes reaction-fade {
+    0% {
+      opacity: 0;
+    }
+    5%,
+    60% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes reaction-drift {
+    0% {
+      transform: none;
+    }
+    50% {
+      transform: translateX(var(--drift)) rotate(var(--tilt));
+    }
+    100% {
+      transform: translateX(var(--drift-end)) rotate(calc(var(--tilt) * -0.5));
+    }
+  }
+}
+
+/*
+ * A reaction's path. These read --d and --ease from the float itself, so they are inlined
+ * into the utility (a variable on :root could not see them).
+ */
+@theme inline {
+  --animate-reaction: reaction-rise var(--d) var(--ease) forwards, reaction-fade var(--d) linear forwards;
+  --animate-reaction-fade: reaction-fade var(--d) linear forwards;
+  --animate-reaction-drift: reaction-drift var(--d) ease-in-out forwards;
+}
+
+/*
+ * One underline for a row of tabs: it sits under the hovered or focused tab, else the selected one,
+ * and slides between them. Goes on the tablist. Without anchor positioning each tab grows its own bar.
+ */
+@utility sliding-tabs {
+  @supports (anchor-name: --a) {
+    position: relative;
+
+    & [role='tab'][aria-selected='true'],
+    & [role='tab']:is(:hover, :focus-visible) {
+      anchor-name: --sliding-tab;
+    }
+
+    &:has([role='tab']:is(:hover, :focus-visible)) [role='tab'][aria-selected='true']:not(:hover, :focus-visible),
+    &:has([role='tab']:hover) [role='tab']:focus-visible:not(:hover) {
+      anchor-name: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      position-anchor: --sliding-tab;
+      left: anchor(left);
+      right: anchor(right);
+      top: calc(anchor(bottom) - 2px);
+      height: 2px;
+      border-radius: 2px;
+      background: var(--color-pink-500);
+      pointer-events: none;
+      transition:
+        left 0.3s var(--ease-emphasized),
+        right 0.3s var(--ease-emphasized),
+        top 0.3s var(--ease-emphasized);
+      /* Waiting before returning to the selected tab keeps the bar from jumping back while the pointer crosses the gap between tabs. */
+      transition-delay: 0.12s;
+    }
+
+    &:has([role='tab']:is(:hover, :focus-visible))::after {
+      transition-delay: 0s;
+    }
+  }
+
+  @supports not (anchor-name: --a) {
+    & [role='tab']::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--color-pink-500);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    & [role='tab'][aria-selected='true']::after,
+    & [role='tab']:is(:hover, :focus-visible)::after {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after,
+    & [role='tab']::after {
+      transition: none;
+    }
+  }
 }

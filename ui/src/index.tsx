@@ -1,7 +1,4 @@
-import 'sanitize.css'
-import 'font-awesome/css/font-awesome.css'
 import './tailwind.css'
-import './global.css'
 
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, Navigate, Outlet } from 'react-router'

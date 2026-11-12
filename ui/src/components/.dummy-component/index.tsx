@@ -1,4 +1,3 @@
-import './style.css'
 import * as React from 'react'
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
 
 function UiDummy(props: Props) {
   return (
-    <div className="ui-spacer">
+    <div>
       {props.children}
     </div>
   )

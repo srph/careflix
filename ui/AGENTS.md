@@ -49,17 +49,27 @@ src/
 
 ## Styling
 
-Styling is moving from one global `style.css` per component to Tailwind `4.3.5`. Both exist until the migration ends.
+Components are styled with Tailwind `4.3.5` classes; none has its own stylesheet. `src/tailwind.css` is the only CSS file: the reset, the tokens, the focus ring and one custom utility.
 
-- **Migrate a stylesheet whole, then delete it.** The old CSS is unlayered and always beats Tailwind's layered utilities, so a component can't be half and half.
+- **No component stylesheets.** CSS outside a layer always beats Tailwind's layered utilities, so a component can't be half and half. A library that injects its own styles does the same: add `!` to the utility that has to win (`absolute!` on the invitation's border beam).
 - **Tokens** live in `src/tailwind.css` (`@theme`). A value used in several places becomes a token; a true one-off is an arbitrary value (`bg-[#5865f2]`).
 - **Colours** come straight from Tailwind's palette: primary `pink-500`, focus `pink-700`, soft pink text `pink-300`, error `rose-400`, live `rose-500`, green `emerald-300`, blue `sky-500`, yellow `amber-300`. `neutral-*` holds Tailwind's taupe values.
 - **Snap to the default scale** for spacing, radius and font size instead of registering near-misses. `text-10`, `text-11` and `text-13` are the only extra sizes.
 - **Mobile-first only.** Base classes are the phone layout; `sm:`, `md:`, `lg:` and `xl:` add to it. No `max-*` variants.
-- **1rem is 16px.** The app's 14px text comes from `text-sm/[1.15]` on `body`.
+- **1rem is 16px.** The app's 14px text comes from `text-sm` on `body`.
+- **`body` sets four app-wide defaults** in `index.html`: 14px text, white on `neutral-950`, the arrow cursor over text (`cursor-default`), and long words that wrap (`wrap-anywhere`).
 - **Easings** are `ease-*` tokens (`ease-out-soft` is the house curve). Motion can't read them, so `utils/motion.ts` mirrors the ones it needs.
 - **`cn()`** from `~/utils/cn` joins classes and lets a later Tailwind class win. Primitives that accept `className` use it.
-- **Preflight is not loaded yet;** `sanitize.css` still does the reset. Borders need an explicit style and colour until that changes.
+- **The reset is Tailwind's Preflight.** A heading has no size or weight of its own, a list no bullets, a link no colour or underline, and a button no padding, border or background: give each what it needs. An image is block-level, so add `inline` to centre one with `text-center`. A border with no colour class takes the text colour, so always name one.
+- **Focus ring:** one rule in `src/tailwind.css` gives every focused control a `pink-700` ring, 3px out. A component only changes the offset where a parent would clip it.
+- **Small caps labels** are `font-label text-xs font-bold tracking-label uppercase`.
+- **Placeholders** are `placeholder:text-neutral-500`.
+- **Stacking order** is a set of `--zindex-*` tokens in `src/tailwind.css`, used as `z-(--zindex-modal)`.
+- **Icons:** size a FontAwesome icon with a `text-*` class on the `<i>` or its parent, plus `leading-none`.
+- **Animations** are `animate-*` tokens with their keyframes in `src/tailwind.css`. One that reads a variable set on the element itself (a reaction's path) goes in the `@theme inline` block.
+- **`hover:` only applies where the pointer can hover,** so a tap on a phone no longer leaves a button looking hovered.
+- **Line height:** a size class brings Tailwind's line height with it. Add `leading-none` where a line height does nothing useful (buttons, chips, icons, single-line labels). Text with no size class gets `body`'s 20px line.
+- **Styling a child you don't render** (every `<b>` in a line, every button in a card): use a variant on the parent, such as `[&_b]:font-semibold`.
 - **Tests never select by class name.** Use roles, text, labels or `data-testid`, and expose state as `data-*` attributes.
 - `prettier-plugin-tailwindcss` sorts classes; run Prettier on files you migrate.
 

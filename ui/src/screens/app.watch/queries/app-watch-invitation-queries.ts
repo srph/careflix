@@ -1,4 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef } from 'react'
+import { hashKey, notifyManager, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { axios } from '~/lib/axios/axios'
 import { get } from '~/lib/query/get'
 import { queryKeys } from '~/query-keys'
@@ -67,6 +68,34 @@ export function useInvitationsQuery(party: AppParty) {
     gcTime: 0,
     retry: false
   })
+}
+
+/**
+ * Calls `onChange` with the list before and after every write to it (events, sends, loads), one write at a
+ * time and in order, even when several land before the next render. What `onChange` sets in React state
+ * shows up in the same render as the write.
+ */
+export function useInvitationsChange(
+  partyId: AppId,
+  onChange: (before: AppPartyInvitation[], after: AppPartyInvitation[]) => void
+) {
+  const client = useQueryClient()
+  const latest = useRef(onChange)
+  latest.current = onChange
+
+  useEffect(() => {
+    const key = queryKeys.watchParty.invitations(partyId)
+    const hash = hashKey(key)
+    let previous = client.getQueryData<AppPartyInvitation[]>(key) ?? []
+    return client.getQueryCache().subscribe((event) => {
+      if (event.type !== 'updated' || event.query.queryHash !== hash) return
+      const next = event.query.state.data as AppPartyInvitation[] | undefined
+      if (!next || next === previous) return
+      const before = previous
+      previous = next
+      notifyManager.schedule(() => latest.current(before, next))
+    })
+  }, [client, partyId])
 }
 
 /** Merges invitations into the room's list. */

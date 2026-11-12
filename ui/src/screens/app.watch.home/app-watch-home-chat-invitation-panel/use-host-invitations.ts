@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { usePusher } from '~/hooks/use-pusher'
 import { usePresence } from '~/hooks/use-presence'
 import { useNow } from '~/hooks/use-now'
@@ -8,6 +8,7 @@ import { useSetParty } from '~/screens/app.watch/queries/app-watch-party-queries
 import { addMember } from '~/screens/app.watch/app-watch-party-updates'
 import {
   useCancelInviteMutation,
+  useInvitationsChange,
   useInvitationsQuery,
   useMergeInvitations,
   useSendInviteMutation
@@ -80,12 +81,10 @@ export function useHostInvitations() {
   const sendInvite = useSendInviteMutation(party.id)
   const cancelInvite = useCancelInviteMutation()
   const [state, dispatch] = useReducer(reducer, { answers: {}, busy: {}, errors: {} })
-  // Answers come from how the list changes, so they land in the same render as the change.
-  const [seen, setSeen] = useState(query.data)
-  if (seen !== query.data) {
-    setSeen(query.data)
-    dispatch({ type: 'history', previous: seen, history: query.data, at: Date.now() })
-  }
+  // Answers come from each change to the list, and land in the same render as it.
+  useInvitationsChange(party.id, (previous, history) =>
+    dispatch({ type: 'history', previous, history, at: Date.now() })
+  )
   const operations = useRef(new Set<string>())
   const sendingTo = useRef(new Map<string, AppUser>())
   const presence = usePresence('presence-chat')

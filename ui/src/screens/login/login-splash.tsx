@@ -1,4 +1,4 @@
-import { useRef, type ReactNode } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { PageTitle } from '~/components/page-title/page-title'
 import { cn } from '~/utils/cn'
@@ -30,6 +30,13 @@ export const DISCORD_BUTTON =
   'flex min-h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#5865f2] px-5.5 py-3 text-lg leading-snug font-semibold tracking-[-.01em] text-white transition-colors duration-150 hover:bg-[#4752c4] disabled:cursor-wait motion-reduce:transition-none'
 
 function DiscordButton({ state, onClick, name }: { state: string; onClick?: () => void; name?: string }) {
+  // The label the page opened with is already there; every label after it fades up.
+  const [previous, setPrevious] = useState(state)
+  const [changed, setChanged] = useState(false)
+  if (state !== previous) {
+    setPrevious(state)
+    setChanged(true)
+  }
   return (
     <button
       type="button"
@@ -37,21 +44,26 @@ function DiscordButton({ state, onClick, name }: { state: string; onClick?: () =
       data-reaction-shelf
       disabled={state === 'connecting' || state === 'welcome'}
       onClick={onClick}>
-      {state === 'connecting' ? (
-        <>
-          <Spinner />
-          Opening Discord…
-        </>
-      ) : state === 'welcome' ? (
-        <>
-          <span aria-hidden="true">👋</span> Welcome, {name}
-        </>
-      ) : (
-        <>
-          <DiscordMark />
-          {state === 'cancelled' ? 'Try again with Discord' : 'Continue with Discord'}
-        </>
-      )}
+      {/* Keyed by state, so each new label mounts fresh and plays its fade-up. */}
+      <span
+        key={state}
+        className={cn('flex items-center gap-2.5', changed && 'animate-status-in motion-reduce:animate-none')}>
+        {state === 'connecting' ? (
+          <>
+            <Spinner />
+            Opening Discord…
+          </>
+        ) : state === 'welcome' ? (
+          <>
+            <span aria-hidden="true">👋</span> Welcome, {name}
+          </>
+        ) : (
+          <>
+            <DiscordMark />
+            {state === 'cancelled' ? 'Try again with Discord' : 'Continue with Discord'}
+          </>
+        )}
+      </span>
     </button>
   )
 }

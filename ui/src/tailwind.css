@@ -160,7 +160,7 @@
     }
   }
 
-  /* Watch room. A new line in the chat status row. */
+  /* A new line in the chat status row, and the login Discord button's new label. */
   --animate-status-in: status-in 0.3s var(--ease-out-soft);
   /* Three dots bobbing in turn: someone typing, and a busy invite button. */
   --animate-typing-dot: typing-dot 1.2s infinite;

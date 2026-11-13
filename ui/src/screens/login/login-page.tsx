@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router'
-import { useAuth } from '~/contexts/auth/auth'
+import { beginDiscord } from '~/lib/auth/discord'
 import { LoginSplash } from './login-splash'
 
 export function LoginPage() {
-  const auth = useAuth()
   const location = useLocation()
   const [state, setState] = useState('idle')
   const [error, setError] = useState('')
@@ -12,7 +11,7 @@ export function LoginPage() {
     setState('connecting')
     setError('')
     try {
-      await auth.startDiscord(location.state?.from || (location.pathname === '/' ? '/' + location.search : '/'))
+      await beginDiscord(location.state?.from || (location.pathname === '/' ? '/' + location.search : '/'))
     } catch {
       setError('Discord couldn’t open. Please try again.')
       setState('cancelled')

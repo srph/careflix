@@ -1,44 +1,46 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Navigate, useNavigate } from 'react-router'
-import { useAuth } from '~/contexts/auth/auth'
-import { authError, returnToApp } from '~/lib/auth/discord'
+import { useAuth, useRequestAccessMutation } from '~/lib/auth/auth-queries'
+import { authError, beginDiscord, pendingOnboarding, returnToApp } from '~/lib/auth/discord'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { cn } from '~/utils/cn'
 import { LoginSplash, DISCORD_BUTTON, Spinner } from '~/screens/login/login-splash'
 
 export function OnboardingPage() {
   const auth = useAuth()
+  const requestAccess = useRequestAccessMutation()
+  // The ticket the callback saved. It's cleared once the code passes, so read it once.
+  const [onboarding] = useState(pendingOnboarding)
   const navigate = useNavigate()
   const [code, setCode] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [expired, setExpired] = useState(false)
   useEffect(() => {
-    if (!auth.onboarding) return
-    const timer = window.setTimeout(
-      () => setExpired(true),
-      Math.max(0, Date.parse(auth.onboarding.expiresAt) - Date.now())
-    )
+    if (!onboarding) return
+    const timer = window.setTimeout(() => setExpired(true), Math.max(0, Date.parse(onboarding.expiresAt) - Date.now()))
     return () => window.clearTimeout(timer)
-  }, [auth.onboarding])
-  if (auth.isAuthenticated) return <Navigate to="/" replace />
-  if (!auth.onboarding) return <Navigate to="/login" replace />
+  }, [onboarding])
+  if (auth.status === 'authenticated') return <Navigate to="/" replace />
+  if (!onboarding) return <Navigate to="/login" replace />
   const submit = async (event: FormEvent) => {
     event.preventDefault()
     if (busy || expired) return
     setBusy(true)
     setError('')
-    const [err] = await auth.requestAccess(code.trim())
-    if (err) {
+    try {
+      await requestAccess.mutateAsync(code.trim())
+      navigate(returnToApp(), { replace: true })
+    } catch (err) {
       setError(authError(err))
       setExpired(!!(err as any).response?.data?.errors?.ticket)
       setBusy(false)
-    } else navigate(returnToApp(), { replace: true })
+    }
   }
   const reconnect = async () => {
     setBusy(true)
     try {
-      await auth.startDiscord()
+      await beginDiscord()
     } catch {
       setError('Discord couldn’t open. Please try again.')
       setBusy(false)
@@ -55,12 +57,12 @@ export function OnboardingPage() {
           data-reaction-shelf
           data-reaction-solid>
           <span aria-hidden="true" className="flex flex-none">
-            <UiAvatar user={{ name: auth.onboarding.name, avatar: '' }} className="size-6.5 text-11" />
+            <UiAvatar user={{ name: onboarding.name, avatar: '' }} className="size-6.5 text-11" />
           </span>
           <span className="flex min-w-0 items-baseline gap-0.75 whitespace-nowrap">
             Signed in as{' '}
-            <b title={auth.onboarding.name} className="truncate font-semibold text-white">
-              {auth.onboarding.name}
+            <b title={onboarding.name} className="truncate font-semibold text-white">
+              {onboarding.name}
             </b>
           </span>
           <span className="flex-none whitespace-nowrap text-neutral-400">

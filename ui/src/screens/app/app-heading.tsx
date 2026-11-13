@@ -2,7 +2,7 @@ import * as React from 'react'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiNavigation } from '~/components/ui-navigation/ui-navigation'
 import { useLocation } from 'react-router'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
 
 const headings: Record<string, { title: string; backUrl: string }> = {
   '/download': { title: 'Download The App', backUrl: '/' },
@@ -21,7 +21,7 @@ export function AppHeading() {
       {heading ? <UiNavigation.BackAction to={heading.backUrl} /> : <UiNavigation.Action />}
       {heading ? <UiNavigation.Title>{heading.title}</UiNavigation.Title> : <UiNavigation.Logo />}
       <UiNavigation.Action to="/settings">
-        <UiAvatar user={auth.data} />
+        <UiAvatar user={auth.user} />
       </UiNavigation.Action>
     </UiNavigation>
   )

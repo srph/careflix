@@ -14,7 +14,7 @@ import { AppWatchHomeChatWidgetComposer } from './app-watch-home-chat-widget-com
 import type { Reaction } from '../use-reactions'
 import { useTransientState } from '~/hooks/use-transient-state'
 import { AppWatchHomePartyCode } from '../app-watch-home-party-code'
-import { useAuthUser } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/lib/auth/auth-queries'
 import { useEffect, useRef } from 'react'
 import { usePusher } from '~/hooks/use-pusher'
 import { useWindowVisibility } from '~/hooks/use-window-visibility'

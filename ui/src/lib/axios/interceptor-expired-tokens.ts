@@ -1,19 +1,14 @@
 import { instance } from './instance'
-import { AuthContext } from '~/contexts/auth/auth'
 import { AxiosError } from 'axios'
+import { isRejectedToken, logout } from '~/lib/auth/session'
 
 export const interceptorExpiredTokens = {
-  setup: (auth: AuthContext): number => {
+  setup: (): number => {
     return instance.interceptors.response.use(undefined, (err: AxiosError) => {
       const url = err.config?.url || ''
-      if (
-        err.response &&
-        !url.startsWith('/api/auth/') &&
-        url !== '/api/logout' &&
-        (err.response.status === 401 ||
-          (err.response.status === 403 && (err.response.data as any)?.error === 'request_access_required'))
-      ) {
-        void auth.logout(false)
+      // /api/me handles its own: a rejected token there just means a guest (lib/auth/auth-queries.ts).
+      if (isRejectedToken(err) && !url.startsWith('/api/auth/') && url !== '/api/logout' && url !== '/api/me') {
+        void logout({ notify: false })
       }
 
       return Promise.reject(err)

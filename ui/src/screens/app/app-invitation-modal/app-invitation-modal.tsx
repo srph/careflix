@@ -6,19 +6,20 @@ import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
-import { useAuth, useAuthUser } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/lib/auth/auth-queries'
 import { useNow } from '~/hooks/use-now'
 import { usePusher } from '~/hooks/use-pusher'
-import { axios } from '~/lib/axios/axios'
 import { cn } from '~/utils/cn'
 import { easeOutSoft } from '~/utils/motion'
 import { getVideoDetails } from '~/utils/shows/get-video-details'
 import { clockTime, showMeta } from '~/screens/app.home/app-home-listing/app-home-listing-format'
 import { useShowGroupsQuery } from '~/queries/show-queries'
+import { useIncomingInvitationsCache, useIncomingInvitationsQuery } from '~/queries/invitation-queries'
 import assetInvitation from '~/assets/audio/invitation.ogg'
 import { useInvitationOverlay } from './app-invitation-modal-context'
 import { initialState, invitationStatus, reducer } from './app-invitation-modal-state'
 import { sendDecline } from './app-invitation-modal-send-decline'
+import { useAcceptInvitationMutation } from './app-invitation-modal-queries'
 
 const COLLAPSED_HEIGHT = 40
 const DECLINE_COOLDOWN = 500
@@ -45,14 +46,15 @@ const TROUGH = 'overflow-hidden rounded-xs bg-neutral-700'
 const FILL = 'block h-full rounded-xs bg-pink-500'
 
 export function AppInvitationModal() {
-  const auth = useAuth()
   const user = useAuthUser()
+  const cache = useIncomingInvitationsCache()
+  const accepting = useAcceptInvitationMutation()
   const navigate = useNavigate()
   const location = useLocation()
   const overlay = useInvitationOverlay()
   const reducedMotion = useReducedMotion()
   const now = useNow({ interval: 1000 })
-  const invitations = user.invitations ?? []
+  const invitations = useIncomingInvitationsQuery().data
   const latestInvitations = useRef(invitations)
   latestInvitations.current = invitations
   const [activeId, setActiveId] = useState<AppId | null>(invitations[0]?.id ?? null)
@@ -74,13 +76,6 @@ export function AppInvitationModal() {
   const closeRef = useRef<HTMLButtonElement>(null)
   const requestRef = useRef(false)
   const lastDecline = useRef(0)
-  const mounted = useRef(true)
-  useEffect(() => {
-    mounted.current = true
-    return () => {
-      mounted.current = false
-    }
-  }, [])
   const lastNotification = useRef<AppId | null>(null)
   const [dock, setDock] = useState<{ left: number; bottom: number } | null>(null)
   const [body, setBody] = useState<HTMLDivElement | null>(null)
@@ -118,13 +113,13 @@ export function AppInvitationModal() {
   }, [body, expanded])
 
   usePusher(`private-user.${user.id}`, 'invitation.received', (event: { invitation: AppPartyInvitation }) => {
-    auth.receiveInvitation(event.invitation)
+    cache.receive(event.invitation)
   })
   usePusher(`private-user.${user.id}`, 'invitation.cancelled', (event: { invitation: AppPartyInvitation }) => {
-    auth.cancelInvitation(event.invitation)
+    cache.cancel(event.invitation)
   })
   usePusher(`private-user.${user.id}`, 'invitations.resolved', (event: { invitation_ids: AppId[] }) => {
-    for (const id of event.invitation_ids) auth.removeInvitation(id)
+    cache.remove(event.invitation_ids)
   })
 
   useEffect(() => {
@@ -203,7 +198,7 @@ export function AppInvitationModal() {
     const hasNext = latestInvitations.current.some(
       (invite) => invite.id !== current.id && invitationStatus(invite, new Date()) === 'pending'
     )
-    auth.removeInvitation(current.id)
+    cache.remove([current.id])
     // Without a next invite, hold this one so the toast fades out with its content.
     dispatch(hasNext ? { type: 'advance' } : { type: 'dismissed', invitation: current })
   }
@@ -219,7 +214,7 @@ export function AppInvitationModal() {
     const hasNext = latestInvitations.current.some(
       (invite) => invite.id !== target.id && invitationStatus(invite, new Date()) === 'pending'
     )
-    auth.declineInvitation(target)
+    cache.decline(target)
     void sendDecline(target)
     if (hasNext) dispatch({ type: 'advance' })
     else {
@@ -228,29 +223,27 @@ export function AppInvitationModal() {
     }
   }
 
-  async function accept() {
+  function accept() {
     if (!current || requestRef.current || invitationStatus(current, new Date()) !== 'pending') return
     const target = current
+    // The mutation's own pending flag lags a render; this stops a double click sending twice.
     requestRef.current = true
     dispatch({ type: 'request' })
-    const [error, response] = await axios.post(
-      `/api/invitations/${target.id}/accept`,
-      {},
-      { app: { validation: false } }
-    )
-    requestRef.current = false
-    if (!mounted.current) return
-    if (error) {
-      dispatch({ type: 'error', message: 'Could not accept this invitation. Please try again.' })
-      overlay.setExpanded(true)
-      return
-    }
-    auth.removeInvitation(target.id)
-    for (const id of response.data.declined_invitation_ids ?? []) auth.removeInvitation(id)
-    for (const id of response.data.accepted_invitation_ids ?? []) auth.removeInvitation(id)
-    overlay.setExpanded(false)
-    dispatch({ type: 'joined', invitation: { ...target, party: response.data } })
-    navigate(`/watch/${response.data.id}`)
+    // These callbacks skip an unmounted toast; the mutation still drops the answered invites.
+    accepting.mutate(target, {
+      onSettled: () => {
+        requestRef.current = false
+      },
+      onError: () => {
+        dispatch({ type: 'error', message: 'Could not accept this invitation. Please try again.' })
+        overlay.setExpanded(true)
+      },
+      onSuccess: (party) => {
+        overlay.setExpanded(false)
+        dispatch({ type: 'joined', invitation: { ...target, party } })
+        navigate(`/watch/${party.id}`)
+      }
+    })
   }
 
   const party = invitation?.party
@@ -441,7 +434,7 @@ export function AppInvitationModal() {
     return (
       <div
         ref={measurement ? setLine : undefined}
-        className={cn(LINE, measurement && 'pointer-events-none invisible absolute w-max')}
+        className={cn(LINE, docked && 'pr-4', measurement && 'pointer-events-none invisible absolute w-max')}
         data-testid={measurement ? undefined : 'invitation-line'}
         aria-hidden={measurement || undefined}
         inert={measurement || undefined}>

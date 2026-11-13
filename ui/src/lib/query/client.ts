@@ -14,3 +14,6 @@ export function createQueryClient() {
     }
   })
 }
+
+/** The app's one client. Sign-in and logout clear it (see `lib/auth/session.ts`), so it never mixes accounts. */
+export const queryClient = createQueryClient()

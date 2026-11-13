@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import type { CSSProperties } from 'react'
 import { UiAvatarGroup } from '~/components/ui-avatar-group/ui-avatar-group'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
 import { AppHomeListingArtwork } from './app-home-listing-artwork'
 import { PARTY_BADGES, PARTY_CONTENT, PROGRESS } from './app-home-listing-classes'
 import { partyDetails, partyStatus } from './app-home-listing-format'
@@ -10,7 +10,7 @@ const BADGE =
   'max-w-full rounded-full bg-neutral-950/85 px-2.25 py-1.25 font-label text-10/3 font-bold tracking-label uppercase'
 
 export function AppHomeListingPartyCard({ party, style }: { party: AppParty; style?: CSSProperties }) {
-  const { data: user } = useAuth()
+  const { user } = useAuth()
   const show = party.video.show
   const others = (party.members ?? []).filter((member) => member.id !== user?.id)
   const names = others.length ? others.map((member) => member.name).join(', ') : 'Just you'

@@ -1,11 +1,12 @@
 import { instance } from './instance'
-import { AuthContext } from '~/contexts/auth/auth'
+import { getToken } from '~/lib/auth/session'
 
 export const interceptorOauth = {
-  setup: (auth: AuthContext): number => {
+  setup: (): number => {
     return instance.interceptors.request.use((config) => {
-      if (auth.token != null) {
-        config.headers['Authorization'] = `Bearer ${auth.token}`
+      const token = getToken()
+      if (token != null) {
+        config.headers['Authorization'] = `Bearer ${token}`
       }
 
       return config

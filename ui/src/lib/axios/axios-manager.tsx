@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { useLayoutEffect, useState } from 'react'
-import { useAuth } from '~/contexts/auth/auth'
 
 import { instance } from './instance'
 import { interceptorAppInit } from './interceptor-app-init'
@@ -14,12 +13,11 @@ import { interceptorPusher } from './interceptor-pusher'
  */
 function AxiosManager({ children }: ReactComponentWrapper) {
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
-  const auth = useAuth()
 
   useLayoutEffect(() => {
-    const requests = [interceptorAppInit.setup(), interceptorOauth.setup(auth), interceptorPusher.setup(auth)]
+    const requests = [interceptorAppInit.setup(), interceptorOauth.setup(), interceptorPusher.setup()]
 
-    const responses = [interceptorExpiredTokens.setup(auth), interceptorToastErrors.setup()]
+    const responses = [interceptorExpiredTokens.setup(), interceptorToastErrors.setup()]
 
     setIsInitialized(true)
 
@@ -32,7 +30,7 @@ function AxiosManager({ children }: ReactComponentWrapper) {
         instance.interceptors.response.eject(interceptor)
       })
     }
-  }, [auth.token])
+  }, [])
 
   return <React.Fragment>{isInitialized ? children : null}</React.Fragment>
 }

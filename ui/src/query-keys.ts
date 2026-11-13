@@ -2,10 +2,14 @@
  * Every React Query key, in one place.
  *
  * Queries shared across pages start with `global-`; a page's own start with the page's name.
- * Keys leave out the account: `QueryProvider` swaps the whole cache when the account changes.
+ * Keys leave out the account: sign-in and logout clear the cache (`lib/auth/session.ts`).
  */
 export const queryKeys = {
   global: {
+    /** The signed-in user, or null for a guest. */
+    auth: () => ['global-auth'] as const,
+    /** Invitations sent to the signed-in user. */
+    invitations: () => ['global-invitations'] as const,
     showGroups: (showId?: AppId) => ['global-show-groups', showId] as const
   },
   home: {

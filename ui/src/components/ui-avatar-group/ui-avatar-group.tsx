@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiPresenceAvatar } from '~/components/ui-presence-avatar/ui-presence-avatar'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
 
 interface Props {
   users: AppUser[] | AppPartyMember[]
@@ -21,7 +21,7 @@ export function UiAvatarGroup(props: Props) {
     <div className={cn('flex items-center', props.className)}>
       {props.users.slice(0, 4).map((user, i) => (
         <div className={cn('not-last:mr-0.5', props.itemClassName)} key={i}>
-          {auth.data?.id !== user.id && 'pivot' in user ? (
+          {auth.user?.id !== user.id && 'pivot' in user ? (
             <UiPresenceAvatar
               user={user}
               isActive={(user as AppPartyMember).pivot.is_active}

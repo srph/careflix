@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { readDeclinedInvitations, rememberDeclinedInvitation } from './auth-declined-invitations'
+import { readDeclinedInvitations, rememberDeclinedInvitation } from './declined-invitations'
 
 const at = (minutes: number) => new Date(Date.now() + minutes * 60_000).toISOString()
 const invitation = (id: number, minutes = 30) => ({ id, expires_at: at(minutes) }) as AppPartyInvitation

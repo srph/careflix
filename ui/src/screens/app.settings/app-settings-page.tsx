@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 
 import { AppHeadingSettings } from '~/screens/app/app-heading-settings'
 
-import { useAuthUser } from '~/contexts/auth/auth'
+import { useAuthUser } from '~/lib/auth/auth-queries'
 import { useIsPWA } from '~/hooks/use-is-pwa'
 
 import { config } from '~/config'

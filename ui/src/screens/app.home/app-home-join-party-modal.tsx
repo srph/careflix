@@ -4,7 +4,7 @@ import { UiButton } from '~/components/ui-button/ui-button'
 import { UiModal } from '~/components/ui-modal/ui-modal'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
 import { cn } from '~/utils/cn'
 import { useInvitationOverlay } from '~/screens/app/app-invitation-modal/app-invitation-modal-context'
 import { useJoinPartyMutation, usePartyCodeQuery } from './app-home-queries'
@@ -67,7 +67,7 @@ function JoinPartyForm({ onClose, joining }: { onClose: () => void; joining: Rea
   const wrong = error?.response?.status === 404
   const throttled = error?.response?.status === 429
   const found = preview?.creator
-    ? String(preview.creator.id) === String(auth.data?.id)
+    ? String(preview.creator.id) === String(auth.user?.id)
       ? 'Found your watch party'
       : `Found ${preview.creator.name}’s watch party`
     : 'Watch party found'

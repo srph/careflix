@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import { UiLogo } from '~/components/ui-logo/ui-logo'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
 import { type ListingTab } from '../app-home-queries'
 import { AppHomeListingSearch } from './app-home-listing-search'
 import { AppHomeJoinPartyModal } from '../app-home-join-party-modal'
@@ -63,7 +63,7 @@ export function AppHomeListingNav({
       <AppHomeJoinPartyModal />
       <AppHomeListingSearch onShowSelect={onShowSelect} />
       <Link to="/settings" className="flex flex-none items-center sm:-ml-2 xl:-ml-5" aria-label="Account settings">
-        <UiAvatar user={auth.data} className="size-7.5 sm:size-8.5" />
+        <UiAvatar user={auth.user} className="size-7.5 sm:size-8.5" />
       </Link>
     </nav>
   )

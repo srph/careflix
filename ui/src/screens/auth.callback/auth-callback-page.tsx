@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useAuth } from '~/contexts/auth/auth'
-import { authError, returnToApp } from '~/lib/auth/discord'
+import { useDiscordExchangeMutation } from '~/lib/auth/auth-queries'
+import { authError, beginDiscord, returnToApp } from '~/lib/auth/discord'
 import { LoginSplash } from '~/screens/login/login-splash'
 
 const ERRORS: Record<string, string> = {
@@ -14,7 +14,7 @@ const ERRORS: Record<string, string> = {
 }
 
 export function AuthCallbackPage() {
-  const auth = useAuth()
+  const exchange = useDiscordExchangeMutation()
   const navigate = useNavigate()
   const [parameters] = useState(() => new URLSearchParams(window.location.search))
   const [state, setState] = useState('connecting')
@@ -32,12 +32,13 @@ export function AuthCallbackPage() {
       setError(ERRORS[parameters.get('error') || 'expired'] || ERRORS.connection_failed)
       return
     }
-    auth.exchangeDiscord(code).then(([err, result]) => {
-      if (err || !result) {
+    exchange.mutate(code, {
+      onError: (err) => {
         setState('cancelled')
         setError(authError(err))
-      } else if (result.requires_request_access) navigate('/onboarding', { replace: true })
-      else {
+      },
+      onSuccess: (result) => {
+        if (result.requires_request_access) return navigate('/onboarding', { replace: true })
         destination.current = returnToApp()
         setName(result.user!.name.split(' ')[0])
         setState('welcome')
@@ -53,7 +54,7 @@ export function AuthCallbackPage() {
     setError('')
     setState('connecting')
     try {
-      await auth.startDiscord()
+      await beginDiscord()
     } catch {
       setState('cancelled')
       setError(ERRORS.connection_failed)

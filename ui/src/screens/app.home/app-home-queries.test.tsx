@@ -1,14 +1,16 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
-import { QueryClientProvider, useQueryClient } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createQueryClient } from '~/lib/query/client'
-import { QueryProvider } from '~/lib/query/query-provider'
 import { useCreatePartyMutation, useListingSearchQuery, useShowsQuery } from './app-home-queries'
 import { axios } from '~/lib/axios/axios'
 import { queryKeys } from '~/query-keys'
 
 const session = vi.hoisted(() => ({ user: { id: 1 }, navigate: vi.fn() }))
-vi.mock('~/contexts/auth/auth', () => ({ useAuth: () => ({ data: session.user, isAuthenticated: true }) }))
+vi.mock('~/lib/auth/auth-queries', () => ({
+  useAuth: () => ({ status: 'authenticated', user: session.user }),
+  useAuthUser: () => session.user
+}))
 vi.mock('react-router', () => ({ useNavigate: () => session.navigate }))
 vi.mock('~/lib/axios/axios', () => ({ axios: { get: vi.fn(), post: vi.fn() } }))
 const clients: ReturnType<typeof createQueryClient>[] = []
@@ -108,16 +110,5 @@ describe('listing queries', () => {
     expect(client.getQueryState(queryKeys.home.parties())!.isInvalidated).toBe(true)
     expect(client.getQueryState(queryKeys.home.search('moon'))!.isInvalidated).toBe(true)
     expect(session.navigate).toHaveBeenCalledWith('/watch/42')
-  })
-
-  it('discards the previous account cache when the authenticated account changes', () => {
-    const hook = renderHook(() => useQueryClient(), { wrapper: QueryProvider })
-    const previous = hook.result.current
-    previous.setQueryData(['private'], 'first account')
-    session.user = { id: 2 }
-    hook.rerender()
-    expect(hook.result.current).not.toBe(previous)
-    expect(hook.result.current.getQueryData(['private'])).toBeUndefined()
-    expect(previous.getQueryData(['private'])).toBeUndefined()
   })
 })

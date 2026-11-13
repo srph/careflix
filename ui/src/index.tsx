@@ -3,11 +3,13 @@ import './tailwind.css'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, Navigate, Outlet } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { PrivateRoute } from '~/components/private-route/private-route'
-import { GuestRoute } from '~/components/guest-route/guest-route'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { PrivateRoute } from '~/lib/auth/private-route'
+import { GuestRoute } from '~/lib/auth/guest-route'
 import { Toast } from '~/components/toast/toast'
-import { AuthProvider } from '~/contexts/auth/auth'
-import { QueryProvider } from '~/lib/query/query-provider'
+import { AuthBoundary } from '~/lib/auth/auth-boundary'
+import { useAuth } from '~/lib/auth/auth-queries'
+import { queryClient } from '~/lib/query/client'
 import { AxiosManager } from '~/lib/axios/axios-manager'
 import { PusherManager } from '~/lib/pusher/pusher-manager'
 import { WindowVhSetter } from '~/components/window-vh-setter/window-vh-setter'
@@ -28,25 +30,27 @@ function RootLayout() {
   return (
     <>
       <WindowVhSetter />
-      <AuthProvider>
+      <QueryClientProvider client={queryClient}>
         <AxiosManager>
-          <Outlet />
+          <AuthBoundary>
+            <Outlet />
+          </AuthBoundary>
         </AxiosManager>
-      </AuthProvider>
+      </QueryClientProvider>
       <Toast />
     </>
   )
 }
 
 function ApplicationLayout() {
+  const { user } = useAuth()
+  // Another account starts the app over: no state carried across. Sign-in and logout clear the queries.
   return (
-    <QueryProvider>
-      <PusherManager>
-        <AppPage>
-          <Outlet />
-        </AppPage>
-      </PusherManager>
-    </QueryProvider>
+    <PusherManager key={user?.id ?? 'guest'}>
+      <AppPage>
+        <Outlet />
+      </AppPage>
+    </PusherManager>
   )
 }
 

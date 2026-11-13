@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
+import { getToken } from '~/lib/auth/session'
 import { pusher } from './pusher'
 
 /**
@@ -8,11 +9,12 @@ import { pusher } from './pusher'
  */
 function PusherManager({ children }: ReactComponentWrapper) {
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
-  const auth = useAuth()
+  const { user } = useAuth()
 
   useEffect(() => {
-    if (auth.token) {
-      pusher.set(auth)
+    const token = user && getToken()
+    if (token) {
+      pusher.set(token)
       setIsInitialized(true)
     } else {
       pusher.unset()
@@ -22,10 +24,10 @@ function PusherManager({ children }: ReactComponentWrapper) {
     return () => {
       pusher.unset()
     }
-  }, [auth.token])
+  }, [user?.id])
 
   // For guests, we'll just show the view. Otherwise, we'll wait for Pusher to be initialized.
-  return <React.Fragment>{!auth.token || isInitialized ? children : null}</React.Fragment>
+  return <React.Fragment>{!user || isInitialized ? children : null}</React.Fragment>
 }
 
 export { PusherManager }

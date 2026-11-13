@@ -18,24 +18,25 @@ Legacy date-fns `1.30.1` is retained under the `date-fns-v1` npm alias to preser
 
 No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.g.:
 
-- `contexts/auth/auth.tsx` — auth/session state
+- `lib/auth/` — everything auth: the token cookie, `signIn`/`logout` (`session.ts`), `useAuth()` (`{ status, user }`, a React Query over `/api/me`), `useAuthUser()`, the sign-in mutations, `AuthBoundary` and the route guards
 - `screens/app.watch/app-watch-page.tsx` — loads the room's party with `usePartyQuery` and provides it to the room; read it with `useParty()`. Pusher events write to that query's cache.
 - `screens/app.watch.home/app-watch-home-page.tsx` — the player: `usePlayerSync` (time, playing, volume, and sync with the room) and `usePlayerChrome` (controls, chat, modals, subtitles), each a `useReducer`, shared with the controls through `usePlayer()`
 
 Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers, or written to the query cache.
 
-The authenticated home listing uses `@tanstack/react-query` through the wrapper hooks in
-`screens/app.home/app-home-queries.ts`. The shared provider in `lib/query` sets a 60-second
-stale time and replaces the cache when the authenticated account changes. Other
-screens retain their existing fetching patterns. The watch room loads through the hooks in
-`screens/app.watch/queries/`, with Pusher events written into those caches. `SeasonSelection`
-takes its groups from the caller (`useShowGroupsQuery`).
+Server data goes through `@tanstack/react-query`. There's one client (`queryClient` in
+`lib/query/client.ts`, 60-second stale time). `signIn` and `logout` drop every query but the auth one,
+and the app routes are keyed by user id, so nothing carries across accounts. The home listing uses
+`screens/app.home/app-home-queries.ts`; the watch room uses `screens/app.watch/queries/`; the
+signed-in user's incoming invitations live in `queries/invitation-queries.ts`, filled from `/api/me`.
+Pusher events are written into those caches. `SeasonSelection` takes its groups from the caller
+(`useShowGroupsQuery`).
 
 Query conventions:
 
 - **Wrap every query and mutation in a hook** (`usePartyCodeQuery`) that just returns `useQuery`/`useMutation`.
-- **Keys live in `src/query-keys.ts`.** Keys shared across pages start with `global-`; a page's own start with the page's name (`home-`, `watch-party-`). Keys leave out the account, since the provider swaps the cache per account.
-- **Hooks sit with their screen** (in a `queries/` folder once the screen has several), and move to `src/queries/<domain>-queries.ts` once a second page uses them.
+- **Keys live in `src/query-keys.ts`.** Keys shared across pages start with `global-`; a page's own start with the page's name (`home-`, `watch-party-`). Keys leave out the account, since sign-in and logout clear the cache.
+- **Hooks sit with their screen** (in a `queries/` folder once the screen has several), and move to `src/queries/<domain>-queries.ts` once a second page uses them. An app-wide concern keeps its hooks in its own `lib/` module (`lib/auth/auth-queries.ts`).
 - **Read `status` and `data` together**, and use `fetchStatus` when a background fetch matters.
 
 ## File structure
@@ -44,9 +45,8 @@ Query conventions:
 src/
 ├── assets/       static audio/image assets
 ├── components/   shared, reusable UI (Ui* prefix for design-system primitives)
-├── contexts/     app-wide React Context providers (e.g. Auth)
 ├── hooks/        shared hooks (useMediaMode, useFullscreen, etc.)
-├── lib/          thin wrappers around third-party integrations (axios, pusher, uuid, srt2obj)
+├── lib/          third-party wrappers (axios, pusher, uuid, srt2obj) and whole app-wide modules (auth)
 ├── screens/      route-level screens, named by route path with `.` as a nesting separator
 │                 (e.g. `app.watch.home` = child of `app.watch` = child of `app`);
 │                 each screen folder holds its own subcomponents, styles, and local hooks
@@ -66,7 +66,7 @@ Older code is still being migrated; follow these in new and touched files.
 - **A screen's entrypoint is its page:** `app.watch/app-watch-page.tsx` → `AppWatchPage`.
 - **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`. Hooks keep their `use-` name: `app.watch.home/use-reactions.ts`.
 - **Tests sit next to the file** (`use-now.test.ts`) and select by role, text, label or `data-testid`, never class name. Expose state as `data-*` attributes.
-- **Nulls:** behind `PrivateRoute`, read the user with `useAuthUser()`; in the watch room, `useParty()` always has a party. Prefer narrowing or a tighter type to `!`; `!` is fine for refs to elements that always render, and in tests.
+- **Nulls:** behind `PrivateRoute`, read the user with `useAuthUser()`; elsewhere check `useAuth().status === 'authenticated'`; in the watch room, `useParty()` always has a party. Prefer narrowing or a tighter type to `!`; `!` is fine for refs to elements that always render, and in tests.
 - **Run Prettier** on files you change; it also sorts Tailwind classes.
 
 ## Styling
@@ -115,4 +115,4 @@ See [TESTING.md](TESTING.md) for cross-browser projects, production-preview chec
 
 Discord login starts with a full navigation to `/auth/discord`. The browser keeps a random verifier in sessionStorage and sends only its SHA-256 challenge to Laravel. `/auth/callback` exchanges the handoff code with the verifier; `/onboarding` uses only a restricted onboarding ticket until the optional code passes. The former `/request-access` URL redirects to `/onboarding`. Never add OAuth client secrets to browser configuration.
 
-Keep callback and onboarding routes outside the account-keyed Query/Pusher providers: those providers remount when the account changes. Axios interceptors remain around all routes and initialize before requests. The full Passport token is stored in `app_token` with the server’s expiration; logout revokes it on the API. See [../AUTHENTICATION.md](../AUTHENTICATION.md).
+The full Passport token is stored in the `app_token` cookie with the server’s expiration and sent as a Bearer header (the cookie is only storage); `getToken()` reads it for axios and Pusher. `/api/me` decides who's signed in: no cookie means a guest without a request, a 401 (or 403 `request_access_required`) drops the cookie, and a network or server error keeps it and shows a Retry screen. Any later 401 logs out. Logout revokes the token on the API, best effort. Keep callback and onboarding routes outside the account-keyed app routes, which remount when the account changes. Axios interceptors remain around all routes and initialize before requests. See [../AUTHENTICATION.md](../AUTHENTICATION.md).

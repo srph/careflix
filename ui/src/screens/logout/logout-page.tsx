@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
-import { useAuth } from '~/contexts/auth/auth'
+import { useNavigate } from 'react-router'
+import { logout } from '~/lib/auth/session'
 
 export function LogoutPage(): null {
-  const auth = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    auth.logout()
+    void logout()
+    navigate('/login', { replace: true })
   }, [])
 
   return null

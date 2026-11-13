@@ -18,7 +18,7 @@ beforeEach(() => {
 })
 
 it('uses the Care.tv bearer token for private channel authorization and disconnects on logout', () => {
-  pusher.set({ token: 'care-tv-token' } as any)
+  pusher.set('care-tv-token')
   expect(connection.options.authEndpoint).toMatch(/\/broadcasting\/auth$/)
   expect(connection.options.auth.headers.Authorization).toBe('Bearer care-tv-token')
   pusher.unset()

@@ -2,7 +2,8 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 import { useNavigate } from 'react-router'
 import { axios } from '~/lib/axios/axios'
 import { get } from '~/lib/query/get'
-import { useAuth } from '~/contexts/auth/auth'
+import { useAuth } from '~/lib/auth/auth-queries'
+import { useIncomingInvitationsCache } from '~/queries/invitation-queries'
 import { queryKeys } from '~/query-keys'
 
 export type ListingTab = 'all' | 'movie' | 'series' | 'parties'
@@ -10,7 +11,7 @@ export type ListingTab = 'all' | 'movie' | 'series' | 'parties'
 const nextPage = (page: AppCollection) => (page.current_page < page.last_page ? page.current_page + 1 : undefined)
 
 export function useShowsQuery(titleType?: 'movie' | 'series', enabled = true) {
-  const { isAuthenticated } = useAuth()
+  const isAuthenticated = useAuth().status === 'authenticated'
   return useInfiniteQuery({
     queryKey: queryKeys.home.shows(titleType ?? 'all'),
     queryFn: ({ pageParam, signal }) =>
@@ -22,7 +23,7 @@ export function useShowsQuery(titleType?: 'movie' | 'series', enabled = true) {
 }
 
 export function useMyPartiesQuery(show?: AppShow) {
-  const { isAuthenticated } = useAuth()
+  const isAuthenticated = useAuth().status === 'authenticated'
   return useInfiniteQuery({
     queryKey: queryKeys.home.parties(show?.id),
     queryFn: ({ pageParam, signal }) =>
@@ -34,7 +35,7 @@ export function useMyPartiesQuery(show?: AppShow) {
 }
 
 export function useListingSearchQuery(term: string) {
-  const { isAuthenticated } = useAuth()
+  const isAuthenticated = useAuth().status === 'authenticated'
   return useQuery({
     queryKey: queryKeys.home.search(term),
     queryFn: async ({ signal }) => {
@@ -67,7 +68,7 @@ export function useCreatePartyMutation() {
 }
 
 export function usePartyCodeQuery(code: string) {
-  const { isAuthenticated } = useAuth()
+  const isAuthenticated = useAuth().status === 'authenticated'
   return useQuery({
     queryKey: queryKeys.home.partyCode(code),
     queryFn: ({ signal }) => get<AppPartyPreview>(`/api/party-codes/${code}`, undefined, signal),
@@ -80,7 +81,7 @@ export function usePartyCodeQuery(code: string) {
 }
 
 export function useJoinPartyMutation() {
-  const auth = useAuth()
+  const invitations = useIncomingInvitationsCache()
   const client = useQueryClient()
   const navigate = useNavigate()
   return useMutation({
@@ -92,7 +93,7 @@ export function useJoinPartyMutation() {
       return response.data
     },
     onSuccess: (party) => {
-      for (const id of [...party.accepted_invitation_ids, ...party.declined_invitation_ids]) auth.removeInvitation(id)
+      invitations.remove([...party.accepted_invitation_ids, ...party.declined_invitation_ids])
       void client.invalidateQueries({ queryKey: queryKeys.home.parties() })
       void client.invalidateQueries({ queryKey: queryKeys.home.search() })
       navigate(`/watch/${party.id}`)

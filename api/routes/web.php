@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json(['status' => 'success', 'message' => 'Hello']);
 });
 
 Route::get('auth/discord', 'Auth\DiscordController@redirect')->middleware('throttle.auth:10,1');

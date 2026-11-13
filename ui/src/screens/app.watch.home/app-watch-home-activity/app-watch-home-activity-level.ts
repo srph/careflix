@@ -1,4 +1,5 @@
 import { useLocalStorageState } from '~/hooks/use-local-storage-state'
+import type { PlayaActivity } from '~/components/playa/playa-activity'
 
 /**
  * What the picture shows from the room while chat is closed:
@@ -53,6 +54,16 @@ export function showsOnOverlay(log: AppPartyLog, level: ActivityLevel, meId: App
   const kind = log.activity?.kind
   if (!kind) return false
   return (level === 'all' ? ALL_KINDS : KEY_KINDS).includes(kind)
+}
+
+/**
+ * Whether a line already on the picture stays after the level changes. Lines got there at a level
+ * at least this loose, so "Everything" keeps them all.
+ */
+export function keepsOnOverlay(activity: PlayaActivity, level: ActivityLevel): boolean {
+  if (level === 'off') return false
+  if (level === 'all') return true
+  return activity.type === 'joined' || activity.type === 'paused'
 }
 
 /**

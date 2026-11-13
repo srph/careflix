@@ -1,20 +1,59 @@
 import * as React from 'react'
 import { cn } from '~/utils/cn'
-import type { ReactionFloat } from './use-reactions'
+import { usePlayaContext } from './playa'
 
-interface Props {
-  floats: ReactionFloat[]
-  // The player controls are up, so floats start above the seek bar.
-  isLifted: boolean
-  onDone: (id: string) => void
+// Oldest floats make way once a crowd laugh fills the picture.
+export const MAX_FLOATS = 24
+
+// Each float picks its own smooth path so a burst never looks copy-pasted.
+export interface FloatPath {
+  // 0–1 across the band on the right of the picture
+  x: number
+  // seconds
+  duration: number
+  // share of the lane's height to rise, in percent
+  rise: number
+  // px
+  size: number
+  drift: number
+  driftEnd: number
+  // degrees
+  tilt: number
+  ease: string
+}
+
+export interface PlayaFloat {
+  id: string
+  emoji: string
+  name: string
+  path: FloatPath
+}
+
+const EASES = ['cubic-bezier(.22,.61,.36,1)', 'cubic-bezier(.33,.7,.4,1)', 'cubic-bezier(.17,.5,.3,1)']
+
+export function makePath(random: () => number = Math.random): FloatPath {
+  const between = (a: number, b: number) => a + random() * (b - a)
+  const side = random() < 0.5 ? -1 : 1
+  return {
+    x: random(),
+    duration: between(2.6, 3.6),
+    rise: between(50, 75),
+    size: between(26, 34),
+    drift: side * between(8, 22),
+    driftEnd: -side * between(0, 16),
+    tilt: side * between(0, 6),
+    ease: EASES[Math.floor(random() * EASES.length)]
+  }
 }
 
 /**
- * Emoji float up the right side of the picture, each with the sender's name in a white pill.
+ * Emoji from `playa.react()` float up the right side of the picture, each with the sender's name in a white pill.
  * The path (--x, --d, --rise and the rest) is set per float; the keyframes are in tailwind.css.
  * With reduced motion a float still fades, since that is what clears it, but it doesn't rise, drift or pop.
  */
-export function AppWatchHomeReactionLayer(props: Props) {
+export function PlayaReactions() {
+  const playa = usePlayaContext()
+
   return (
     <div
       className="pointer-events-none absolute inset-0 z-(--zindex-player-reactions) overflow-hidden"
@@ -23,9 +62,9 @@ export function AppWatchHomeReactionLayer(props: Props) {
       <div
         className={cn(
           '[container-type:size] absolute inset-0 transition-[bottom] duration-200',
-          props.isLifted && 'bottom-18 sm:bottom-24'
+          playa.state.isOverlayOpen && 'bottom-18 sm:bottom-24'
         )}>
-        {props.floats.map((float) => (
+        {playa.floats.map((float) => (
           <div
             key={float.id}
             className="absolute right-[calc(24px+var(--x)*min(260px,35cqw))] bottom-4.5 animate-reaction motion-reduce:animate-reaction-fade"
@@ -43,7 +82,7 @@ export function AppWatchHomeReactionLayer(props: Props) {
               } as React.CSSProperties
             }
             onAnimationEnd={(event) => {
-              if (event.target === event.currentTarget) props.onDone(float.id)
+              if (event.target === event.currentTarget) playa.dropFloat(float.id)
             }}>
             <span className="flex animate-reaction-drift flex-col items-center motion-reduce:animate-none">
               <span

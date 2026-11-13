@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { cn } from '~/utils/cn'
 import { UiAvatar } from '~/components/ui-avatar/ui-avatar'
-import { hypeFor, latestStatusActivity, typingLabel } from './app-watch-home-chat-status-status'
-import {
-  AppWatchHomeChatStatusActivitySaid,
-  TypingDots,
-  activityIcon
-} from './app-watch-home-chat-status-activity-said'
+import { PlayaActivityText, TypingDots, activityIcon, hypeFor, typingLabel } from '~/components/playa/playa-activity'
+import { activityToPlaya } from '../app-watch-home-activity/app-watch-home-activity-to-playa'
+import { latestStatusActivity } from './app-watch-home-chat-status-status'
 
 const TEXT = 'truncate'
 const NAME = 'font-semibold text-white'
@@ -27,7 +24,8 @@ interface Props {
 export function AppWatchHomeChatStatus({ logs, typing, joined, meId }: Props) {
   const who = (user: AppUser) => (String(user.id) === String(meId) ? 'You' : user.name)
   const typer = typingLabel(typing)
-  const activity = latestStatusActivity(logs)
+  const latest = latestStatusActivity(logs)
+  const activity = latest && activityToPlaya(latest.id, latest)
   let key = ''
   let line: React.ReactNode = null
 
@@ -61,12 +59,12 @@ export function AppWatchHomeChatStatus({ logs, typing, joined, meId }: Props) {
           className={cn(
             'fa flex-none text-10 leading-none',
             activityIcon(activity),
-            activity.kind === 'played' && 'text-pink-500'
+            activity.type === 'played' && 'text-pink-500'
           )}
           aria-hidden="true"
         />
         <span className={TEXT}>
-          <b className={NAME}>{who(activity.user)}</b> <AppWatchHomeChatStatusActivitySaid activity={activity} />
+          <b className={NAME}>{who(latest.user)}</b> <PlayaActivityText activity={activity} />
         </span>
       </>
     )

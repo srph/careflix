@@ -1,46 +1,63 @@
 import * as React from 'react'
-import { useEffect, useRef } from 'react'
+import { createContext, use, useEffect, useRef } from 'react'
 import { Tooltip } from '@base-ui/react/tooltip'
 
-interface Props {
+interface TooltipCount {
   onOpen: () => void
   onClose: () => void
+}
+
+/** PlayaControls counts its open tooltips, so the timeline can step aside for one. */
+export const PlayaTooltipCount = createContext<TooltipCount>({ onOpen() {}, onClose() {} })
+
+interface Props {
   text: string
   align: 'left' | 'right'
   padding?: number
   // While something else is open from this control, e.g. a menu.
   disabled?: boolean
+  // The trigger is the control's box in the bar.
+  className?: string
+  onOpen?: () => void
+  onClose?: () => void
   children: React.ReactNode
 }
 
 /**
- * A player control's tooltip. Put the controls under one `Tooltip.Provider` so moving
+ * A control's tooltip. PlayaControls puts every control under one `Tooltip.Provider`, so moving
  * between them swaps tooltips instantly instead of fading each one up.
- * onOpen and onClose come in pairs, so the controls can count how many are showing.
  */
-export function AppWatchHomePlayerTooltip({ padding = 32, ...props }: Props) {
+export function PlayaTooltip({ padding = 32, ...props }: Props) {
+  const count = use(PlayaTooltipCount)
   const isOpen = useRef(false)
-  const latest = useRef(props)
-  latest.current = props
+  const latest = useRef({ ...props, count })
+  latest.current = { ...props, count }
 
   function handleOpenChange(open: boolean) {
     if (open === isOpen.current) return
     isOpen.current = open
-    if (open) props.onOpen()
-    else props.onClose()
+    if (open) {
+      count.onOpen()
+      props.onOpen?.()
+    } else {
+      count.onClose()
+      props.onClose?.()
+    }
   }
 
   // A control can leave while its tooltip shows, e.g. subtitles when the episode changes.
   useEffect(
     () => () => {
-      if (isOpen.current) latest.current.onClose()
+      if (!isOpen.current) return
+      latest.current.count.onClose()
+      latest.current.onClose?.()
     },
     []
   )
 
   return (
     <Tooltip.Root disabled={props.disabled} onOpenChange={handleOpenChange}>
-      <Tooltip.Trigger delay={0} closeOnClick={false} render={<div />}>
+      <Tooltip.Trigger delay={0} closeOnClick={false} render={<div className={props.className} />}>
         {props.children}
       </Tooltip.Trigger>
       <Tooltip.Portal>

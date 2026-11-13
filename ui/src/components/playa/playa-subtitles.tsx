@@ -1,50 +1,34 @@
 import * as React from 'react'
-import { cn } from '~/utils/cn'
 import { useMemo } from 'react'
-import { useSubtitleQuery } from '~/screens/app.watch/queries/app-watch-video-queries'
-import { placements, HAS_PLACEMENT_PATTERN } from './app-watch-home-subtitle-slot-constants'
-import { srt2obj } from './app-watch-home-subtitle-slot-utils'
-
-interface Props {
-  video: AppShowVideo
-  time: number
-  isEnabled: boolean
-  isPlayerOpen: boolean
-}
+import { cn } from '~/utils/cn'
+import { usePlayaContext } from './playa'
+import { placements, HAS_PLACEMENT_PATTERN } from './playa-subtitles-constants'
+import { srt2obj } from './playa-subtitles-utils'
 
 // White text with a black edge. <font> tags in a subtitle file keep their colour but not their own size or face.
 // The md step is the only place 768px is used: a hotfix for a split-screen setup on a small laptop.
 const SLOT =
   'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
 
-export function AppWatchHomeSubtitleSlot(props: Props) {
-  const subtitle = useSubtitleQuery(props.video).data
+/** The cues of an `.srt` at the current time, once the video is up and while subtitles are on. */
+export function PlayaSubtitles(props: { srt?: string | null }) {
+  const playa = usePlayaContext()
   const tracks = useMemo(() => {
-    if (!subtitle) return []
+    if (!props.srt) return []
     try {
-      return srt2obj(subtitle)
+      return srt2obj(props.srt)
     } catch {
       // Missing or malformed subtitles should not interrupt the watch party.
       return []
     }
-  }, [subtitle])
+  }, [props.srt])
 
-  if (!props.video.subtitle_url) {
+  const { time, isReady, isSubtitlesOn, isOverlayOpen } = playa.state
+  if (!isReady || !isSubtitlesOn || !tracks.length) {
     return null
   }
 
-  if (!tracks.length) {
-    return null
-  }
-
-  if (!props.isEnabled) {
-    return null
-  }
-
-  const subtitles = tracks.filter((track) => {
-    return props.time >= track.start && props.time <= track.end
-  })
-
+  const subtitles = tracks.filter((track) => time >= track.start && time <= track.end)
   if (!subtitles.length) {
     return null
   }
@@ -53,8 +37,7 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
     <React.Fragment>
       {placements.map((placement) => {
         const placementSubtitles = subtitles.filter((subtitle) => {
-          // We want to position default tracks (tracks without specified positioning)
-          // to be placed to the bottom center.
+          // Cues without a placement go to the bottom center.
           if (placement.key === 'bottom-center' && !HAS_PLACEMENT_PATTERN.test(subtitle.text)) {
             return true
           }
@@ -66,8 +49,8 @@ export function AppWatchHomeSubtitleSlot(props: Props) {
         const className = cn(
           SLOT,
           placement.className,
-          props.isPlayerOpen && 'hidden lg:block',
-          props.isPlayerOpen && placement.vertical === 'bottom' && 'lg:pb-45'
+          isOverlayOpen && 'hidden lg:block',
+          isOverlayOpen && placement.vertical === 'bottom' && 'lg:pb-45'
         )
 
         return (

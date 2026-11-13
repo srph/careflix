@@ -6,15 +6,14 @@ import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { UiButton } from '~/components/ui-button/ui-button'
 import { UiModal } from '~/components/ui-modal/ui-modal'
 import { getVideoDetails } from '~/utils/shows/get-video-details'
-
-interface Props {
-  party: AppParty
-  onOpenSeasonSelection: () => void
-}
+import { useParty } from '~/screens/app.watch/use-party'
+import { useWatchLayout } from './app-watch-home-layout'
 
 const ACTION = 'relative p-2 text-base leading-none text-white not-last:mr-4'
 
-export function AppWatchHomeMobileTitleBar(props: Props) {
+export function AppWatchHomeMobileTitleBar() {
+  const party = useParty()
+  const { setModal } = useWatchLayout()
   const { width, height } = useWindowSize()
 
   const [isNoteOpen, setIsNoteOpen] = useState(false)
@@ -41,13 +40,16 @@ export function AppWatchHomeMobileTitleBar(props: Props) {
         data-testid="mobile-title-bar"
         className="flex items-center justify-between border-b border-neutral-950 bg-neutral-900 p-4 pr-2 sm:hidden">
         <h3 className="max-w-full truncate pr-8 text-base leading-none font-medium">
-          <span>{props.party.video.show.title}</span>
-          <span className="ml-2 opacity-75">{getVideoDetails(props.party.video)}</span>
+          <span>{party.video.show.title}</span>
+          <span className="ml-2 opacity-75">{getVideoDetails(party.video)}</span>
         </h3>
 
         <div className="flex items-center">
-          {props.party.video.show.title_type === 'series' && (
-            <UiPlainButton className={ACTION} aria-label="Open Episode Selection" onClick={props.onOpenSeasonSelection}>
+          {party.video.show.title_type === 'series' && (
+            <UiPlainButton
+              className={ACTION}
+              aria-label="Open Episode Selection"
+              onClick={() => setModal('season-selection')}>
               <i className="fa fa-list-ol" />
             </UiPlainButton>
           )}

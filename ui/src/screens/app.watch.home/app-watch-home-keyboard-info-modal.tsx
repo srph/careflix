@@ -1,11 +1,7 @@
 import * as React from 'react'
 import { UiPlainButton } from '~/components/ui-plain-button/ui-plain-button'
 import { UiModal } from '~/components/ui-modal/ui-modal'
-
-interface Props {
-  isOpen: boolean
-  onClose: () => void
-}
+import { useWatchLayout } from './app-watch-home-layout'
 
 interface Shortcut {
   name: string
@@ -24,11 +20,14 @@ const shortcuts: Shortcut[] = [
   { name: 'Decrease volume', combo: '↓' }
 ]
 
-export function AppWatchHomeKeyboardInfoModal(props: Props) {
+export function AppWatchHomeKeyboardInfoModal() {
+  const { modal, setModal } = useWatchLayout()
+  const close = () => setModal(null)
+
   return (
     <UiModal
-      isOpen={props.isOpen}
-      onClose={props.onClose}
+      isOpen={modal === 'keyboard-info'}
+      onClose={close}
       overlayClassName="bg-neutral-900 lg:bg-black/75"
       modalClassName="p-0 lg:mx-auto lg:my-20 lg:w-120 lg:rounded-sm lg:bg-neutral-900">
       <div className="flex items-center justify-between p-4">
@@ -36,7 +35,7 @@ export function AppWatchHomeKeyboardInfoModal(props: Props) {
 
         <UiPlainButton
           className="flex size-8 items-center justify-center rounded-full bg-neutral-400 text-white"
-          onClick={props.onClose}>
+          onClick={close}>
           <i className="fa fa-close" />
         </UiPlainButton>
       </div>

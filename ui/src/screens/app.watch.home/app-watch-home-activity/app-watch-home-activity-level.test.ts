@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { isActivityLevel, showsOnOverlay, showsReactions } from './app-watch-home-activity-level'
+import { isActivityLevel, keepsOnOverlay, showsOnOverlay, showsReactions } from './app-watch-home-activity-level'
+import { toPlayaActivity } from './app-watch-home-activity-to-playa'
 
 const leo = { id: 2, name: 'Leo' } as AppUser
 const me = 1
@@ -40,6 +41,17 @@ describe('activity overlay level', () => {
     expect(showsReactions('all', false)).toBe(true)
     expect(showsReactions('activity', false)).toBe(false)
     expect(showsReactions('off', false)).toBe(false)
+  })
+
+  it('keeps lines already up only while the level still allows them', () => {
+    const paused = toPlayaActivity(activity('paused'))
+    const said = toPlayaActivity(message(leo))
+    expect(keepsOnOverlay(said, 'all')).toBe(true)
+    expect(keepsOnOverlay(said, 'activity')).toBe(false)
+    expect(keepsOnOverlay(paused, 'activity')).toBe(true)
+    expect(keepsOnOverlay(toPlayaActivity(activity('joined_code')), 'activity')).toBe(true)
+    expect(keepsOnOverlay(toPlayaActivity(activity('seeked')), 'activity')).toBe(false)
+    expect(keepsOnOverlay(paused, 'off')).toBe(false)
   })
 
   it('accepts only known levels from storage', () => {

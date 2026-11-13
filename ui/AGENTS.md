@@ -20,7 +20,7 @@ No Redux/MobX/Recoil. State is React Context + `useReducer` per feature area, e.
 
 - `lib/auth/` — everything auth: the token cookie, `signIn`/`logout` (`session.ts`), `useAuth()` (`{ status, user }`, a React Query over `/api/me`), `useAuthUser()`, the sign-in mutations, `AuthBoundary` and the route guards
 - `screens/app.watch/app-watch-page.tsx` — loads the room's party with `usePartyQuery` and provides it to the room; read it with `useParty()`. Pusher events write to that query's cache.
-- `screens/app.watch.home/app-watch-home-page.tsx` — the player: `usePlayerSync` (time, playing, volume, and sync with the room) and `usePlayerChrome` (controls, chat, modals, subtitles), each a `useReducer`, shared with the controls through `usePlayer()`
+- `screens/app.watch.home/app-watch-home-page.tsx` — the room's page: `AppWatchHomeLayout` (`useWatchLayout()`: sidebar `chat | invite | closed`, one `modal` at a time, the Activity Overlay level) around `AppWatchHomePlaya` (`usePlayaContext()`: the room's Playa from `usePartyPlaya`)
 
 Real-time updates (party sync, chat, invitations) arrive over Pusher (`lib/pusher`) and get dispatched into these reducers, or written to the query cache.
 
@@ -64,7 +64,7 @@ Older code is still being migrated; follow these in new and touched files.
 - **Imports:** `~/` reaches anywhere in `src`. A relative path may go down into folders (`./stuff/types.ts`) and up one level at most (`../types.ts`); past that (`../../types.ts`), use `~/`.
 - **Shared components** get a folder of their own: `components/key-castr/key-castr.tsx`.
 - **A screen's entrypoint is its page:** `app.watch/app-watch-page.tsx` → `AppWatchPage`.
-- **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`. Hooks keep their `use-` name: `app.watch.home/use-reactions.ts`.
+- **A screen's own parts are prefixed with the screen's name**, so it's clear at a glance what goes where: `app.home/app-home-auth.tsx`. A part with 3 or more files gets a folder, one level deep at most: `app.home/app-home-listing/app-home-listing-search.tsx`. Hooks keep their `use-` name: `app.watch.home/use-party-playa.ts`.
 - **Tests sit next to the file** (`use-now.test.ts`) and select by role, text, label or `data-testid`, never class name. Expose state as `data-*` attributes.
 - **Nulls:** behind `PrivateRoute`, read the user with `useAuthUser()`; elsewhere check `useAuth().status === 'authenticated'`; in the watch room, `useParty()` always has a party. Prefer narrowing or a tighter type to `!`; `!` is fine for refs to elements that always render, and in tests.
 - **Run Prettier** on files you change; it also sorts Tailwind classes.
@@ -84,14 +84,14 @@ Tailwind `4.3.5` classes; tokens, keyframes and the focus ring live in `src/tail
 
 ## Video player
 
-There's no video library (no video.js/hls.js) — it's a plain HTML5 `<video>` element (`screens/app.watch.home/app-watch-home-page.tsx`) with fully custom React-built chrome:
+There's no video library (no video.js/hls.js). The player is **Playa** (`components/playa/`), our own: a plain HTML5 `<video>` with React-built parts. Playa imports nothing from the app (no `screens/`, Pusher, axios, auth or queries); the app feeds it.
 
-- `AppWatchHomePlayerControls` — controls overlay (play/pause, seek, volume, fullscreen, chat toggle, subtitle toggle, episode selection)
-- `AppWatchHomePlayerSeeker`, `AppWatchHomeVolumeControl`, `AppWatchHomePlayerTooltip` — individual control widgets
-- `AppWatchHomeSubtitleSlot` — renders subtitles parsed client-side from a `.srt` via `lib/srt2obj`
-- `usePlayerHotkeys` (`use-player-hotkeys.ts`) — keyboard shortcuts (space, arrows, f, m, etc.)
+- `usePlaya(options)` — playback, the controls overlay, reaction floats and activity lines. What you do calls back (`onPlayback`, `onReact`); what others did comes in through `sync()`, `react(emoji, { by })` and `activity({ id, type, by, … })`, and never calls back, so nothing echoes.
+- `PlayaProvider` hands it to everything below (`usePlayaContext()`); `Playa` is the box, `PlayaElement` the 16:9 picture with the `<video>`.
+- Layers: `PlayaStatus`, `PlayaSubtitles` (an `.srt` string), `PlayaReactions`, `PlayaActivity` (draws each activity type itself), `PlayaOverlay`.
+- Controls: `PlayaControls` holds `PlayaSlider` and a `PlayaBar` you lay out left to right, with `PlayaSpacer` to push the rest right; `PlayaButton` for the page's own buttons.
 
-Playback is kept in sync across party members by dispatching local player actions to the API, which re-broadcasts `PartyState`/`PartyVideoChanged` events over Pusher; `usePlayerSync` (`screens/app.watch.home/use-player-sync.ts`) applies incoming `state` events and video changes by imperatively setting `$video.current.currentTime`, `.play()`/`.pause()`, etc. on the video ref.
+`screens/app.watch.home/use-party-playa.ts` is the only file that knows both the room and Playa: it sends your play, pause and seek to the API and your reactions to the room, and turns Pusher `state`, `client-reaction` and `log` events into `sync()`, `react()` and `activity()`. The page's own parts live in `app-watch-home-stage/` (the picture, its controls), `app-watch-home-sidebar.tsx`, `app-watch-home-activity/` and `app-watch-home-hotkeys.tsx`.
 
 ## Commands
 

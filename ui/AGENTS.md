@@ -88,7 +88,8 @@ There's no video library (no video.js/hls.js). The player is **Playa** (`compone
 
 - `usePlaya(options)` — playback, the controls overlay, reaction floats and activity lines. What you do calls back (`onPlayback`, `onReact`); what others did comes in through `sync()`, `react(emoji, { by })` and `activity({ id, type, by, … })`, and never calls back, so nothing echoes.
 - `PlayaProvider` hands it to everything below (`usePlayaContext()`); `Playa` is the box, `PlayaElement` the 16:9 picture with the `<video>`.
-- Layers: `PlayaStatus`, `PlayaSubtitles` (an `.srt` string), `PlayaReactions`, `PlayaActivity` (draws each activity type itself), `PlayaOverlay`.
+- Layers: `PlayaStatus`, `PlayaSubtitles`, `PlayaReactions`, `PlayaActivity` (draws each activity type itself), `PlayaOverlay`.
+- Subtitles: pass `usePlaya({ subtitles })` a loader that returns the `.srt` text. Playa loads it with React Query (its own `playa-subtitles` key, outside `query-keys.ts`), once per source, then parses and shows it. Our loader is `loadSubtitle` in `screens/app.watch/queries/app-watch-video-queries.ts`; the API fetches the file because the browser can't.
 - Controls: `PlayaControls` holds `PlayaSlider` and a `PlayaBar` you lay out left to right, with `PlayaSpacer` to push the rest right; `PlayaButton` for the page's own buttons.
 
 `screens/app.watch.home/use-party-playa.ts` is the only file that knows both the room and Playa: it sends your play, pause and seek to the API and your reactions to the room, and turns Pusher `state`, `client-reaction` and `log` events into `sync()`, `react()` and `activity()`. The page's own parts live in `app-watch-home-stage/` (the picture, its controls), `app-watch-home-sidebar.tsx`, `app-watch-home-activity/` and `app-watch-home-hotkeys.tsx`.

@@ -1,4 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useFullscreen } from '~/hooks/use-fullscreen'
 import { useUpdateEffect } from '~/hooks/use-update-effect'
 import { clamp } from '~/utils/clamp'
@@ -18,6 +19,8 @@ export interface PlayaOptions {
   initialTime?: number
   /** In seconds, when the caller already knows it; otherwise the video's own. */
   duration?: number
+  /** Loads the video's `.srt` as text, or null when there's none. Playa loads it once per source. */
+  subtitles?: (() => Promise<string | null>) | null
   /** You played, paused or seeked. Never called for `sync()`. */
   onPlayback?: (state: { time: number; isPlaying: boolean }) => void
   /** You reacted. Never called for a reaction with `by`. */
@@ -127,6 +130,17 @@ export function usePlaya(options: PlayaOptions) {
   const [floats, setFloats] = useState<PlayaFloat[]>([])
   const [lines, setLines] = useState<Line[]>([])
 
+  // Once per source, kept while it plays; a failure just means no subtitles. Keyed by source,
+  // so a slow answer for the last video never shows over this one.
+  const subtitles = useQuery({
+    queryKey: ['playa-subtitles', options.src],
+    queryFn: () => latest.current.subtitles?.() ?? null,
+    enabled: Boolean(options.subtitles),
+    staleTime: Infinity,
+    gcTime: 0,
+    retry: false
+  })
+
   useEffect(() => {
     // Start where the caller says.
     $video.current!.currentTime = state.time
@@ -187,6 +201,8 @@ export function usePlaya(options: PlayaOptions) {
     floats,
     /** Newest last; at most four, each for 8 seconds. */
     lines: lines.map((line) => line.activity),
+    /** The `.srt` from `options.subtitles`, once it has loaded. */
+    subtitles: (options.subtitles && subtitles.data) || null,
 
     play: () => setPlaying(true),
     pause: () => setPlaying(false),

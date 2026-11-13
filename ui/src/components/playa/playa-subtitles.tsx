@@ -10,18 +10,19 @@ import { srt2obj } from './playa-subtitles-utils'
 const SLOT =
   'pointer-events-none absolute inset-x-0 z-(--zindex-player-subtitles) p-2 text-base/normal font-medium text-white select-none text-shadow-outline md:pb-12 md:text-xl/normal lg:p-8 lg:text-2xl/normal [&_font]:[font:inherit]'
 
-/** The cues of an `.srt` at the current time, once the video is up and while subtitles are on. */
-export function PlayaSubtitles(props: { srt?: string | null }) {
+/** The cues of the playa's `.srt` at the current time, once the video is up and while subtitles are on. */
+export function PlayaSubtitles() {
   const playa = usePlayaContext()
+  const srt = playa.subtitles
   const tracks = useMemo(() => {
-    if (!props.srt) return []
+    if (!srt) return []
     try {
-      return srt2obj(props.srt)
+      return srt2obj(srt)
     } catch {
       // Missing or malformed subtitles should not interrupt the watch party.
       return []
     }
-  }, [props.srt])
+  }, [srt])
 
   const { time, isReady, isSubtitlesOn, isOverlayOpen } = playa.state
   if (!isReady || !isSubtitlesOn || !tracks.length) {

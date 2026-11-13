@@ -6,6 +6,7 @@ import { pusher } from '~/lib/pusher/pusher'
 import { useAuthUser } from '~/lib/auth/auth-queries'
 import { setPlayback } from '~/screens/app.watch/app-watch-party-updates'
 import { useSetParty, useSyncStateMutation } from '~/screens/app.watch/queries/app-watch-party-queries'
+import { loadSubtitle } from '~/screens/app.watch/queries/app-watch-video-queries'
 import { keepsOnOverlay, showsOnOverlay, showsReactions } from './app-watch-home-activity/app-watch-home-activity-level'
 import { toPlayaActivity, toPlayaPerson } from './app-watch-home-activity/app-watch-home-activity-to-playa'
 import { isReaction } from './app-watch-home-chat-widget/app-watch-home-chat-widget-reaction-row'
@@ -31,6 +32,7 @@ export function usePartyPlaya(party: AppParty) {
     src: party.video.video_url,
     initialTime: party.current_time,
     duration: party.video.duration,
+    subtitles: party.video.subtitle_url ? () => loadSubtitle(party.video.id) : null,
     onPlayback: ({ time, isPlaying }) => syncState.mutate({ is_playing: isPlaying, current_time: time }),
     // Pusher doesn't echo client events back to the sender; Playa already floated yours.
     onReact(emoji) {

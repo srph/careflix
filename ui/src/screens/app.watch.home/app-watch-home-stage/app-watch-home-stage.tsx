@@ -6,6 +6,7 @@ import { Playa, PlayaElement, PlayaOverlay } from '~/components/playa/playa'
 import { PlayaCenterControls } from '~/components/playa/playa-controls'
 import { PlayaReactions } from '~/components/playa/playa-reactions'
 import { PlayaStatus } from '~/components/playa/playa-status'
+import { PlayaSubtitles } from '~/components/playa/playa-subtitles'
 import { getVideoPreviewImage } from '~/utils/shows/get-video-preview-image'
 import { useParty } from '~/screens/app.watch/use-party'
 import { useInvitationOverlay } from '~/screens/app/app-invitation-modal/app-invitation-modal-context'
@@ -13,7 +14,6 @@ import { AppWatchHomeActivityOverlay } from '../app-watch-home-activity/app-watc
 import { useWatchLayout } from '../app-watch-home-layout'
 import { AppWatchHomeStageControls } from './app-watch-home-stage-controls'
 import { AppWatchHomeStageNowPlaying } from './app-watch-home-stage-now-playing'
-import { AppWatchHomeStageSubtitles } from './app-watch-home-stage-subtitles'
 
 /** The picture and everything over it. It narrows to make room for the sidebar from 640px up. */
 export function AppWatchHomeStage() {
@@ -38,7 +38,7 @@ export function AppWatchHomeStage() {
       <PlayaElement src={party.video.video_url} poster={getVideoPreviewImage(party)} />
       <AppWatchHomeStageNowPlaying />
       <PlayaStatus />
-      <AppWatchHomeStageSubtitles />
+      <PlayaSubtitles />
       <PlayaReactions />
       <AppWatchHomeActivityOverlay />
 

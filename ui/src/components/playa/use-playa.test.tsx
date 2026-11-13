@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { act, render } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { type Playa, type PlayaOptions, usePlaya } from './use-playa'
 import { MAX_FLOATS, makePath } from './playa-reactions'
@@ -14,7 +15,11 @@ function renderPlaya(options: Partial<PlayaOptions> = {}) {
     result.current = usePlaya({ src: 'movie.mp4', duration: 100, ...options })
     return <video ref={result.current.$video} {...result.current.events} />
   }
-  render(<Harness />)
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <Harness />
+    </QueryClientProvider>
+  )
   return result
 }
 

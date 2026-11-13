@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { act, render } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Playa } from '~/components/playa/use-playa'
 import { REACTION_EVENT, usePartyPlaya } from './use-party-playa'
@@ -34,7 +35,11 @@ function renderPartyPlaya() {
     result.current = usePartyPlaya(party)
     return <video ref={result.current.$video} {...result.current.events} />
   }
-  render(<Harness />)
+  render(
+    <QueryClientProvider client={new QueryClient()}>
+      <Harness />
+    </QueryClientProvider>
+  )
   return result
 }
 

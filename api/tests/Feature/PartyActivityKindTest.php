@@ -18,8 +18,6 @@ class PartyActivityKindTest extends TestCase
         config([
             'database.default' => 'sqlite',
             'database.connections.sqlite.database' => ':memory:',
-            'telescope.storage.database.connection' => 'sqlite',
-            'telescope.enabled' => false
         ]);
         DB::purge('sqlite');
         $this->assertSame(':memory:', DB::connection()->getDatabaseName());

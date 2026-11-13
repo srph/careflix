@@ -26,7 +26,6 @@ class DiscordAuthTest extends TestCase
         parent::setUp();
         config([
             'database.default' => 'sqlite', 'database.connections.sqlite.database' => ':memory:',
-            'telescope.storage.database.connection' => 'sqlite', 'telescope.enabled' => false,
             'config.request_access_code' => '', 'services.discord.client_id' => 'test-client',
             'services.discord.client_secret' => 'test-secret',
             'services.discord.redirect' => 'http://localhost/auth/discord/callback',

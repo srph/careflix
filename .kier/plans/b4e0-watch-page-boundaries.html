@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch Page Boundaries</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root {
+  --bg: #f6f5f3; --surface: #fff; --ink: #1d1b19; --muted: #6b6661; --line: #d9d5cf; --soft: #efece8;
+  --room: #e11d74; --page: #0284c7; --player: #d97706; --party: #059669; --side: #7c3aed; --sheet: #e11d48;
+  --new: #059669; --mod: #d97706; --del: #dc2626; --mov: #2563eb;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151413; --surface: #1e1c1b; --ink: #ece9e5; --muted: #a19b95; --line: #3a3633; --soft: #262321;
+    --room: #f472b6; --page: #38bdf8; --player: #fbbf24; --party: #34d399; --side: #a78bfa; --sheet: #fb7185;
+    --new: #34d399; --mod: #fbbf24; --del: #f87171; --mov: #60a5fa;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151413; --surface: #1e1c1b; --ink: #ece9e5; --muted: #a19b95; --line: #3a3633; --soft: #262321;
+  --room: #f472b6; --page: #38bdf8; --player: #fbbf24; --party: #34d399; --side: #a78bfa; --sheet: #fb7185;
+  --new: #34d399; --mod: #fbbf24; --del: #f87171; --mov: #60a5fa;
+}
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5 }
+main { max-width: 1040px; margin: 0 auto; padding: 40px 16px 80px }
+h1 { font-size: 30px; line-height: 1.15; margin: 0 0 18px; letter-spacing: -.01em }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 56px 0 14px }
+h3 { font-size: 15px; margin: 0 0 6px }
+.cap { color: var(--muted); margin: 10px 0 0; font-size: 13px }
+code, .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px }
+.fact b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600 }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px }
+.scroll { overflow-x: auto }
+svg text { font-family: ui-sans-serif, system-ui, sans-serif }
+.badge { display: inline-block; font: 600 10px/1 ui-monospace, Menlo, monospace; padding: 3px 6px; border-radius: 4px; vertical-align: 2px; margin-left: 6px; text-transform: uppercase; letter-spacing: .04em; border: 1px solid currentColor }
+.b-new { color: var(--new) } .b-mod { color: var(--mod) } .b-del { color: var(--del) } .b-mov { color: var(--mov) }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0 0 12px; font-size: 13px }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; background: var(--c); vertical-align: -1px }
+
+/* Mockup canvas — the app's own look */
+.canvas { background: #0b0a0a; border-radius: 12px; padding: 18px; overflow-x: auto }
+.app { position: relative; width: 980px; height: 470px; border: 2px dashed var(--room); border-radius: 10px; padding: 26px 10px 10px; color: #f5f5f4; font: 13px/1.4 "Work Sans", ui-sans-serif, system-ui }
+.page { position: absolute; inset: 26px 10px 10px; border: 2px dashed var(--page); border-radius: 8px; display: flex }
+.tag { position: absolute; font: 600 11px/1 ui-monospace, Menlo, monospace; padding: 4px 6px; border-radius: 4px; color: #0b0a0a; white-space: nowrap; z-index: 5 }
+.stage { position: relative; width: 660px; height: 100%; border-right: 1px solid #222 }
+.picture { position: relative; margin: 26px 10px 0; height: 360px; border: 2px solid var(--player); border-radius: 6px; overflow: hidden;
+  background: radial-gradient(120% 90% at 30% 20%, #3b2a3a 0%, #1a1418 55%, #0e0b0c 100%) }
+.layer { position: absolute; border: 1.5px dashed var(--party); border-radius: 6px }
+.layer.gen { border: 1.5px solid var(--player) }
+.sub { left: 262px; right: 100px; bottom: 122px; text-align: center; padding: 4px; font-size: 14px; text-shadow: 0 1px 2px #000 }
+.floats { right: 14px; top: 70px; width: 70px; height: 150px; font-size: 22px; display: grid; place-items: center; align-content: space-around }
+.activity { left: 14px; bottom: 96px; width: 230px; padding: 6px; display: grid; gap: 4px }
+.activity div { background: rgba(0,0,0,.45); border-radius: 12px; padding: 3px 10px; font-size: 12px; color: #ddd }
+.activity b { color: #fff }
+.controls { left: 0; right: 0; bottom: 0; height: 84px; border-radius: 0 0 4px 4px; background: linear-gradient(to top, rgba(0,0,0,.85), transparent); padding: 10px 14px }
+.seek { display: flex; align-items: center; gap: 10px; font-size: 12px; font-variant-numeric: tabular-nums }
+.seek i { flex: 1; height: 4px; background: #555; border-radius: 2px; position: relative }
+.seek i::before { content: ""; position: absolute; inset: 0 62% 0 0; background: #ec4899; border-radius: 2px }
+.bar { display: flex; align-items: center; gap: 6px; margin-top: 12px }
+.bar .g, .bar .p { padding: 3px 6px; border-radius: 4px; font-size: 13px; line-height: 1 }
+.bar .g { outline: 1.5px solid var(--player) } .bar .p { outline: 1.5px dashed var(--party) }
+.bar .t { flex: 1; font-weight: 600; padding-left: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.side { position: relative; flex: 1; margin: 26px 10px 10px; border: 2px solid var(--side); border-radius: 6px; display: flex; flex-direction: column; overflow: hidden; background: #141212 }
+.side .hd { display: flex; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid #262222 }
+.dot { width: 22px; height: 22px; border-radius: 50%; display: inline-block; border: 2px solid #141212; margin-left: -8px }
+.code { margin-left: auto; font: 600 11px/1 ui-monospace, Menlo, monospace; background: #262222; padding: 5px 7px; border-radius: 6px; letter-spacing: .1em }
+.inv { background: #ec4899; color: #fff; font-weight: 700; padding: 5px 9px; border-radius: 4px; font-size: 12px }
+.msgs { flex: 1; padding: 10px; display: grid; gap: 8px; align-content: end; font-size: 12.5px }
+.msgs b { color: #f9a8d4 }
+.react { position: relative; display: flex; justify-content: space-around; padding: 6px 10px; font-size: 16px; border-top: 1px solid #262222; }
+.comp { margin: 0 10px 10px; border-radius: 10px; background: #262222; padding: 9px 10px; color: #8a8580; font-size: 12.5px; display: flex; justify-content: space-between }
+.comp span:last-child { color: #ec4899 }
+.sheet { position: absolute; left: 250px; top: 96px; width: 210px; border: 2px dashed var(--sheet); border-radius: 10px; background: rgba(20,18,18,.94); padding: 22px 12px 10px; font-size: 12px; color: #cfcac5; z-index: 4 }
+.sheet div { padding: 3px 0; border-bottom: 1px solid #2a2626 }
+
+/* Exploded layers */
+.stack { display: grid; gap: 6px; max-width: 640px }
+.lyr { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 8px; padding: 7px 12px; margin-left: calc(var(--i) * 18px) }
+.lyr code { font-weight: 600 }
+.lyr small { color: var(--muted); margin-left: auto; font-size: 12px }
+
+/* Tree */
+.tree, .tree ul { list-style: none; margin: 0; padding: 0 }
+.tree ul { position: relative; padding-left: 20px }
+.tree ul::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 14px; border-left: 1px solid var(--line) }
+.tree li { position: relative; padding-left: 14px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; line-height: 26px }
+.tree li::before { content: ""; position: absolute; left: -14px; top: 13px; width: 20px; border-top: 1px solid var(--line) }
+.tree > li { padding-left: 0 }
+.tree > li::before { display: none }
+.tree .dir { font-weight: 700 }
+.tree .grey { color: var(--muted); opacity: .7 }
+.tree .gone { text-decoration: line-through; color: var(--muted) }
+.tree .note { color: var(--muted); font-family: ui-sans-serif, system-ui, sans-serif; font-size: 12px; margin-left: 8px }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px }
+
+/* Phases */
+.timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-bottom: 14px; position: relative }
+.timeline div { text-align: center; font-size: 12.5px; color: var(--muted); position: relative; padding-top: 24px }
+.timeline div::before { content: attr(data-n); position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--bg); font: 700 11px/20px ui-sans-serif, system-ui; z-index: 1 }
+.timeline div::after { content: ""; position: absolute; top: 10px; left: 0; right: 0; border-top: 2px solid var(--line) }
+.timeline b { color: var(--ink); display: block }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px }
+details > summary { list-style: none; cursor: pointer; padding: 14px 16px 14px 38px; position: relative }
+details > summary::-webkit-details-marker { display: none }
+details > summary::before { content: ""; position: absolute; left: 16px; top: 20px; border: 5px solid transparent; border-left: 7px solid var(--muted); transition: transform .15s; transform-origin: 3px 5px }
+details[open] > summary::before { transform: rotate(90deg) }
+details .body { padding: 0 16px 16px }
+.sum-t { font-weight: 700 } .sum-o { color: var(--muted); margin-left: 6px }
+.files { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 12px }
+.files .badge { margin-left: 4px }
+pre { margin: 12px 0 0; border-radius: 10px; overflow: auto; font-size: 12.5px }
+pre code.hljs { padding: 14px 16px; background: #16161a }
+.path { font: 600 12px ui-monospace, Menlo, monospace; color: var(--muted); margin-top: 16px }
+
+/* Decisions, risks */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px }
+.opts { display: grid; gap: 6px; margin: 8px 0 }
+.opt { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 13px; color: var(--muted) }
+.opt.pick { border-color: var(--new); color: var(--ink); background: color-mix(in srgb, var(--new) 8%, transparent) }
+.opt.pick::before { content: "✓ "; color: var(--new); font-weight: 700 }
+.why { font-size: 13px }
+.sev { font: 700 10px/1 ui-monospace, Menlo, monospace; padding: 3px 6px; border-radius: 4px; color: #fff; text-transform: uppercase; margin-right: 6px }
+.hi { background: var(--del) } .md { background: var(--mod) } .lo { background: var(--muted) }
+.check { list-style: none; padding: 0; margin: 0 0 18px }
+.check li { display: flex; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line) }
+.check li::before { content: "☐"; color: var(--muted) }
+.check li span:last-child { margin-left: auto; font: 12px ui-monospace, Menlo, monospace; color: var(--muted); white-space: nowrap }
+h4 { margin: 0 0 4px; font-size: 13px }
+.rules { margin: 6px 0 0; padding-left: 18px; font-size: 13px } .rules li { margin: 3px 0 }
+.rate { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px }
+.rate th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; padding: 0 10px 8px 0 }
+.rate td { padding: 7px 10px 7px 0; border-top: 1px solid var(--line); white-space: nowrap }
+.rate td:nth-child(2) { width: 34% } .rate td:nth-child(3) { color: var(--muted); white-space: normal }
+.rate i { display: inline-block; width: calc(var(--w) * 1.4px); height: 8px; border-radius: 4px; background: var(--ink); opacity: .35; margin-right: 8px; vertical-align: 0 }
+.next { font-size: 15px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--page); border-radius: 8px; padding: 12px 16px }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Watch page: Room, Layout and Playa, each its own thing</h1>
+<div class="facts">
+  <div class="fact"><b>Surface</b><code>components/playa</code> + <code>app.watch.home</code></div>
+  <div class="fact"><b>Shape</b>Room → Layout → Playa providers; Stage, Sidebar, two modals</div>
+  <div class="fact"><b>Files</b>~14 new · ~12 moved · ~6 modified · 6 deleted</div>
+  <div class="fact"><b>Rule</b>Playa imports nothing from the app; the app feeds it</div>
+  <div class="fact"><b>Status</b>Proposal, rev 3 · nothing changed yet</div>
+</div>
+
+<h2>The page, broken down</h2>
+<div class="legend">
+  <span style="--c:var(--room)">Room · server data</span>
+  <span style="--c:var(--page)">Layout · what's open</span>
+  <span style="--c:var(--player)">Playa · the player library</span>
+  <span style="--c:var(--party)">App parts slotted into Playa</span>
+  <span style="--c:var(--side)">Sidebar</span>
+  <span style="--c:var(--sheet)">Modals</span>
+</div>
+<div class="canvas">
+  <div class="app">
+    <span class="tag" style="background:var(--room);top:5px;left:10px">AppWatchPage · Room · useParty()</span>
+    <div class="page">
+      <span class="tag" style="background:var(--page);top:5px;left:8px">AppWatchHomeLayout · useWatchLayout()</span>
+      <span class="tag" style="background:var(--player);top:5px;left:300px">AppWatchHomePlaya → &lt;PlayaProvider&gt; · usePlayaContext()</span>
+      <div class="stage">
+        <span class="tag" style="background:var(--player);top:30px;left:18px">&lt;Playa&gt;</span>
+        <div class="picture">
+          <div class="layer gen floats">😂<br>🔥<br>❤️</div>
+          <span class="tag" style="background:var(--player);right:14px;top:46px">PlayaReactions</span>
+          <div class="layer gen sub">I told you it was the butler.</div>
+          <span class="tag" style="background:var(--player);left:262px;bottom:160px">PlayaSubtitles</span>
+          <div class="layer gen activity">
+            <div><b>Joyce</b> joined with the code</div>
+            <div><b>Sam</b> paused</div>
+          </div>
+          <span class="tag" style="background:var(--player);left:14px;bottom:166px">PlayaActivity</span>
+          <div class="layer gen controls">
+            <div class="seek"><span>12:04</span><i></i><span>48:10</span></div>
+            <div class="bar">
+              <span class="g">▶</span><span class="g">⟲10</span><span class="g">10⟳</span><span class="g">🔊</span>
+              <span class="t">Knives Out <span style="opacity:.6">S1:E3</span></span>
+              <span class="p">⌨</span><span class="g">CC</span><span class="p">☰</span><span class="g">⛶</span><span class="p">🔔</span><span class="p">💬</span>
+            </div>
+          </div>
+          <span class="tag" style="background:var(--player);right:10px;bottom:90px">PlayaOverlay → PlayaControls + app buttons</span>
+        </div>
+      </div>
+      <div class="side">
+        <span class="tag" style="background:var(--side);top:6px;right:6px">AppWatchHomeSidebar · chat ⇄ invite</span>
+        <div class="hd" style="padding-top:30px">
+          <span class="dot" style="background:#f9a8d4;margin-left:0"></span><span class="dot" style="background:#7dd3fc"></span><span class="dot" style="background:#fcd34d"></span>
+          <span class="code">482 913</span><span class="inv">Invite</span>
+        </div>
+        <div class="msgs">
+          <div><b>Joyce</b> no way he did it</div>
+          <div><b>Sam</b> wait for it…</div>
+          <div><b>You</b> 👀</div>
+          <div style="color:#8a8580;font-size:12px">Joyce is typing…</div>
+        </div>
+        <div class="react">😂 😱 😭 ❤️ 🔥 👀</div>
+        <div class="comp"><span>Say something…</span><span>➤</span></div>
+      </div>
+      <div class="sheet">
+        <span class="tag" style="background:var(--sheet);top:-10px;left:10px">AppWatchHomeSeasonSelectionModal</span>
+        <div>S1:E1 · Pilot</div><div>S1:E2 · The Will</div><div style="color:#f9a8d4">S1:E3 · The Butler ▸</div>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="cap">Solid orange is Playa; dashed green is the app's, slotted in. The reaction row sits in the sidebar but calls <code>playa.react()</code>.</p>
+
+<h2>Layers on the picture, bottom to top</h2>
+<div class="stack">
+  <div class="lyr" style="--c:var(--player);--i:0"><code>PlayaElement</code><small>the &lt;video&gt;</small></div>
+  <div class="lyr" style="--c:var(--player);--i:1"><code>PlayaStatus</code><small>buffering, ▶/❚❚ flash</small></div>
+  <div class="lyr" style="--c:var(--player);--i:2"><code>PlayaSubtitles</code><small>cues at the current time</small></div>
+  <div class="lyr" style="--c:var(--party);--i:3"><code>AppWatchHomeStageNowPlaying</code><small>episode change notice</small></div>
+  <div class="lyr" style="--c:var(--player);--i:4"><code>PlayaReactions</code><small>floats from <code>playa.react()</code></small></div>
+  <div class="lyr" style="--c:var(--player);--i:5"><code>PlayaActivity</code><small>lines from <code>playa.activity()</code></small></div>
+  <div class="lyr" style="--c:var(--player);--i:6"><code>PlayaOverlay</code> → <code>PlayaControls</code><small>hover / tap, hides after 5s</small></div>
+</div>
+
+<h2>The Playa API</h2>
+<div class="path">ui/src/components/playa/use-playa.ts <span class="badge b-new">new</span></div>
+<pre><code class="language-tsx">const playa = usePlaya({
+  src, initialTime, subtitles,
+  onPlayback: (state) =&gt; { /* you played, paused or seeked */ },
+  onReact: (emoji) =&gt; { /* you reacted */ },
+})
+
+// Yours: move the video, then call onPlayback / onReact
+playa.play() · playa.pause() · playa.seek(90) · playa.skip(-10)
+playa.react('😂')
+
+// Theirs: same effect, never calls back, so nothing echoes
+playa.sync({ time: 754, isPlaying: true })
+playa.react('😂', { by: joyce })
+
+// A line on the picture. Playa renders it, stacks four, fades each after 8s
+playa.activity({ id: '81', type: 'paused', by: joyce, at: 754 })     // "Joyce paused at 12:34"
+playa.activity({ id: '82', type: 'message', by: sam, text: 'wait for it…' })
+
+playa.state   // { time, duration, isPlaying, isBuffering, isReady, volume, isMuted, subtitlesOn }
+// joyce, sam: PlayaPerson = { id, name, avatarUrl? }
+playa.floats · playa.lines</code></pre>
+<div class="path">the parts, as you sketched them</div>
+<pre><code class="language-tsx">&lt;PlayaProvider playa={playa}&gt;            {/* no DOM; lets the sidebar react too */}
+  &lt;Playa poster={poster}&gt;                  {/* the 16:9 box */}
+    &lt;PlayaElement /&gt;
+    &lt;PlayaStatus /&gt;
+    &lt;PlayaSubtitles /&gt;
+    &lt;PlayaReactions /&gt;
+    &lt;PlayaActivity /&gt;
+    &lt;PlayaOverlay&gt;
+      &lt;PlayaControls&gt;
+        &lt;PlayaSlider /&gt;
+        &lt;PlayaPlay /&gt; &lt;PlayaPause /&gt; &lt;PlayaBackward /&gt; &lt;PlayaForward /&gt;
+        &lt;PlayaVolume /&gt; &lt;PlayaFullscreen /&gt;
+        {/* app buttons slot in here */}
+      &lt;/PlayaControls&gt;
+    &lt;/PlayaOverlay&gt;
+  &lt;/Playa&gt;
+&lt;/PlayaProvider&gt;</code></pre>
+
+<h2>Shape</h2>
+<div class="card scroll">
+  <svg viewBox="0 0 960 290" width="960" role="img" aria-label="Before: one page component wires everything by props">
+    <text x="0" y="14" font-size="12" font-weight="700" fill="var(--muted)">BEFORE</text>
+    <rect x="20" y="30" width="230" height="54" rx="8" fill="var(--soft)" stroke="var(--line)"/>
+    <text x="34" y="53" font-size="13" font-weight="700" fill="var(--ink)">AppWatchPage</text>
+    <text x="34" y="71" font-size="12" fill="var(--muted)">party context</text>
+    <line x1="135" y1="84" x2="135" y2="118" stroke="var(--line)" stroke-width="2" marker-end="url(#a)"/>
+    <rect x="20" y="120" width="300" height="160" rx="8" fill="var(--soft)" stroke="var(--del)" stroke-width="2"/>
+    <text x="34" y="143" font-size="13" font-weight="700" fill="var(--ink)">AppWatchHomePage · 219 lines</text>
+    <text x="34" y="166" font-size="12" fill="var(--muted)">usePlayerSync (video + Pusher + PUT)</text>
+    <text x="34" y="186" font-size="12" fill="var(--muted)">usePlayerChrome (5 flags + controls timer)</text>
+    <text x="34" y="206" font-size="12" fill="var(--muted)">useReactions · registerPlayer · router block</text>
+    <text x="34" y="226" font-size="12" fill="var(--muted)">click / hover rules · now-playing timer</text>
+    <text x="34" y="246" font-size="12" fill="var(--muted)">re-renders on every timeupdate</text>
+    <g font-size="12" fill="var(--ink)">
+      <rect x="420" y="30" width="230" height="28" rx="6" fill="var(--soft)" stroke="var(--line)"/><text x="432" y="49">ChatWidget ← 8 props</text>
+      <rect x="420" y="66" width="230" height="28" rx="6" fill="var(--soft)" stroke="var(--line)"/><text x="432" y="85">ActivityOverlay ← 6 props</text>
+      <rect x="420" y="102" width="230" height="28" rx="6" fill="var(--soft)" stroke="var(--line)"/><text x="432" y="121">SeasonSelectionModal ← 5 props</text>
+      <rect x="420" y="138" width="230" height="28" rx="6" fill="var(--soft)" stroke="var(--line)"/><text x="432" y="157">SubtitleSlot ← 4 props</text>
+      <rect x="420" y="174" width="230" height="28" rx="6" fill="var(--soft)" stroke="var(--line)"/><text x="432" y="193">ReactionLayer ← 3 props</text>
+      <rect x="420" y="210" width="230" height="28" rx="6" fill="var(--soft)" stroke="var(--line)"/><text x="432" y="229">KeyboardInfoModal ← 2 props</text>
+    </g>
+    <g stroke="var(--line)" stroke-width="1.5" fill="none">
+      <path d="M320 180 C370 180 370 44 418 44"/><path d="M320 180 C370 180 370 80 418 80"/><path d="M320 180 C370 180 370 116 418 116"/>
+      <path d="M320 180 C370 180 370 152 418 152"/><path d="M320 180 C370 180 370 188 418 188"/><path d="M320 180 C370 180 370 224 418 224"/>
+      <path d="M320 260 C560 275 640 275 698 220" stroke="var(--del)" stroke-dasharray="4 3" marker-end="url(#a)"/>
+    </g>
+    <text x="470" y="254" font-size="11.5" fill="var(--del)">context { player, chrome }</text>
+    <rect x="700" y="120" width="240" height="120" rx="8" fill="var(--soft)" stroke="var(--del)" stroke-width="2"/>
+    <text x="714" y="143" font-size="13" font-weight="700" fill="var(--ink)">PlayerControls · 408 lines</text>
+    <text x="714" y="166" font-size="12" fill="var(--muted)">hotkeys · fullscreen · tooltips</text>
+    <text x="714" y="186" font-size="12" fill="var(--muted)">play/seek/volume + party buttons</text>
+    <text x="714" y="206" font-size="12" fill="var(--muted)">title · chat toggle · activity menu</text>
+    <text x="714" y="226" font-size="12" fill="var(--muted)">reaches into $video.current.click()</text>
+    <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+  </svg>
+  <hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+  <svg viewBox="0 0 960 330" width="960" role="img" aria-label="After: Room, Layout and Playa providers; Playa is a library the app feeds">
+    <text x="0" y="14" font-size="12" font-weight="700" fill="var(--muted)">AFTER</text>
+    <rect x="20" y="28" width="440" height="292" rx="10" fill="none" stroke="var(--room)" stroke-width="2"/>
+    <text x="34" y="50" font-size="13" font-weight="700" fill="var(--room)">Room · AppWatchPage</text>
+    <text x="34" y="68" font-size="12" fill="var(--muted)">party query, presence, Pusher → cache · useParty()</text>
+    <rect x="38" y="80" width="404" height="226" rx="8" fill="none" stroke="var(--page)" stroke-width="2"/>
+    <text x="52" y="102" font-size="13" font-weight="700" fill="var(--page)">Layout · AppWatchHomeLayout</text>
+    <text x="52" y="120" font-size="12" fill="var(--muted)">sidebar · modal · activity level · useWatchLayout()</text>
+    <rect x="52" y="132" width="376" height="162" rx="8" fill="none" stroke="var(--player)" stroke-width="2"/>
+    <text x="66" y="152" font-size="13" font-weight="700" fill="var(--player)">Playa · AppWatchHomePlaya</text>
+    <rect x="66" y="164" width="172" height="118" rx="6" fill="var(--soft)" stroke="var(--line)"/>
+    <text x="80" y="184" font-size="12.5" font-weight="700" fill="var(--ink)">Stage · &lt;Playa&gt;</text>
+    <text x="80" y="204" font-size="11.5" fill="var(--muted)">Element · Status · Subtitles</text>
+    <text x="80" y="222" font-size="11.5" fill="var(--muted)">Reactions · Activity</text>
+    <text x="80" y="240" font-size="11.5" fill="var(--muted)">Overlay → Controls</text>
+    <text x="80" y="258" font-size="11.5" fill="var(--muted)">+ now playing</text>
+    <rect x="250" y="164" width="164" height="54" rx="8" fill="var(--soft)" stroke="var(--side)" stroke-width="2"/>
+    <text x="264" y="186" font-size="12.5" font-weight="700" fill="var(--side)">Sidebar</text>
+    <text x="264" y="206" font-size="11.5" fill="var(--muted)">chat ⇄ invite · react row</text>
+    <rect x="250" y="228" width="164" height="54" rx="8" fill="var(--soft)" stroke="var(--sheet)" stroke-width="2"/>
+    <text x="264" y="250" font-size="12.5" font-weight="700" fill="var(--sheet)">Modals</text>
+    <text x="264" y="270" font-size="11.5" fill="var(--muted)">season selection · keyboard info</text>
+
+    <rect x="530" y="34" width="410" height="66" rx="8" fill="var(--soft)" stroke="var(--party)" stroke-width="2" stroke-dasharray="5 3"/>
+    <text x="546" y="58" font-size="13" font-weight="700" fill="var(--ink)">usePartyPlaya(party) · app</text>
+    <text x="546" y="78" font-size="12" fill="var(--muted)">Pusher + PUT /state ↔ playa · filters by activity level</text>
+    <rect x="530" y="140" width="410" height="66" rx="8" fill="var(--soft)" stroke="var(--player)" stroke-width="2"/>
+    <text x="546" y="164" font-size="13" font-weight="700" fill="var(--ink)">usePlaya(options) · library</text>
+    <text x="546" y="184" font-size="12" fill="var(--muted)">video · sync() · react() · activity() — no app imports</text>
+    <rect x="530" y="246" width="410" height="66" rx="8" fill="var(--soft)" stroke="var(--player)" stroke-width="2"/>
+    <text x="546" y="270" font-size="13" font-weight="700" fill="var(--ink)">components/playa/*</text>
+    <text x="546" y="290" font-size="12" fill="var(--muted)">Playa · Element · Overlay · Controls · Slider · Reactions …</text>
+    <g stroke="var(--muted)" stroke-width="1.5" fill="none">
+      <line x1="735" y1="140" x2="735" y2="104" marker-end="url(#b)"/>
+      <line x1="735" y1="246" x2="735" y2="210" marker-end="url(#b)"/>
+      <path d="M428 146 H500 V67 H526" stroke-dasharray="4 3" marker-end="url(#b)"/>
+    </g>
+    <text x="745" y="126" font-size="11.5" fill="var(--muted)">called by</text>
+    <text x="745" y="232" font-size="11.5" fill="var(--muted)">read by</text>
+    <text x="470" y="162" font-size="11.5" fill="var(--muted)">creates</text>
+    <defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+  </svg>
+</div>
+<p class="cap">One provider per thing; <code>usePartyPlaya</code> is the only file that knows both the room and Playa.</p>
+
+<h2>Context or props</h2>
+<div class="grid">
+  <div class="card" style="border-top:3px solid var(--page)"><h3>Context when…</h3>
+    <ul class="rules">
+      <li>it's the thing itself, read at many depths: room, layout, Playa</li>
+      <li>the reader only makes sense inside that thing: regions, layers, Playa parts</li>
+      <li>it's passed through a component that doesn't use it</li>
+    </ul></div>
+  <div class="card" style="border-top:3px solid var(--muted)"><h3>Props when…</h3>
+    <ul class="rules">
+      <li>it's one level down, or a leaf that could live anywhere: <code>UiAvatar</code></li>
+      <li>it's the parent's intent: <code>onClose</code>, <code>onInvite</code>, <code>onLineClick</code></li>
+      <li>it's a helper or view you want to test without a provider</li>
+    </ul></div>
+</div>
+<div class="card scroll" style="margin-top:12px">
+  <table class="rate">
+    <thead><tr><th>Thing · context</th><th>Changes</th><th>Good enough because</th></tr></thead>
+    <tbody>
+      <tr><td><code style="color:var(--room)">useParty()</code></td><td><i style="--w:18"></i>Pusher events</td><td>rare</td></tr>
+      <tr><td><code style="color:var(--page)">useWatchLayout()</code></td><td><i style="--w:28"></i>clicks</td><td>rare</td></tr>
+      <tr><td><code style="color:var(--player)">usePlayaContext()</code></td><td><i style="--w:100"></i>~4×/s while playing</td><td>only Playa parts and the reaction row read it; today the whole page re-renders instead</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">If something ever stutters, fix it in the leaf (a <code>memo</code>), not in the API.</p>
+<details>
+  <summary><span class="sum-t">Today's drilling</span><span class="sum-o"><code>party</code> goes in as a prop 4 times, though <code>useParty()</code> already exists.</span></summary>
+  <div class="body">
+    <ul class="rules">
+      <li><code>ChatWidget</code> ← party + 7 flags/callbacks → reads <code>useParty()</code>, <code>useWatchLayout()</code></li>
+      <li><code>ActivityOverlay</code> ← party, me, level, isChatOpen, isLifted, onOpenChat → lifting moves into <code>PlayaActivity</code></li>
+      <li><code>SeasonSelectionModal</code>, <code>MobileTitleBar</code> ← party → <code>useParty()</code></li>
+      <li><code>PlayerControls</code> → <code>player.$video.current.click()</code> reaches through the ref; becomes <code>playa.play()</code></li>
+    </ul>
+  </div>
+</details>
+
+<h2>The page after</h2>
+<div class="path">ui/src/screens/app.watch.home/app-watch-home-page.tsx <span class="badge b-mod">modify</span></div>
+<pre><code class="language-tsx">export function AppWatchHomePage() {
+  return (
+    &lt;AppWatchHomeLayout&gt;                  {/* what's open: sidebar, modal, activity level */}
+      &lt;AppWatchHomePlaya&gt;                 {/* usePartyPlaya(party) → &lt;PlayaProvider&gt; */}
+        &lt;AppWatchHomeHotkeys /&gt;
+        &lt;AppWatchHomeShell&gt;               {/* picture beside sidebar; phones stack */}
+          &lt;AppWatchHomeStage /&gt;           {/* &lt;Playa&gt;, its layers, the controls */}
+          &lt;AppWatchHomeMobileTitleBar /&gt;
+          &lt;AppWatchHomeSidebar /&gt;
+        &lt;/AppWatchHomeShell&gt;
+        &lt;AppWatchHomeSeasonSelectionModal /&gt;   {/* both read layout.modal; */}
+        &lt;AppWatchHomeKeyboardInfoModal /&gt;      {/* no isOpen / onClose props */}
+      &lt;/AppWatchHomePlaya&gt;
+    &lt;/AppWatchHomeLayout&gt;
+  )
+}</code></pre>
+<div class="path">ui/src/screens/app.watch.home/use-party-playa.ts <span class="badge b-new">new</span></div>
+<pre><code class="language-ts">// Wires Playa to the room. The only file that knows both.
+export function usePartyPlaya(party: AppParty) {
+  const user = useAuthUser()
+  const { sidebar, activityLevel } = useWatchLayout()
+  const syncState = useSyncStateMutation(party.id)
+  const channel = `private-party.${party.id}`
+
+  const playa = usePlaya({
+    src: party.video.video_url,
+    initialTime: party.current_time,
+    subtitles: party.video.subtitle_url,
+    onPlayback: ({ time, isPlaying }) =&gt; syncState.mutate({ current_time: time, is_playing: isPlaying }),
+    // Today's send from use-reactions; Pusher doesn't echo client events, Playa already floated yours.
+    onReact: (emoji) =&gt; {
+      const room = pusher()?.channel(channel)
+      if (room?.subscribed) room.trigger(REACTION_EVENT, { userId: user.id, emoji })
+    },
+  })
+
+  usePusher(channel, 'state', ({ state }) =&gt; playa.sync({ time: state.current_time, isPlaying: state.is_playing }))
+  usePusher(channel, REACTION_EVENT, ({ userId, emoji }) =&gt; {   // REACTION_EVENT lives here now
+    const by = toPlayaPerson(party, userId)   // name from the party, not the payload
+    if (by &amp;&amp; isReaction(emoji) &amp;&amp; showsReactions(activityLevel, sidebar !== 'closed')) playa.react(emoji, { by })
+  })
+  usePusher(channel, 'log', ({ log }) =&gt; {
+    if (sidebar === 'closed' &amp;&amp; showsOnOverlay(activityLevel, log)) playa.activity(toPlayaActivity(log))
+  })
+
+  return playa
+}</code></pre>
+
+<h2>Tree</h2>
+<div class="cols">
+<div class="card">
+<ul class="tree">
+  <li><span class="dir">ui/src/components/</span>
+    <ul>
+      <li class="grey">ui-button/ …</li>
+      <li><span class="dir">playa/</span><span class="badge b-new">new</span><span class="note">imports nothing from screens/ or lib/</span>
+        <ul>
+          <li>use-playa.ts<span class="badge b-new">new</span><span class="note">+ PlayaPerson</span></li>
+          <li>use-playa.test.ts<span class="badge b-new">new</span></li>
+          <li>playa.tsx<span class="badge b-new">new</span><span class="note">Provider, Playa, Element, Overlay</span></li>
+          <li>playa-controls.tsx<span class="badge b-new">new</span><span class="note">Controls, Bar, Spacer, Play, Pause, Backward, Forward, Fullscreen</span></li>
+          <li>playa-status.tsx<span class="badge b-mov">moved</span><span class="note">was buffered-indicator + spinner</span></li>
+          <li>playa-slider.tsx<span class="badge b-mov">moved</span><span class="note">was player-seeker</span></li>
+          <li>playa-volume.tsx<span class="badge b-mov">moved</span></li>
+          <li>playa-tooltip.tsx<span class="badge b-mov">moved</span></li>
+          <li>playa-reactions.tsx<span class="badge b-mov">moved</span><span class="note">float paths from use-reactions; any emoji</span></li>
+          <li>playa-activity.tsx<span class="badge b-new">new</span><span class="note">types, copy, icons, stack, 8s fade</span></li>
+          <li>playa-subtitles*.ts(x)<span class="badge b-mov">moved</span><span class="note">was subtitle-slot/</span></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><span class="dir">ui/src/screens/app.watch/</span><span class="note">Room, unchanged</span>
+    <ul><li class="grey">app-watch-page.tsx · use-party.ts · queries/ …</li></ul>
+  </li>
+</ul>
+</div>
+<div class="card">
+<ul class="tree">
+  <li><span class="dir">ui/src/screens/app.watch.home/</span>
+    <ul>
+      <li>app-watch-home-page.tsx<span class="badge b-mod">modified</span></li>
+      <li>app-watch-home-layout.tsx<span class="badge b-new">new</span><span class="note">useWatchLayout()</span></li>
+      <li>app-watch-home-playa.tsx<span class="badge b-new">new</span><span class="note">provides Playa</span></li>
+      <li>use-party-playa.ts<span class="badge b-new">new</span></li>
+      <li>app-watch-home-hotkeys.tsx<span class="badge b-mov">moved</span></li>
+      <li>app-watch-home-shell.tsx<span class="badge b-new">new</span></li>
+      <li>app-watch-home-sidebar.tsx<span class="badge b-new">new</span></li>
+      <li>app-watch-home-season-selection-modal.tsx<span class="badge b-mod">modified</span><span class="note">owns the change-video steps</span></li>
+      <li>app-watch-home-keyboard-info-modal.tsx<span class="badge b-mod">modified</span></li>
+      <li><span class="dir">app-watch-home-stage/</span><span class="badge b-new">new</span>
+        <ul>
+          <li>…-stage.tsx<span class="badge b-new">new</span></li>
+          <li>…-stage-controls.tsx<span class="badge b-mov">moved</span><span class="note">app buttons only</span></li>
+          <li>…-stage-now-playing.tsx<span class="badge b-new">new</span></li>
+        </ul>
+      </li>
+      <li><span class="dir">app-watch-home-activity/</span><span class="badge b-new">new</span>
+        <ul>
+          <li>…-activity-to-playa.ts<span class="badge b-new">new</span><span class="note">log → PlayaActivity, party → PlayaPerson</span></li>
+          <li>menu · menu-preview · level<span class="badge b-mov">moved</span></li>
+        </ul>
+      </li>
+      <li><span class="dir">app-watch-home-chat-widget/</span><span class="badge b-mod">modified</span><span class="note">chat + reaction row, which owns REACTIONS</span></li>
+      <li class="grey">chat-invitation-panel/ · chat-status/ · mobile-title-bar</li>
+      <li class="gone">use-player-sync · use-player-chrome · use-player · player-context · use-reactions · activity-overlay<span class="badge b-del">deleted</span></li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+<p class="cap">Playa reads like a library in <code>components/</code>; the screen keeps only what's about the room.</p>
+
+<h2>Phases</h2>
+<div class="timeline">
+  <div data-n="1"><b>Playa core</b>video, sync(), no UI change</div>
+  <div data-n="2"><b>Playa parts</b>Provider, Overlay, Controls</div>
+  <div data-n="3"><b>Playa social</b>react(), activity(), subtitles</div>
+  <div data-n="4"><b>Layout + regions</b>sidebar, modals, folders</div>
+</div>
+
+<details>
+  <summary><span class="sum-t">1 · Playa core</span><span class="sum-o">usePlayerSync becomes usePlaya plus the room wiring in usePartyPlaya.</span>
+    <div class="files"><span>use-playa.ts<span class="badge b-new">new</span></span><span>use-party-playa.tsx<span class="badge b-new">new</span></span><span>use-player-sync.ts<span class="badge b-del">deleted</span></span><span>page, controls<span class="badge b-mod">mod</span></span></div>
+  </summary>
+  <div class="body">
+    <div class="path">ui/src/components/playa/use-playa.ts <span class="badge b-new">new</span></div>
+<pre><code class="language-ts">export interface PlayaOptions {
+  src: string
+  initialTime?: number
+  subtitles?: string | null
+  onPlayback?(state: { time: number; isPlaying: boolean }): void   // yours only
+  onReact?(emoji: string): void                                     // yours only, i.e. no `by`
+}
+
+export function usePlaya(options: PlayaOptions): Playa {
+  const $video = useRef&lt;HTMLVideoElement&gt;(null)
+  const [state, dispatch] = useReducer(reducer, initialState(options))
+  // ...
+
+  // Applies a move; only yours reach the callback.
+  function move(next: { time: number; isPlaying: boolean }, mine: boolean) {
+    dispatch({ type: 'move', payload: next })
+    $video.current!.currentTime = next.time
+    if (mine) options.onPlayback?.(next)
+  }
+
+  return {
+    state,
+    play: () =&gt; move({ time: state.time, isPlaying: true }, true),
+    seek: (time) =&gt; move({ time, isPlaying: state.isPlaying }, true),
+    sync: (next) =&gt; move(next, false),
+    // pause, skip, volume, react, activity ...
+  }
+}</code></pre>
+  </div>
+</details>
+
+<details>
+  <summary><span class="sum-t">2 · Playa parts</span><span class="sum-o">Controls are built from Playa parts; the 5s hide timer moves into PlayaOverlay.</span>
+    <div class="files"><span>playa.tsx<span class="badge b-new">new</span></span><span>playa-controls.tsx<span class="badge b-new">new</span></span><span>status, slider, volume, tooltip<span class="badge b-mov">moved</span></span><span>stage-controls<span class="badge b-mod">mod</span></span></div>
+  </summary>
+  <div class="body">
+    <div class="path">ui/src/components/playa/playa.tsx <span class="badge b-new">new</span></div>
+<pre><code class="language-tsx">const PlayaContext = createContext&lt;Playa | null&gt;(null)
+export const usePlayaContext = () =&gt; use(PlayaContext) ?? fail('needs &lt;PlayaProvider&gt;')
+
+export function PlayaProvider(props: { playa: Playa; children: ReactNode })
+
+/** The 16:9 box. Poster until ready. */
+export function Playa(props: { poster?: string; children: ReactNode })
+
+export function PlayaElement()   // the &lt;video&gt;, bound to the playa
+
+/** Shows on hover (desktop) or tap (phone), hides 5s after the pointer stops.
+ *  A menu inside calls usePinPlayaOverlay(isOpen) to keep it up. */
+export function PlayaOverlay(props: { children: ReactNode })</code></pre>
+    <div class="path">ui/src/screens/app.watch.home/app-watch-home-stage/app-watch-home-stage.tsx <span class="badge b-new">new</span></div>
+<pre><code class="language-tsx">export function AppWatchHomeStage() {
+  const party = useParty()
+  return (
+    &lt;Playa poster={getVideoPreviewImage(party)}&gt;
+      &lt;PlayaElement /&gt;
+      &lt;PlayaStatus /&gt;
+      &lt;PlayaSubtitles /&gt;
+      &lt;AppWatchHomeStageNowPlaying /&gt;
+      &lt;PlayaReactions /&gt;
+      &lt;PlayaActivity /&gt;
+      &lt;PlayaOverlay&gt;
+        &lt;AppWatchHomeStageControls /&gt;    {/* PlayaControls + title, episodes, bell, chat */}
+      &lt;/PlayaOverlay&gt;
+    &lt;/Playa&gt;
+  )
+}</code></pre>
+    <div class="path">ui/src/screens/app.watch.home/app-watch-home-stage/app-watch-home-stage-controls.tsx <span class="badge b-mod">modify</span></div>
+<pre><code class="language-tsx">// Playa parts and the party's own, left to right. Playa lays out; the app picks what goes in.
+export function AppWatchHomeStageControls() {
+  return (
+    &lt;PlayaControls&gt;
+      &lt;PlayaSlider /&gt;                          {/* row 1: time · slider · duration */}
+      &lt;PlayaBar&gt;                               {/* row 2: a flex row */}
+        &lt;PlayaPlay /&gt; &lt;PlayaPause /&gt; &lt;PlayaBackward /&gt; &lt;PlayaForward /&gt; &lt;PlayaVolume /&gt;
+        &lt;AppWatchHomeStageTitle /&gt;             {/* useParty(): "Knives Out S1:E3", truncates */}
+        &lt;PlayaSpacer /&gt;                         {/* pushes everything after it right */}
+        &lt;AppWatchHomeStageKeyboardButton /&gt;     {/* setModal('keyboard-info') */}
+        &lt;PlayaSubtitlesToggle /&gt;
+        &lt;AppWatchHomeStageEpisodesButton /&gt;     {/* series only; setModal('season-selection') */}
+        &lt;PlayaFullscreen /&gt;
+        &lt;AppWatchHomeActivityMenu /&gt;            {/* the bell */}
+        &lt;AppWatchHomeStageChatToggle /&gt;
+      &lt;/PlayaBar&gt;
+    &lt;/PlayaControls&gt;
+  )
+}</code></pre>
+  </div>
+</details>
+
+<details>
+  <summary><span class="sum-t">3 · Playa social</span><span class="sum-o">Reactions, activity lines and subtitles become Playa layers the app feeds.</span>
+    <div class="files"><span>playa-reactions.tsx<span class="badge b-mov">moved</span></span><span>playa-activity.tsx<span class="badge b-new">new</span></span><span>playa-subtitles<span class="badge b-mov">moved</span></span><span>activity-to-playa<span class="badge b-new">new</span></span><span>chat-status<span class="badge b-mod">mod</span></span><span>activity-overlay<span class="badge b-del">deleted</span></span></div>
+  </summary>
+  <div class="body">
+    <div class="path">ui/src/components/playa/playa-activity.tsx <span class="badge b-new">new</span></div>
+<pre><code class="language-tsx">// Typed per type, so Playa can say each one without guessing.
+export type PlayaActivity =
+  | { id: string; type: 'joined'; by: PlayaPerson; via?: 'code' | 'invite' }
+  | { id: string; type: 'played'; by: PlayaPerson }
+  | { id: string; type: 'paused'; by: PlayaPerson; at?: number }
+  | { id: string; type: 'seeked'; by: PlayaPerson; from?: number; to: number }   // back / ahead from these
+  | { id: string; type: 'switched'; by: PlayaPerson; title?: string }
+  | { id: string; type: 'message'; by: PlayaPerson; text: string }
+  | { id: string; type: 'note'; by?: PlayaPerson; text: string }               // anything else, said as-is
+
+/** "paused at 41:12", "skipped ahead to 1:02:15". The chat's status row uses it too, so there's one copy. */
+export function PlayaActivityText(props: { activity: PlayaActivity })
+
+/** Lines from playa.activity(), bottom-left, newest brightest; 4 at most, 8s each.
+ *  Sits above the controls while PlayaOverlay is up; no isLifted prop to pass. */
+export function PlayaActivity(props: { onLineClick?(activity: PlayaActivity): void })</code></pre>
+    <div class="path">ui/src/screens/app.watch.home/app-watch-home-activity/app-watch-home-activity-to-playa.ts <span class="badge b-new">new</span></div>
+<pre><code class="language-ts">// The room's words → Playa's. Unknown or old kinds fall back to the server's text.
+export function toPlayaActivity(log: AppPartyLog): PlayaActivity {
+  if (log.type === 'message') return { id: String(log.id), type: 'message', by: person(log.message.user), text: log.message.text }
+  const { kind, meta, user, text } = log.activity
+  switch (kind) {
+    case 'paused': return { id: String(log.id), type: 'paused', by: person(user), at: meta?.seconds }
+    case 'seeked': return { id: String(log.id), type: 'seeked', by: person(user), from: meta?.from_seconds, to: meta?.seconds ?? 0 }
+    case 'joined_code': return { id: String(log.id), type: 'joined', by: person(user), via: 'code' }
+    // ... played, joined, switched
+    default: return { id: String(log.id), type: 'note', by: person(user), text }
+  }
+}</code></pre>
+    <div class="path">ui/src/components/playa/playa-reactions.tsx <span class="badge b-mov">moved</span></div>
+<pre><code class="language-tsx">/** Floats from playa.react(); yours show at once, theirs carry a name label.
+ *  Paths, MAX_FLOATS and the lift come from today's use-reactions + reaction-layer. */
+export function PlayaReactions()</code></pre>
+  </div>
+</details>
+
+<details>
+  <summary><span class="sum-t">4 · Layout + regions</span><span class="sum-o">Five booleans become enums; Sidebar, Shell and both modals take no props; files move.</span>
+    <div class="files"><span>layout, playa provider, shell, sidebar<span class="badge b-new">new</span></span><span>both modals<span class="badge b-mod">mod</span></span><span>stage/, activity/<span class="badge b-mov">moved</span></span><span>chat-widget<span class="badge b-mod">mod</span></span><span>use-player-chrome, use-player, player-context<span class="badge b-del">deleted</span></span></div>
+  </summary>
+  <div class="body">
+    <div class="path">ui/src/screens/app.watch.home/app-watch-home-layout.tsx <span class="badge b-new">new</span></div>
+<pre><code class="language-tsx">// What's open around Playa. Nothing about the video.
+export function AppWatchHomeLayout(props: ReactComponentWrapper) {
+  const user = useAuthUser()
+  const [sidebar, setSidebar] = useState&lt;'chat' | 'invite' | 'closed'&gt;('chat')
+  const [modal, setModal] = useState&lt;'season-selection' | 'keyboard-info' | null&gt;(null)   // one at a time
+  const [activityLevel, setActivityLevel] = useActivityLevel(user.id)
+  const layout = { sidebar, setSidebar, modal, setModal, activityLevel, setActivityLevel }
+  return &lt;LayoutContext.Provider value={layout}&gt;{props.children}&lt;/LayoutContext.Provider&gt;
+}
+
+export const useWatchLayout = () =&gt; use(LayoutContext) ?? fail('useWatchLayout needs the watch page')</code></pre>
+    <div class="path">ui/src/screens/app.watch.home/app-watch-home-sidebar.tsx <span class="badge b-new">new</span></div>
+<pre><code class="language-tsx">// The column beside the picture: header, then chat or the invite panel.
+export function AppWatchHomeSidebar() {
+  const { sidebar, setSidebar } = useWatchLayout()
+  if (sidebar === 'closed') return null
+  return (
+    &lt;aside aria-label="Party"&gt;
+      &lt;AppWatchHomeSidebarHeader onInvite={() =&gt; setSidebar('invite')} /&gt;
+      &lt;AppWatchHomeChatWidget inert={sidebar === 'invite'} /&gt;   {/* its reaction row calls playa.react() */}
+      &lt;AnimatePresence&gt;
+        {sidebar === 'invite' &amp;&amp; &lt;AppWatchHomeChatInvitationPanel onClose={() =&gt; setSidebar('chat')} /&gt;}
+      &lt;/AnimatePresence&gt;
+    &lt;/aside&gt;
+  )
+}</code></pre>
+  </div>
+</details>
+
+<h2>Decisions</h2>
+<div class="grid">
+  <div class="card"><h3>What does Playa own?</h3>
+    <div class="opts">
+      <div class="opt">The &lt;video&gt; only</div>
+      <div class="opt pick">Video, reactions, activity lines, subtitles; the app feeds them</div>
+    </div>
+    <div class="why">They're all things on the picture; Playa owns how they look and expire.</div></div>
+  <div class="card"><h3>What <code>playa.activity()</code> takes</h3>
+    <div class="opts">
+      <div class="opt">A rendered <code>content</code> node</div>
+      <div class="opt">Loose <code>{ id, type, metadata }</code></div>
+      <div class="opt pick">Typed per type; Playa renders it</div>
+    </div>
+    <div class="why">One look and one copy everywhere; a typo in a field is a type error.</div></div>
+  <div class="card"><h3>Yours vs theirs</h3>
+    <div class="opts">
+      <div class="opt pick">Callbacks for yours; <code>sync()</code> and <code>{ by }</code> for theirs</div>
+      <div class="opt">A wrapper that re-implements play/seek</div>
+      <div class="opt">Playa subscribes to Pusher</div>
+    </div>
+    <div class="why">One rule, and Playa never learns where moves come from.</div></div>
+  <div class="card"><h3>How many contexts?</h3>
+    <div class="opts">
+      <div class="opt pick">One per thing: Room, Layout, Playa</div>
+      <div class="opt">A page grab-bag (<code>useWatchPage</code>)</div>
+      <div class="opt">One per rate of change</div>
+    </div>
+    <div class="why">Each name says what it is; perf is good enough.</div></div>
+  <div class="card"><h3>Episode picker and shortcuts</h3>
+    <div class="opts">
+      <div class="opt">One <code>AppWatchHomeSheets</code> wrapper</div>
+      <div class="opt pick">The two existing modals, each in the page tree</div>
+    </div>
+    <div class="why">Being modals doesn't make them one thing; the page should name both.</div></div>
+  <div class="card"><h3>Names and home</h3>
+    <div class="opts">
+      <div class="opt pick">Flat <code>PlayaSlider</code> in <code>components/playa/</code></div>
+      <div class="opt"><code>Playa.Slider</code> namespace</div>
+    </div>
+    <div class="why">Repo rule: named exports named after their file.</div></div>
+  <div class="card"><h3>Adopt a real library?</h3>
+    <div class="opts">
+      <div class="opt pick">Hand-rolled Playa, shaped like Media Chrome / Vidstack</div>
+      <div class="opt">Adopt one</div>
+    </div>
+    <div class="why">The server decides playback; a library's own store would fight <code>sync()</code>.</div></div>
+  <div class="card"><h3>Layout state</h3>
+    <div class="opts">
+      <div class="opt pick"><code>sidebar</code> + <code>modal</code> enums</div>
+      <div class="opt">Today's five booleans</div>
+    </div>
+    <div class="why">Hotkeys turn off with a single check: <code>modal !== null</code>.</div></div>
+</div>
+
+<h2>Risks</h2>
+<div class="grid">
+  <div class="card"><span class="sev hi">High</span><b>Echo loop:</b> a synced move posts back to the room.<div class="cap"><code>sync()</code> never calls <code>onPlayback</code>; a test pins it.</div></div>
+  <div class="card"><span class="sev md">Med</span><b>Controls timing</b> (5s hide, menu pin, volume, tooltip count) drifts.<div class="cap">Overlay exposes a pin; compare ⅛-speed recordings before and after.</div></div>
+  <div class="card"><span class="sev md">Med</span><b>Parallel edits</b> in <code>ui/</code> collide with the moves.<div class="cap">Moves land alone in phase 4; stage only these files.</div></div>
+  <div class="card"><span class="sev lo">Low</span><b>Activity extras</b> (typing dots, level toast) don't fit <code>playa.activity()</code>.<div class="cap">They stay app layers, slotted next to <code>PlayaActivity</code>.</div></div>
+</div>
+
+<h2>Verify</h2>
+<h4>User</h4>
+<ul class="check">
+  <li><span>User can play, pause and seek, and the room follows</span><span>manual · 2 tabs</span></li>
+  <li><span>User sees controls hide 5s after the pointer stops, but not with the bell open</span><span>manual</span></li>
+  <li><span>User can use space, ←/→, ↑/↓, C, M, F, ? — and they're off while a modal is up</span><span>manual</span></li>
+  <li><span>User sees reactions and activity lines float as today, on phone and desktop</span><span>manual</span></li>
+</ul>
+<h4>System</h4>
+<ul class="check">
+  <li><span><code>sync()</code> and <code>react(…, { by })</code> never call back</span><span>use-playa.test.ts</span></li>
+  <li><span><code>components/playa</code> never imports from <code>screens/</code> or <code>lib/</code></span><span>grep</span></li>
+  <li><span>Switching rooms still resets Playa, chat and subscriptions</span><span>manual</span></li>
+</ul>
+<h4>Automated</h4>
+<ul class="check">
+  <li><span>Types hold across the moves</span><span>npm run typecheck</span></li>
+  <li><span>Every log kind maps to a PlayaActivity, unknown ones to <code>note</code></span><span>activity-to-playa.test.ts</span></li>
+  <li><span>Existing reactions, activity, chat and invite tests still pass</span><span>npm test</span></li>
+</ul>
+
+<h2>Next</h2>
+<div class="next">Write <code>usePlaya</code> (video + <code>sync()</code>) and <code>usePartyPlaya</code>, and swap them in behind today's <code>usePlayer()</code> context.</div>
+
+</main>
+<script>hljs.highlightAll()</script>
+</body>
+</html>

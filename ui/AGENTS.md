@@ -108,7 +108,7 @@ npm run preview          # serve the production build on :8484
 npm run test:e2e          # Playwright smoke tests; first run npx playwright install
 ```
 
-Existing unprefixed local environment variables remain supported through an explicit allowlist in Vite configuration. New configuration uses `VITE_*`; Pusher server secrets belong only in the API.
+Browser configuration uses Vite's own `VITE_*` variables (`VITE_API_BASE_URL`, `VITE_PUSHER_KEY`, `VITE_PUSHER_CLUSTER`); anything `VITE_*` ends up in the bundle, so OAuth and Pusher secrets belong only in the API.
 
 See [TESTING.md](TESTING.md) for cross-browser projects, production-preview checks, and opt-in live two-account verification.
 

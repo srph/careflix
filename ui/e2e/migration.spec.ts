@@ -54,7 +54,7 @@ test('guest home and login show the Discord splash', async ({ page }) => {
     await expect(page.getByRole('heading', { name: 'Bring popcorn. Bring feelings.' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Continue with Discord' })).toBeVisible()
     await expect(page.getByRole('textbox')).toHaveCount(0)
-    await expect(page).toHaveTitle('Watch together - Care.tv')
+    await expect(page).toHaveTitle('Watch together • Careflix')
     const fonts = await page.getByRole('main').evaluate((element) => ({
       splash: getComputedStyle(element).fontFamily,
       app: getComputedStyle(document.body).fontFamily
@@ -139,7 +139,7 @@ test('authenticated settings preserve the heading and back navigation', async ({
   await authenticatedCatalog(page)
   await page.goto('/settings/profile')
   await expect(page).toHaveURL(/\/settings\/profile$/)
-  await expect(page).toHaveTitle(/Care.tv$/)
+  await expect(page).toHaveTitle(/Careflix$/)
   await expect(page.getByTestId('navigation')).toContainText('Account Settings')
   // The existing mobile layout hides the text and leaves an icon-only link.
   await page.getByTestId('navigation').getByRole('link', { name: 'Go Back' }).click()
@@ -200,9 +200,9 @@ test('settings remove password controls and retain account navigation', async ({
   await page.goBack()
   await expect(page).toHaveURL(/\/settings$/)
   await page.goto('/settings/faq')
-  await expect(page).toHaveTitle('FAQ - Care.tv')
+  await expect(page).toHaveTitle('FAQ • Careflix')
   await page.goto('/download')
-  await expect(page).toHaveTitle('Download The App - Care.tv')
+  await expect(page).toHaveTitle('Download The App • Careflix')
 })
 
 test('onboarding persists across reloads and only grants a session after the correct code', async ({ page }) => {
@@ -296,6 +296,6 @@ test('unmatched URLs retain the existing authenticated app shell', async ({ page
   await authenticatedCatalog(page)
   await page.goto('/migration-unknown-route')
   await expect(page.getByTestId('navigation')).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Care.tv', exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Careflix', exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Unexpected Application Error!' })).not.toBeVisible()
 })

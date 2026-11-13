@@ -1,16 +1,16 @@
 export const appSettingsFaqQuestions = [
   {
-    title: 'What is Care.tv?',
-    content: ['Care.tv is like Netflix with sync-play, chat, and invitation system.']
+    title: 'What is Careflix?',
+    content: ['Careflix is like Netflix with sync-play, chat, and invitation system.']
   },
   {
-    title: 'Is Care.tv connected to Netflix?',
+    title: 'Is Careflix connected to Netflix?',
     content: ['No.']
   },
   {
-    title: 'Who made Care.tv?',
+    title: 'Who made Careflix?',
     content: [
-      'Care.tv is a personal project by :author.',
+      'Careflix is a personal project by :author.',
       `I'm a designer-developer who likes to build software for myself and people close to me.`
     ]
   },
@@ -37,7 +37,7 @@ export const appSettingsFaqQuestions = [
   {
     title: 'How do you profit?',
     content: [
-      `Care.tv will always be free of charge.`,
+      `Careflix will always be free of charge.`,
       `I don't make money out of this. This has been a long-time idea, and I enjoyed building this from the ground up.`,
       `Thanks for appreciating my work, and for providing me feedback.`,
       `I only profit off this by having a portfolio to showcase to employers, and having a public platform to learn building a product.`
@@ -47,7 +47,7 @@ export const appSettingsFaqQuestions = [
     title: 'Where do you get the money for server expenses?',
     content: [
       `Everything comes from my own pocket so far.`,
-      `Care.tv will always be free of charge. Afterall, it's for myself, my family, and some friends.`
+      `Careflix will always be free of charge. Afterall, it's for myself, my family, and some friends.`
     ]
   },
   {
@@ -57,7 +57,7 @@ export const appSettingsFaqQuestions = [
   {
     title: 'How do I sign in?',
     content: [
-      'Continue with Discord. Care.tv uses your Discord profile and email when available; your Discord password stays with Discord.'
+      'Continue with Discord. Careflix uses your Discord profile and email when available; your Discord password stays with Discord.'
     ]
   },
   {
@@ -95,7 +95,7 @@ export const appSettingsFaqQuestions = [
     ]
   },
   {
-    title: 'How can I contribute to Care.tv?',
+    title: 'How can I contribute to Careflix?',
     content: [
       `You can view the entire codebase on :github.`,
       `Feel free to provide any sort of feedback negative or positive; heck, designs or code pull-requests would be awesome!`

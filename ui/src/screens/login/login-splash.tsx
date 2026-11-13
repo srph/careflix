@@ -91,14 +91,14 @@ export function LoginSplash({
       <PageTitle title={access ? 'Request access' : 'Watch together'} />
       <Link
         to="/"
-        aria-label="Care.tv home"
+        aria-label="Careflix home"
         className={cn(
           'absolute inset-x-0 z-2 text-center text-pink-500 md:top-9 md:right-auto md:left-11 md:text-left',
           access
             ? 'top-16.5 font-label text-lg leading-none font-semibold tracking-[-.01em]'
             : 'top-5.5 text-[25px] leading-none font-bold tracking-[-.04em] md:text-[27px]'
         )}>
-        Care.tv
+        Careflix
       </Link>
       <div className={cn('z-2 text-center', access ? 'w-[min(100%,1000px)]' : 'row-start-2 w-full px-5 md:px-6')}>
         {identity}
@@ -132,7 +132,7 @@ export function LoginSplash({
             access ? 'mt-4 max-w-75 md:mt-5.5 md:max-w-115' : 'mt-4.5 max-w-80 md:mt-6 md:max-w-130'
           )}>
           {access ? (
-            'Care.tv is invite-only for now. Ask Kier or a friend who’s already in.'
+            'Careflix is invite-only for now. Ask Kier or a friend who’s already in.'
           ) : state === 'welcome' ? (
             'Taking you in…'
           ) : (

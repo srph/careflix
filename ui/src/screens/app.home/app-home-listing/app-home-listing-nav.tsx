@@ -28,7 +28,7 @@ export function AppHomeListingNav({
     <nav
       aria-label="Catalog"
       className="sticky top-0 z-30 flex min-h-19 flex-wrap items-center gap-2.5 bg-neutral-950/95 px-3 pt-3.5 pb-2.5 min-[361px]:gap-3.5 min-[361px]:px-5 sm:gap-x-6 sm:gap-y-3 sm:px-6 sm:pt-4 lg:flex-nowrap lg:gap-6 lg:px-10 lg:py-3 xl:gap-9">
-      <Link to="/" className="flex-none" aria-label="Care.tv" onClick={() => onTabChange('all')}>
+      <Link to="/" className="flex-none" aria-label="Careflix" onClick={() => onTabChange('all')}>
         <UiLogo className="font-bold text-white first-letter:text-pink-500 min-[361px]:text-lg sm:text-xl" />
       </Link>
       <div

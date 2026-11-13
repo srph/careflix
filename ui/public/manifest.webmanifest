@@ -1,8 +1,8 @@
 {
-  "name": "Care.tv",
-  "short_name": "Care.tv",
+  "name": "Careflix",
+  "short_name": "Careflix",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0c0a09",
-  "description": "Care.tv makes it really easy to enjoy movies or watch TV shows with the people you care about, no matter how far!"
+  "description": "Careflix makes it really easy to enjoy movies or watch TV shows with the people you care about, no matter how far!"
 }

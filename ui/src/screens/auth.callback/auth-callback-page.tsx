@@ -8,7 +8,7 @@ const ERRORS: Record<string, string> = {
   cancelled: 'Discord didn’t connect. No harm done.',
   expired: 'Your sign-in expired. Please try again.',
   account_link_required:
-    'You already have a Care.tv account. Ask Kier to link your Discord account so you can keep your history.',
+    'You already have a Careflix account. Ask Kier to link your Discord account so you can keep your history.',
   not_configured: 'Discord login isn’t ready yet. Please try again later.',
   connection_failed: 'Discord couldn’t connect. Please try again.'
 }

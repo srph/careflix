@@ -13,7 +13,7 @@ export function AuthBoundary({ children }: ReactComponentWrapper) {
   if (auth.status === 'error') {
     return (
       <div className="mx-auto my-20 max-w-120 p-6 text-center" role="alert">
-        <p className="mb-4">We couldn’t reach Care.tv. Please try again.</p>
+        <p className="mb-4">We couldn’t reach Careflix. Please try again.</p>
         {/* Reset rather than refetch, so the retry shows nothing while it loads, like the first load. */}
         <UiButton onClick={() => client.resetQueries({ queryKey: queryKeys.global.auth() })}>Retry</UiButton>
       </div>

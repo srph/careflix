@@ -64,7 +64,7 @@ export function AppDownloadPage() {
             </Step>
 
             <Step label="Step 3" image={asset_downloadStep4}>
-              On your home screen, you should find <Highlight>Care.tv</Highlight>.
+              On your home screen, you should find <Highlight>Careflix</Highlight>.
             </Step>
           </UiAccordion.Section>
 

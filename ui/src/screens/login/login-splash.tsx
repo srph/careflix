@@ -29,7 +29,7 @@ export function Spinner() {
 export const DISCORD_BUTTON =
   'flex min-h-14 w-full cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#5865f2] px-5.5 py-3 text-lg leading-snug font-semibold tracking-[-.01em] text-white transition-colors duration-150 hover:bg-[#4752c4] disabled:cursor-wait motion-reduce:transition-none'
 
-function DiscordButton({ state, onClick, name }: { state: string; onClick?: () => void; name?: string }) {
+function DiscordButton({ state, onClick }: { state: string; onClick?: () => void }) {
   // The label the page opened with is already there; every label after it fades up.
   const [previous, setPrevious] = useState(state)
   const [changed, setChanged] = useState(false)
@@ -54,9 +54,7 @@ function DiscordButton({ state, onClick, name }: { state: string; onClick?: () =
             Opening Discord…
           </>
         ) : state === 'welcome' ? (
-          <>
-            <span aria-hidden="true">👋</span> Welcome, {name}
-          </>
+          'Signed in'
         ) : (
           <>
             <DiscordMark />
@@ -74,7 +72,6 @@ function DiscordButton({ state, onClick, name }: { state: string; onClick?: () =
  */
 export function LoginSplash({
   state = 'idle',
-  name,
   error,
   children,
   identity,
@@ -82,7 +79,6 @@ export function LoginSplash({
   access = false
 }: {
   state?: string
-  name?: string
   error?: string
   children?: ReactNode
   identity?: ReactNode
@@ -123,12 +119,6 @@ export function LoginSplash({
           )}>
           {access ? (
             <span data-reaction-shelf>Ticket, please.</span>
-          ) : state === 'welcome' ? (
-            <>
-              <span>Here they</span>
-              <br />
-              <span>come, {name}.</span>
-            </>
           ) : (
             <>
               <span data-reaction-shelf>Bring popcorn.</span>
@@ -145,8 +135,6 @@ export function LoginSplash({
           )}>
           {access ? (
             'Careflix is invite-only for now. Ask Kier or a friend who’s already in.'
-          ) : state === 'welcome' ? (
-            'Taking you in…'
           ) : (
             <>
               Host watch parties with your{' '}
@@ -170,7 +158,7 @@ export function LoginSplash({
             {error}
           </p>
         )}
-        {children || <DiscordButton state={state} onClick={onDiscord} name={name} />}
+        {children || <DiscordButton state={state} onClick={onDiscord} />}
       </div>
       <span className="sr-only" role="status">
         {state === 'connecting' ? 'Opening Discord…' : state === 'welcome' ? 'Signed in. Taking you in…' : ''}

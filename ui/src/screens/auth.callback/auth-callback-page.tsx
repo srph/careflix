@@ -19,7 +19,6 @@ export function AuthCallbackPage() {
   const [parameters] = useState(() => new URLSearchParams(window.location.search))
   const [state, setState] = useState('connecting')
   const [error, setError] = useState('')
-  const [name, setName] = useState('')
   const started = useRef(false)
   const destination = useRef<string | null>(null)
   useEffect(() => {
@@ -40,7 +39,6 @@ export function AuthCallbackPage() {
       onSuccess: (result) => {
         if (result.requires_request_access) return navigate('/onboarding', { replace: true })
         destination.current = returnToApp()
-        setName(result.user!.name.split(' ')[0])
         setState('welcome')
       }
     })
@@ -60,5 +58,5 @@ export function AuthCallbackPage() {
       setError(ERRORS.connection_failed)
     }
   }
-  return <LoginSplash state={state} error={error} name={name} onDiscord={retry} />
+  return <LoginSplash state={state} error={error} onDiscord={retry} />
 }
